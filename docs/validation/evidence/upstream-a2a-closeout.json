@@ -1,0 +1,647 @@
+{
+  "date": "2026-10-22",
+  "fixedCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "team": "m0Verifier",
+  "modelId": "deepseek-flash",
+  "card": {
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "name": "M0 synthetic verification",
+      "description": "Synthetic text protocol verification only",
+      "supportedInterfaces": [
+        {
+          "url": "http://127.0.0.1:3002/a2a/m0Verifier",
+          "protocolBinding": "JSONRPC",
+          "protocolVersion": "1.0"
+        }
+      ],
+      "version": "1.0.0",
+      "capabilities": {
+        "streaming": true,
+        "pushNotifications": false,
+        "extendedAgentCard": false
+      },
+      "securitySchemes": {
+        "bearer": {
+          "httpAuthSecurityScheme": {
+            "scheme": "bearer"
+          }
+        }
+      },
+      "securityRequirements": [
+        {
+          "schemes": {
+            "bearer": {}
+          }
+        }
+      ],
+      "defaultInputModes": [
+        "text/plain"
+      ],
+      "defaultOutputModes": [
+        "text/plain",
+        "application/json"
+      ],
+      "skills": [
+        {
+          "id": "m0Verifier",
+          "name": "M0 synthetic verification",
+          "description": "Synthetic text protocol verification only",
+          "tags": [
+            "toonflow",
+            "team"
+          ]
+        }
+      ]
+    }
+  },
+  "unauthorized": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "749ab7b4-bac0-4fd3-a154-200f2d174446",
+      "method": "ListTasks",
+      "params": {}
+    },
+    "httpStatus": 401,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "error": "unauthorized"
+    }
+  },
+  "submit": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "38f63a93-f39c-4aae-86ae-6ebdc63f0894",
+      "method": "SendMessage",
+      "params": {
+        "message": {
+          "messageId": "484f284f-8a85-439c-b1d9-82d728a3a40a",
+          "role": "ROLE_USER",
+          "parts": [
+            {
+              "text": "Reply exactly M0_A2A_OK. This is a synthetic protocol test. Do not use tools."
+            }
+          ]
+        },
+        "configuration": {
+          "returnImmediately": true
+        }
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "38f63a93-f39c-4aae-86ae-6ebdc63f0894",
+      "result": {
+        "task": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+          "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+          "status": {
+            "state": "TASK_STATE_WORKING",
+            "timestamp": "2026-10-22T03:00:06.632Z"
+          },
+          "history": [
+            {
+              "messageId": "484f284f-8a85-439c-b1d9-82d728a3a40a",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_USER",
+              "parts": [
+                {
+                  "text": "Reply exactly M0_A2A_OK. This is a synthetic protocol test. Do not use tools."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "queries": [
+    {
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "adda31bf-a91a-4489-8683-156dcd253f2c",
+        "method": "GetTask",
+        "params": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24"
+        }
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "jsonrpc": "2.0",
+        "id": "adda31bf-a91a-4489-8683-156dcd253f2c",
+        "result": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+          "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+          "status": {
+            "state": "TASK_STATE_WORKING",
+            "timestamp": "2026-10-22T03:00:06.632Z"
+          },
+          "history": [
+            {
+              "messageId": "484f284f-8a85-439c-b1d9-82d728a3a40a",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_USER",
+              "parts": [
+                {
+                  "text": "Reply exactly M0_A2A_OK. This is a synthetic protocol test. Do not use tools."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "e1013c11-1062-487d-9806-c6f5bac2392c",
+        "method": "GetTask",
+        "params": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24"
+        }
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "jsonrpc": "2.0",
+        "id": "e1013c11-1062-487d-9806-c6f5bac2392c",
+        "result": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+          "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+          "status": {
+            "state": "TASK_STATE_WORKING",
+            "message": {
+              "messageId": "16360b58-de50-4954-be0f-7924b834a599",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "verifier：准备执行",
+                  "mediaType": "text/plain"
+                }
+              ]
+            },
+            "timestamp": "2026-10-22T03:00:06.824Z"
+          },
+          "history": [
+            {
+              "messageId": "484f284f-8a85-439c-b1d9-82d728a3a40a",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_USER",
+              "parts": [
+                {
+                  "text": "Reply exactly M0_A2A_OK. This is a synthetic protocol test. Do not use tools."
+                }
+              ]
+            },
+            {
+              "messageId": "16360b58-de50-4954-be0f-7924b834a599",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "verifier：准备执行",
+                  "mediaType": "text/plain"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "30dad949-68e8-49a7-b673-e7caed45cd31",
+        "method": "GetTask",
+        "params": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24"
+        }
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "jsonrpc": "2.0",
+        "id": "30dad949-68e8-49a7-b673-e7caed45cd31",
+        "result": {
+          "id": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+          "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+          "status": {
+            "state": "TASK_STATE_COMPLETED",
+            "message": {
+              "messageId": "9bd71de5-b423-4077-8d62-e9ab56f5a107",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "M0_A2A_OK",
+                  "mediaType": "text/plain"
+                }
+              ]
+            },
+            "timestamp": "2026-10-22T03:00:07.889Z"
+          },
+          "artifacts": [
+            {
+              "artifactId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "name": "团队结果",
+              "parts": [
+                {
+                  "text": "M0_A2A_OK",
+                  "mediaType": "text/plain"
+                }
+              ]
+            }
+          ],
+          "history": [
+            {
+              "messageId": "484f284f-8a85-439c-b1d9-82d728a3a40a",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_USER",
+              "parts": [
+                {
+                  "text": "Reply exactly M0_A2A_OK. This is a synthetic protocol test. Do not use tools."
+                }
+              ]
+            },
+            {
+              "messageId": "16360b58-de50-4954-be0f-7924b834a599",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "verifier：准备执行",
+                  "mediaType": "text/plain"
+                }
+              ]
+            },
+            {
+              "messageId": "5328edf4-7def-472f-bc21-998218eef936",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "verifier：正在处理",
+                  "mediaType": "text/plain"
+                }
+              ]
+            },
+            {
+              "messageId": "9bd71de5-b423-4077-8d62-e9ab56f5a107",
+              "contextId": "55ebb549-52a6-4779-8f88-fb386962664a",
+              "taskId": "afe2ef38-57b2-4ee2-a39a-880e15a1cc24",
+              "role": "ROLE_AGENT",
+              "parts": [
+                {
+                  "text": "M0_A2A_OK",
+                  "mediaType": "text/plain"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "cancelSubmit": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "f5aee90d-ef08-4d80-af91-12d585412e48",
+      "method": "SendMessage",
+      "params": {
+        "message": {
+          "messageId": "60cb920d-4672-46c2-82f3-52066453c60b",
+          "role": "ROLE_USER",
+          "parts": [
+            {
+              "text": "Synthetic cancellation test: write 500 numbered sentences about a paper boat, one sentence per line. Do not summarize or use tools."
+            }
+          ]
+        },
+        "configuration": {
+          "returnImmediately": true
+        }
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "f5aee90d-ef08-4d80-af91-12d585412e48",
+      "result": {
+        "task": {
+          "id": "27c178a6-3aae-4ddf-b465-3206150047f1",
+          "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+          "status": {
+            "state": "TASK_STATE_WORKING",
+            "timestamp": "2026-10-22T03:00:08.668Z"
+          },
+          "history": [
+            {
+              "messageId": "60cb920d-4672-46c2-82f3-52066453c60b",
+              "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+              "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+              "role": "ROLE_USER",
+              "parts": [
+                {
+                  "text": "Synthetic cancellation test: write 500 numbered sentences about a paper boat, one sentence per line. Do not summarize or use tools."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "beforeCancel": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "6a6f2a13-4f96-4062-8944-e16753b0dbec",
+      "method": "GetTask",
+      "params": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1"
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "6a6f2a13-4f96-4062-8944-e16753b0dbec",
+      "result": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1",
+        "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+        "status": {
+          "state": "TASK_STATE_WORKING",
+          "message": {
+            "messageId": "55b68f9a-354d-4fab-a851-6f4a79aa9bd0",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：正在处理",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          "timestamp": "2026-10-22T03:00:09.260Z"
+        },
+        "history": [
+          {
+            "messageId": "60cb920d-4672-46c2-82f3-52066453c60b",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_USER",
+            "parts": [
+              {
+                "text": "Synthetic cancellation test: write 500 numbered sentences about a paper boat, one sentence per line. Do not summarize or use tools."
+              }
+            ]
+          },
+          {
+            "messageId": "efb2a9bc-eef6-4ce8-a3bd-cfee78d298fe",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：准备执行",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          {
+            "messageId": "55b68f9a-354d-4fab-a851-6f4a79aa9bd0",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：正在处理",
+                "mediaType": "text/plain"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "cancel": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "5ed7d130-28f2-4fdf-90e5-cebc4550a67d",
+      "method": "CancelTask",
+      "params": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1"
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "5ed7d130-28f2-4fdf-90e5-cebc4550a67d",
+      "result": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1",
+        "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+        "status": {
+          "state": "TASK_STATE_CANCELED",
+          "message": {
+            "messageId": "6d060cd2-5025-40ee-ba1d-ae679903ba5c",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "任务已取消",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          "timestamp": "2026-10-22T03:00:09.677Z"
+        },
+        "history": [
+          {
+            "messageId": "60cb920d-4672-46c2-82f3-52066453c60b",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_USER",
+            "parts": [
+              {
+                "text": "Synthetic cancellation test: write 500 numbered sentences about a paper boat, one sentence per line. Do not summarize or use tools."
+              }
+            ]
+          },
+          {
+            "messageId": "efb2a9bc-eef6-4ce8-a3bd-cfee78d298fe",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：准备执行",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          {
+            "messageId": "55b68f9a-354d-4fab-a851-6f4a79aa9bd0",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：正在处理",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          {
+            "messageId": "6d060cd2-5025-40ee-ba1d-ae679903ba5c",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "任务已取消",
+                "mediaType": "text/plain"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "afterCancel": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "e1d212cb-175c-43cd-8224-87904aff1d3d",
+      "method": "GetTask",
+      "params": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1"
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "e1d212cb-175c-43cd-8224-87904aff1d3d",
+      "result": {
+        "id": "27c178a6-3aae-4ddf-b465-3206150047f1",
+        "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+        "status": {
+          "state": "TASK_STATE_CANCELED",
+          "message": {
+            "messageId": "6d060cd2-5025-40ee-ba1d-ae679903ba5c",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "任务已取消",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          "timestamp": "2026-10-22T03:00:09.677Z"
+        },
+        "history": [
+          {
+            "messageId": "60cb920d-4672-46c2-82f3-52066453c60b",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_USER",
+            "parts": [
+              {
+                "text": "Synthetic cancellation test: write 500 numbered sentences about a paper boat, one sentence per line. Do not summarize or use tools."
+              }
+            ]
+          },
+          {
+            "messageId": "efb2a9bc-eef6-4ce8-a3bd-cfee78d298fe",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：准备执行",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          {
+            "messageId": "55b68f9a-354d-4fab-a851-6f4a79aa9bd0",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "verifier：正在处理",
+                "mediaType": "text/plain"
+              }
+            ]
+          },
+          {
+            "messageId": "6d060cd2-5025-40ee-ba1d-ae679903ba5c",
+            "contextId": "b12b6bdc-8127-475f-a8d4-0624e70a78b8",
+            "taskId": "27c178a6-3aae-4ddf-b465-3206150047f1",
+            "role": "ROLE_AGENT",
+            "parts": [
+              {
+                "text": "任务已取消",
+                "mediaType": "text/plain"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "missingTask": {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": "7918c305-68e4-4106-a6a2-41550f51afb0",
+      "method": "GetTask",
+      "params": {
+        "id": "3c33a6b0-c8e9-49f1-a8f1-59cbf25512d7"
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "jsonrpc": "2.0",
+      "id": "7918c305-68e4-4106-a6a2-41550f51afb0",
+      "error": {
+        "code": -32001,
+        "message": "Task not found: 3c33a6b0-c8e9-49f1-a8f1-59cbf25512d7",
+        "data": [
+          {
+            "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+            "reason": "TASK_NOT_FOUND",
+            "domain": "a2a-protocol.org"
+          }
+        ]
+      }
+    }
+  },
+  "checks": {
+    "card": true,
+    "unauthorized": true,
+    "completed": true,
+    "artifact": true,
+    "cancel": true,
+    "missingTask": true
+  }
+}

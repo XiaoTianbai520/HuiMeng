@@ -1,0 +1,42 @@
+@startuml
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+title { FontSize 14; FontStyle bold; FontColor #000000; BackGroundColor transparent; LineColor transparent; LineThickness 0 }
+sequenceDiagram {
+  actor { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  participant { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  lifeLine { BackGroundColor #FFFFFF; LineColor #000000; LineStyle 5-5; LineThickness 0.75 }
+  group { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  arrow { LineColor #000000; LineThickness 0.75; FontColor #000000 }
+}
+</style>
+title Huimeng 1.0 - Generation Admission
+actor Caller
+participant "Spring API" as Spring
+database "MySQL" as Db
+participant "Bun executor" as Bun
+Caller -> Spring : submit(projectId, idempotencyKey)
+Spring -> Db : check actor and project grant
+Spring -> Db : atomically reserve one of five slots
+alt capacity full
+  Spring --> Caller : 429 PROJECT_CAPACITY_EXCEEDED
+else admitted
+  Spring -> Bun : execute(internal project context, runId)
+  Bun --> Spring : stream or final response
+  Spring --> Caller : forward compatible response
+  alt execution ended or stop confirmed
+    Spring -> Db : mark terminal state, release slot
+  else disconnected or completion unknown
+    Spring -> Db : keep slot, reconcile execution status
+  end
+end
+@enduml

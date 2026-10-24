@@ -1,0 +1,670 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader",
+        "m0ApiInputs": {
+          "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "widgets_values": [
+        "qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        350
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "m0ApiInputs": {
+          "clip_name": "qwen3vl_8b_w4a8.safetensors",
+          "type": "qwen_image",
+          "device": "default"
+        }
+      },
+      "widgets_values": [
+        "qwen3vl_8b_w4a8.safetensors",
+        "qwen_image",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        660
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "m0ApiInputs": {
+          "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+        }
+      },
+      "widgets_values": [
+        "qwen_image_2.1_vae_bf16.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "ResolutionSelector",
+      "pos": [
+        40,
+        970
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "preview",
+          "type": "RESOLUTION_PREVIEW",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ResolutionSelector",
+        "m0ApiInputs": {
+          "aspect_ratio": "1:1 (Square)",
+          "megapixels": 0.3,
+          "multiple": 32
+        }
+      },
+      "widgets_values": [
+        "1:1 (Square)",
+        0.3,
+        32
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        540,
+        815
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 1
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "m0ApiInputs": {
+          "width": [
+            "4",
+            0
+          ],
+          "height": [
+            "4",
+            1
+          ],
+          "batch_size": 1
+        }
+      },
+      "widgets_values": [
+        1
+      ]
+    },
+    {
+      "id": 6,
+      "type": "TextEncodeQwenImage21",
+      "pos": [
+        540,
+        505
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "images",
+          "type": "COMFY_AUTOGROW_V3",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextEncodeQwenImage21",
+        "m0ApiInputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "prompt": "A quiet watercolor sunrise over a narrow canal, a small blue origami paper boat drifting on silver water, soft hand-painted animation background, no text, no watermark.",
+          "negative_prompt": "",
+          "resolution": 1024
+        }
+      },
+      "widgets_values": [
+        "A quiet watercolor sunrise over a narrow canal, a small blue origami paper boat drifting on silver water, soft hand-painted animation background, no text, no watermark.",
+        "",
+        1024
+      ]
+    },
+    {
+      "id": 11,
+      "type": "RepeatLatentBatch",
+      "pos": [
+        1040,
+        505
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RepeatLatentBatch",
+        "m0ApiInputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "amount": 1
+        }
+      },
+      "widgets_values": [
+        1
+      ]
+    },
+    {
+      "id": 12,
+      "type": "QwenImage21Cache",
+      "pos": [
+        540,
+        195
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "QwenImage21Cache",
+        "m0ApiInputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "device": "auto",
+          "dtype": "default"
+        }
+      },
+      "widgets_values": [
+        "auto",
+        "default"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "KSampler",
+      "pos": [
+        1540,
+        440
+      ],
+      "size": [
+        380,
+        370
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 8
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler",
+        "m0ApiInputs": {
+          "model": [
+            "12",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "6",
+            1
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 1261816332,
+          "steps": 25,
+          "cfg": 1.0,
+          "sampler_name": "euler",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "widgets_values": [
+        1261816332,
+        "fixed",
+        25,
+        1.0,
+        "euler",
+        "simple",
+        1.0
+      ]
+    },
+    {
+      "id": 14,
+      "type": "VAEDecode",
+      "pos": [
+        2040,
+        505
+      ],
+      "size": [
+        380,
+        240
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 10
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode",
+        "m0ApiInputs": {
+          "samples": [
+            "13",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 15,
+      "type": "SaveImage",
+      "pos": [
+        2540,
+        436
+      ],
+      "size": [
+        380,
+        378
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage",
+        "m0ApiInputs": {
+          "images": [
+            "14",
+            0
+          ],
+          "filename_prefix": "Huimeng-M0-Qwen21"
+        }
+      },
+      "widgets_values": [
+        "Huimeng-M0-Qwen21"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      5,
+      0,
+      "INT"
+    ],
+    [
+      2,
+      4,
+      1,
+      5,
+      1,
+      "INT"
+    ],
+    [
+      3,
+      2,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      5,
+      0,
+      11,
+      0,
+      "LATENT"
+    ],
+    [
+      5,
+      1,
+      0,
+      12,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      12,
+      0,
+      13,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      6,
+      0,
+      13,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      6,
+      1,
+      13,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      9,
+      11,
+      0,
+      13,
+      3,
+      "LATENT"
+    ],
+    [
+      10,
+      13,
+      0,
+      14,
+      0,
+      "LATENT"
+    ],
+    [
+      11,
+      3,
+      0,
+      14,
+      1,
+      "VAE"
+    ],
+    [
+      12,
+      14,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "M0 actual executed qwenText",
+      "bounding": [
+        -5,
+        -51,
+        2970,
+        1306
+      ],
+      "color": "#335159",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {
+    "m0PromptId": "103efd01-89fb-4396-9ae4-476b45080948",
+    "m0ProviderSha256": "e6e98133d25fe759e385a35922f0517e3e4a9e00455dd3603030ca7e5626ffbc",
+    "apiFixture": "qwenText-api.json"
+  },
+  "version": 0.4
+}

@@ -1,0 +1,157 @@
+[
+  {
+    "case": "initial-canvas-list",
+    "method": "GET",
+    "route": "/api/workspaces/files/list",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": ""
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": {
+        "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\toonflow-m0-data-ascii\\workspaces\\M0样例项目",
+        "empty": false,
+        "entries": [
+          {
+            "name": "画布1.json",
+            "path": "画布1.json",
+            "type": "file"
+          }
+        ]
+      },
+      "message": "成功"
+    }
+  },
+  {
+    "case": "create-text",
+    "method": "PUT",
+    "route": "/api/workspaces/files/write",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": "M0-剧本.md",
+      "exclusive": "true"
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": null,
+      "message": "成功"
+    }
+  },
+  {
+    "case": "read-snapshot",
+    "method": "GET",
+    "route": "/api/workspaces/files/read",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": "M0-剧本.md",
+      "snapshot": "true"
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": {
+        "text": "第一版剧本\n",
+        "encoding": "utf-8",
+        "revision": "9b092d40646dcb06e5e7ed073df689657c44b9aa4c5b220299853cf7280d7f17"
+      },
+      "message": "成功"
+    }
+  },
+  {
+    "case": "write-with-revision",
+    "method": "PUT",
+    "route": "/api/workspaces/files/write",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": "M0-剧本.md",
+      "expectedRevision": "9b092d40646dcb06e5e7ed073df689657c44b9aa4c5b220299853cf7280d7f17",
+      "encoding": "utf-8"
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": {
+        "revision": "c50814ea0abe03922c22d663f4e38ca49bdf93e7922f18582a83f38b8723df6d"
+      },
+      "message": "成功"
+    }
+  },
+  {
+    "case": "stale-write",
+    "method": "PUT",
+    "route": "/api/workspaces/files/write",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": "M0-剧本.md",
+      "expectedRevision": "9b092d40646dcb06e5e7ed073df689657c44b9aa4c5b220299853cf7280d7f17"
+    },
+    "status": 409,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 409,
+      "data": {
+        "code": "ESTALE"
+      },
+      "message": "文件已被其他编辑器修改，当前修改已保留，请重新载入磁盘版本或另存副本"
+    }
+  },
+  {
+    "case": "read-after-conflict",
+    "method": "GET",
+    "route": "/api/workspaces/files/read",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": "M0-剧本.md",
+      "snapshot": "true"
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": {
+        "text": "第二版剧本\n",
+        "encoding": "utf-8",
+        "revision": "c50814ea0abe03922c22d663f4e38ca49bdf93e7922f18582a83f38b8723df6d"
+      },
+      "message": "成功"
+    }
+  },
+  {
+    "case": "final-list",
+    "method": "GET",
+    "route": "/api/workspaces/files/list",
+    "params": {
+      "directory": "<PROJECT_DIR>",
+      "path": ""
+    },
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "response": {
+      "code": 200,
+      "data": {
+        "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\toonflow-m0-data-ascii\\workspaces\\M0样例项目",
+        "empty": false,
+        "entries": [
+          {
+            "name": "画布1.json",
+            "path": "画布1.json",
+            "type": "file"
+          },
+          {
+            "name": "M0-剧本.md",
+            "path": "M0-剧本.md",
+            "type": "file"
+          }
+        ]
+      },
+      "message": "成功"
+    }
+  }
+]

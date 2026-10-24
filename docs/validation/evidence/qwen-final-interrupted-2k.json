@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-22",
+  "providerId": "qwenImage21Local",
+  "version": "1.0.0",
+  "adapterSha256": "cadefd6096b8eb27277e350f5c96f378325f9a46efcf3b5d6cb9d209e47a68a3",
+  "tests": [
+    {
+      "mode": "text",
+      "modelId": "qwenImage21Text",
+      "request": {
+        "providerId": "qwenImage21Local",
+        "modelId": "qwenImage21Text",
+        "prompt": "一只蓝色折纸小船漂在宁静的小溪上，水彩动画背景风格，画面中央仅一只小船，远处有柔和的日出，清晰的纸张折痕，水面有倒影，没有文字或水印。",
+        "size": "2K",
+        "ratio": "16:9",
+        "outputDirectory": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37",
+        "images": [],
+        "mediaType": "image"
+      },
+      "httpStatus": 200,
+      "response": {
+        "code": 500,
+        "data": null,
+        "message": "Qwen 图片生成失败（5ebf7f69-2557-45df-89c3-84bb14647fb9）：execution_start；execution_cached；execution_interrupted"
+      },
+      "elapsedSeconds": 38.78,
+      "leadingWhitespaceBytes": 1
+    }
+  ],
+  "pageErrors": []
+}

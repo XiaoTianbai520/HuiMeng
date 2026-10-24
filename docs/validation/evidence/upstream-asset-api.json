@@ -1,0 +1,79 @@
+[
+  {
+    "case": "mkdir-assets",
+    "status": 409,
+    "contentType": "application/json; charset=utf-8",
+    "bytes": 137,
+    "sha256": "a580d6eb668a5ea46cbe1bf1762066a84efddd368cfc1798a1d244e96a5e0e02",
+    "response": {
+      "code": 409,
+      "data": {
+        "code": "EEXIST"
+      },
+      "message": "这个名称已经被占用了，请换一个名称。原来的内容不会被覆盖。"
+    }
+  },
+  {
+    "case": "write-image",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "bytes": 43,
+    "sha256": "f00ee5e45370d530c93516871b6ca9c6745f4518f2b3715b4178264d18ac58ab",
+    "response": {
+      "code": 200,
+      "data": null,
+      "message": "成功"
+    }
+  },
+  {
+    "case": "read-image",
+    "status": 200,
+    "contentType": "image/png",
+    "bytes": 391,
+    "sha256": "1aa4adcae516bea3ced2326c9f5ae4bd8dbe8be9c73f9747cc2dd43e5e8654e9"
+  },
+  {
+    "case": "copy-image",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "bytes": 43,
+    "sha256": "f00ee5e45370d530c93516871b6ca9c6745f4518f2b3715b4178264d18ac58ab",
+    "response": {
+      "code": 200,
+      "data": null,
+      "message": "成功"
+    }
+  },
+  {
+    "case": "list-assets",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "bytes": 439,
+    "sha256": "b74d096ef8c958084250e43964e5b5bc9329ee536fccf18f2660c6e180745190",
+    "response": {
+      "code": 200,
+      "data": {
+        "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\toonflow-m0-data-ascii\\workspaces\\M0样例项目",
+        "empty": false,
+        "entries": [
+          {
+            "name": "f4d47afc-5e06-41df-b05f-6b550c9cd9d3",
+            "path": "assets/f4d47afc-5e06-41df-b05f-6b550c9cd9d3",
+            "type": "directory"
+          },
+          {
+            "name": "M0-sample-copy.png",
+            "path": "assets/M0-sample-copy.png",
+            "type": "file"
+          },
+          {
+            "name": "M0-sample.png",
+            "path": "assets/M0-sample.png",
+            "type": "file"
+          }
+        ]
+      },
+      "message": "成功"
+    }
+  }
+]

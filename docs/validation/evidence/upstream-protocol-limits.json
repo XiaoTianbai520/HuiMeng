@@ -1,0 +1,50 @@
+[
+  {
+    "case": "ffmpeg-status",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":200,\"data\":{\"platform\":\"win32\",\"arch\":\"x64\",\"target\":\"win32-x64\",\"supported\":true,\"directory\":\"C:\\\\Users\\\\c1338\\\\AppData\\\\Local\\\\Temp\\\\toonflow-m0-data-ascii\\\\ffmpeg\\\\win32-x64\",\"version\":\"6.1.1\",\"sources\":[{\"id\":\"npmmirror\",\"label\":\"阿里镜像（推荐）\",\"description\":\"国内下载源，建议优先使用\",\"available\":true,\"homepage\":\"https://npmmirror.com/\"},{\"id\":\"github\",\"label\":\"GitHub 上游\",\"description\":\"ffmpeg-static 项目发布的预编译程序\",\"available\":true,\"homepage\":\"https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1\"},{\"id\":\"ghProxy\",\"label\":\"GH-Proxy 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh-proxy.org/\"},{\"id\":\"ghFast\",\"label\":\"GHFast 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://ghfast.top/\"},{\"id\":\"ghProxyNet\",\"label\":\"GHProxy.net 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://ghproxy.net/\"},{\"id\":\"ghJasonZeng\",\"label\":\"JasonZeng 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh.jasonzeng.dev/\"},{\"id\":\"ghGeekertao\",\"label\":\"Geekertao 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh.dpik.top/\"},{\"id\":\"ghLlkk\",\"label\":\"LLKK 加速\",\"description\":\"第三方 GitHub 加速渠道，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh.llkk.cc/\"},{\"id\":\"ghProxyIpv4\",\"label\":\"GH-Proxy IPv4 优选\",\"description\":\"GH-Proxy 的 IPv4 优选线路，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh-proxy.com/\"},{\"id\":\"ghProxyDualStack\",\"label\":\"GH-Proxy 双栈优选\",\"description\":\"GH-Proxy 的 IPv4 / IPv6 线路，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh-proxy.com/\"},{\"id\":\"ghProxyFastly\",\"label\":\"GH-Proxy Fastly 线路\",\"description\":\"GH-Proxy 的 Fastly CDN 线路，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh-proxy.com/\"},{\"id\":\"ghProxyAxisNow\",\"label\":\"GH-Proxy AxisNow 线路\",\"description\":\"GH-Proxy 的 AxisNow 线路，下载后会验证文件完整性\",\"available\":true,\"homepage\":\"https://gh-proxy.com/\"},{\"id\":\"tencent\",\"label\":\"腾讯云\",\"description\":\"未提供已核验的同版本构建，暂不支持自动下载\",\"available\":false,\"homepage\":\"https://mirrors.cloud.tencent.com/\"},{\"id\":\"tuna\",\"label\":\"清华大学\",\"description\":\"暂无已核验的独立预编译程序，暂不支持自动下载\",\"available\":false,\"homepage\":\"https://mirrors.tuna.tsinghua.edu.cn/\"}],\"config\":{\"mode\":\"auto\",\"source\":\"npmmirror\"},\"tools\":{\"ffmpeg\":{\"path\":null,\"origin\":null,\"version\":null,\"error\":\"未找到可用程序\"},\"ffprobe\":{\"path\":null,\"origin\":null,\"version\":null,\"error\":\"未找到可用程序\"}},\"download\":{\"phase\":\"idle\",\"received\":0}},\"message\":\"成功\"}"
+  },
+  {
+    "case": "ffmpeg-prepare",
+    "status": 424,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":424,\"data\":{\"code\":\"FFMPEG_REQUIRED\"},\"message\":\"当前操作需要 FFmpeg，请在插件市场下载安装或配置可用版本后重试。\"}"
+  },
+  {
+    "case": "text-no-configured-model",
+    "status": 400,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":400,\"data\":null,\"message\":\"请先在设置中配置模型供应商\"}"
+  },
+  {
+    "case": "agent-no-configured-model",
+    "status": 200,
+    "contentType": "application/x-ndjson; charset=utf-8",
+    "raw": "{\"type\":\"error\",\"message\":\"请先在设置中配置模型供应商\"}\n"
+  },
+  {
+    "case": "media-image-no-provider",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":404,\"data\":null,\"message\":\"请先在媒体模型设置中添加供应商\"}"
+  },
+  {
+    "case": "media-video-no-provider",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":404,\"data\":null,\"message\":\"请先在媒体模型设置中添加供应商\"}"
+  },
+  {
+    "case": "media-audio-no-provider",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "raw": "{\"code\":404,\"data\":null,\"message\":\"请先在媒体模型设置中添加供应商\"}"
+  },
+  {
+    "case": "a2a-disabled",
+    "status": 404,
+    "contentType": "text/plain; charset=utf-8",
+    "raw": "Not Found"
+  }
+]

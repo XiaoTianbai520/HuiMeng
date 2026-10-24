@@ -1,0 +1,22 @@
+[
+  {
+    "workflow": "h3Fl2v-api.json",
+    "inputName": "h3Local1792638763961476380719.png",
+    "sha256": "876896194e4bf10462c03a4ecabaea8a72a100406ef7c49bfc0cf82f61724fe8"
+  },
+  {
+    "workflow": "h3Fl2v-api.json",
+    "inputName": "h3Local1792638763966653465280.png",
+    "sha256": "860e3c083a3a77170969aab1583ba5ff8e4d8ae14fb18cc43e476d4182943823"
+  },
+  {
+    "workflow": "h3I2v-api.json",
+    "inputName": "h3Local1792638594891259020247.png",
+    "sha256": "876896194e4bf10462c03a4ecabaea8a72a100406ef7c49bfc0cf82f61724fe8"
+  },
+  {
+    "workflow": "qwenEdit-api.json",
+    "inputName": "qwen21-edit-1792641047179.png",
+    "sha256": "714f3534cb8834bdf11c97e8e35cc6cee6440ad264406d2618722fe80dacdefb"
+  }
+]

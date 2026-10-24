@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-22",
+  "checks": {
+    "uninstallFromPage": true,
+    "missingKeyUi": true,
+    "invalidKeyUi": true,
+    "invalidKeyNotSaved": true,
+    "isolatedKeyRestored": true,
+    "noPageErrors": true
+  },
+  "pageErrors": []
+}

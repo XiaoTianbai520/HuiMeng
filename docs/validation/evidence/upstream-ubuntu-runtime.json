@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-22",
+  "fixedCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "image": "oven/bun:1.3.14",
+  "exitCode": 0,
+  "temporaryContainerRemoved": true,
+  "bind": "127.0.0.1 random port"
+}

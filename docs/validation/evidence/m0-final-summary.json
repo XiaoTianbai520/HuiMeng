@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-22",
+  "auditedAtUtc": "2026-10-22T11:34:25.836074+00:00",
+  "status": "complete",
+  "scope": "M0 baseline including market and current Qwen text/edit successful Web flows; Spring migration acceptance remains M1-M4",
+  "checks": {
+    "fixedOriginalBaseline": true,
+    "marketBaseline": true,
+    "currentQwenBothModes": true,
+    "providerSnapshotMatches": true,
+    "originalFilesUnchanged": true,
+    "dailyServicesHealthy": true,
+    "isolatedServerStopped": true,
+    "temporaryDataRemoved": true,
+    "documentationLinks": true,
+    "jsonAndPythonSyntax": true,
+    "noActualSecretsInDocs": true
+  },
+  "allPassed": true,
+  "jsonFilesParsed": 61,
+  "brokenLinks": [],
+  "secretBearingFiles": [],
+  "evidence": [
+    "m0-closeout-summary.json",
+    "m0-market-summary.json",
+    "qwen-final-closeout.json",
+    "qwen-final-cleanup.json"
+  ],
+  "remainingMigrationIssues": [
+    "M0-I06",
+    "M0-I07",
+    "M0-I08",
+    "M0-I09",
+    "M0-I12",
+    "M0-I13",
+    "M0-I14",
+    "M0-I15"
+  ],
+  "notClaimed": [
+    "Spring authentication/project isolation",
+    "five concurrent tasks",
+    "media Web cancellation end-to-end",
+    "all media specifications",
+    "standalone audio success flow",
+    "production deployment"
+  ]
+}

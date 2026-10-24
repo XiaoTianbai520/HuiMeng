@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-22",
+  "fixedCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "installed": [
+    {
+      "name": "canvas",
+      "action": "preserved-existing"
+    },
+    {
+      "name": "mediaGeneration",
+      "version": "2.0.0",
+      "action": "installed-missing-original-built-in",
+      "sha256": "d4df10793575bb9dd35d88aa02dcaced6bbff24732891ab1591daff5b87b5b6f"
+    },
+    {
+      "name": "workspace",
+      "version": "2.0.0",
+      "action": "installed-missing-original-built-in",
+      "sha256": "d2ef81ce344b56603bad448430f68ee400fbf30ad9fb728dce724dd655505484"
+    },
+    {
+      "name": "skillOperator",
+      "version": "2.0.0",
+      "action": "installed-missing-original-built-in",
+      "sha256": "3702d338b871a366bdad2cc867e9e7a9db598658dde3e524f9d35e4b24e25f1b"
+    },
+    {
+      "name": "askUser",
+      "version": "2.0.0",
+      "action": "installed-missing-original-built-in",
+      "sha256": "9812dcf92697640c80b1107322c7bf88b2d4c77aa86f21ed7aa7ef76ccf27251"
+    }
+  ],
+  "tools": [
+    {
+      "name": "askUser",
+      "version": "2.0.0",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "canvas",
+      "version": "3.0.0",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "deleteTool",
+      "version": "1.3.1",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "mediaGeneration",
+      "version": "2.0.0",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "skillOperator",
+      "version": "2.0.0",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "videoComposer",
+      "version": "4.5.1",
+      "enabled": true,
+      "loadError": ""
+    },
+    {
+      "name": "workspace",
+      "version": "2.0.0",
+      "enabled": true,
+      "loadError": ""
+    }
+  ],
+  "existingToolsPreserved": true,
+  "settingsBytesUnchanged": true
+}

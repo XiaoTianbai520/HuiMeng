@@ -1,0 +1,1480 @@
+{
+  "scope": "current browser artifact",
+  "files": [
+    {
+      "source": "licenses/@antfu_utils@9.3.0/LICENSE",
+      "file": "texts/@antfu_utils@9.3.0/LICENSE.txt",
+      "sha256": "67cd5e903c1f908edfa27c25606fa806ce629d9a8ddb7d83019d9fd1f83f7fde"
+    },
+    {
+      "source": "licenses/@babel_runtime@7.29.10/LICENSE",
+      "file": "texts/@babel_runtime@7.29.10/LICENSE.txt",
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    {
+      "source": "licenses/@braintree_sanitize-url@7.1.2/LICENSE",
+      "file": "texts/@braintree_sanitize-url@7.1.2/LICENSE.txt",
+      "sha256": "0984740e0c3d725c8044dec7edcefe1dbce180ef5a7bc710c251e19607000158"
+    },
+    {
+      "source": "licenses/@ctrl_tinycolor@4.2.1/LICENSE",
+      "file": "texts/@ctrl_tinycolor@4.2.1/LICENSE.txt",
+      "sha256": "40623170cffa92890b9a2decc5456de6bba6d4f75a7a7b7abc60cc9fdaf78b65"
+    },
+    {
+      "source": "licenses/@dagrejs_dagre@3.1.1/LICENSE",
+      "file": "texts/@dagrejs_dagre@3.1.1/LICENSE.txt",
+      "sha256": "6a349742a6cb219d5a2fc8d0844f6d89a6efc62e20c664450d884fc7ff2d6015"
+    },
+    {
+      "source": "licenses/@earendil-works_chord@0.85.1/supplement/LICENSE",
+      "file": "texts/@earendil-works_chord@0.85.1/supplement/LICENSE.txt",
+      "sha256": "4f6a1985796db5225e3b1e59972bd47e07a27a0748427cb3d3c8fbf39f9311f0"
+    },
+    {
+      "source": "licenses/@earendil-works_pi-agent-core@0.85.1/supplement/LICENSE",
+      "file": "texts/@earendil-works_pi-agent-core@0.85.1/supplement/LICENSE.txt",
+      "sha256": "4f6a1985796db5225e3b1e59972bd47e07a27a0748427cb3d3c8fbf39f9311f0"
+    },
+    {
+      "source": "licenses/@earendil-works_pi-ai@0.85.1/supplement/LICENSE",
+      "file": "texts/@earendil-works_pi-ai@0.85.1/supplement/LICENSE.txt",
+      "sha256": "4f6a1985796db5225e3b1e59972bd47e07a27a0748427cb3d3c8fbf39f9311f0"
+    },
+    {
+      "source": "licenses/@earendil-works_pi-telemetry@0.85.1/supplement/LICENSE",
+      "file": "texts/@earendil-works_pi-telemetry@0.85.1/supplement/LICENSE.txt",
+      "sha256": "4f6a1985796db5225e3b1e59972bd47e07a27a0748427cb3d3c8fbf39f9311f0"
+    },
+    {
+      "source": "licenses/@element-plus_icons-vue@2.3.2/LICENSE",
+      "file": "texts/@element-plus_icons-vue@2.3.2/LICENSE.txt",
+      "sha256": "5db4ebb3abd8353774ae148723ccc14087d6dab99473f77a7b799b55defd8dfe"
+    },
+    {
+      "source": "licenses/@floating-ui_core@1.8.0/LICENSE",
+      "file": "texts/@floating-ui_core@1.8.0/LICENSE.txt",
+      "sha256": "0e4c9a9b6c71019cbbea3bdc20b01223110a9035700f9c960c8fcbf78c2325ce"
+    },
+    {
+      "source": "licenses/@floating-ui_dom@1.8.0/LICENSE",
+      "file": "texts/@floating-ui_dom@1.8.0/LICENSE.txt",
+      "sha256": "0e4c9a9b6c71019cbbea3bdc20b01223110a9035700f9c960c8fcbf78c2325ce"
+    },
+    {
+      "source": "licenses/@floating-ui_utils@0.2.12/LICENSE",
+      "file": "texts/@floating-ui_utils@0.2.12/LICENSE.txt",
+      "sha256": "0e4c9a9b6c71019cbbea3bdc20b01223110a9035700f9c960c8fcbf78c2325ce"
+    },
+    {
+      "source": "licenses/@form-create_element-ui@3.3.3/LICENSE",
+      "file": "texts/@form-create_element-ui@3.3.3/LICENSE.txt",
+      "sha256": "6947a9e9c6862d14264d75eeaf0ee2639095bf226bf48e3e67f1f7f8df46126a"
+    },
+    {
+      "source": "licenses/@formatjs_fast-memoize@2.2.7/LICENSE.md",
+      "file": "texts/@formatjs_fast-memoize@2.2.7/LICENSE.md.txt",
+      "sha256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7"
+    },
+    {
+      "source": "licenses/@formatjs_icu-messageformat-parser@2.11.4/LICENSE.md",
+      "file": "texts/@formatjs_icu-messageformat-parser@2.11.4/LICENSE.md.txt",
+      "sha256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7"
+    },
+    {
+      "source": "licenses/@formatjs_icu-skeleton-parser@1.8.16/LICENSE.md",
+      "file": "texts/@formatjs_icu-skeleton-parser@1.8.16/LICENSE.md.txt",
+      "sha256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7"
+    },
+    {
+      "source": "licenses/@iconify_utils@3.1.7/license.txt",
+      "file": "texts/@iconify_utils@3.1.7/license.txt.txt",
+      "sha256": "a86793ac023162ce98b91899601c15f6712f44943163c4f92a0a4bf89152b3bf"
+    },
+    {
+      "source": "licenses/@json-render_core@0.19.0/LICENSE",
+      "file": "texts/@json-render_core@0.19.0/LICENSE.txt",
+      "sha256": "014bb31e83d5c2e76aea1cc6e82217346ab41362f32cb355ad0f5c10aa0aeaff"
+    },
+    {
+      "source": "licenses/@lobehub_icons-static-svg@1.95.0/supplement/LICENSE",
+      "file": "texts/@lobehub_icons-static-svg@1.95.0/supplement/LICENSE.txt",
+      "sha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a"
+    },
+    {
+      "source": "licenses/@markmend_ast@1.1.0/LICENSE.md",
+      "file": "texts/@markmend_ast@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@markmend_core@1.1.0/LICENSE.md",
+      "file": "texts/@markmend_core@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@mermaid-js_parser@1.2.1/LICENSE",
+      "file": "texts/@mermaid-js_parser@1.2.1/LICENSE.txt",
+      "sha256": "d374061c40bfb6f99c5033290caefda97a9b3e7e477e5ee02f487143ef2177e8"
+    },
+    {
+      "source": "licenses/@shikijs_core@4.4.3/LICENSE",
+      "file": "texts/@shikijs_core@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_engine-javascript@4.4.3/LICENSE",
+      "file": "texts/@shikijs_engine-javascript@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_engine-oniguruma@4.4.3/LICENSE",
+      "file": "texts/@shikijs_engine-oniguruma@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_langs@4.4.3/LICENSE",
+      "file": "texts/@shikijs_langs@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_primitive@4.4.3/LICENSE",
+      "file": "texts/@shikijs_primitive@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_themes@4.4.3/LICENSE",
+      "file": "texts/@shikijs_themes@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_types@4.4.3/LICENSE",
+      "file": "texts/@shikijs_types@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/@shikijs_vscode-textmate@10.1.0/LICENSE.md",
+      "file": "texts/@shikijs_vscode-textmate@10.1.0/LICENSE.md.txt",
+      "sha256": "b5cb7ff7859e7d282d98fc43ab081b0dda5dc659dc3385cf65740c759a7e6a6c"
+    },
+    {
+      "source": "licenses/@stream-markdown_code@1.1.0/LICENSE.md",
+      "file": "texts/@stream-markdown_code@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@stream-markdown_core@1.1.0/LICENSE.md",
+      "file": "texts/@stream-markdown_core@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@stream-markdown_math@1.1.0/LICENSE.md",
+      "file": "texts/@stream-markdown_math@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@stream-markdown_mermaid@1.1.0/LICENSE.md",
+      "file": "texts/@stream-markdown_mermaid@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/@sxzz_popperjs-es@2.11.8/LICENSE.md",
+      "file": "texts/@sxzz_popperjs-es@2.11.8/LICENSE.md.txt",
+      "sha256": "bf67e2c9b7974543bb18ced3a0b37f53729aaff953b442dd89a3adaf90fd93e8"
+    },
+    {
+      "source": "licenses/@tabler_icons-vue@3.46.0/LICENSE",
+      "file": "texts/@tabler_icons-vue@3.46.0/LICENSE.txt",
+      "sha256": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db"
+    },
+    {
+      "source": "licenses/@tanstack_virtual-core@3.17.11/LICENSE",
+      "file": "texts/@tanstack_virtual-core@3.17.11/LICENSE.txt",
+      "sha256": "a405ee70c632bb938acb7ac5f210e814409b3760ea9d2329d8ed8ffcfd11a0e7"
+    },
+    {
+      "source": "licenses/@tanstack_vue-virtual@3.13.39/LICENSE",
+      "file": "texts/@tanstack_vue-virtual@3.13.39/LICENSE.txt",
+      "sha256": "a405ee70c632bb938acb7ac5f210e814409b3760ea9d2329d8ed8ffcfd11a0e7"
+    },
+    {
+      "source": "licenses/@tdesign-vue-next_chat@0.7.0/LICENSE",
+      "file": "texts/@tdesign-vue-next_chat@0.7.0/LICENSE.txt",
+      "sha256": "b3dbcb89dcf4a11abf1b70d043795a3da0c458af16fefd2ff315d9ff5875312f"
+    },
+    {
+      "source": "licenses/@tdesign_ai-chat-engine@0.1.0/LICENSE",
+      "file": "texts/@tdesign_ai-chat-engine@0.1.0/LICENSE.txt",
+      "sha256": "b3dbcb89dcf4a11abf1b70d043795a3da0c458af16fefd2ff315d9ff5875312f"
+    },
+    {
+      "source": "licenses/@tdesign_web-components-chat@1.3.3/LICENSE",
+      "file": "texts/@tdesign_web-components-chat@1.3.3/LICENSE.txt",
+      "sha256": "ea5ad4e3d80af01d32b7c16e821ed5e7ed9abd25f1722d3a07b403b8b88417c0"
+    },
+    {
+      "source": "licenses/@tdesign_web-components@1.3.2/LICENSE",
+      "file": "texts/@tdesign_web-components@1.3.2/LICENSE.txt",
+      "sha256": "ea5ad4e3d80af01d32b7c16e821ed5e7ed9abd25f1722d3a07b403b8b88417c0"
+    },
+    {
+      "source": "licenses/@tiptap_core@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_core@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-blockquote@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-blockquote@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-bold@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-bold@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-code-block@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-code-block@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-code@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-code@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-document@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-document@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-find-and-replace@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-find-and-replace@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-hard-break@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-hard-break@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-heading@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-heading@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-highlight@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-highlight@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-horizontal-rule@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-horizontal-rule@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-image@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-image@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-italic@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-italic@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-link@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-link@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-list@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-list@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-paragraph@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-paragraph@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-strike@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-strike@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-subscript@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-subscript@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-superscript@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-superscript@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-table@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-table@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-text-align@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-text-align@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-text@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-text@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extension-underline@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extension-underline@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_extensions@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_extensions@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_markdown@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_markdown@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_pm@3.31.3/LICENSE",
+      "file": "texts/@tiptap_pm@3.31.3/LICENSE.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_starter-kit@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_starter-kit@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@tiptap_vue-3@3.31.3/LICENSE.md",
+      "file": "texts/@tiptap_vue-3@3.31.3/LICENSE.md.txt",
+      "sha256": "c96e5ecb55ac593157ad1d21d1f44a611187f494a0f04c235a1ae692c88d6ba9"
+    },
+    {
+      "source": "licenses/@toonflow_i18n@0.0.0/src/elementPlus/license.txt",
+      "file": "texts/@toonflow_i18n@0.0.0/src/elementPlus/license.txt.txt",
+      "sha256": "7d6560ca47099f18ae7dc4d2fcdb3e0dcc207430a442525177f8af6dc229d1cc"
+    },
+    {
+      "source": "licenses/@upsetjs_venn.js@2.0.0/LICENSE",
+      "file": "texts/@upsetjs_venn.js@2.0.0/LICENSE.txt",
+      "sha256": "6a3508febf2cfccfee96597394543a6154a4bb0b1f91f28404be42c09e9fcb54"
+    },
+    {
+      "source": "licenses/@vue-flow_background@1.3.2/LICENSE",
+      "file": "texts/@vue-flow_background@1.3.2/LICENSE.txt",
+      "sha256": "37f707787429e095e0255a542e43f6f4bfe6d3883cf23595d3dcd9327b43cf5c"
+    },
+    {
+      "source": "licenses/@vue-flow_core@1.48.2/LICENSE",
+      "file": "texts/@vue-flow_core@1.48.2/LICENSE.txt",
+      "sha256": "102b29fe1db781aaad7c28e4ac4f20de288781ac5cd06936099be15a473c1794"
+    },
+    {
+      "source": "licenses/@vue-flow_minimap@1.5.4/LICENSE",
+      "file": "texts/@vue-flow_minimap@1.5.4/LICENSE.txt",
+      "sha256": "102b29fe1db781aaad7c28e4ac4f20de288781ac5cd06936099be15a473c1794"
+    },
+    {
+      "source": "licenses/@vueuse_core@14.4.0/LICENSE",
+      "file": "texts/@vueuse_core@14.4.0/LICENSE.txt",
+      "sha256": "0f844b1160603552a01662ac2999c14e5fb4df487e65619b9ed4406e43eb3c0b"
+    },
+    {
+      "source": "licenses/@vueuse_shared@14.4.0/LICENSE",
+      "file": "texts/@vueuse_shared@14.4.0/LICENSE.txt",
+      "sha256": "0f844b1160603552a01662ac2999c14e5fb4df487e65619b9ed4406e43eb3c0b"
+    },
+    {
+      "source": "licenses/@vue_reactivity@3.5.42/LICENSE",
+      "file": "texts/@vue_reactivity@3.5.42/LICENSE.txt",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+    },
+    {
+      "source": "licenses/@vue_runtime-core@3.5.42/LICENSE",
+      "file": "texts/@vue_runtime-core@3.5.42/LICENSE.txt",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+    },
+    {
+      "source": "licenses/@vue_runtime-dom@3.5.42/LICENSE",
+      "file": "texts/@vue_runtime-dom@3.5.42/LICENSE.txt",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+    },
+    {
+      "source": "licenses/@vue_shared@3.5.42/LICENSE",
+      "file": "texts/@vue_shared@3.5.42/LICENSE.txt",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+    },
+    {
+      "source": "licenses/async-validator@4.2.5/LICENSE.md",
+      "file": "texts/async-validator@4.2.5/LICENSE.md.txt",
+      "sha256": "5d0427088e37071c4b942de990f6365d5c2d195f3e957ce925322d184784e2eb"
+    },
+    {
+      "source": "licenses/axios@1.20.0/LICENSE",
+      "file": "texts/axios@1.20.0/LICENSE.txt",
+      "sha256": "82761059eaedacb3356803aea8a170d8298609f91b14fc32ee1bfb40d690183c"
+    },
+    {
+      "source": "licenses/beautiful-mermaid@1.1.3/LICENSE",
+      "file": "texts/beautiful-mermaid@1.1.3/LICENSE.txt",
+      "sha256": "f05f5a4009eae7fadfd4a55f77ffe10948f621982d56076667e68afbb54de894"
+    },
+    {
+      "source": "licenses/ccount@2.0.1/license",
+      "file": "texts/ccount@2.0.1/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/character-entities-html4@2.1.0/license",
+      "file": "texts/character-entities-html4@2.1.0/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/character-entities-legacy@3.0.0/license",
+      "file": "texts/character-entities-legacy@3.0.0/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/cherry-markdown@0.11.8/supplement/LICENSE",
+      "file": "texts/cherry-markdown@0.11.8/supplement/LICENSE.txt",
+      "sha256": "5dbbf2f030a992aa4320be106435047db4a418123abeff489f0c8cc37141dd27"
+    },
+    {
+      "source": "licenses/classnames@2.5.1/LICENSE",
+      "file": "texts/classnames@2.5.1/LICENSE.txt",
+      "sha256": "0c1c24dcc129cb0c02ee9803cfa7a50061c236a3b59b36a714c27f3ade66d7be"
+    },
+    {
+      "source": "licenses/clipboard@2.0.11/LICENSE",
+      "file": "texts/clipboard@2.0.11/LICENSE.txt",
+      "sha256": "a798e7b5fa604117d52d607e05f1cbac3b2fa5da087837f412a1a3c866b4b748"
+    },
+    {
+      "source": "licenses/clsx@2.1.1/license",
+      "file": "texts/clsx@2.1.1/license.txt",
+      "sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97"
+    },
+    {
+      "source": "licenses/comma-separated-tokens@2.0.3/license",
+      "file": "texts/comma-separated-tokens@2.0.3/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/cose-base@1.0.3/LICENSE",
+      "file": "texts/cose-base@1.0.3/LICENSE.txt",
+      "sha256": "5fb3cf4a14c3c5af6e473a192df8bca10c77754e3a0c6492c79fb92a76a5478a"
+    },
+    {
+      "source": "licenses/cose-base@2.2.0/LICENSE",
+      "file": "texts/cose-base@2.2.0/LICENSE.txt",
+      "sha256": "5fb3cf4a14c3c5af6e473a192df8bca10c77754e3a0c6492c79fb92a76a5478a"
+    },
+    {
+      "source": "licenses/cytoscape-cose-bilkent@4.1.0/LICENSE",
+      "file": "texts/cytoscape-cose-bilkent@4.1.0/LICENSE.txt",
+      "sha256": "440fc58a56a12814e417d2b341da89b050da052dc75bdb235607d37ec5fe74ef"
+    },
+    {
+      "source": "licenses/cytoscape-fcose@2.2.0/LICENSE",
+      "file": "texts/cytoscape-fcose@2.2.0/LICENSE.txt",
+      "sha256": "2837634f403949215760fcdd2fa1ed0c64875d02099ecc8318c704b852f1421d"
+    },
+    {
+      "source": "licenses/cytoscape@3.34.4/LICENSE",
+      "file": "texts/cytoscape@3.34.4/LICENSE.txt",
+      "sha256": "eb319c6e6f233607f71e8e2f450391751883cfc0eeb3ca7ef574c13d1d9c2203"
+    },
+    {
+      "source": "licenses/cytoscape@3.34.4/license-update.mjs",
+      "file": "texts/cytoscape@3.34.4/license-update.mjs.txt",
+      "sha256": "4a5a644717fc90d678e8fbbc537a08452d0566726710eef47b196abd6363e635"
+    },
+    {
+      "source": "licenses/d3-array@2.12.1/LICENSE",
+      "file": "texts/d3-array@2.12.1/LICENSE.txt",
+      "sha256": "0747bebeb06b10954913149be9b9a8bdf6fad3e6fdcbd9f9524e7a94c13d2cea"
+    },
+    {
+      "source": "licenses/d3-array@3.2.4/LICENSE",
+      "file": "texts/d3-array@3.2.4/LICENSE.txt",
+      "sha256": "3e6849627f74ff73c257a3ae1efb574015d94fc1035c05ec3c15805165efcbc4"
+    },
+    {
+      "source": "licenses/d3-axis@3.0.0/LICENSE",
+      "file": "texts/d3-axis@3.0.0/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-brush@3.0.0/LICENSE",
+      "file": "texts/d3-brush@3.0.0/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-color@3.1.0/LICENSE",
+      "file": "texts/d3-color@3.1.0/LICENSE.txt",
+      "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884"
+    },
+    {
+      "source": "licenses/d3-dispatch@3.0.1/LICENSE",
+      "file": "texts/d3-dispatch@3.0.1/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-ease@3.0.1/LICENSE",
+      "file": "texts/d3-ease@3.0.1/LICENSE.txt",
+      "sha256": "b989d9085148d21ff64a75e14462aefa06b2589a55553b07b1460c70081c7d08"
+    },
+    {
+      "source": "licenses/d3-format@3.1.2/LICENSE",
+      "file": "texts/d3-format@3.1.2/LICENSE.txt",
+      "sha256": "2a6d2d5f32ba0b755ddbc1c833f766e30cdbe6ebe9a6d4e3e24427721f0b63d3"
+    },
+    {
+      "source": "licenses/d3-hierarchy@3.1.2/LICENSE",
+      "file": "texts/d3-hierarchy@3.1.2/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-interpolate@3.0.1/LICENSE",
+      "file": "texts/d3-interpolate@3.0.1/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-path@1.0.9/LICENSE",
+      "file": "texts/d3-path@1.0.9/LICENSE.txt",
+      "sha256": "b8265327ab678f554800e71188b1cc6b1ff57522e292d2b1c0be66f27cf328b6"
+    },
+    {
+      "source": "licenses/d3-path@3.1.0/LICENSE",
+      "file": "texts/d3-path@3.1.0/LICENSE.txt",
+      "sha256": "a09b0d6d76e768fca2085fad05743ee81ddd11946bcda160a3cf5e1081a479aa"
+    },
+    {
+      "source": "licenses/d3-sankey@0.12.3/LICENSE",
+      "file": "texts/d3-sankey@0.12.3/LICENSE.txt",
+      "sha256": "2bf785e778d67a4f5266cffcd4f2cc5bb98cde73791666e7efeb8002ba32dfa5"
+    },
+    {
+      "source": "licenses/d3-scale-chromatic@3.1.0/LICENSE",
+      "file": "texts/d3-scale-chromatic@3.1.0/LICENSE.txt",
+      "sha256": "0986d93944902cca9af86824b6a641b4b7c2d10602fc510c433a8bcd443919fe"
+    },
+    {
+      "source": "licenses/d3-scale@4.0.2/LICENSE",
+      "file": "texts/d3-scale@4.0.2/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-selection@3.0.0/LICENSE",
+      "file": "texts/d3-selection@3.0.0/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-shape@1.3.7/LICENSE",
+      "file": "texts/d3-shape@1.3.7/LICENSE.txt",
+      "sha256": "7eea8533ea92bd8c32a901e89ecb0305890905bb12711449565ddff96891146d"
+    },
+    {
+      "source": "licenses/d3-shape@3.2.0/LICENSE",
+      "file": "texts/d3-shape@3.2.0/LICENSE.txt",
+      "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884"
+    },
+    {
+      "source": "licenses/d3-time-format@4.1.0/LICENSE",
+      "file": "texts/d3-time-format@4.1.0/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-time@3.1.0/LICENSE",
+      "file": "texts/d3-time@3.1.0/LICENSE.txt",
+      "sha256": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884"
+    },
+    {
+      "source": "licenses/d3-timer@3.0.1/LICENSE",
+      "file": "texts/d3-timer@3.0.1/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-transition@3.0.1/LICENSE",
+      "file": "texts/d3-transition@3.0.1/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3-zoom@3.0.0/LICENSE",
+      "file": "texts/d3-zoom@3.0.0/LICENSE.txt",
+      "sha256": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+    },
+    {
+      "source": "licenses/d3@7.9.0/LICENSE",
+      "file": "texts/d3@7.9.0/LICENSE.txt",
+      "sha256": "3e6849627f74ff73c257a3ae1efb574015d94fc1035c05ec3c15805165efcbc4"
+    },
+    {
+      "source": "licenses/dagre-d3-es@7.0.14/LICENSE.md",
+      "file": "texts/dagre-d3-es@7.0.14/LICENSE.md.txt",
+      "sha256": "d01eb84ccce437dbf5fd40853bceea0f287930920acea066597a4a25ead63858"
+    },
+    {
+      "source": "licenses/dayjs@1.11.23/LICENSE",
+      "file": "texts/dayjs@1.11.23/LICENSE.txt",
+      "sha256": "5faab7526d055651be3aab769d58897be6bd91f3d39d137f25f12dba1b31d5dc"
+    },
+    {
+      "source": "licenses/decode-named-character-reference@1.3.0/license",
+      "file": "texts/decode-named-character-reference@1.3.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/devlop@1.1.0/license",
+      "file": "texts/devlop@1.1.0/license.txt",
+      "sha256": "6f296a5eccc1dc96714bb94ebaa9cac25b0a1467d74cc5263ac4d0646ab01f62"
+    },
+    {
+      "source": "licenses/diff@8.0.4/LICENSE",
+      "file": "texts/diff@8.0.4/LICENSE.txt",
+      "sha256": "eda81a415869e67809f6a9f3fd6056062cb83a462118e07eec5e92b2e0c40ce9"
+    },
+    {
+      "source": "licenses/dockview-core@5.2.0/supplement/LICENSE",
+      "file": "texts/dockview-core@5.2.0/supplement/LICENSE.txt",
+      "sha256": "1d56757fdc06c9b33c0f80821efe4f4b11960dd7fb6544232cff61752101f513"
+    },
+    {
+      "source": "licenses/dockview-vue@5.2.0/supplement/LICENSE",
+      "file": "texts/dockview-vue@5.2.0/supplement/LICENSE.txt",
+      "sha256": "1d56757fdc06c9b33c0f80821efe4f4b11960dd7fb6544232cff61752101f513"
+    },
+    {
+      "source": "licenses/dompurify@3.4.16/LICENSE",
+      "file": "texts/dompurify@3.4.16/LICENSE.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "source": "licenses/dompurify@3.4.16/LICENSE-MPL",
+      "file": "texts/dompurify@3.4.16/LICENSE-MPL.txt",
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+    },
+    {
+      "source": "licenses/dompurify@3.4.16/src/license_header",
+      "file": "texts/dompurify@3.4.16/src/license_header.txt",
+      "sha256": "5803fa925ae1703b9c752921c95a321570e6cabf06fcf2de895ddaf1687cebef"
+    },
+    {
+      "source": "licenses/element-plus@2.14.5/LICENSE",
+      "file": "texts/element-plus@2.14.5/LICENSE.txt",
+      "sha256": "0790118bb4d66681db1d63181f72ef68e632d632f6db0373ef87cf328561af27"
+    },
+    {
+      "source": "licenses/elkjs@0.11.1/LICENSE.md",
+      "file": "texts/elkjs@0.11.1/LICENSE.md.txt",
+      "sha256": "89591d4578fb1ebd91501312a3d25f021bd865a2e436641c1cf7b1bc7e3c1617"
+    },
+    {
+      "source": "licenses/entities@7.0.1/LICENSE",
+      "file": "texts/entities@7.0.1/LICENSE.txt",
+      "sha256": "cb992345949ccd6e8394b2cd6c465f7b897c864f845937dbf64e8997f389e164"
+    },
+    {
+      "source": "licenses/es-toolkit@1.52.0/LICENSE",
+      "file": "texts/es-toolkit@1.52.0/LICENSE.txt",
+      "sha256": "51f3674294d988d89dbebd31273baaeb3c697a15482d9699b14d1fded2e132a7"
+    },
+    {
+      "source": "licenses/es-toolkit@1.52.0/NOTICE",
+      "file": "texts/es-toolkit@1.52.0/NOTICE.txt",
+      "sha256": "11ee5e3bce9b0a4dde7f73811caf98978e710228d891c3111ad8ef8d7d2a916f"
+    },
+    {
+      "source": "licenses/escape-string-regexp@5.0.0/license",
+      "file": "texts/escape-string-regexp@5.0.0/license.txt",
+      "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+    },
+    {
+      "source": "licenses/fastdom@1.0.12/README.md",
+      "file": "texts/fastdom@1.0.12/README.md.txt",
+      "sha256": "cc5669ab6f7741bb061c8a7244addc8e3af1f84ec7d2445744b59d0169a87d11"
+    },
+    {
+      "source": "licenses/fault@2.0.1/license",
+      "file": "texts/fault@2.0.1/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/flag-icons@7.3.2/LICENSE.txt",
+      "file": "texts/flag-icons@7.3.2/LICENSE.txt.txt",
+      "sha256": "b004ec9a1d97a3623e9db538ae49872076d609ad51f3607e106166a0bdadb51e"
+    },
+    {
+      "source": "licenses/format@0.2.2/supplement/MIT-REFERENCE.txt",
+      "file": "texts/format@0.2.2/supplement/MIT-REFERENCE.txt.txt",
+      "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
+    },
+    {
+      "source": "licenses/format@0.2.2/supplement/SOURCE-NOTICE.txt",
+      "file": "texts/format@0.2.2/supplement/SOURCE-NOTICE.txt.txt",
+      "sha256": "e078ab4217332db9ac446cdf23e932eabd21d6db7c239a6495df4d3802251f20"
+    },
+    {
+      "source": "licenses/get-east-asian-width@1.7.0/license",
+      "file": "texts/get-east-asian-width@1.7.0/license.txt",
+      "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+    },
+    {
+      "source": "licenses/hast-util-to-html@9.0.5/license",
+      "file": "texts/hast-util-to-html@9.0.5/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/hast-util-whitespace@3.0.0/license",
+      "file": "texts/hast-util-whitespace@3.0.0/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/highlight.js@11.12.0/LICENSE",
+      "file": "texts/highlight.js@11.12.0/LICENSE.txt",
+      "sha256": "6c081431591d9df696c82dc598fe1423765b8a299b200ed00b281afd0f64c490"
+    },
+    {
+      "source": "licenses/html-void-elements@3.0.0/license",
+      "file": "texts/html-void-elements@3.0.0/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/ignore@7.0.5/LICENSE-MIT",
+      "file": "texts/ignore@7.0.5/LICENSE-MIT.txt",
+      "sha256": "9c94db23dc4b1e9aaee5d195668b916afc71efed54af226b66cf0ccc4389c1c0"
+    },
+    {
+      "source": "licenses/immer@10.2.0/LICENSE",
+      "file": "texts/immer@10.2.0/LICENSE.txt",
+      "sha256": "99cf22f6960a6fe228ec84ea9aefb0d75b27999ece83a3a9801e1c2081fa270b"
+    },
+    {
+      "source": "licenses/internmap@2.0.3/LICENSE",
+      "file": "texts/internmap@2.0.3/LICENSE.txt",
+      "sha256": "9ea8903938dab5f12c4572d60725069bec2d1b0dc3bcc210b09bae946a5ebb1f"
+    },
+    {
+      "source": "licenses/intl-messageformat@10.7.18/LICENSE.md",
+      "file": "texts/intl-messageformat@10.7.18/LICENSE.md.txt",
+      "sha256": "cc4143615b27c66eafbe913f132a9e41ac14c1e2ec6b2df24dafeaa97f028850"
+    },
+    {
+      "source": "licenses/katex@0.16.47/LICENSE",
+      "file": "texts/katex@0.16.47/LICENSE.txt",
+      "sha256": "766ccc1f306c885aa45542a9846bbd0a505b27a0374f146778171c2254ce18e3"
+    },
+    {
+      "source": "licenses/khroma@2.1.0/license",
+      "file": "texts/khroma@2.1.0/license.txt",
+      "sha256": "66b333b0f66759a0b710459e03f7029abe17f4358114a128d2c972e642961b49"
+    },
+    {
+      "source": "licenses/layout-base@1.0.2/LICENSE",
+      "file": "texts/layout-base@1.0.2/LICENSE.txt",
+      "sha256": "eabb762d8a95109a39c9be3247325529a5239a7aca327d909c3ccdc41f3a06bf"
+    },
+    {
+      "source": "licenses/layout-base@2.0.1/LICENSE",
+      "file": "texts/layout-base@2.0.1/LICENSE.txt",
+      "sha256": "eabb762d8a95109a39c9be3247325529a5239a7aca327d909c3ccdc41f3a06bf"
+    },
+    {
+      "source": "licenses/linkifyjs@4.4.0/LICENSE",
+      "file": "texts/linkifyjs@4.4.0/LICENSE.txt",
+      "sha256": "58e6f3677452cca096ce5328ebf7de37a1406bbeeb2f263c1b2ededc8c7d0228"
+    },
+    {
+      "source": "licenses/lodash-es@4.18.1/LICENSE",
+      "file": "texts/lodash-es@4.18.1/LICENSE.txt",
+      "sha256": "f71e8ed126b46346494aad5486874cd8f0aafe95092ed67d2e3cb6110f939abc"
+    },
+    {
+      "source": "licenses/longest-streak@3.1.0/license",
+      "file": "texts/longest-streak@3.1.0/license.txt",
+      "sha256": "9f084fac69d8cf1e6ce983ba5a3499c7695ed74a26ec625c38f0fd19fddd5e10"
+    },
+    {
+      "source": "licenses/markdown-table@3.0.4/license",
+      "file": "texts/markdown-table@3.0.4/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/marked-highlight@2.2.4/LICENSE",
+      "file": "texts/marked-highlight@2.2.4/LICENSE.txt",
+      "sha256": "a846b93fda6af8008a89d1394d827afc60d62eebb70c68efbfeeafe0b01928ed"
+    },
+    {
+      "source": "licenses/marked@12.0.2/LICENSE.md",
+      "file": "texts/marked@12.0.2/LICENSE.md.txt",
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c"
+    },
+    {
+      "source": "licenses/marked@16.4.2/LICENSE.md",
+      "file": "texts/marked@16.4.2/LICENSE.md.txt",
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c"
+    },
+    {
+      "source": "licenses/marked@17.0.6/LICENSE.md",
+      "file": "texts/marked@17.0.6/LICENSE.md.txt",
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c"
+    },
+    {
+      "source": "licenses/marked@18.0.13/LICENSE",
+      "file": "texts/marked@18.0.13/LICENSE.txt",
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c"
+    },
+    {
+      "source": "licenses/mdast-util-find-and-replace@3.0.3/license",
+      "file": "texts/mdast-util-find-and-replace@3.0.3/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-from-markdown@2.1.0/license",
+      "file": "texts/mdast-util-from-markdown@2.1.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-frontmatter@2.0.1/license",
+      "file": "texts/mdast-util-frontmatter@2.0.1/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/mdast-util-gfm-autolink-literal@2.0.1/license",
+      "file": "texts/mdast-util-gfm-autolink-literal@2.0.1/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/mdast-util-gfm-footnote@2.1.0/license",
+      "file": "texts/mdast-util-gfm-footnote@2.1.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-gfm-strikethrough@2.0.1/license",
+      "file": "texts/mdast-util-gfm-strikethrough@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-gfm-table@2.0.0/license",
+      "file": "texts/mdast-util-gfm-table@2.0.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/mdast-util-gfm-task-list-item@2.0.0/license",
+      "file": "texts/mdast-util-gfm-task-list-item@2.0.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/mdast-util-gfm@3.1.0/license",
+      "file": "texts/mdast-util-gfm@3.1.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-math@3.0.0/license",
+      "file": "texts/mdast-util-math@3.0.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/mdast-util-phrasing@4.1.0/license",
+      "file": "texts/mdast-util-phrasing@4.1.0/license.txt",
+      "sha256": "b6d1a4e1831b177acc96f22a817d4f0f4c18419355badc3125754445fc69e3a7"
+    },
+    {
+      "source": "licenses/mdast-util-to-markdown@2.2.0/license",
+      "file": "texts/mdast-util-to-markdown@2.2.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/mdast-util-to-string@4.0.0/license",
+      "file": "texts/mdast-util-to-string@4.0.0/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/memoize-one@6.0.0/LICENSE",
+      "file": "texts/memoize-one@6.0.0/LICENSE.txt",
+      "sha256": "b1c501095de70182748cb8e8d97ac5577701a4ef3b755ba30d59fd87b24bdb0f"
+    },
+    {
+      "source": "licenses/mermaid@11.17.2/LICENSE",
+      "file": "texts/mermaid@11.17.2/LICENSE.txt",
+      "sha256": "ec9fb67dcb25eccc416ed56e1aab819222c805a2a4bfe4cb19e7556bf2ffde80"
+    },
+    {
+      "source": "licenses/micromark-core-commonmark@2.0.4/license",
+      "file": "texts/micromark-core-commonmark@2.0.4/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-extension-cjk-friendly-gfm-strikethrough@2.0.1/LICENSE",
+      "file": "texts/micromark-extension-cjk-friendly-gfm-strikethrough@2.0.1/LICENSE.txt",
+      "sha256": "a7b294523dccbe77fb59b2b941de6ec179c72b21602621e4aca4a24f4a24eca5"
+    },
+    {
+      "source": "licenses/micromark-extension-cjk-friendly-util@3.0.1/LICENSE",
+      "file": "texts/micromark-extension-cjk-friendly-util@3.0.1/LICENSE.txt",
+      "sha256": "e4078c730a92cb9c2803a46b6f288a26bf196433e2b009e90ef4789217b49907"
+    },
+    {
+      "source": "licenses/micromark-extension-cjk-friendly@2.0.2/LICENSE",
+      "file": "texts/micromark-extension-cjk-friendly@2.0.2/LICENSE.txt",
+      "sha256": "ba752b39ec76e0887ed1b66d3eb4507d41dd3cff41be66d475d556e15d6a9520"
+    },
+    {
+      "source": "licenses/micromark-extension-frontmatter@2.0.0/license",
+      "file": "texts/micromark-extension-frontmatter@2.0.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm-autolink-literal@2.1.0/license",
+      "file": "texts/micromark-extension-gfm-autolink-literal@2.1.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm-footnote@2.1.0/license",
+      "file": "texts/micromark-extension-gfm-footnote@2.1.0/license.txt",
+      "sha256": "807a88522a850092aece49486207c17c313c4d5708ac276524840fe1caa0b0fa"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm-strikethrough@2.1.0/license",
+      "file": "texts/micromark-extension-gfm-strikethrough@2.1.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm-table@2.1.2/license",
+      "file": "texts/micromark-extension-gfm-table@2.1.2/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm-task-list-item@2.1.0/license",
+      "file": "texts/micromark-extension-gfm-task-list-item@2.1.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-extension-gfm@3.0.0/license",
+      "file": "texts/micromark-extension-gfm@3.0.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-extension-math@3.1.0/license",
+      "file": "texts/micromark-extension-math@3.1.0/license.txt",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61"
+    },
+    {
+      "source": "licenses/micromark-factory-destination@2.0.1/license",
+      "file": "texts/micromark-factory-destination@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-factory-label@2.0.1/license",
+      "file": "texts/micromark-factory-label@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-factory-space@2.1.0/license",
+      "file": "texts/micromark-factory-space@2.1.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-factory-title@2.0.1/license",
+      "file": "texts/micromark-factory-title@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-factory-whitespace@2.0.1/license",
+      "file": "texts/micromark-factory-whitespace@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-character@2.1.1/license",
+      "file": "texts/micromark-util-character@2.1.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-chunked@2.0.1/license",
+      "file": "texts/micromark-util-chunked@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-classify-character@2.0.1/license",
+      "file": "texts/micromark-util-classify-character@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-combine-extensions@2.0.1/license",
+      "file": "texts/micromark-util-combine-extensions@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-decode-numeric-character-reference@2.0.2/license",
+      "file": "texts/micromark-util-decode-numeric-character-reference@2.0.2/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-decode-string@2.0.1/license",
+      "file": "texts/micromark-util-decode-string@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-edit-map@1.0.0/license",
+      "file": "texts/micromark-util-edit-map@1.0.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-html-tag-name@2.0.1/license",
+      "file": "texts/micromark-util-html-tag-name@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-normalize-identifier@2.0.1/license",
+      "file": "texts/micromark-util-normalize-identifier@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-resolve-all@2.0.1/license",
+      "file": "texts/micromark-util-resolve-all@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-subtokenize@2.1.0/license",
+      "file": "texts/micromark-util-subtokenize@2.1.0/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark-util-symbol@2.0.1/license",
+      "file": "texts/micromark-util-symbol@2.0.1/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/micromark@4.0.3/license",
+      "file": "texts/micromark@4.0.3/license.txt",
+      "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+    },
+    {
+      "source": "licenses/normalize-wheel-es@1.2.0/LICENSE",
+      "file": "texts/normalize-wheel-es@1.2.0/LICENSE.txt",
+      "sha256": "658d037c5c078a24c27ab1e0f37050d407ad6628be94886a4e48f3e761f47f7d"
+    },
+    {
+      "source": "licenses/omi-transition@0.1.11/supplement/LICENSE",
+      "file": "texts/omi-transition@0.1.11/supplement/LICENSE.txt",
+      "sha256": "14ff1db26a3a7d65d55c53c485ee453c96b1e6beee95d8d136a84ed7f7eac5b9"
+    },
+    {
+      "source": "licenses/omi-vueify@0.0.12/supplement/LICENSE",
+      "file": "texts/omi-vueify@0.0.12/supplement/LICENSE.txt",
+      "sha256": "14ff1db26a3a7d65d55c53c485ee453c96b1e6beee95d8d136a84ed7f7eac5b9"
+    },
+    {
+      "source": "licenses/omi@7.7.14/supplement/LICENSE",
+      "file": "texts/omi@7.7.14/supplement/LICENSE.txt",
+      "sha256": "14ff1db26a3a7d65d55c53c485ee453c96b1e6beee95d8d136a84ed7f7eac5b9"
+    },
+    {
+      "source": "licenses/oniguruma-parser@0.12.2/LICENSE",
+      "file": "texts/oniguruma-parser@0.12.2/LICENSE.txt",
+      "sha256": "5fe78c91b36c6147ed0b6ab1631ce731165b7dd5e00482be1f027d46d12a8082"
+    },
+    {
+      "source": "licenses/oniguruma-to-es@4.3.6/LICENSE",
+      "file": "texts/oniguruma-to-es@4.3.6/LICENSE.txt",
+      "sha256": "c1a5a1ebc88f3e0f3caa04c0af52bf8f3a5405a467337a09594ae1ad149cec83"
+    },
+    {
+      "source": "licenses/orderedmap@2.1.1/LICENSE",
+      "file": "texts/orderedmap@2.1.1/LICENSE.txt",
+      "sha256": "869c30f368eb08735e779027b9f4bc9fea2f39624351856aebe42741f0bc0884"
+    },
+    {
+      "source": "licenses/performance-now@2.1.0/license.txt",
+      "file": "texts/performance-now@2.1.0/license.txt.txt",
+      "sha256": "c3af1272f30870168177e888b184c1f802e5081e75a126c794670c0b562d3783"
+    },
+    {
+      "source": "licenses/pinia-plugin-persistedstate@4.7.1/LICENSE",
+      "file": "texts/pinia-plugin-persistedstate@4.7.1/LICENSE.txt",
+      "sha256": "2a400d6f43d123dbe19677054f93dbba611375a84f6961cb093b386479928c30"
+    },
+    {
+      "source": "licenses/pinia@4.0.3/LICENSE",
+      "file": "texts/pinia@4.0.3/LICENSE.txt",
+      "sha256": "91a2845c4db44e7497b514b98634a674c737986ad0db81599307cf733bf850b2"
+    },
+    {
+      "source": "licenses/property-information@7.2.0/license",
+      "file": "texts/property-information@7.2.0/license.txt",
+      "sha256": "5d0698266086f217bb11ea0499d33453e401fe479fb9126ad04e625e63d3557b"
+    },
+    {
+      "source": "licenses/prosemirror-commands@1.7.2/LICENSE",
+      "file": "texts/prosemirror-commands@1.7.2/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-dropcursor@1.8.4/LICENSE",
+      "file": "texts/prosemirror-dropcursor@1.8.4/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-gapcursor@1.4.1/LICENSE",
+      "file": "texts/prosemirror-gapcursor@1.4.1/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-history@1.5.1/LICENSE",
+      "file": "texts/prosemirror-history@1.5.1/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-keymap@1.2.3/LICENSE",
+      "file": "texts/prosemirror-keymap@1.2.3/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-model@1.25.12/LICENSE",
+      "file": "texts/prosemirror-model@1.25.12/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-schema-list@1.5.1/LICENSE",
+      "file": "texts/prosemirror-schema-list@1.5.1/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-state@1.4.4/LICENSE",
+      "file": "texts/prosemirror-state@1.4.4/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-tables@1.8.5/LICENSE",
+      "file": "texts/prosemirror-tables@1.8.5/LICENSE.txt",
+      "sha256": "d1d2046ebbe6362f9ad8fd4d62e9074f2553f289c0e1de895a650f10ba5f4239"
+    },
+    {
+      "source": "licenses/prosemirror-transform@1.12.4/LICENSE",
+      "file": "texts/prosemirror-transform@1.12.4/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/prosemirror-view@1.42.7/LICENSE",
+      "file": "texts/prosemirror-view@1.42.7/LICENSE.txt",
+      "sha256": "ef0b452ced6304db2ce78ca66de1fc7b97bab05bc1750c95df359ed3fe1d65c8"
+    },
+    {
+      "source": "licenses/raf@3.4.1/LICENSE",
+      "file": "texts/raf@3.4.1/LICENSE.txt",
+      "sha256": "6b2194e178545b3dcde4a40a09b5f6c00bd9b5b695db0c826c14995c6c9b4ec5"
+    },
+    {
+      "source": "licenses/re2js@2.9.0/LICENSE",
+      "file": "texts/re2js@2.9.0/LICENSE.txt",
+      "sha256": "b80a94f2c3c0b8bd6af849511cef624ad9feecbc0151d08bacad86ebab4cb46e"
+    },
+    {
+      "source": "licenses/reactive-signal@2.0.1/supplement/LICENSE",
+      "file": "texts/reactive-signal@2.0.1/supplement/LICENSE.txt",
+      "sha256": "14ff1db26a3a7d65d55c53c485ee453c96b1e6beee95d8d136a84ed7f7eac5b9"
+    },
+    {
+      "source": "licenses/regex-recursion@6.0.2/LICENSE",
+      "file": "texts/regex-recursion@6.0.2/LICENSE.txt",
+      "sha256": "3d19c2b6246b3072547af2bd05e6b4c09bd3d15955590f1f1e1d20382c919a49"
+    },
+    {
+      "source": "licenses/regex-utilities@2.3.0/LICENSE",
+      "file": "texts/regex-utilities@2.3.0/LICENSE.txt",
+      "sha256": "8ca7af4f6c753e5ab8388e1078d94ce4650723bba4b0d4dfe562fbd45fb4a4e6"
+    },
+    {
+      "source": "licenses/regex@6.1.0/LICENSE",
+      "file": "texts/regex@6.1.0/LICENSE.txt",
+      "sha256": "3d19c2b6246b3072547af2bd05e6b4c09bd3d15955590f1f1e1d20382c919a49"
+    },
+    {
+      "source": "licenses/rope-sequence@1.3.4/LICENSE",
+      "file": "texts/rope-sequence@1.3.4/LICENSE.txt",
+      "sha256": "530424aebdd0e73f53238d1f89df250057bc8d8ce090cf5954197fadce5bf226"
+    },
+    {
+      "source": "licenses/roughjs@4.6.6/LICENSE",
+      "file": "texts/roughjs@4.6.6/LICENSE.txt",
+      "sha256": "dca9a392272606ac748ac0976a2a1133f14eef841c27beaa51a844d53c56a09d"
+    },
+    {
+      "source": "licenses/semver@7.8.0/LICENSE",
+      "file": "texts/semver@7.8.0/LICENSE.txt",
+      "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b"
+    },
+    {
+      "source": "licenses/shiki@4.4.3/LICENSE",
+      "file": "texts/shiki@4.4.3/LICENSE.txt",
+      "sha256": "7a9d8d01038aeacf9e5bcdabbddf2a7815200dce9fc1118468cc553e00ae3eee"
+    },
+    {
+      "source": "licenses/space-separated-tokens@2.0.2/license",
+      "file": "texts/space-separated-tokens@2.0.2/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/stringify-entities@4.0.4/license",
+      "file": "texts/stringify-entities@4.0.4/license.txt",
+      "sha256": "9f084fac69d8cf1e6ce983ba5a3499c7695ed74a26ec625c38f0fd19fddd5e10"
+    },
+    {
+      "source": "licenses/stylis@4.4.0/LICENSE",
+      "file": "texts/stylis@4.4.0/LICENSE.txt",
+      "sha256": "88c579c6ee44b41137a21321190d177982e5b17d4fa1b83a4a2e3ea325a8fc9a"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.d.ts",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.d.ts.txt",
+      "sha256": "62d1dbc5e9a639fbcd3bab2305dff330d1afbbc66afbf49136e7ee3433b67e10"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.js",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.js.txt",
+      "sha256": "987a81ac925c66b709f3c05f74e4a6dc9da9c37772ccd80dd5976ef904c67339"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.js.map",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright-filled.js.map.txt",
+      "sha256": "e5dd192d62f9dd78bd5cb3c175c095292d3cac82f3cfc65d9ee9f97240d2270a"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright.d.ts",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright.d.ts.txt",
+      "sha256": "62d1dbc5e9a639fbcd3bab2305dff330d1afbbc66afbf49136e7ee3433b67e10"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright.js",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright.js.txt",
+      "sha256": "1e09c59e6ff9bd5f12a86bb5ce6873d9fb6a7cac3cb226ebea47c82e926c2b21"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/esm/components/copyright.js.map",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/esm/components/copyright.js.map.txt",
+      "sha256": "fbd1e2942d2d86d64963db38cc1c522b568ea15cee416ae2b5ccda1a829e0a51"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.d.ts",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.d.ts.txt",
+      "sha256": "62d1dbc5e9a639fbcd3bab2305dff330d1afbbc66afbf49136e7ee3433b67e10"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.js",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.js.txt",
+      "sha256": "4fdf6f2e5ac97c2b2d48e64835ddf1bae46349b365b9e9168b59659d32effe85"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.js.map",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright-filled.js.map.txt",
+      "sha256": "57b744d1b1f2268d4e086095f4f723ce49b40f05775de9e5a222fb19ae13d085"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright.d.ts",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright.d.ts.txt",
+      "sha256": "62d1dbc5e9a639fbcd3bab2305dff330d1afbbc66afbf49136e7ee3433b67e10"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright.js",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright.js.txt",
+      "sha256": "6c06e402bb8789dd352a1ee4274fd5d6607e60574462810703ca8330c1e58d8e"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/lib/components/copyright.js.map",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/lib/components/copyright.js.map.txt",
+      "sha256": "e16478f369dde2a45b7d58c559879d579fe5bf58ec449cc3e20da487d4717b3a"
+    },
+    {
+      "source": "licenses/tdesign-icons-vue-next@0.4.11/LICENSE",
+      "file": "texts/tdesign-icons-vue-next@0.4.11/LICENSE.txt",
+      "sha256": "b3dbcb89dcf4a11abf1b70d043795a3da0c458af16fefd2ff315d9ff5875312f"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.d.ts",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.d.ts.txt",
+      "sha256": "8b99513f7a477e6cb2b86324df3c5fd7f19fd4c08a75ae5c838f3e3cf1852cd5"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.js",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.js.txt",
+      "sha256": "2dca526809678a319a37be3a7ef47cfc5cdc446d83478e5d70657e9e01eb528b"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.js.map",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright-filled.js.map.txt",
+      "sha256": "5cad6888d7a1a3979715e786d37700e9a5a341432e23b6c48a36ea27f378562c"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright.d.ts",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright.d.ts.txt",
+      "sha256": "182e6631d30efc42223bfb199e1e5be85c828351ae7bd31b4fbd40245c7cc575"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright.js",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright.js.txt",
+      "sha256": "690e89455af0ad718ac8204d5e1233b1aae5561a7e39249c974a6a627b1d082d"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/esm/components/copyright.js.map",
+      "file": "texts/tdesign-icons-web-components@0.3.9/esm/components/copyright.js.map.txt",
+      "sha256": "bd20c6e6ff79c45382aeb9649a2e88ca010f2ec09a2c811e8067a067ad2de409"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.d.ts",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.d.ts.txt",
+      "sha256": "8b99513f7a477e6cb2b86324df3c5fd7f19fd4c08a75ae5c838f3e3cf1852cd5"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.js",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.js.txt",
+      "sha256": "519fb9a6f798cf57f0b931e93646305c5fda0a86d03570dbfec08f5b160ab250"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.js.map",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright-filled.js.map.txt",
+      "sha256": "38e63efe36b6aa0abe4199550fc65778ced0458031d8d8489314c78faf478d93"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright.d.ts",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright.d.ts.txt",
+      "sha256": "182e6631d30efc42223bfb199e1e5be85c828351ae7bd31b4fbd40245c7cc575"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright.js",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright.js.txt",
+      "sha256": "18d7367ea7b8cd3788bbaba2ba9c5abaf3fedb739d970382a17d14dfe16a1f73"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/lib/components/copyright.js.map",
+      "file": "texts/tdesign-icons-web-components@0.3.9/lib/components/copyright.js.map.txt",
+      "sha256": "e01b0cf30663af99df1b1017433058bd1f77c122d6e5ea0867f6832b3348260f"
+    },
+    {
+      "source": "licenses/tdesign-icons-web-components@0.3.9/LICENSE",
+      "file": "texts/tdesign-icons-web-components@0.3.9/LICENSE.txt",
+      "sha256": "b3dbcb89dcf4a11abf1b70d043795a3da0c458af16fefd2ff315d9ff5875312f"
+    },
+    {
+      "source": "licenses/tdesign-vue-next@1.20.7/LICENSE",
+      "file": "texts/tdesign-vue-next@1.20.7/LICENSE.txt",
+      "sha256": "b3dbcb89dcf4a11abf1b70d043795a3da0c458af16fefd2ff315d9ff5875312f"
+    },
+    {
+      "source": "licenses/three@0.184.0/examples/fonts/droid/NOTICE",
+      "file": "texts/three@0.184.0/examples/fonts/droid/NOTICE.txt",
+      "sha256": "38751245389e1e23f73e6f5384b5cbe7fa972cc4410c5adc9c04b082a0b9561a"
+    },
+    {
+      "source": "licenses/three@0.184.0/examples/fonts/LICENSE",
+      "file": "texts/three@0.184.0/examples/fonts/LICENSE.txt",
+      "sha256": "35e8279356d7890871c4fce804d157e3f21456a7311ef2caab5cb4705c71b6bd"
+    },
+    {
+      "source": "licenses/three@0.184.0/LICENSE",
+      "file": "texts/three@0.184.0/LICENSE.txt",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "source": "licenses/ts-dedent@2.3.0/LICENSE",
+      "file": "texts/ts-dedent@2.3.0/LICENSE.txt",
+      "sha256": "eff13095d9d762c3bd9dda74370c81e2130c28f2691bc455603abf973bac25b9"
+    },
+    {
+      "source": "licenses/tslib@2.8.1/LICENSE.txt",
+      "file": "texts/tslib@2.8.1/LICENSE.txt.txt",
+      "sha256": "210b19e543130388c68654b7497e967119ce17145f66ab7d85688fbd70f08751"
+    },
+    {
+      "source": "licenses/typebox@1.3.7/license",
+      "file": "texts/typebox@1.3.7/license.txt",
+      "sha256": "e8a7cc256941a26ba8234f04390165243a4d42f74fd6491934140605bf7eae2d"
+    },
+    {
+      "source": "licenses/unist-util-is@6.0.1/license",
+      "file": "texts/unist-util-is@6.0.1/license.txt",
+      "sha256": "82974dbf2639d13edab95c32ed9cb6c0867ede272cd2e07ce47ce8548fe55c05"
+    },
+    {
+      "source": "licenses/unist-util-stringify-position@4.0.0/license",
+      "file": "texts/unist-util-stringify-position@4.0.0/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/unist-util-visit-parents@6.0.2/license",
+      "file": "texts/unist-util-visit-parents@6.0.2/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "licenses/unist-util-visit@5.1.0/license",
+      "file": "texts/unist-util-visit@5.1.0/license.txt",
+      "sha256": "63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf"
+    },
+    {
+      "source": "licenses/uuid@14.0.3/LICENSE.md",
+      "file": "texts/uuid@14.0.3/LICENSE.md.txt",
+      "sha256": "beaa6b04fb82e41dd2ad679e19e27953afb5999b1abbb455b6564e78ebfeb332"
+    },
+    {
+      "source": "licenses/vue-router@5.3.1/LICENSE",
+      "file": "texts/vue-router@5.3.1/LICENSE.txt",
+      "sha256": "91a2845c4db44e7497b514b98634a674c737986ad0db81599307cf733bf850b2"
+    },
+    {
+      "source": "licenses/vue-stream-markdown@1.1.0/LICENSE.md",
+      "file": "texts/vue-stream-markdown@1.1.0/LICENSE.md.txt",
+      "sha256": "82abb6a8e0319941bbe41ac099e475d78a19184e8a8a8dfbf39f32ed6d00160d"
+    },
+    {
+      "source": "licenses/vue@3.5.42/LICENSE",
+      "file": "texts/vue@3.5.42/LICENSE.txt",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+    },
+    {
+      "source": "licenses/w3c-keyname@2.2.8/LICENSE",
+      "file": "texts/w3c-keyname@2.2.8/LICENSE.txt",
+      "sha256": "869c30f368eb08735e779027b9f4bc9fea2f39624351856aebe42741f0bc0884"
+    },
+    {
+      "source": "licenses/weakmap-polyfill@2.0.4/LICENSE",
+      "file": "texts/weakmap-polyfill@2.0.4/LICENSE.txt",
+      "sha256": "bdee742aa87e726e1574ec986df720b10887c0e86a5e1125a0a1475383881f3b"
+    },
+    {
+      "source": "licenses/x-sender@1.4.6/LICENSE",
+      "file": "texts/x-sender@1.4.6/LICENSE.txt",
+      "sha256": "2ee3f7f2c4798d4ffc1c823931ba658199ee4ed3c4d9f4afec64b82f26b8b337"
+    },
+    {
+      "source": "licenses/yaml@2.9.0/LICENSE",
+      "file": "texts/yaml@2.9.0/LICENSE.txt",
+      "sha256": "5bba27375d93e9119f76c1015f7672cf9ad5f70952296e0842fb2243d6376869"
+    },
+    {
+      "source": "licenses/zod@4.6.2/LICENSE",
+      "file": "texts/zod@4.6.2/LICENSE.txt",
+      "sha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8"
+    },
+    {
+      "source": "licenses/zwitch@2.0.4/license",
+      "file": "texts/zwitch@2.0.4/license.txt",
+      "sha256": "ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d"
+    },
+    {
+      "source": "license-inventory.json",
+      "file": "inventory.json",
+      "sha256": "85bcd1e7a3b5e9f2cfcb3155243c606c235ab17eedae025c77bcca6e8a87f78c"
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.txt",
+      "file": "THIRD_PARTY_NOTICES.txt",
+      "sha256": "fa1022288323ecbc4358ad21a40bf67e976cdac50a162846cf0f87da7562a930"
+    }
+  ]
+}

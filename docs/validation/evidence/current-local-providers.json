@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-22",
+  "scope": "Read-only current source, runtime metadata and model list; no generation, workflow submission or provider/config writes",
+  "providerDirectory": "C:\\Users\\c1338\\Desktop\\workplace\\toonflow\\Toonflow-app\\data\\providers",
+  "providers": [
+    {
+      "id": "h3Local3060",
+      "fileName": "h3Local3060.ts",
+      "label": "本地 MiniMax H3 · RTX3060 五模式",
+      "version": "2.0.0",
+      "revision": "199ff8d17b875c4bb54160e7175126b28c1213b1de0ff2051cf13d1676c66b17",
+      "loadError": "",
+      "sha256": "199ff8d17b875c4bb54160e7175126b28c1213b1de0ff2051cf13d1676c66b17",
+      "modelCount": 5,
+      "matchesHistoricalSnapshot": true,
+      "models": [
+        {
+          "providerId": "h3Local3060",
+          "modelId": "h3T2v",
+          "label": "H3 文生视频",
+          "type": "video",
+          "mode": [
+            "text"
+          ],
+          "durationResolutionMap": [
+            {
+              "duration": [
+                5,
+                8,
+                10,
+                15
+              ],
+              "resolution": [
+                "352p",
+                "480p",
+                "544p"
+              ]
+            }
+          ],
+          "audio": true
+        },
+        {
+          "providerId": "h3Local3060",
+          "modelId": "h3I2v",
+          "label": "H3 首帧图生视频",
+          "type": "video",
+          "mode": [
+            "singleImage"
+          ],
+          "durationResolutionMap": [
+            {
+              "duration": [
+                5,
+                8,
+                10,
+                15
+              ],
+              "resolution": [
+                "352p",
+                "480p",
+                "544p"
+              ]
+            }
+          ],
+          "audio": true
+        },
+        {
+          "providerId": "h3Local3060",
+          "modelId": "h3Fl2v",
+          "label": "H3 首尾帧生视频",
+          "type": "video",
+          "mode": [
+            "startEndRequired"
+          ],
+          "durationResolutionMap": [
+            {
+              "duration": [
+                5,
+                8,
+                10,
+                15
+              ],
+              "resolution": [
+                "352p",
+                "480p",
+                "544p"
+              ]
+            }
+          ],
+          "audio": true
+        },
+        {
+          "providerId": "h3Local3060",
+          "modelId": "h3L2v",
+          "label": "H3 尾帧生视频",
+          "type": "video",
+          "mode": [
+            "startFrameOptional"
+          ],
+          "durationResolutionMap": [
+            {
+              "duration": [
+                5,
+                8,
+                10,
+                15
+              ],
+              "resolution": [
+                "352p",
+                "480p",
+                "544p"
+              ]
+            }
+          ],
+          "audio": true
+        },
+        {
+          "providerId": "h3Local3060",
+          "modelId": "h3R2v",
+          "label": "H3 参考生视频",
+          "type": "video",
+          "mode": [
+            [
+              "imageReference:9",
+              "videoReference:3",
+              "audioReference:3"
+            ]
+          ],
+          "durationResolutionMap": [
+            {
+              "duration": [
+                5,
+                8,
+                10,
+                15
+              ],
+              "resolution": [
+                "352p",
+                "480p",
+                "544p"
+              ]
+            }
+          ],
+          "audio": true
+        }
+      ]
+    },
+    {
+      "id": "qwenImage21Local",
+      "fileName": "qwenImage21Local.ts",
+      "label": "本地 Qwen-Image-2.1 · RTX3060",
+      "version": "1.0.0",
+      "revision": "cadefd6096b8eb27277e350f5c96f378325f9a46efcf3b5d6cb9d209e47a68a3",
+      "loadError": "",
+      "sha256": "cadefd6096b8eb27277e350f5c96f378325f9a46efcf3b5d6cb9d209e47a68a3",
+      "modelCount": 2,
+      "matchesHistoricalSnapshot": false,
+      "models": [
+        {
+          "providerId": "qwenImage21Local",
+          "modelId": "qwenImage21Text",
+          "label": "Qwen 2.1 文生图 · TEXT_TO_IMAGE",
+          "type": "image",
+          "mode": [
+            "text"
+          ],
+          "imageSizes": [
+            "1K",
+            "0.5MP",
+            "2K"
+          ],
+          "imageRatios": [
+            "1:1",
+            "2:3",
+            "3:2",
+            "3:4",
+            "4:3",
+            "9:16",
+            "16:9",
+            "21:9"
+          ]
+        },
+        {
+          "providerId": "qwenImage21Local",
+          "modelId": "qwenImage21Edit",
+          "label": "Qwen 2.1 图生图 · IMAGE_TO_IMAGE",
+          "type": "image",
+          "mode": [
+            "singleImage"
+          ],
+          "imageSizes": [
+            "1K",
+            "0.5MP",
+            "2K"
+          ],
+          "imageRatios": [
+            "1:1",
+            "2:3",
+            "3:2",
+            "3:4",
+            "4:3",
+            "9:16",
+            "16:9",
+            "21:9"
+          ]
+        }
+      ]
+    }
+  ],
+  "retiredProviderFilesAbsent": {
+    "localQwenImage21.ts": true,
+    "localMiniMaxH3.ts": true
+  },
+  "retiredProviderIdsNotListed": true,
+  "generationVerification": {
+    "h3Local3060": "Source unchanged; reuse historical T2V/I2V/FL2V evidence only, not all 5 modes or specifications",
+    "qwenImage21Local": "Not generated in this synchronization; prior localQwenImage21 results do not apply"
+  }
+}

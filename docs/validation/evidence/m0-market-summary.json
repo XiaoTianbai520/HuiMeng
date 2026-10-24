@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-22",
+  "status": "M0-06 source behavior evidence complete; migration fixes remain",
+  "checks": {
+    "catalogAuthenticated": true,
+    "favoriteRestored": true,
+    "pluginLifecyclesAndExpectedErrors": true,
+    "webExpectedChecks": true,
+    "keyAndUninstallUi": true,
+    "dailyToolCalls": true,
+    "noActualSecretsOrDownloadSignaturesInDocs": true,
+    "syntaxAndJson": true
+  },
+  "notFixedInUpstream": [
+    "M0-I12 market versus archive version mismatch; fileHash algorithm unknown",
+    "M0-I13 node status authorization and download source restrictions",
+    "M0-I14 original built ext-txt backtick export rejected"
+  ],
+  "webCheckCount": 28,
+  "finishCheckCount": 6,
+  "dailyCheckCount": 5,
+  "evidenceScope": "Market offline only, not whole-machine offline. Daily canvas uses a read-only protocol callback; full browser canvas exercised in isolated instance.",
+  "finalState": {
+    "favoriteStillRestored": true,
+    "originalPluginsStillPreserved": true,
+    "originalProviderSourcesUnchanged": true,
+    "originalSettingsStillSameAsStart": true
+  }
+}

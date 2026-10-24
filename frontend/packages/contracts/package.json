@@ -1,0 +1,16 @@
+{
+  "name": "@huimeng/contracts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./platform": "./platform.ts",
+    "./nodeMenu": "./nodeMenu.ts",
+    "./documentFormats": "./documentFormats.ts",
+    "./agent-types": "./agent-types.ts",
+    "./mentionSources": "./mentionSources.ts",
+    "./singleAgent-types": "./singleAgent-types.ts"
+  },
+  "dependencies": {
+    "@toonflow/tools-scaffold": "workspace:*"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "toonflowCanvas": true,
+  "nodes": [
+    {
+      "id": "70d057f4-5723-4a8d-bf32-ec810164be0f",
+      "type": "remote-textNode",
+      "initialized": false,
+      "position": {
+        "x": 800,
+        "y": 500
+      },
+      "data": {
+        "label": "文本",
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "VIDEO",
+              "IMAGE",
+              "STRING",
+              "FILE"
+            ],
+            "label": "视频、图片、文本、文件输入"
+          },
+          {
+            "id": "text",
+            "type": "source",
+            "dataType": "STRING",
+            "label": "文本输出"
+          }
+        ],
+        "outputs": {},
+        "promptModel": [
+          [
+            {
+              "type": "Write",
+              "text": "请只输出：M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。"
+            }
+          ]
+        ],
+        "model": "[\"deepSeek\",\"deepseek-flash\"]",
+        "textPath": "assets/70d057f4-5723-4a8d-bf32-ec810164be0f/content.md",
+        "prompt": "请只输出：M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。"
+      }
+    },
+    {
+      "id": "7789bb80-0c8b-45fa-927f-35459c50982f",
+      "type": "remote-textNode",
+      "initialized": false,
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "data": {
+        "label": "M0 Agent 画布验证",
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "VIDEO",
+              "IMAGE",
+              "STRING",
+              "FILE"
+            ],
+            "label": "视频、图片、文本、文件输入"
+          },
+          {
+            "id": "text",
+            "type": "source",
+            "dataType": "STRING",
+            "label": "文本输出"
+          }
+        ],
+        "outputs": {},
+        "model": "[\"deepSeek\",\"deepseek-flash\"]",
+        "textPath": "assets/7789bb80-0c8b-45fa-927f-35459c50982f/content.md"
+      }
+    },
+    {
+      "id": "f492cf58-8f65-40f1-8354-0598f8fd58e4",
+      "type": "remote-videoGenerationNode",
+      "initialized": false,
+      "position": {
+        "x": 800,
+        "y": 500
+      },
+      "data": {
+        "label": "视频生成",
+        "prompt": "integrated_multimodal_description: [Shot 1] A blue paper boat drifts slowly across a calm stream at sunrise. Tracking Shot slowly alongside it. A continuous shot, no people, no text.\n\noverall_soundscape: Gentle flowing water and distant birds.\n\nnon_diegetic_music: None.",
+        "promptModel": [
+          [
+            {
+              "type": "Write",
+              "text": "integrated_multimodal_description: [Shot 1] A blue paper boat drifts slowly across a calm stream at sunrise. Tracking Shot slowly alongside it. A continuous shot, no people, no text."
+            }
+          ],
+          [
+            {
+              "type": "Write",
+              "text": ""
+            }
+          ],
+          [
+            {
+              "type": "Write",
+              "text": "overall_soundscape: Gentle flowing water and distant birds."
+            }
+          ],
+          [
+            {
+              "type": "Write",
+              "text": ""
+            }
+          ],
+          [
+            {
+              "type": "Write",
+              "text": "non_diegetic_music: None."
+            }
+          ]
+        ],
+        "model": "[\"h3Local3060\",\"h3T2v\"]",
+        "resolution": "352p",
+        "mode": "\"text\"",
+        "generateAudio": true,
+        "ratio": "16:9",
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "IMAGE",
+              "VIDEO",
+              "AUDIO",
+              "STRING"
+            ],
+            "label": "图片、视频、音频、文本输入"
+          },
+          {
+            "id": "video",
+            "type": "source",
+            "dataType": "VIDEO",
+            "label": "视频输出"
+          }
+        ],
+        "outputs": {
+          "video": {
+            "dataType": "VIDEO",
+            "value": {
+              "url": "assets/f492cf58-8f65-40f1-8354-0598f8fd58e4/video52be0052-9ac4-4ad5-9536-8242675124eb.mp4",
+              "mimeType": "video/mp4"
+            }
+          }
+        },
+        "duration": 5
+      }
+    }
+  ],
+  "edges": [],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

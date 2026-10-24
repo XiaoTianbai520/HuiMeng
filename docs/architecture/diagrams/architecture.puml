@@ -1,0 +1,43 @@
+@startuml
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+title { FontSize 14; FontStyle bold; FontColor #000000; BackGroundColor transparent; LineColor transparent; LineThickness 0 }
+componentDiagram {
+  component { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  database { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  cloud { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  node { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  arrow { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+title Huimeng 1.0 - Component Boundary
+left to right direction
+actor "Internal user" as User
+actor "Authorized LAN MCP/A2A client" as Client
+node "LAN HTTPS boundary" {
+  component "Vue Web" as Web
+  component "Spring Boot API" as Spring
+}
+node "Private execution network" {
+  component "Bun executor\n(single instance)" as Bun
+  database "MySQL" as Db
+  database "Project workspaces" as Files
+}
+cloud "AI providers" as Providers
+User --> Web
+Web --> Spring : /api/v1
+Client --> Spring : /mcp and /a2a
+Spring --> Db : identity, grants, runs
+Spring --> Bun : authenticated internal request
+Bun --> Files : project files
+Bun --> Providers : approved models
+@enduml

@@ -1,0 +1,515 @@
+{
+  "date": "2026-10-22",
+  "cases": [
+    {
+      "case": "node-install",
+      "method": "POST",
+      "path": "/api/nodes/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode"
+        },
+        "message": "节点已安装"
+      },
+      "bytes": 75,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "case": "node-same-version",
+      "method": "POST",
+      "path": "/api/nodes/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 409,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 409,
+        "data": null,
+        "message": "节点“m0MarketTextNode”已安装版本 1.0.0，待安装版本 1.0.0 不高于现有版本；如需覆盖或降级，请在开发者设置中使用强制安装"
+      },
+      "bytes": 201,
+      "elapsedSeconds": 0.032
+    },
+    {
+      "case": "node-upgrade",
+      "method": "POST",
+      "path": "/api/nodes/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode"
+        },
+        "message": "节点已安装"
+      },
+      "bytes": 75,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "case": "node-config",
+      "method": "PUT",
+      "path": "/api/nodes/save",
+      "requestFields": [
+        "name",
+        "config"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {},
+        "message": "节点配置已保存"
+      },
+      "bytes": 56,
+      "elapsedSeconds": 0.047
+    },
+    {
+      "case": "node-enable-False",
+      "method": "PUT",
+      "path": "/api/nodes/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode",
+          "enabled": false
+        },
+        "message": "成功"
+      },
+      "bytes": 82,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "node-enable-True",
+      "method": "PUT",
+      "path": "/api/nodes/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode",
+          "enabled": true
+        },
+        "message": "成功"
+      },
+      "bytes": 81,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "node-export",
+      "method": "GET",
+      "path": "/api/plugins/export?type=node&name=m0MarketTextNode",
+      "requestFields": [],
+      "httpStatus": 200,
+      "contentType": "text/javascript; charset=utf-8",
+      "disposition": "attachment; filename=\"m0MarketTextNode.umd.js\"",
+      "body": null,
+      "bytes": 338404,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "case": "node-nonlocal-toggle",
+      "method": "PUT",
+      "path": "/api/nodes/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode",
+          "enabled": false
+        },
+        "message": "成功"
+      },
+      "bytes": 82,
+      "elapsedSeconds": 0.032
+    },
+    {
+      "case": "node-reset-after-negative-probe",
+      "method": "PUT",
+      "path": "/api/nodes/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0MarketTextNode",
+          "enabled": true
+        },
+        "message": "成功"
+      },
+      "bytes": 81,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "case": "node-uninstall",
+      "method": "DELETE",
+      "path": "/api/nodes/uninstall",
+      "requestFields": [
+        "name"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": null,
+        "message": "节点已卸载"
+      },
+      "bytes": 52,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "original-built-ext-backtick-export",
+      "method": "POST",
+      "path": "/api/ext/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 400,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 400,
+        "data": null,
+        "message": "文件不是兼容的 Toonflow 文件扩展，请使用扩展脚手架构建并保留原文件名"
+      },
+      "bytes": 134,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "ext-install",
+      "method": "POST",
+      "path": "/api/ext/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "ext-m0MarketTxt"
+        },
+        "message": "文件扩展已安装"
+      },
+      "bytes": 80,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "ext-same-version",
+      "method": "POST",
+      "path": "/api/ext/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 409,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 409,
+        "data": null,
+        "message": "文件扩展“ext-m0MarketTxt”已安装版本 1.0.0，待安装版本 1.0.0 不高于现有版本；如需覆盖或降级，请在开发者设置中使用强制安装"
+      },
+      "bytes": 206,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "case": "ext-upgrade",
+      "method": "POST",
+      "path": "/api/ext/install",
+      "requestFields": [
+        "fileName",
+        "source"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "ext-m0MarketTxt"
+        },
+        "message": "文件扩展已安装"
+      },
+      "bytes": 80,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "ext-config",
+      "method": "PUT",
+      "path": "/api/ext/save",
+      "requestFields": [
+        "name",
+        "config"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "fontSize": 18,
+          "wordWrap": false
+        },
+        "message": "文件扩展配置已保存"
+      },
+      "bytes": 92,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "case": "ext-enable-False",
+      "method": "PUT",
+      "path": "/api/ext/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "ext-m0MarketTxt",
+          "enabled": false
+        },
+        "message": "成功"
+      },
+      "bytes": 81,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "ext-enable-True",
+      "method": "PUT",
+      "path": "/api/ext/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "ext-m0MarketTxt",
+          "enabled": true
+        },
+        "message": "成功"
+      },
+      "bytes": 80,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "ext-export",
+      "method": "GET",
+      "path": "/api/plugins/export?type=ext&name=ext-m0MarketTxt",
+      "requestFields": [],
+      "httpStatus": 200,
+      "contentType": "text/javascript; charset=utf-8",
+      "disposition": "attachment; filename=\"ext-m0MarketTxt.umd.js\"",
+      "body": null,
+      "bytes": 11622,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "case": "ext-nonlocal-toggle",
+      "method": "PUT",
+      "path": "/api/ext/setEnabled",
+      "requestFields": [
+        "name",
+        "enabled"
+      ],
+      "httpStatus": 403,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 403,
+        "data": null,
+        "message": "请在桌面端或服务器本机管理文件扩展"
+      },
+      "bytes": 88,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "ext-uninstall",
+      "method": "DELETE",
+      "path": "/api/ext/uninstall",
+      "requestFields": [
+        "name"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": null,
+        "message": "文件扩展已卸载"
+      },
+      "bytes": 58,
+      "elapsedSeconds": 0.032
+    },
+    {
+      "case": "skill-install",
+      "method": "POST",
+      "path": "/api/skills/install",
+      "requestFields": [
+        "fileName",
+        "base64"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0LifecycleSkill"
+        },
+        "message": "技能已安装"
+      },
+      "bytes": 75,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "case": "skill-same-version",
+      "method": "POST",
+      "path": "/api/skills/install",
+      "requestFields": [
+        "fileName",
+        "base64"
+      ],
+      "httpStatus": 409,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 409,
+        "data": null,
+        "message": "技能“m0LifecycleSkill”已安装版本 1.0.0，待安装版本 1.0.0 不高于现有版本；如需覆盖或降级，请在开发者设置中使用强制安装"
+      },
+      "bytes": 201,
+      "elapsedSeconds": 0.0
+    },
+    {
+      "case": "skill-upgrade",
+      "method": "POST",
+      "path": "/api/skills/install",
+      "requestFields": [
+        "fileName",
+        "base64"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "name": "m0LifecycleSkill"
+        },
+        "message": "技能已安装"
+      },
+      "bytes": 75,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "skill-edit",
+      "method": "PUT",
+      "path": "/api/skills/save",
+      "requestFields": [
+        "name",
+        "content"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": null,
+        "message": "已保存"
+      },
+      "bytes": 46,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "case": "skill-nonlocal-edit",
+      "method": "PUT",
+      "path": "/api/skills/save",
+      "requestFields": [
+        "name",
+        "content"
+      ],
+      "httpStatus": 403,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 403,
+        "data": null,
+        "message": "请在桌面端或服务器本机编辑技能"
+      },
+      "bytes": 82,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "case": "skill-uninstall",
+      "method": "DELETE",
+      "path": "/api/skills/uninstall",
+      "requestFields": [
+        "name"
+      ],
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": null,
+        "message": "技能已卸载"
+      },
+      "bytes": 52,
+      "elapsedSeconds": 0.016
+    }
+  ]
+}

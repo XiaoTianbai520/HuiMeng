@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-22",
+  "records": [
+    {
+      "mode": "h3T2v",
+      "promptId": "b82f9d3b-35d9-4c35-a73a-d414aa8d92bc",
+      "apiFile": "h3T2v-api.json",
+      "guiFile": "h3T2v-gui.json",
+      "savedGui": "M:\\ComfyUI_windows_portable_nvidia\\ComfyUI_windows_portable\\ComfyUI\\user\\default\\workflows\\2026-10-22-M0-h3T2v.json",
+      "graphSha256": "dde876475c61c62d6a501e6e8b2a80a88e117975390ee0041677a2946c5a43b2",
+      "layout": {
+        "summary": "nodes=18 edges=21 overlaps=0 crossings=10 bounds=[40, 40, 4920, 1830]",
+        "overlaps": [],
+        "crossings": 10,
+        "bounds": [
+          40.0,
+          40.0,
+          4920.0,
+          1830.0
+        ],
+        "n_nodes": 18,
+        "n_edges": 21
+      },
+      "note": "API graph is the actual executed source of truth. GUI is generated for graph inspection; dynamic widget roundtrip has not been re-executed."
+    },
+    {
+      "mode": "h3I2v",
+      "promptId": "c1f990c5-1701-4d18-b865-9fb22f2f3e8f",
+      "apiFile": "h3I2v-api.json",
+      "guiFile": "h3I2v-gui.json",
+      "savedGui": "M:\\ComfyUI_windows_portable_nvidia\\ComfyUI_windows_portable\\ComfyUI\\user\\default\\workflows\\2026-10-22-M0-h3I2v.json",
+      "graphSha256": "35a61e07ab0d087d71ef57608e0d349a55c6f54a2523ef383bc7ae361642c422",
+      "layout": {
+        "summary": "nodes=19 edges=22 overlaps=0 crossings=11 bounds=[40, 40, 4920, 2302]",
+        "overlaps": [],
+        "crossings": 11,
+        "bounds": [
+          40.0,
+          40.0,
+          4920.0,
+          2302.0
+        ],
+        "n_nodes": 19,
+        "n_edges": 22
+      },
+      "note": "API graph is the actual executed source of truth. GUI is generated for graph inspection; dynamic widget roundtrip has not been re-executed."
+    },
+    {
+      "mode": "h3Fl2v",
+      "promptId": "685842c6-1c15-4dd5-843a-960a5a4158c7",
+      "apiFile": "h3Fl2v-api.json",
+      "guiFile": "h3Fl2v-gui.json",
+      "savedGui": "M:\\ComfyUI_windows_portable_nvidia\\ComfyUI_windows_portable\\ComfyUI\\user\\default\\workflows\\2026-10-22-M0-h3Fl2v.json",
+      "graphSha256": "bc781feab969119a38c6e137161181a362141e5b8cbe5682ce6da14d7af0252b",
+      "layout": {
+        "summary": "nodes=20 edges=23 overlaps=0 crossings=13 bounds=[40, 40, 4920, 2774]",
+        "overlaps": [],
+        "crossings": 13,
+        "bounds": [
+          40.0,
+          40.0,
+          4920.0,
+          2774.0
+        ],
+        "n_nodes": 20,
+        "n_edges": 23
+      },
+      "note": "API graph is the actual executed source of truth. GUI is generated for graph inspection; dynamic widget roundtrip has not been re-executed."
+    }
+  ]
+}

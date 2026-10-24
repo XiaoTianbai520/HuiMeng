@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-22",
+  "auditedAtUtc": "2026-10-22T04:05:23.885836+00:00",
+  "checks": {
+    "webTextAndAgent": true,
+    "webH3": true,
+    "h3ThreeModes": true,
+    "qwenTextAndEdit": true,
+    "qwenFixInstalled": true,
+    "ffmpeg": true,
+    "a2a": true,
+    "mcp": true,
+    "ubuntuBuild": true,
+    "ubuntuCompiledRuntime": true,
+    "fixedRouteSources": true,
+    "allCandidateProbes": true,
+    "callSitesClassified": true,
+    "noPrematurePublicRoutes": true,
+    "documentationLinks": true,
+    "jsonAndPythonSyntax": true,
+    "noActualSecretsInDocs": true
+  },
+  "brokenLinks": [],
+  "secretBearingFiles": [],
+  "jsonFilesParsed": 41,
+  "scope": "M0 original behavior baseline only; Spring isolation and five-slot acceptance remain M1-M4",
+  "allPassed": true
+}

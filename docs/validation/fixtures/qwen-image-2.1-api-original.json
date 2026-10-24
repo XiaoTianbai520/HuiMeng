@@ -1,0 +1,77 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "_meta": {"title": "Qwen 2.1 模型 $model.unet_name"},
+    "inputs": {"unet_name": "qwen_image_2.1_int8_convrot.safetensors", "weight_dtype": "default"}
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "_meta": {"title": "Qwen 2.1 文本编码器"},
+    "inputs": {"clip_name": "qwen3vl_8b_w4a8.safetensors", "type": "qwen_image", "device": "default"}
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "_meta": {"title": "Qwen 2.1 VAE"},
+    "inputs": {"vae_name": "qwen_image_2.1_vae_bf16.safetensors"}
+  },
+  "4": {
+    "class_type": "ResolutionSelector",
+    "_meta": {"title": "宽高比与像素量 $aspect_ratio.aspect_ratio,$megapixels.megapixels"},
+    "inputs": {"aspect_ratio": "1:1 (Square)", "megapixels": 1, "multiple": 32}
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "_meta": {"title": "画布 $width.width,$height.height"},
+    "inputs": {"width": ["4", 0], "height": ["4", 1], "batch_size": 1}
+  },
+  "6": {
+    "class_type": "TextEncodeQwenImage21",
+    "_meta": {"title": "纯文本提示词 $prompt.prompt,$negative_prompt.negative_prompt"},
+    "inputs": {"clip": ["2", 0], "prompt": "一只白猫坐在窗边，柔和晨光", "negative_prompt": "", "resolution": 1024}
+  },
+  "7": {
+    "class_type": "TextEncodeQwenImage21",
+    "_meta": {"title": "参考图提示词 $prompt.prompt,$negative_prompt.negative_prompt,$reference_resolution.resolution,$references"},
+    "inputs": {"clip": ["2", 0], "vae": ["3", 0], "prompt": "参考<image1>，生成一张精致图片", "negative_prompt": "", "resolution": 1024}
+  },
+  "8": {
+    "class_type": "ComfySwitchNode",
+    "_meta": {"title": "提示词模式 $use_reference.switch"},
+    "inputs": {"switch": false, "on_false": ["6", 0], "on_true": ["7", 0]}
+  },
+  "9": {
+    "class_type": "ComfySwitchNode",
+    "_meta": {"title": "负面提示词模式 $use_reference.switch"},
+    "inputs": {"switch": false, "on_false": ["6", 1], "on_true": ["7", 1]}
+  },
+  "10": {
+    "class_type": "ComfySwitchNode",
+    "_meta": {"title": "画布模式 $use_reference_size.switch"},
+    "inputs": {"switch": false, "on_false": ["5", 0], "on_true": ["7", 2]}
+  },
+  "11": {
+    "class_type": "RepeatLatentBatch",
+    "_meta": {"title": "生成张数 $count.amount"},
+    "inputs": {"samples": ["10", 0], "amount": 1}
+  },
+  "12": {
+    "class_type": "QwenImage21Cache",
+    "_meta": {"title": "Qwen 2.1 缓存"},
+    "inputs": {"model": ["1", 0], "device": "auto", "dtype": "default"}
+  },
+  "13": {
+    "class_type": "KSampler",
+    "_meta": {"title": "采样 $steps.steps,$seed.seed,$cfg.cfg"},
+    "inputs": {"model": ["12", 0], "positive": ["8", 0], "negative": ["9", 0], "latent_image": ["11", 0], "seed": 42, "steps": 25, "cfg": 1, "sampler_name": "euler", "scheduler": "simple", "denoise": 1}
+  },
+  "14": {
+    "class_type": "VAEDecode",
+    "_meta": {"title": "解码"},
+    "inputs": {"samples": ["13", 0], "vae": ["3", 0]}
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "_meta": {"title": "保存图片 $output.image"},
+    "inputs": {"images": ["14", 0], "filename_prefix": "Qwen-Image-2.1"}
+  }
+}

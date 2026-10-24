@@ -1,0 +1,50 @@
+{
+  "testedAt": "2026-10-19",
+  "upstreamCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "service": "isolated:3001",
+  "model": { "providerId": "deepSeek", "modelId": "deepseek-flash" },
+  "textError": {
+    "endpoint": "POST /api/ai/generate",
+    "testProvider": "m0InvalidDeepSeek",
+    "cause": "invalid synthetic API key",
+    "httpStatus": 200,
+    "contentType": "text/event-stream; charset=utf-8",
+    "eventTypes": ["error"],
+    "authenticationError": true,
+    "doneReceived": false
+  },
+  "textStop": {
+    "endpoint": "POST /api/ai/generate",
+    "httpStatus": 200,
+    "action": "client closed response after first nonempty text delta",
+    "firstTextReceived": true,
+    "terminalEventBeforeClose": false,
+    "upstreamAbortObserved": false,
+    "limitation": "Client disconnect was observed; upstream provider cancellation was not directly measured."
+  },
+  "agentTool": {
+    "endpoint": "POST /api/agent",
+    "httpStatus": 200,
+    "fixture": "fixtures/sample-project/M0-safe-tool-probe.txt",
+    "toolName": "read",
+    "toolPath": "M0-safe-tool-probe.txt",
+    "finalToolStatus": "success",
+    "doneReceived": true,
+    "errorEvents": 0
+  },
+  "agentCancelResume": {
+    "endpoint": "POST /api/agent",
+    "cancelAction": "client closed NDJSON response after first content event",
+    "firstContentType": "thinking",
+    "terminalEventBeforeClose": false,
+    "runningAfterClose": false,
+    "storedFirstAssistantStopReason": "aborted",
+    "resumeAction": "POST /api/agent with the same sessionFile and a new user prompt",
+    "resumeHttpStatus": 200,
+    "resumeFinalEvent": "done",
+    "resumeErrorEvents": 0,
+    "runningAfterResume": false,
+    "storedSecondAssistantStopReason": "stop"
+  },
+  "secrets": "No API keys, raw Authorization headers, provider responses, or session file names recorded"
+}

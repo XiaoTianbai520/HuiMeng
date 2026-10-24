@@ -1,0 +1,1 @@
+{"name": "m0Verifier", "displayName": "M0 synthetic verification", "description": "Synthetic text protocol verification only", "version": "1.0.0", "author": "M0", "github": "", "entry": "verifier", "members": {"verifier": {"description": "Answer synthetic verification prompts", "instructions": "members/verifier.md", "tools": []}}}

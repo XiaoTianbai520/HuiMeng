@@ -1,0 +1,59 @@
+{
+  "status": 200,
+  "contentType": "application/json; charset=utf-8",
+  "elapsedSeconds": 10.59,
+  "model": {
+    "providerId": "localQwenImage21",
+    "providerLabel": "本地 Qwen-Image-2.1（M0 测试）",
+    "modelId": "qwen-image-2.1",
+    "label": "Qwen-Image-2.1 本地文生图",
+    "type": "image",
+    "supportsPrice": false,
+    "mode": [
+      "text"
+    ],
+    "imageSizes": [
+      "0.3MP",
+      "1MP"
+    ],
+    "imageRatios": [
+      "1:1",
+      "2:3",
+      "3:2",
+      "3:4",
+      "4:3",
+      "9:16",
+      "16:9",
+      "21:9"
+    ]
+  },
+  "request": {
+    "mediaType": "image",
+    "providerId": "localQwenImage21",
+    "modelId": "qwen-image-2.1",
+    "prompt": "A hand-drawn animation background of a quiet riverside town at sunrise, warm light, wide shot, no text",
+    "ratio": "1:1",
+    "size": "0.3MP",
+    "outputDirectory": "assets/m0-qwen21"
+  },
+  "response": {
+    "code": 200,
+    "data": [
+      {
+        "path": "assets/m0-qwen21/image5fb606fd-d45b-46e3-af5f-55c7f38adc5b.png",
+        "mimeType": "image/png",
+        "mediaType": "image"
+      }
+    ],
+    "message": "成功"
+  },
+  "leadingWhitespaceBytes": 0,
+  "files": [
+    {
+      "path": "assets/m0-qwen21/image5fb606fd-d45b-46e3-af5f-55c7f38adc5b.png",
+      "bytes": 614816,
+      "sha256": "a5ec5af0869c6d77c99d40778ebc5c3b83f6fdff92fe01f4ca8d4c7ee5907eeb",
+      "png": true
+    }
+  ]
+}

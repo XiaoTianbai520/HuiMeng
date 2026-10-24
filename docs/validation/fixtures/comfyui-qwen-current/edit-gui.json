@@ -1,0 +1,615 @@
+{
+  "last_node_id": 10,
+  "last_link_id": 11,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "title": "Qwen 2.1 INT8",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader",
+        "m0ApiInputs": {
+          "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "widgets_values": [
+        "qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "title": "Qwen3-VL 8B W4A8",
+      "pos": [
+        40,
+        1150
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "m0ApiInputs": {
+          "clip_name": "qwen3vl_8b_w4a8.safetensors",
+          "type": "qwen_image",
+          "device": "default"
+        }
+      },
+      "widgets_values": [
+        "qwen3vl_8b_w4a8.safetensors",
+        "qwen_image",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "title": "Qwen 2.1 VAE",
+      "pos": [
+        40,
+        780
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            2,
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "m0ApiInputs": {
+          "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+        }
+      },
+      "widgets_values": [
+        "qwen_image_2.1_vae_bf16.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "TextEncodeQwenImage21",
+      "title": "编辑指令 / 参考图条件",
+      "pos": [
+        540,
+        920
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        },
+        {
+          "name": "images",
+          "type": "COMFY_AUTOGROW_V3",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2
+        },
+        {
+          "name": "images.image_1",
+          "type": "*",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextEncodeQwenImage21",
+        "m0ApiInputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "prompt": "将参考图中蓝色折纸小船改成红色，保留小船的折纸形状、小溪、水彩风格和柔和的日出光线。不要添加文字。",
+          "negative_prompt": "",
+          "resolution": 1024,
+          "vae": [
+            "3",
+            0
+          ],
+          "images.image_1": [
+            "10",
+            0
+          ]
+        }
+      },
+      "widgets_values": [
+        "将参考图中蓝色折纸小船改成红色，保留小船的折纸形状、小溪、水彩风格和柔和的日出光线。不要添加文字。",
+        "",
+        1024
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "title": "输出画布（32对齐）",
+      "pos": [
+        40,
+        410
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "m0ApiInputs": {
+          "width": 1024,
+          "height": 1024,
+          "batch_size": 1
+        }
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ]
+    },
+    {
+      "id": 6,
+      "type": "QwenImage21Cache",
+      "title": "原生 KV Cache",
+      "pos": [
+        540,
+        550
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "QwenImage21Cache",
+        "m0ApiInputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "device": "auto",
+          "dtype": "default"
+        }
+      },
+      "widgets_values": [
+        "auto",
+        "default"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "title": "基础模型 / 25步 / CFG1",
+      "pos": [
+        1040,
+        700
+      ],
+      "size": [
+        380,
+        370
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler",
+        "m0ApiInputs": {
+          "model": [
+            "6",
+            0
+          ],
+          "positive": [
+            "4",
+            0
+          ],
+          "negative": [
+            "4",
+            1
+          ],
+          "latent_image": [
+            "5",
+            0
+          ],
+          "seed": 263069284,
+          "steps": 25,
+          "cfg": 1.0,
+          "sampler_name": "euler",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "widgets_values": [
+        263069284,
+        "fixed",
+        25,
+        1.0,
+        "euler",
+        "simple",
+        1.0
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "title": "VAE 解码",
+      "pos": [
+        1540,
+        735
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode",
+        "m0ApiInputs": {
+          "samples": [
+            "7",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "title": "保存 PNG",
+      "pos": [
+        2040,
+        696
+      ],
+      "size": [
+        380,
+        378
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage",
+        "m0ApiInputs": {
+          "images": [
+            "8",
+            0
+          ],
+          "filename_prefix": "QwenImage21Local/imageToImage"
+        }
+      },
+      "widgets_values": [
+        "QwenImage21Local/imageToImage"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "LoadImage",
+      "title": "参考图片",
+      "pos": [
+        40,
+        1520
+      ],
+      "size": [
+        380,
+        402
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage",
+        "m0ApiInputs": {
+          "image": "qwenImage211792668358627937254717.png"
+        }
+      },
+      "widgets_values": [
+        "qwenImage211792668358627937254717.png"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      2,
+      "VAE"
+    ],
+    [
+      3,
+      10,
+      0,
+      4,
+      3,
+      "IMAGE"
+    ],
+    [
+      4,
+      1,
+      0,
+      6,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      6,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      4,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      4,
+      1,
+      7,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      5,
+      0,
+      7,
+      3,
+      "LATENT"
+    ],
+    [
+      9,
+      7,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      3,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "M0 current Qwen edit",
+      "bounding": [
+        -5,
+        -51,
+        2470,
+        2018
+      ],
+      "color": "#335159",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {
+    "m0PromptId": "2433380c-3954-400e-aeb7-6f5499c1dfee",
+    "m0ProviderSha256": "cadefd6096b8eb27277e350f5c96f378325f9a46efcf3b5d6cb9d209e47a68a3",
+    "apiFixture": "edit-api.json"
+  },
+  "version": 0.4
+}

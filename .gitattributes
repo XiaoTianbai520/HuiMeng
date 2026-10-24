@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Preserve the exact bytes used by archived checksums and recorded evidence.
+frontend/LICENSE.Toonflow -text
+frontend/licenses/** -text
+docs/validation/evidence/** -text
+docs/validation/fixtures/** -text

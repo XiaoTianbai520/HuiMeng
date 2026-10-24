@@ -1,0 +1,135 @@
+{
+  "toonflowCanvas": true,
+  "nodes": [
+    {
+      "id": "4fc3736e-f315-426d-aa27-ed28aeec9b37",
+      "type": "remote-imageGenerationNode",
+      "initialized": false,
+      "position": {
+        "x": 100,
+        "y": 180
+      },
+      "data": {
+        "label": "Qwen 文生图参考",
+        "prompt": "一只蓝色折纸小船漂在宁静的小溪上，水彩动画背景风格，画面中央仅一只小船，远处有柔和的日出，清晰的纸张折痕，水面有倒影，没有文字或水印。",
+        "promptModel": [
+          [
+            {
+              "type": "Write",
+              "text": "一只蓝色折纸小船漂在宁静的小溪上，水彩动画背景风格，画面中央仅一只小船，远处有柔和的日出，清晰的纸张折痕，水面有倒影，没有文字或水印。"
+            }
+          ]
+        ],
+        "inpaintPrompt": "",
+        "inpaintPromptModel": [],
+        "model": "[\"qwenImage21Local\",\"qwenImage21Text\"]",
+        "size": "1K",
+        "ratio": "1:1",
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "IMAGE",
+              "STRING"
+            ],
+            "label": "图片、文本输入"
+          },
+          {
+            "id": "image",
+            "type": "source",
+            "dataType": "IMAGE",
+            "label": "图片输出"
+          }
+        ],
+        "outputs": {
+          "image": {
+            "dataType": "IMAGE",
+            "value": {
+              "url": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37/imagece199c24-46de-430b-9fcc-dbaddf135b17.png",
+              "mimeType": "image/png"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "d2c41873-664e-429c-aa51-7847442446c4",
+      "type": "remote-imageGenerationNode",
+      "initialized": false,
+      "position": {
+        "x": 720,
+        "y": 180
+      },
+      "data": {
+        "label": "Qwen 单图编辑",
+        "model": "[\"qwenImage21Local\",\"qwenImage21Edit\"]",
+        "size": "1K",
+        "ratio": "1:1",
+        "prompt": "将参考图中蓝色折纸小船改成红色，保留小船的折纸形状、小溪、水彩风格和柔和的日出光线。不要添加文字。",
+        "promptModel": [
+          [
+            {
+              "type": "Write",
+              "text": "将参考图中蓝色折纸小船改成红色，保留小船的折纸形状、小溪、水彩风格和柔和的日出光线。不要添加文字。"
+            }
+          ]
+        ],
+        "inpaintPrompt": "",
+        "inpaintPromptModel": [],
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "IMAGE",
+              "STRING"
+            ],
+            "label": "图片、文本输入"
+          },
+          {
+            "id": "image",
+            "type": "source",
+            "dataType": "IMAGE",
+            "label": "图片输出"
+          }
+        ],
+        "outputs": {
+          "image": {
+            "dataType": "IMAGE",
+            "value": {
+              "url": "assets/d2c41873-664e-429c-aa51-7847442446c4/imagefdff4e9a-d1dc-45f3-8107-f45493e5650e.png",
+              "mimeType": "image/png"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "qwenFinalReference",
+      "type": "simple-bezier",
+      "source": "4fc3736e-f315-426d-aa27-ed28aeec9b37",
+      "target": "d2c41873-664e-429c-aa51-7847442446c4",
+      "sourceHandle": "image",
+      "targetHandle": "in",
+      "updatable": false,
+      "selectable": false,
+      "focusable": false,
+      "data": {},
+      "label": "",
+      "interactionWidth": 40,
+      "animated": false,
+      "sourceX": 379.0000228881836,
+      "sourceY": 361.99999237060547,
+      "targetX": 699.0000152587891,
+      "targetY": 361.99999237060547
+    }
+  ],
+  "viewport": {
+    "x": 30,
+    "y": 40,
+    "zoom": 0.8
+  }
+}

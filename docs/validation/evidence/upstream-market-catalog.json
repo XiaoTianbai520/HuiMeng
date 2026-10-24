@@ -1,0 +1,1146 @@
+{
+  "fixedCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "date": "2026-10-22",
+  "cases": [
+    {
+      "case": "discover",
+      "request": {
+        "page": 1,
+        "limit": 20,
+        "type": "all"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 74,
+              "name": "文件删除增强",
+              "identifier": "deleteTool",
+              "userId": 21186,
+              "supplier": "土豆",
+              "type": "tool",
+              "state": 1,
+              "desc": "面向 AI Agent 的工作区文件删除能力，而非手动使用的文件管理工具。Agent 可在当前工作区内批量删除文件：被删的文件不会消失，而是移动到工作区内的回收站目录（保留原路径结构，可随时找回）；执行前弹出确认卡片并列出待删清单，支持逐项取消勾选以保留部分文件。只处理空文件夹，非空文件夹会被跳过。仅在当前工作区内生效，不涉及工作区之外的任何文件。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "deleteTool.tool.js",
+              "creationTime": 1792597295534,
+              "installation": 4,
+              "download": 0,
+              "version": "1.3.1",
+              "updateById": null,
+              "fileHash": "13a8e9cf9cfa847fb740064ec2f809a7848795f9bac2649219e8773c3066fcfc",
+              "isCollected": false
+            },
+            {
+              "id": 73,
+              "name": "Toonflow 导演与视频制作 （第三方）",
+              "identifier": "oonflowproduction",
+              "userId": 22563,
+              "supplier": "lyy",
+              "type": "skill",
+              "state": 1,
+              "desc": "让剧本创作与视频制作的边界更清晰，同时合并与精简118workflow、workflow、h3三个skill及github项目方案，重构制作流程，增强最终输出效果。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "toonflow-production.zip",
+              "creationTime": 1792550004897,
+              "installation": 113,
+              "download": 42,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "aeb60fbbe0523c9a62151886087b28c256af22431e1e5263598c9729a5484482",
+              "isCollected": false
+            },
+            {
+              "id": 72,
+              "name": "MiniMax H3 提示词写作技能包",
+              "identifier": "mp",
+              "userId": 16348,
+              "supplier": "wyz",
+              "type": "skill",
+              "state": 1,
+              "desc": "如何编写minimax-H3视频提示词",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "skills-MiniMax-AI.h3-prompt-writing.zip",
+              "creationTime": 1792504638501,
+              "installation": 41,
+              "download": 21,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "e7264aeea97c22975cb37e17ae93e46d902aefa770b02ac65cbe3a4c5c5e9a19",
+              "isCollected": false
+            },
+            {
+              "id": 69,
+              "name": "抖音红果爆款短剧工业化编剧超级系统",
+              "identifier": "shortdramafactory",
+              "userId": 19693,
+              "supplier": "不吃李子",
+              "type": "skill",
+              "state": 1,
+              "desc": "抖音 / 红果 爆款短剧工业化编剧超级系统 · 纯剧本引擎\n\n一句创意进，一部带付费墙的爆款剧本出。 情绪契约贯穿全剧，矛盾按单元跑——单矛盾绝不烧过 30 集；篇幅可选标准 / 长档（150~195 秒弹性）/ 漫剧；台词 / 内心独白 / 旁白三通道分流。 只产剧本层，不碰分镜 / 资产 / 视频制作。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "short-drama-factory-master.zip",
+              "creationTime": 1792348875881,
+              "installation": 244,
+              "download": 74,
+              "version": "10.0.0",
+              "updateById": null,
+              "fileHash": "c391c72a453968c316c2a78900c0ead488148e16e3cff1b803ac0f29f773839b",
+              "isCollected": false
+            },
+            {
+              "id": 62,
+              "name": "深度动作捕捉",
+              "identifier": "depthCaptureNode",
+              "userId": 16207,
+              "supplier": "啦啦啦啦啦",
+              "type": "node",
+              "state": 1,
+              "desc": "视频深度动捕\n把一段实拍视频转换成逐帧黑白深度视频：越白表示离镜头越近，越黑表示越远。人物的长相、服装、颜色与画风会被抹去，只留下动作、走位、运镜与空间关系。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "depthCaptureNode.umd.js",
+              "creationTime": 1791897235232,
+              "installation": 312,
+              "download": 92,
+              "version": "1.1.1",
+              "updateById": 57,
+              "fileHash": "4dc54df8e48a62f6205f23dbc3643b79b64633b3efd2bcebd1fdb6aa3a888fb1",
+              "isCollected": false
+            },
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": false
+            },
+            {
+              "id": 54,
+              "name": "达人带货视频",
+              "identifier": "kocvideo",
+              "userId": 19336,
+              "supplier": "FF",
+              "type": "skill",
+              "state": 1,
+              "desc": "生成 KOC/UGC 风格短视频，覆盖种草、测评、用户实测等场景，完成从开场创意、人设锚定、口播分镜到视频输出全流程，产出贴近真实社交原生内容",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "koc-video.zip",
+              "creationTime": 1791516634111,
+              "installation": 339,
+              "download": 133,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "86d1d2df6ad87a4af0df7114737fd0cd631723eb4298d926fc09bc601d976e63",
+              "isCollected": false
+            },
+            {
+              "id": 50,
+              "name": "小说转换器",
+              "identifier": "novelToTxt",
+              "userId": 11345,
+              "supplier": "junkcode",
+              "type": "tool",
+              "state": 1,
+              "desc": "使用说明：\n1.将工作区内book.epub转换为一个txt/md \n2.将工作区内book.epub转换为一个章节一个txt/md放在一个文件夹内 \n支持格式：\npdf、epub、kepub、docx、html、htm、xhtml、fb2、txt。\n支持语言：\n中、英、日、韩、法、德、意大利、俄、阿拉伯等.....常见章节标题规则。\n注意事项：\n扫描版 pdf的ocr、mobi / azw、drm 解密暂不支持；\n自动拆章效果取决于原书结构及标题格式。\n作者说明：\n不建议把一本小说拆分成一个txt或一个md，很难加载出来且很消耗性能\n对模型的理解也不便利，会导致模型的记忆混乱。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "novelToTxt.tool.js",
+              "creationTime": 1791024108359,
+              "installation": 842,
+              "download": 259,
+              "version": "1.3.0",
+              "updateById": 48,
+              "fileHash": "919aae82e811dbd969c880b292e9af5ab550054539e3739b77387d6a8b3ba12f",
+              "isCollected": false
+            },
+            {
+              "id": 46,
+              "name": "minimaxh3",
+              "identifier": "minimaxh3PromptWritingOptimizationInspection ",
+              "userId": 17684,
+              "supplier": "一人一马",
+              "type": "skill",
+              "state": 1,
+              "desc": "视频提示词的写作、优化与质检。把一份短剧分镜/参考生成提示词改写成 H3 能稳定读取的高质量提示词，或从零起草。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "minimax-h3-prompt-optimizer.zip",
+              "creationTime": 1790916870389,
+              "installation": 1397,
+              "download": 428,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "23199a2be45918cfdf8b50a72351ce1fdd4d3cfb62ade0f1dd738fb7759d7734",
+              "isCollected": false
+            },
+            {
+              "id": 40,
+              "name": "舌尖美食-美学短片",
+              "identifier": "foodAestheticShortFilm",
+              "userId": 11956,
+              "supplier": "卢卡斯",
+              "type": "skill",
+              "state": 1,
+              "desc": "舌尖美食-美学短片",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "舌尖美食.zip",
+              "creationTime": 1790597334141,
+              "installation": 242,
+              "download": 96,
+              "version": "1.1.2",
+              "updateById": null,
+              "fileHash": "809cc7199fbacdf71ad7c96b48d0bf5d3ec9124e2f2e550aa2b8f6d2c9bd71f9",
+              "isCollected": false
+            },
+            {
+              "id": 39,
+              "name": "拟人动物典当回收类的营销 AI 漫剧技能",
+              "identifier": "toonflowLuxuryPawnRecoveryComicDrama",
+              "userId": 14474,
+              "supplier": "azrael",
+              "type": "skill",
+              "state": 1,
+              "desc": "动物拟人典当/奢侈品回收商业营销 AI 漫剧技能。用于把回收知识、典当流程、避坑科普与轻喜剧短故事，转化为可直接生产的人物资产、场景资产、60秒内短剧脚本、分镜与图生视频提示词。角色采用高完成度动画电影级动物拟人表情与动作逻辑，同时保持偏写实、真人电影质感和稳定的商业品牌视觉。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "新建文件夹 (2).zip",
+              "creationTime": 1790586979392,
+              "installation": 224,
+              "download": 104,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "66065d8009baa9d5f5df36f2d09c576784f4fb1ecb7e9c47137f19496c1ea5eb",
+              "isCollected": false
+            },
+            {
+              "id": 32,
+              "name": "剪辑台Pro",
+              "identifier": "webEpisodeEditorProNode",
+              "userId": 15329,
+              "supplier": "左天",
+              "type": "node",
+              "state": 1,
+              "desc": "目标\n媒体库、预览区、属性区、多轨时间线分栏布局。\n\n视频、音频、字幕、滤镜、特效轨道独立呈现。\n\n时间线支持吸附、缩放、播放头、片段顺序和导出计划。\n\n导出优先复用本地 videoComposer / ffmpeg；WebAV 作为后续浏览器渲染路线。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "webEpisodeEditorProNode.umd.js",
+              "creationTime": 1790244885724,
+              "installation": 777,
+              "download": 233,
+              "version": "0.2.87",
+              "updateById": null,
+              "fileHash": "e9eb2d16a50b2838c38d3073a19af3f6c673af9fe8e4805bcc32bb1644586305",
+              "isCollected": false
+            },
+            {
+              "id": 31,
+              "name": "视频拼接",
+              "identifier": "videoComposer",
+              "userId": 15329,
+              "supplier": "左天",
+              "type": "tool",
+              "state": 1,
+              "desc": "使用底座 ffmpeg 将工作区视频片段裁剪、拼接、混音并导出 mp4；支持顺序拼接、批量合成和剪辑台Pro时间线合成，不下载 ffmpeg。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "videoComposer.tool.js",
+              "creationTime": 1790238766751,
+              "installation": 537,
+              "download": 188,
+              "version": "4.5.1",
+              "updateById": null,
+              "fileHash": "3115eb2e8ab4f779cd397a49590ca08ed08120907514ec9ea6ca421a54360d78",
+              "isCollected": false
+            }
+          ],
+          "total": 13
+        },
+        "message": "成功",
+        "id": "26c27060-cdf3-11f1-855f-671ff6cb2152"
+      },
+      "bytes": 13840,
+      "elapsedSeconds": 0.297
+    },
+    {
+      "case": "category-node",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "node"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 62,
+              "name": "深度动作捕捉",
+              "identifier": "depthCaptureNode",
+              "userId": 16207,
+              "supplier": "啦啦啦啦啦",
+              "type": "node",
+              "state": 1,
+              "desc": "视频深度动捕\n把一段实拍视频转换成逐帧黑白深度视频：越白表示离镜头越近，越黑表示越远。人物的长相、服装、颜色与画风会被抹去，只留下动作、走位、运镜与空间关系。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "depthCaptureNode.umd.js",
+              "creationTime": 1791897235232,
+              "installation": 312,
+              "download": 92,
+              "version": "1.1.1",
+              "updateById": 57,
+              "fileHash": "4dc54df8e48a62f6205f23dbc3643b79b64633b3efd2bcebd1fdb6aa3a888fb1",
+              "isCollected": false
+            },
+            {
+              "id": 32,
+              "name": "剪辑台Pro",
+              "identifier": "webEpisodeEditorProNode",
+              "userId": 15329,
+              "supplier": "左天",
+              "type": "node",
+              "state": 1,
+              "desc": "目标\n媒体库、预览区、属性区、多轨时间线分栏布局。\n\n视频、音频、字幕、滤镜、特效轨道独立呈现。\n\n时间线支持吸附、缩放、播放头、片段顺序和导出计划。\n\n导出优先复用本地 videoComposer / ffmpeg；WebAV 作为后续浏览器渲染路线。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "webEpisodeEditorProNode.umd.js",
+              "creationTime": 1790244885724,
+              "installation": 777,
+              "download": 233,
+              "version": "0.2.87",
+              "updateById": null,
+              "fileHash": "e9eb2d16a50b2838c38d3073a19af3f6c673af9fe8e4805bcc32bb1644586305",
+              "isCollected": false
+            }
+          ],
+          "total": 2
+        },
+        "message": "成功",
+        "id": "27b69460-cdf3-11f1-a2bc-f14632ee0d9a"
+      },
+      "bytes": 2237,
+      "elapsedSeconds": 1.5
+    },
+    {
+      "case": "category-tool",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "tool"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 74,
+              "name": "文件删除增强",
+              "identifier": "deleteTool",
+              "userId": 21186,
+              "supplier": "土豆",
+              "type": "tool",
+              "state": 1,
+              "desc": "面向 AI Agent 的工作区文件删除能力，而非手动使用的文件管理工具。Agent 可在当前工作区内批量删除文件：被删的文件不会消失，而是移动到工作区内的回收站目录（保留原路径结构，可随时找回）；执行前弹出确认卡片并列出待删清单，支持逐项取消勾选以保留部分文件。只处理空文件夹，非空文件夹会被跳过。仅在当前工作区内生效，不涉及工作区之外的任何文件。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "deleteTool.tool.js",
+              "creationTime": 1792597295534,
+              "installation": 4,
+              "download": 0,
+              "version": "1.3.1",
+              "updateById": null,
+              "fileHash": "13a8e9cf9cfa847fb740064ec2f809a7848795f9bac2649219e8773c3066fcfc",
+              "isCollected": false
+            },
+            {
+              "id": 50,
+              "name": "小说转换器",
+              "identifier": "novelToTxt",
+              "userId": 11345,
+              "supplier": "junkcode",
+              "type": "tool",
+              "state": 1,
+              "desc": "使用说明：\n1.将工作区内book.epub转换为一个txt/md \n2.将工作区内book.epub转换为一个章节一个txt/md放在一个文件夹内 \n支持格式：\npdf、epub、kepub、docx、html、htm、xhtml、fb2、txt。\n支持语言：\n中、英、日、韩、法、德、意大利、俄、阿拉伯等.....常见章节标题规则。\n注意事项：\n扫描版 pdf的ocr、mobi / azw、drm 解密暂不支持；\n自动拆章效果取决于原书结构及标题格式。\n作者说明：\n不建议把一本小说拆分成一个txt或一个md，很难加载出来且很消耗性能\n对模型的理解也不便利，会导致模型的记忆混乱。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "novelToTxt.tool.js",
+              "creationTime": 1791024108359,
+              "installation": 842,
+              "download": 259,
+              "version": "1.3.0",
+              "updateById": 48,
+              "fileHash": "919aae82e811dbd969c880b292e9af5ab550054539e3739b77387d6a8b3ba12f",
+              "isCollected": false
+            },
+            {
+              "id": 31,
+              "name": "视频拼接",
+              "identifier": "videoComposer",
+              "userId": 15329,
+              "supplier": "左天",
+              "type": "tool",
+              "state": 1,
+              "desc": "使用底座 ffmpeg 将工作区视频片段裁剪、拼接、混音并导出 mp4；支持顺序拼接、批量合成和剪辑台Pro时间线合成，不下载 ffmpeg。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "videoComposer.tool.js",
+              "creationTime": 1790238766751,
+              "installation": 537,
+              "download": 188,
+              "version": "4.5.1",
+              "updateById": null,
+              "fileHash": "3115eb2e8ab4f779cd397a49590ca08ed08120907514ec9ea6ca421a54360d78",
+              "isCollected": false
+            }
+          ],
+          "total": 3
+        },
+        "message": "成功",
+        "id": "27d16f60-cdf3-11f1-af87-fd38254edcd3"
+      },
+      "bytes": 3691,
+      "elapsedSeconds": 0.141
+    },
+    {
+      "case": "category-skill",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "skill"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 73,
+              "name": "Toonflow 导演与视频制作 （第三方）",
+              "identifier": "oonflowproduction",
+              "userId": 22563,
+              "supplier": "lyy",
+              "type": "skill",
+              "state": 1,
+              "desc": "让剧本创作与视频制作的边界更清晰，同时合并与精简118workflow、workflow、h3三个skill及github项目方案，重构制作流程，增强最终输出效果。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "toonflow-production.zip",
+              "creationTime": 1792550004897,
+              "installation": 113,
+              "download": 42,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "aeb60fbbe0523c9a62151886087b28c256af22431e1e5263598c9729a5484482",
+              "isCollected": false
+            },
+            {
+              "id": 72,
+              "name": "MiniMax H3 提示词写作技能包",
+              "identifier": "mp",
+              "userId": 16348,
+              "supplier": "wyz",
+              "type": "skill",
+              "state": 1,
+              "desc": "如何编写minimax-H3视频提示词",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "skills-MiniMax-AI.h3-prompt-writing.zip",
+              "creationTime": 1792504638501,
+              "installation": 41,
+              "download": 21,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "e7264aeea97c22975cb37e17ae93e46d902aefa770b02ac65cbe3a4c5c5e9a19",
+              "isCollected": false
+            },
+            {
+              "id": 69,
+              "name": "抖音红果爆款短剧工业化编剧超级系统",
+              "identifier": "shortdramafactory",
+              "userId": 19693,
+              "supplier": "不吃李子",
+              "type": "skill",
+              "state": 1,
+              "desc": "抖音 / 红果 爆款短剧工业化编剧超级系统 · 纯剧本引擎\n\n一句创意进，一部带付费墙的爆款剧本出。 情绪契约贯穿全剧，矛盾按单元跑——单矛盾绝不烧过 30 集；篇幅可选标准 / 长档（150~195 秒弹性）/ 漫剧；台词 / 内心独白 / 旁白三通道分流。 只产剧本层，不碰分镜 / 资产 / 视频制作。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "short-drama-factory-master.zip",
+              "creationTime": 1792348875881,
+              "installation": 244,
+              "download": 74,
+              "version": "10.0.0",
+              "updateById": null,
+              "fileHash": "c391c72a453968c316c2a78900c0ead488148e16e3cff1b803ac0f29f773839b",
+              "isCollected": false
+            },
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": false
+            },
+            {
+              "id": 54,
+              "name": "达人带货视频",
+              "identifier": "kocvideo",
+              "userId": 19336,
+              "supplier": "FF",
+              "type": "skill",
+              "state": 1,
+              "desc": "生成 KOC/UGC 风格短视频，覆盖种草、测评、用户实测等场景，完成从开场创意、人设锚定、口播分镜到视频输出全流程，产出贴近真实社交原生内容",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "koc-video.zip",
+              "creationTime": 1791516634111,
+              "installation": 339,
+              "download": 133,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "86d1d2df6ad87a4af0df7114737fd0cd631723eb4298d926fc09bc601d976e63",
+              "isCollected": false
+            }
+          ],
+          "total": 8
+        },
+        "message": "成功",
+        "id": "27ea0070-cdf3-11f1-bbf8-4910a094a6e8"
+      },
+      "bytes": 4978,
+      "elapsedSeconds": 0.156
+    },
+    {
+      "case": "category-ext",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "ext"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [],
+          "total": 0
+        },
+        "message": "成功",
+        "id": "289a64b0-cdf3-11f1-ac0a-1d94054f9137"
+      },
+      "bytes": 104,
+      "elapsedSeconds": 1.5
+    },
+    {
+      "case": "category-agent",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "agent"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [],
+          "total": 0
+        },
+        "message": "成功",
+        "id": "28e7e870-cdf3-11f1-bbf8-4910a094a6e8"
+      },
+      "bytes": 104,
+      "elapsedSeconds": 0.172
+    },
+    {
+      "case": "category-my",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "my"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [],
+          "total": 0
+        },
+        "message": "成功",
+        "id": "28fbe5a0-cdf3-11f1-af87-fd38254edcd3"
+      },
+      "bytes": 104,
+      "elapsedSeconds": 0.125
+    },
+    {
+      "case": "category-collection",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "collection"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [],
+          "total": 0
+        },
+        "message": "成功",
+        "id": "2915fd50-cdf3-11f1-af87-fd38254edcd3"
+      },
+      "bytes": 104,
+      "elapsedSeconds": 0.172
+    },
+    {
+      "case": "page-one",
+      "request": {
+        "page": 1,
+        "limit": 5,
+        "type": "all"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 74,
+              "name": "文件删除增强",
+              "identifier": "deleteTool",
+              "userId": 21186,
+              "supplier": "土豆",
+              "type": "tool",
+              "state": 1,
+              "desc": "面向 AI Agent 的工作区文件删除能力，而非手动使用的文件管理工具。Agent 可在当前工作区内批量删除文件：被删的文件不会消失，而是移动到工作区内的回收站目录（保留原路径结构，可随时找回）；执行前弹出确认卡片并列出待删清单，支持逐项取消勾选以保留部分文件。只处理空文件夹，非空文件夹会被跳过。仅在当前工作区内生效，不涉及工作区之外的任何文件。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "deleteTool.tool.js",
+              "creationTime": 1792597295534,
+              "installation": 4,
+              "download": 0,
+              "version": "1.3.1",
+              "updateById": null,
+              "fileHash": "13a8e9cf9cfa847fb740064ec2f809a7848795f9bac2649219e8773c3066fcfc",
+              "isCollected": false
+            },
+            {
+              "id": 73,
+              "name": "Toonflow 导演与视频制作 （第三方）",
+              "identifier": "oonflowproduction",
+              "userId": 22563,
+              "supplier": "lyy",
+              "type": "skill",
+              "state": 1,
+              "desc": "让剧本创作与视频制作的边界更清晰，同时合并与精简118workflow、workflow、h3三个skill及github项目方案，重构制作流程，增强最终输出效果。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "toonflow-production.zip",
+              "creationTime": 1792550004897,
+              "installation": 113,
+              "download": 42,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "aeb60fbbe0523c9a62151886087b28c256af22431e1e5263598c9729a5484482",
+              "isCollected": false
+            },
+            {
+              "id": 72,
+              "name": "MiniMax H3 提示词写作技能包",
+              "identifier": "mp",
+              "userId": 16348,
+              "supplier": "wyz",
+              "type": "skill",
+              "state": 1,
+              "desc": "如何编写minimax-H3视频提示词",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "skills-MiniMax-AI.h3-prompt-writing.zip",
+              "creationTime": 1792504638501,
+              "installation": 41,
+              "download": 21,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "e7264aeea97c22975cb37e17ae93e46d902aefa770b02ac65cbe3a4c5c5e9a19",
+              "isCollected": false
+            },
+            {
+              "id": 69,
+              "name": "抖音红果爆款短剧工业化编剧超级系统",
+              "identifier": "shortdramafactory",
+              "userId": 19693,
+              "supplier": "不吃李子",
+              "type": "skill",
+              "state": 1,
+              "desc": "抖音 / 红果 爆款短剧工业化编剧超级系统 · 纯剧本引擎\n\n一句创意进，一部带付费墙的爆款剧本出。 情绪契约贯穿全剧，矛盾按单元跑——单矛盾绝不烧过 30 集；篇幅可选标准 / 长档（150~195 秒弹性）/ 漫剧；台词 / 内心独白 / 旁白三通道分流。 只产剧本层，不碰分镜 / 资产 / 视频制作。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "short-drama-factory-master.zip",
+              "creationTime": 1792348875881,
+              "installation": 244,
+              "download": 74,
+              "version": "10.0.0",
+              "updateById": null,
+              "fileHash": "c391c72a453968c316c2a78900c0ead488148e16e3cff1b803ac0f29f773839b",
+              "isCollected": false
+            },
+            {
+              "id": 62,
+              "name": "深度动作捕捉",
+              "identifier": "depthCaptureNode",
+              "userId": 16207,
+              "supplier": "啦啦啦啦啦",
+              "type": "node",
+              "state": 1,
+              "desc": "视频深度动捕\n把一段实拍视频转换成逐帧黑白深度视频：越白表示离镜头越近，越黑表示越远。人物的长相、服装、颜色与画风会被抹去，只留下动作、走位、运镜与空间关系。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "depthCaptureNode.umd.js",
+              "creationTime": 1791897235232,
+              "installation": 312,
+              "download": 92,
+              "version": "1.1.1",
+              "updateById": 57,
+              "fileHash": "4dc54df8e48a62f6205f23dbc3643b79b64633b3efd2bcebd1fdb6aa3a888fb1",
+              "isCollected": false
+            }
+          ],
+          "total": 13
+        },
+        "message": "成功",
+        "id": "29609ae0-cdf3-11f1-821a-2d3a40219804"
+      },
+      "bytes": 5401,
+      "elapsedSeconds": 1.531
+    },
+    {
+      "case": "page-two",
+      "request": {
+        "page": 2,
+        "limit": 5,
+        "type": "all"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": false
+            },
+            {
+              "id": 54,
+              "name": "达人带货视频",
+              "identifier": "kocvideo",
+              "userId": 19336,
+              "supplier": "FF",
+              "type": "skill",
+              "state": 1,
+              "desc": "生成 KOC/UGC 风格短视频，覆盖种草、测评、用户实测等场景，完成从开场创意、人设锚定、口播分镜到视频输出全流程，产出贴近真实社交原生内容",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "koc-video.zip",
+              "creationTime": 1791516634111,
+              "installation": 339,
+              "download": 133,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "86d1d2df6ad87a4af0df7114737fd0cd631723eb4298d926fc09bc601d976e63",
+              "isCollected": false
+            },
+            {
+              "id": 50,
+              "name": "小说转换器",
+              "identifier": "novelToTxt",
+              "userId": 11345,
+              "supplier": "junkcode",
+              "type": "tool",
+              "state": 1,
+              "desc": "使用说明：\n1.将工作区内book.epub转换为一个txt/md \n2.将工作区内book.epub转换为一个章节一个txt/md放在一个文件夹内 \n支持格式：\npdf、epub、kepub、docx、html、htm、xhtml、fb2、txt。\n支持语言：\n中、英、日、韩、法、德、意大利、俄、阿拉伯等.....常见章节标题规则。\n注意事项：\n扫描版 pdf的ocr、mobi / azw、drm 解密暂不支持；\n自动拆章效果取决于原书结构及标题格式。\n作者说明：\n不建议把一本小说拆分成一个txt或一个md，很难加载出来且很消耗性能\n对模型的理解也不便利，会导致模型的记忆混乱。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "novelToTxt.tool.js",
+              "creationTime": 1791024108359,
+              "installation": 842,
+              "download": 259,
+              "version": "1.3.0",
+              "updateById": 48,
+              "fileHash": "919aae82e811dbd969c880b292e9af5ab550054539e3739b77387d6a8b3ba12f",
+              "isCollected": false
+            },
+            {
+              "id": 46,
+              "name": "minimaxh3",
+              "identifier": "minimaxh3PromptWritingOptimizationInspection ",
+              "userId": 17684,
+              "supplier": "一人一马",
+              "type": "skill",
+              "state": 1,
+              "desc": "视频提示词的写作、优化与质检。把一份短剧分镜/参考生成提示词改写成 H3 能稳定读取的高质量提示词，或从零起草。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "minimax-h3-prompt-optimizer.zip",
+              "creationTime": 1790916870389,
+              "installation": 1397,
+              "download": 428,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "23199a2be45918cfdf8b50a72351ce1fdd4d3cfb62ade0f1dd738fb7759d7734",
+              "isCollected": false
+            },
+            {
+              "id": 40,
+              "name": "舌尖美食-美学短片",
+              "identifier": "foodAestheticShortFilm",
+              "userId": 11956,
+              "supplier": "卢卡斯",
+              "type": "skill",
+              "state": 1,
+              "desc": "舌尖美食-美学短片",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "舌尖美食.zip",
+              "creationTime": 1790597334141,
+              "installation": 242,
+              "download": 96,
+              "version": "1.1.2",
+              "updateById": null,
+              "fileHash": "809cc7199fbacdf71ad7c96b48d0bf5d3ec9124e2f2e550aa2b8f6d2c9bd71f9",
+              "isCollected": false
+            }
+          ],
+          "total": 13
+        },
+        "message": "成功",
+        "id": "2a1b3850-cdf3-11f1-98a5-132ff1e0f45a"
+      },
+      "bytes": 5207,
+      "elapsedSeconds": 0.187
+    },
+    {
+      "case": "search",
+      "request": {
+        "page": 1,
+        "limit": 20,
+        "type": "all",
+        "searchKeyword": "Toonflow"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 73,
+              "name": "Toonflow 导演与视频制作 （第三方）",
+              "identifier": "oonflowproduction",
+              "userId": 22563,
+              "supplier": "lyy",
+              "type": "skill",
+              "state": 1,
+              "desc": "让剧本创作与视频制作的边界更清晰，同时合并与精简118workflow、workflow、h3三个skill及github项目方案，重构制作流程，增强最终输出效果。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "toonflow-production.zip",
+              "creationTime": 1792550004897,
+              "installation": 113,
+              "download": 42,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "aeb60fbbe0523c9a62151886087b28c256af22431e1e5263598c9729a5484482",
+              "isCollected": false
+            },
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": false
+            }
+          ],
+          "total": 2
+        },
+        "message": "成功",
+        "id": "2a337b40-cdf3-11f1-a967-97155ed4b353"
+      },
+      "bytes": 1995,
+      "elapsedSeconds": 0.157
+    },
+    {
+      "case": "search-empty",
+      "request": {
+        "page": 1,
+        "limit": 20,
+        "type": "all",
+        "searchKeyword": "m0SyntheticNoSuchPlugin20261022"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [],
+          "total": 0
+        },
+        "message": "成功",
+        "id": "2a518a90-cdf3-11f1-855f-671ff6cb2152"
+      },
+      "bytes": 104,
+      "elapsedSeconds": 0.187
+    },
+    {
+      "case": "invalid-key",
+      "request": {
+        "page": 1,
+        "limit": 1,
+        "type": "all"
+      },
+      "httpStatus": 401,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 401,
+        "data": "apiKey 不存在",
+        "message": "用户信息错误",
+        "id": "2a6ab7e0-cdf3-11f1-821a-2d3a40219804"
+      },
+      "bytes": 113,
+      "elapsedSeconds": 0.203
+    },
+    {
+      "case": "favorite-toggle",
+      "request": {
+        "pluginId": 60
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "collected": true
+        },
+        "message": "收藏成功",
+        "id": "2a8ac300-cdf3-11f1-a967-97155ed4b353"
+      },
+      "bytes": 107,
+      "elapsedSeconds": 0.156
+    },
+    {
+      "case": "favorite-query",
+      "request": {
+        "page": 1,
+        "limit": 50,
+        "type": "collection"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": true
+            }
+          ],
+          "total": 1
+        },
+        "message": "成功",
+        "id": "2aa1cd70-cdf3-11f1-b32d-892c25eb2b6c"
+      },
+      "bytes": 1008,
+      "elapsedSeconds": 0.156
+    },
+    {
+      "case": "favorite-state-before-restore",
+      "request": {
+        "page": 1,
+        "limit": 50,
+        "type": "all",
+        "searchKeyword": "Toonflow v1.1.8 旧版短剧生产工作流"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": true
+            }
+          ],
+          "total": 1
+        },
+        "message": "成功",
+        "id": "2abcf690-cdf3-11f1-a2bc-f14632ee0d9a"
+      },
+      "bytes": 1008,
+      "elapsedSeconds": 0.188
+    },
+    {
+      "case": "favorite-restore",
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "collected": false
+        },
+        "message": "已取消收藏",
+        "id": "2ae1bca0-cdf3-11f1-98a5-132ff1e0f45a"
+      },
+      "bytes": 111,
+      "elapsedSeconds": 0.234
+    },
+    {
+      "case": "favorite-restored-check",
+      "request": {
+        "page": 1,
+        "limit": 50,
+        "type": "all",
+        "searchKeyword": "Toonflow v1.1.8 旧版短剧生产工作流"
+      },
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "disposition": null,
+      "body": {
+        "code": 200,
+        "data": {
+          "list": [
+            {
+              "id": 60,
+              "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+              "identifier": "v118workflow",
+              "userId": 0,
+              "supplier": "Toonflow",
+              "type": "skill",
+              "state": 1,
+              "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+              "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+              "fileName": "v118workflow.zip",
+              "creationTime": 1791887912068,
+              "installation": 184,
+              "download": 72,
+              "version": "1.0.0",
+              "updateById": null,
+              "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+              "isCollected": false
+            }
+          ],
+          "total": 1
+        },
+        "message": "成功",
+        "id": "2afcbeb0-cdf3-11f1-821a-2d3a40219804"
+      },
+      "bytes": 1009,
+      "elapsedSeconds": 0.172
+    }
+  ],
+  "favoriteRestored": true,
+  "selected": {
+    "id": 60,
+    "name": "Toonflow v1.1.8 旧版短剧生产工作流",
+    "identifier": "v118workflow",
+    "userId": 0,
+    "supplier": "Toonflow",
+    "type": "skill",
+    "state": 1,
+    "desc": "Toonflow 官方旧版 v1.1.8 工作流 SOP。安装后，在 Agent 对话框输入“/”即可触发旧版短剧生产流程。",
+    "link": "toonflow.tos-cn-beijing.volces.com/[artifact]",
+    "fileName": "v118workflow.zip",
+    "creationTime": 1791887912068,
+    "installation": 184,
+    "download": 72,
+    "version": "1.0.0",
+    "updateById": null,
+    "fileHash": "4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791",
+    "isCollected": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-22",
+  "state": "completed",
+  "ubuntu": {
+    "temporaryDirectory": "/tmp/huimeng-m0-build.etJjYO4v",
+    "temporaryDirectoryRemoved": true,
+    "temporaryContainersRemaining": false,
+    "output": "1.6G\t/tmp/huimeng-m0-build.etJjYO4v\nm0_remote_temporary_directory_removed",
+    "bunImageCacheRetained": true
+  },
+  "local": {
+    "temporaryDirectory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj",
+    "temporaryDirectoryRemoved": true,
+    "isolatedServerStopped": true
+  },
+  "services": [
+    {
+      "url": "http://127.0.0.1:3000/api/ai/media/models",
+      "httpStatus": 200
+    },
+    {
+      "url": "http://127.0.0.1:5173",
+      "httpStatus": 200
+    },
+    {
+      "url": "http://127.0.0.1:8188/queue",
+      "httpStatus": 200,
+      "runningCount": 0,
+      "pendingCount": 0
+    }
+  ],
+  "h3SourceUnchanged": true,
+  "oldH3StillRemoved": true,
+  "qwenFixedSourceInstalled": true,
+  "finishedAtUtc": "2026-10-22T04:05:27.332709+00:00"
+}

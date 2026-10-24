@@ -1,0 +1,16 @@
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import { createPersistedState } from "pinia-plugin-persistedstate";
+import App from "./App.vue";
+import router from "@/router";
+import { settingsStorage } from "@/stores/settings";
+import { registerLanguage } from "@/lib/i18n";
+import "@/assets/main.scss";
+import "element-plus/es/components/message-box/style/css";
+import "element-plus/es/components/button/style/css";
+import "element-plus/es/components/result/style/css";
+const app = createApp(App);
+app.use(createPinia().use(createPersistedState({ storage: settingsStorage })));
+app.use(router);
+app.onUnmount(registerLanguage());
+app.mount("#app");

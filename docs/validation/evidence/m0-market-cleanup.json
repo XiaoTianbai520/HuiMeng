@@ -1,0 +1,16 @@
+{
+  "marketKeyAndSignedLinksRemovedWithTemporaryData": true,
+  "removedRuntimeName": "huimeng-m0-market-_fnko10j",
+  "isolatedTemporaryDataRemoved": true,
+  "date": "2026-10-22",
+  "dailyAddedCoreToolsRetained": true,
+  "remoteServerChanged": false,
+  "isolatedServerStopped": true,
+  "dailyServices": {
+    "3000": 200,
+    "5173": 200,
+    "8188": 200
+  },
+  "dailyCoreToolsReady": true,
+  "comfyHealthCheck": "Direct local /queue without unrelated Toonflow Origin header"
+}

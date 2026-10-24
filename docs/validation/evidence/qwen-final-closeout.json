@@ -1,0 +1,271 @@
+{
+  "date": "2026-10-22",
+  "providerId": "qwenImage21Local",
+  "version": "1.0.0",
+  "adapterSha256": "cadefd6096b8eb27277e350f5c96f378325f9a46efcf3b5d6cb9d209e47a68a3",
+  "tests": [
+    {
+      "mode": "text",
+      "modelId": "qwenImage21Text",
+      "request": {
+        "providerId": "qwenImage21Local",
+        "modelId": "qwenImage21Text",
+        "prompt": "一只蓝色折纸小船漂在宁静的小溪上，水彩动画背景风格，画面中央仅一只小船，远处有柔和的日出，清晰的纸张折痕，水面有倒影，没有文字或水印。",
+        "size": "1K",
+        "ratio": "1:1",
+        "outputDirectory": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37",
+        "images": [],
+        "mediaType": "image"
+      },
+      "httpStatus": 200,
+      "response": {
+        "code": 200,
+        "data": [
+          {
+            "path": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37/imagece199c24-46de-430b-9fcc-dbaddf135b17.png",
+            "mimeType": "image/png",
+            "mediaType": "image"
+          }
+        ],
+        "message": "成功"
+      },
+      "elapsedSeconds": 56.56,
+      "leadingWhitespaceBytes": 2,
+      "previews": [
+        {
+          "complete": true,
+          "width": 1024,
+          "height": 1024,
+          "src": "blob:http://127.0.0.1:58547/fb2d85ce-ec54-4751-8139-a2528c3675db"
+        }
+      ],
+      "file": {
+        "path": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37/imagece199c24-46de-430b-9fcc-dbaddf135b17.png",
+        "bytes": 1806907,
+        "sha256": "d90572024c528b17e883e4951ad2ecf1c52e297fa03475336dc11388d26b7484"
+      }
+    },
+    {
+      "mode": "singleImage",
+      "modelId": "qwenImage21Edit",
+      "fixture": "isolated saved canvas with generated text image connected to editor input",
+      "request": {
+        "providerId": "qwenImage21Local",
+        "modelId": "qwenImage21Edit",
+        "prompt": "将参考图中蓝色折纸小船改成红色，保留小船的折纸形状、小溪、水彩风格和柔和的日出光线。不要添加文字。",
+        "size": "1K",
+        "ratio": "1:1",
+        "outputDirectory": "assets/d2c41873-664e-429c-aa51-7847442446c4",
+        "images": [
+          {
+            "path": "assets/4fc3736e-f315-426d-aa27-ed28aeec9b37/imagece199c24-46de-430b-9fcc-dbaddf135b17.png",
+            "mimeType": "image/png"
+          }
+        ],
+        "mediaType": "image"
+      },
+      "httpStatus": 200,
+      "response": {
+        "code": 200,
+        "data": [
+          {
+            "path": "assets/d2c41873-664e-429c-aa51-7847442446c4/imagefdff4e9a-d1dc-45f3-8107-f45493e5650e.png",
+            "mimeType": "image/png",
+            "mediaType": "image"
+          }
+        ],
+        "message": "成功"
+      },
+      "elapsedSeconds": 100.88,
+      "leadingWhitespaceBytes": 5,
+      "previews": [
+        {
+          "complete": true,
+          "width": 1024,
+          "height": 1024,
+          "src": "blob:http://127.0.0.1:58547/dccbc443-4bd1-4683-9ba3-23a8d6bd6c55"
+        },
+        {
+          "complete": true,
+          "width": 1024,
+          "height": 1024,
+          "src": "blob:http://127.0.0.1:58547/e28a3998-26eb-4553-95e3-0b7c44b8af7d"
+        }
+      ],
+      "file": {
+        "path": "assets/d2c41873-664e-429c-aa51-7847442446c4/imagefdff4e9a-d1dc-45f3-8107-f45493e5650e.png",
+        "bytes": 1677164,
+        "sha256": "3d6677a37bd19ea21409827bedae1dbad431b3a35137ad3b6ae8b9d35a48f99e"
+      }
+    }
+  ],
+  "pageErrors": [],
+  "editPageErrors": [],
+  "reopenedPreviews": [
+    {
+      "complete": true,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "complete": true,
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "checks": {
+    "bothBusinessSuccess": true,
+    "bothFilesSaved": true,
+    "bothWebPreviews": true,
+    "reopenPreviews": true,
+    "referencePassed": true,
+    "noPageErrors": true
+  },
+  "workflowRecords": [
+    {
+      "mode": "text",
+      "promptId": "3ab0eaf3-826d-4ef4-9ed0-8e4e49e87f62",
+      "apiFile": "text-api.json",
+      "guiFile": "text-gui.json",
+      "savedGui": "M:\\ComfyUI_windows_portable_nvidia\\ComfyUI_windows_portable\\ComfyUI\\user\\default\\workflows\\2026-10-22-M0-qwenImage21Local-text.json",
+      "historyStatus": {
+        "status_str": "success",
+        "completed": true,
+        "messages": [
+          [
+            "execution_start",
+            {
+              "prompt_id": "3ab0eaf3-826d-4ef4-9ed0-8e4e49e87f62",
+              "timestamp": 1792668251394
+            }
+          ],
+          [
+            "execution_cached",
+            {
+              "nodes": [
+                "1",
+                "2",
+                "3",
+                "6"
+              ],
+              "prompt_id": "3ab0eaf3-826d-4ef4-9ed0-8e4e49e87f62",
+              "timestamp": 1792668251395
+            }
+          ],
+          [
+            "execution_success",
+            {
+              "prompt_id": "3ab0eaf3-826d-4ef4-9ed0-8e4e49e87f62",
+              "timestamp": 1792668306097
+            }
+          ]
+        ]
+      },
+      "comfyOutputs": {
+        "9": {
+          "images": [
+            {
+              "filename": "textToImage_00002_.png",
+              "subfolder": "QwenImage21Local",
+              "type": "output"
+            }
+          ]
+        }
+      },
+      "graphSha256": "a3d1728b7ab40b3d9caced075fa975dc3f47b5883c401756dde15373f15009c1",
+      "layout": {
+        "summary": "nodes=9 edges=9 overlaps=0 crossings=1 bounds=[40, 40, 2420, 1450]",
+        "overlaps": [],
+        "crossings": 1,
+        "bounds": [
+          40.0,
+          40.0,
+          2420.0,
+          1450.0
+        ],
+        "n_nodes": 9,
+        "n_edges": 9
+      },
+      "note": "API graph matched to successful ComfyUI history and PNG after removing runtime is_changed cache metadata. GUI is for inspection; dynamic widget roundtrip was not executed."
+    },
+    {
+      "mode": "edit",
+      "promptId": "2433380c-3954-400e-aeb7-6f5499c1dfee",
+      "apiFile": "edit-api.json",
+      "guiFile": "edit-gui.json",
+      "savedGui": "M:\\ComfyUI_windows_portable_nvidia\\ComfyUI_windows_portable\\ComfyUI\\user\\default\\workflows\\2026-10-22-M0-qwenImage21Local-edit.json",
+      "historyStatus": {
+        "status_str": "success",
+        "completed": true,
+        "messages": [
+          [
+            "execution_start",
+            {
+              "prompt_id": "2433380c-3954-400e-aeb7-6f5499c1dfee",
+              "timestamp": 1792668358656
+            }
+          ],
+          [
+            "execution_cached",
+            {
+              "nodes": [
+                "1",
+                "2",
+                "3",
+                "5",
+                "6"
+              ],
+              "prompt_id": "2433380c-3954-400e-aeb7-6f5499c1dfee",
+              "timestamp": 1792668358670
+            }
+          ],
+          [
+            "execution_success",
+            {
+              "prompt_id": "2433380c-3954-400e-aeb7-6f5499c1dfee",
+              "timestamp": 1792668458485
+            }
+          ]
+        ]
+      },
+      "comfyOutputs": {
+        "9": {
+          "images": [
+            {
+              "filename": "imageToImage_00002_.png",
+              "subfolder": "QwenImage21Local",
+              "type": "output"
+            }
+          ]
+        }
+      },
+      "graphSha256": "e5488ccc7cca6e548ecd091c82106959a6eb220a7a29458e4f860b9fb03b15f4",
+      "layout": {
+        "summary": "nodes=10 edges=11 overlaps=0 crossings=3 bounds=[40, 40, 2420, 1922]",
+        "overlaps": [],
+        "crossings": 3,
+        "bounds": [
+          40.0,
+          40.0,
+          2420.0,
+          1922.0
+        ],
+        "n_nodes": 10,
+        "n_edges": 11
+      },
+      "note": "API graph matched to successful ComfyUI history and PNG after removing runtime is_changed cache metadata. GUI is for inspection; dynamic widget roundtrip was not executed."
+    }
+  ],
+  "environment": {
+    "comfyuiVersion": "0.37.0",
+    "ramTotal": 34138939392,
+    "devices": [
+      {
+        "name": "cuda:0 NVIDIA GeForce RTX 3060 : cudaMallocAsync",
+        "type": "cuda",
+        "index": 0,
+        "vram_total": 12884377600
+      }
+    ]
+  }
+}

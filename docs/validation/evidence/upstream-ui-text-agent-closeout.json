@@ -1,0 +1,737 @@
+{
+  "date": "2026-10-22",
+  "text": {
+    "httpStatus": 200,
+    "rawSse": "data: {\"type\":\"reasoning\",\"delta\":\"We\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" need\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" answer\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" only\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" exact\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" Chinese\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" text\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\":\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" M\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"0\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" \"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"页面\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"文本\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"生成\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"成功\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"。\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"合成\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"测试\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"，\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"不需要\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"读取\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"或\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"引用\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"任何\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"文件\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\"。\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" Need\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" output\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" only\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" that\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\".\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" Ensure\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" no\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\" extra\"}\n\ndata: {\"type\":\"reasoning\",\"delta\":\".\"}\n\ndata: {\"type\":\"text\",\"delta\":\"M\"}\n\ndata: {\"type\":\"text\",\"delta\":\"0\"}\n\ndata: {\"type\":\"text\",\"delta\":\" \"}\n\ndata: {\"type\":\"text\",\"delta\":\"页面\"}\n\ndata: {\"type\":\"text\",\"delta\":\"文本\"}\n\ndata: {\"type\":\"text\",\"delta\":\"生成\"}\n\ndata: {\"type\":\"text\",\"delta\":\"成功\"}\n\ndata: {\"type\":\"text\",\"delta\":\"。\"}\n\ndata: {\"type\":\"text\",\"delta\":\"合成\"}\n\ndata: {\"type\":\"text\",\"delta\":\"测试\"}\n\ndata: {\"type\":\"text\",\"delta\":\"，\"}\n\ndata: {\"type\":\"text\",\"delta\":\"不需要\"}\n\ndata: {\"type\":\"text\",\"delta\":\"读取\"}\n\ndata: {\"type\":\"text\",\"delta\":\"或\"}\n\ndata: {\"type\":\"text\",\"delta\":\"引用\"}\n\ndata: {\"type\":\"text\",\"delta\":\"任何\"}\n\ndata: {\"type\":\"text\",\"delta\":\"文件\"}\n\ndata: {\"type\":\"text\",\"delta\":\"。\"}\n\ndata: {\"type\":\"done\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"We need answer only exact Chinese text: M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。 Need output only that. Ensure no extra.\",\"thinkingSignature\":\"reasoning_content\"},{\"type\":\"text\",\"text\":\"M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。\"}],\"api\":\"openai-completions\",\"provider\":\"toonflow\",\"model\":\"deepseek-flash\",\"usage\":{\"input\":52,\"output\":54,\"cacheRead\":0,\"cacheWrite\":0,\"reasoning\":35,\"totalTokens\":106,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"stop\",\"timestamp\":1792638867149,\"responseId\":\"57689712-36a9-4a05-87c9-60672b237ff5\",\"rawStopReason\":\"stop\"}}\n\n",
+    "events": [
+      {
+        "type": "reasoning",
+        "delta": "We"
+      },
+      {
+        "type": "reasoning",
+        "delta": " need"
+      },
+      {
+        "type": "reasoning",
+        "delta": " answer"
+      },
+      {
+        "type": "reasoning",
+        "delta": " only"
+      },
+      {
+        "type": "reasoning",
+        "delta": " exact"
+      },
+      {
+        "type": "reasoning",
+        "delta": " Chinese"
+      },
+      {
+        "type": "reasoning",
+        "delta": " text"
+      },
+      {
+        "type": "reasoning",
+        "delta": ":"
+      },
+      {
+        "type": "reasoning",
+        "delta": " M"
+      },
+      {
+        "type": "reasoning",
+        "delta": "0"
+      },
+      {
+        "type": "reasoning",
+        "delta": " "
+      },
+      {
+        "type": "reasoning",
+        "delta": "页面"
+      },
+      {
+        "type": "reasoning",
+        "delta": "文本"
+      },
+      {
+        "type": "reasoning",
+        "delta": "生成"
+      },
+      {
+        "type": "reasoning",
+        "delta": "成功"
+      },
+      {
+        "type": "reasoning",
+        "delta": "。"
+      },
+      {
+        "type": "reasoning",
+        "delta": "合成"
+      },
+      {
+        "type": "reasoning",
+        "delta": "测试"
+      },
+      {
+        "type": "reasoning",
+        "delta": "，"
+      },
+      {
+        "type": "reasoning",
+        "delta": "不需要"
+      },
+      {
+        "type": "reasoning",
+        "delta": "读取"
+      },
+      {
+        "type": "reasoning",
+        "delta": "或"
+      },
+      {
+        "type": "reasoning",
+        "delta": "引用"
+      },
+      {
+        "type": "reasoning",
+        "delta": "任何"
+      },
+      {
+        "type": "reasoning",
+        "delta": "文件"
+      },
+      {
+        "type": "reasoning",
+        "delta": "。"
+      },
+      {
+        "type": "reasoning",
+        "delta": " Need"
+      },
+      {
+        "type": "reasoning",
+        "delta": " output"
+      },
+      {
+        "type": "reasoning",
+        "delta": " only"
+      },
+      {
+        "type": "reasoning",
+        "delta": " that"
+      },
+      {
+        "type": "reasoning",
+        "delta": "."
+      },
+      {
+        "type": "reasoning",
+        "delta": " Ensure"
+      },
+      {
+        "type": "reasoning",
+        "delta": " no"
+      },
+      {
+        "type": "reasoning",
+        "delta": " extra"
+      },
+      {
+        "type": "reasoning",
+        "delta": "."
+      },
+      {
+        "type": "text",
+        "delta": "M"
+      },
+      {
+        "type": "text",
+        "delta": "0"
+      },
+      {
+        "type": "text",
+        "delta": " "
+      },
+      {
+        "type": "text",
+        "delta": "页面"
+      },
+      {
+        "type": "text",
+        "delta": "文本"
+      },
+      {
+        "type": "text",
+        "delta": "生成"
+      },
+      {
+        "type": "text",
+        "delta": "成功"
+      },
+      {
+        "type": "text",
+        "delta": "。"
+      },
+      {
+        "type": "text",
+        "delta": "合成"
+      },
+      {
+        "type": "text",
+        "delta": "测试"
+      },
+      {
+        "type": "text",
+        "delta": "，"
+      },
+      {
+        "type": "text",
+        "delta": "不需要"
+      },
+      {
+        "type": "text",
+        "delta": "读取"
+      },
+      {
+        "type": "text",
+        "delta": "或"
+      },
+      {
+        "type": "text",
+        "delta": "引用"
+      },
+      {
+        "type": "text",
+        "delta": "任何"
+      },
+      {
+        "type": "text",
+        "delta": "文件"
+      },
+      {
+        "type": "text",
+        "delta": "。"
+      },
+      {
+        "type": "done",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "We need answer only exact Chinese text: M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。 Need output only that. Ensure no extra.",
+              "thinkingSignature": "reasoning_content"
+            },
+            {
+              "type": "text",
+              "text": "M0 页面文本生成成功。合成测试，不需要读取或引用任何文件。"
+            }
+          ],
+          "api": "openai-completions",
+          "provider": "toonflow",
+          "model": "deepseek-flash",
+          "usage": {
+            "input": 52,
+            "output": 54,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 35,
+            "totalTokens": 106,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1792638867149,
+          "responseId": "57689712-36a9-4a05-87c9-60672b237ff5",
+          "rawStopReason": "stop"
+        }
+      }
+    ]
+  },
+  "agent": {
+    "httpStatus": 200,
+    "events": [
+      {
+        "type": "session",
+        "file": "2026-10-22T03-14-29-279Z_01a1619a-5f1f-701c-856e-6c3c48c4b279.jsonl"
+      },
+      {
+        "type": "userMessage",
+        "id": "1ef7d243",
+        "content": "这是合成画布验证。请先调用 getCanvas，include 选择 nodeTypes，确认文本节点类型；然后仅用 addNode 在 x=100,y=100 添加一个文本节点，label 必须为 M0 Agent 画布验证。不要生成媒体、不要读取其他文件、不要直接改 JSON。最后简短回复完成。"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "content": ""
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "Let"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " me"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " call"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " get"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "Canvas"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " with"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " include"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " node"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "Types"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "."
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " Note"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " pag"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "ination"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " may"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " be"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " needed"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " to"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " find"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " text"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " node"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": " type"
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "delta": "."
+      },
+      {
+        "type": "tool",
+        "blockId": "1:1",
+        "tool": {
+          "id": "call_00_x5wDh7B25Im1YYYsWTDg8129",
+          "name": "getCanvas",
+          "args": {},
+          "status": "running"
+        }
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "content": "Let me call getCanvas with include nodeTypes. Note pagination may be needed to find text node type.",
+        "done": true
+      },
+      {
+        "type": "tool",
+        "blockId": "1:1",
+        "tool": {
+          "id": "call_00_x5wDh7B25Im1YYYsWTDg8129",
+          "name": "getCanvas",
+          "args": {
+            "include": [
+              "nodeTypes"
+            ],
+            "limit": 100
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "thinking",
+        "blockId": "1:0",
+        "content": "Let me call getCanvas with include nodeTypes. Note pagination may be needed to find text node type.",
+        "done": true
+      },
+      {
+        "type": "tool",
+        "blockId": "1:1",
+        "tool": {
+          "id": "call_00_x5wDh7B25Im1YYYsWTDg8129",
+          "name": "getCanvas",
+          "args": {
+            "include": [
+              "nodeTypes"
+            ],
+            "limit": 100
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "1:1",
+        "tool": {
+          "id": "call_00_x5wDh7B25Im1YYYsWTDg8129",
+          "name": "getCanvas",
+          "args": {
+            "include": [
+              "nodeTypes"
+            ],
+            "limit": 100
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "canvasCall",
+        "callId": "47f5885a-feb7-4dbf-bf1b-880802b47353",
+        "name": "getCanvas",
+        "args": {
+          "include": [
+            "nodeTypes"
+          ],
+          "limit": 100
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "1:1",
+        "tool": {
+          "id": "call_00_x5wDh7B25Im1YYYsWTDg8129",
+          "name": "getCanvas",
+          "status": "success",
+          "result": "{\"canvasId\":\"canvas.json\",\"id\":\"canvas.json\",\"nodeCount\":1,\"edgeCount\":0,\"selectedCount\":1,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"availableNodeTypes\":[{\"type\":\"remote-audioGenerationNode\",\"label\":\"音频生成\"},{\"type\":\"remote-audioNode\",\"label\":\"音频\"},{\"type\":\"remote-director3dNode\",\"label\":\"3D导演台\"},{\"type\":\"remote-imageGenerationNode\",\"label\":\"图片生成\"},{\"type\":\"remote-imageNode\",\"label\":\"图片\"},{\"type\":\"remote-textNode\",\"label\":\"文本\"},{\"type\":\"remote-videoGenerationNode\",\"label\":\"视频生成\"},{\"type\":\"remote-videoNode\",\"label\":\"视频\"}],\"nodeTypeCount\":8,\"hasMore\":false,\"nextCursor\":null}"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "2:0",
+        "tool": {
+          "id": "call_00_ET_VNGj9ehocZUSbwsLkf6S5694",
+          "name": "addNode",
+          "args": {},
+          "status": "running"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "2:0",
+        "tool": {
+          "id": "call_00_ET_VNGj9ehocZUSbwsLkf6S5694",
+          "name": "addNode",
+          "args": {
+            "type": "remote-textNode",
+            "position": {
+              "x": 100,
+              "y": 100
+            },
+            "label": "M0 Agent 画布验证"
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "2:0",
+        "tool": {
+          "id": "call_00_ET_VNGj9ehocZUSbwsLkf6S5694",
+          "name": "addNode",
+          "args": {
+            "type": "remote-textNode",
+            "position": {
+              "x": 100,
+              "y": 100
+            },
+            "label": "M0 Agent 画布验证"
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "2:0",
+        "tool": {
+          "id": "call_00_ET_VNGj9ehocZUSbwsLkf6S5694",
+          "name": "addNode",
+          "args": {
+            "type": "remote-textNode",
+            "position": {
+              "x": 100,
+              "y": 100
+            },
+            "label": "M0 Agent 画布验证"
+          },
+          "status": "running"
+        }
+      },
+      {
+        "type": "canvasCall",
+        "callId": "ab8d3ff4-5144-414e-8ed8-391b93016185",
+        "name": "addNode",
+        "args": {
+          "type": "remote-textNode",
+          "position": {
+            "x": 100,
+            "y": 100
+          },
+          "label": "M0 Agent 画布验证"
+        }
+      },
+      {
+        "type": "tool",
+        "blockId": "2:0",
+        "tool": {
+          "id": "call_00_ET_VNGj9ehocZUSbwsLkf6S5694",
+          "name": "addNode",
+          "status": "success",
+          "result": "{\"node\":{\"id\":\"7789bb80-0c8b-45fa-927f-35459c50982f\",\"type\":\"remote-textNode\",\"label\":\"M0 Agent 画布验证\",\"selected\":false,\"position\":{\"x\":100,\"y\":100}}}"
+        }
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "已在"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": " x"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "="
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "100"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "、"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "y"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "="
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "100"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": " "
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "添加"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "文本"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "节点"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "「"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "M"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "0"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": " Agent"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": " "
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "画"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "布"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "验证"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "」，"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "未"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "生成"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "媒体"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "delta": "。"
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "content": "已在 x=100、y=100 添加文本节点「M0 Agent 画布验证」，未生成媒体。",
+        "done": true
+      },
+      {
+        "type": "text",
+        "blockId": "3:0",
+        "content": "已在 x=100、y=100 添加文本节点「M0 Agent 画布验证」，未生成媒体。",
+        "done": true
+      },
+      {
+        "type": "stats",
+        "stats": {
+          "tokens": {
+            "input": 12505,
+            "output": 193,
+            "cacheRead": 38912,
+            "cacheWrite": 0,
+            "total": 51610
+          },
+          "tokensPerSecond": 357.6612144023891
+        },
+        "contextUsage": {
+          "tokens": 17356,
+          "contextWindow": 1048576,
+          "percent": 1.6551971435546875
+        }
+      },
+      {
+        "type": "done"
+      }
+    ]
+  },
+  "pageErrors": [],
+  "projectDirectory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0WebProof1792638858",
+  "savedNodeLabels": [
+    "文本",
+    "M0 Agent 画布验证"
+  ],
+  "checks": {
+    "textDone": true,
+    "agentDone": true,
+    "canvasCall": true,
+    "savedAgentNode": true,
+    "noPageErrors": true
+  }
+}

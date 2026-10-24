@@ -1,0 +1,32 @@
+{
+  "isolatedServerStopped": true,
+  "date": "2026-10-22",
+  "removedRuntimeName": "huimeng-m0-qwen-final-78to_f5e",
+  "generatedProjectArchived": true,
+  "comfyWorkflowsRetained": true,
+  "isolatedTemporaryDataRemoved": true,
+  "originalFilesUnchanged": {
+    "data\\settings.json": true,
+    "data\\providers\\apiMart.ts": true,
+    "data\\providers\\compshare.ts": true,
+    "data\\providers\\h3Local3060.ts": true,
+    "data\\providers\\qwenImage21Local.ts": true,
+    "data\\providers\\tfRouter.ts": true,
+    "data\\tools\\askUser.tool.js": true,
+    "data\\tools\\canvas.tool.js": true,
+    "data\\tools\\deleteTool.tool.js": true,
+    "data\\tools\\mediaGeneration.tool.js": true,
+    "data\\tools\\skillOperator.tool.js": true,
+    "data\\tools\\videoComposer.tool.js": true,
+    "data\\tools\\workspace.tool.js": true
+  },
+  "dailyServices": {
+    "3000": 200,
+    "5173": 200,
+    "8188": 200
+  },
+  "isolatedEndpointStopped": true,
+  "temporaryPathAbsent": true,
+  "queueRunningCount": 0,
+  "queuePendingCount": 0
+}

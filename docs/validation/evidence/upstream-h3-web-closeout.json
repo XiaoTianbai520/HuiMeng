@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-22",
+  "request": {
+    "providerId": "h3Local3060",
+    "modelId": "h3T2v",
+    "prompt": "integrated_multimodal_description: [Shot 1] A blue paper boat drifts slowly across a calm stream at sunrise. Tracking Shot slowly alongside it. A continuous shot, no people, no text.\n\noverall_soundscape: Gentle flowing water and distant birds.\n\nnon_diegetic_music: None.",
+    "mode": "text",
+    "duration": 5,
+    "resolution": "352p",
+    "ratio": "16:9",
+    "generateAudio": true,
+    "outputDirectory": "assets/f492cf58-8f65-40f1-8354-0598f8fd58e4",
+    "images": [],
+    "videos": [],
+    "audios": [],
+    "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0WebProof1792638858",
+    "mediaType": "video"
+  },
+  "httpStatus": 200,
+  "response": {
+    "code": 200,
+    "data": [
+      {
+        "path": "assets/f492cf58-8f65-40f1-8354-0598f8fd58e4/video52be0052-9ac4-4ad5-9536-8242675124eb.mp4",
+        "mimeType": "video/mp4",
+        "mediaType": "video"
+      }
+    ],
+    "message": "成功"
+  },
+  "elapsedSeconds": 258.19,
+  "player": {
+    "duration": 5.167,
+    "width": 608,
+    "height": 352,
+    "readyState": 4
+  },
+  "pageErrors": []
+}

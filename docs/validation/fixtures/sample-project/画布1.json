@@ -1,0 +1,53 @@
+{
+  "toonflowCanvas": true,
+  "nodes": [
+    {
+      "id": "f4d47afc-5e06-41df-b05f-6b550c9cd9d3",
+      "type": "remote-textNode",
+      "initialized": false,
+      "position": {
+        "x": 550,
+        "y": 1
+      },
+      "data": {
+        "label": "文本",
+        "handles": [
+          {
+            "id": "in",
+            "type": "target",
+            "dataType": [
+              "VIDEO",
+              "IMAGE",
+              "STRING",
+              "FILE"
+            ],
+            "label": "视频、图片、文本、文件输入"
+          },
+          {
+            "id": "text",
+            "type": "source",
+            "dataType": "STRING",
+            "label": "文本输出"
+          }
+        ],
+        "outputs": {},
+        "promptModel": [
+          [
+            {
+              "type": "Write",
+              "text": ""
+            }
+          ]
+        ],
+        "model": "",
+        "textPath": "assets/f4d47afc-5e06-41df-b05f-6b550c9cd9d3/content.md"
+      }
+    }
+  ],
+  "edges": [],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

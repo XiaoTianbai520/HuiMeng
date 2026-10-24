@@ -1,0 +1,166 @@
+# 绘梦 1.0 接口与数据契约（CONTRACTS）
+
+> **状态：M1 已冻结平台及关键创作契约，后端尚未实现。** 本文区分“上游已核对行为”和“1.0 新约定”。M0 已按固定提交 [d2e94aca](https://github.com/HBAI-Ltd/Toonflow-app/commit/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d) 完成源路由、主要成功流和基础请求取证。字段字典以 [OpenAPI](openapi.yaml) 与[冻结记录](M1_CONTRACT_REVIEW.md)为准；[127 条映射](route-map.json)中的 92 条兼容细项仍为 proposed，在对应 M3 批次继续细化。不能把契约或浏览器桩当作已实现的服务。
+
+## 1. 版本、域名与认证
+
+| 类型 | 1.0 路径 | 认证 | 说明 |
+| --- | --- | --- | --- |
+| 平台业务 API | `/api/v1/**` | 内部账号会话 Cookie | 新增账号、项目、管理员能力 |
+| 项目创作兼容 API | `/api/v1/projects/{projectId}/creative/{upstreamPath}` | 内部账号会话 Cookie | 仅在逐条白名单中的原 Web 路由；隐藏 `directory`，不做任意通配转发 |
+| 外部 MCP | `/mcp` 及上游协议要求的子路径 | 专用 Bearer 凭证 | 仅供局域网获授权客户端访问；原 MCP 协议、工具名和事件以 M0 样例为准 |
+| 外部 A2A | `/a2a/{teamName}` 及协议子路径 | 专用 Bearer 凭证 | 仅供局域网获授权客户端访问；原 A2A Agent Card、任务提交/查询/取消以 M0 样例为准 |
+| Bun 内部 API | 内网地址，仅 Spring 可访问 | 服务身份 + 已验证项目上下文 | 不属于公开契约 |
+
+所有对局域网开放的入口经 HTTPS，不发布到公网。会话接口需要 CSRF 防护；外部 Bearer 凭证不得放 URL、浏览器 LocalStorage 或日志。一个外部客户端凭证在 1.0 绑定一个项目及一组允许的 MCP 工具/A2A 团队；这是一项**新约定**，上游全局 token 不再对外使用。
+
+### 1.1 通用头与标识
+
+| 项 | 约定 |
+| --- | --- |
+| `X-Request-Id` | 可由调用方传入；服务端生成或规范化，响应回传，用于日志关联 |
+| `Content-Type` | JSON 请求为 `application/json`；原始文件上传为 `application/octet-stream`；流式按对应协议 |
+| `Idempotency-Key` | 计名额的生成/Agent 新运行请求必填；同调用方、同项目、同操作重复请求返回同一运行或明确状态，内容不一致返回冲突 |
+| `projectId` | 项目 API 路径中的不透明 ID；服务端映射目录。客户端不得提交服务器绝对路径 |
+| 时间 | ISO 8601 UTC；文件字节与上游项目 JSON 内容不被网关转码 |
+
+### 1.2 1.0 新增错误结构
+
+平台入口在**开始流式响应前**发生的校验/授权/限额错误统一返回：
+
+```json
+{"code":"PROJECT_FORBIDDEN","message":"无权访问该项目","requestId":"req_123","details":null}
+```
+
+| HTTP | code | 典型含义 |
+| --- | --- | --- |
+| 400 | `INVALID_ARGUMENT` / `PATH_NOT_ALLOWED` | 参数或相对路径非法 |
+| 401 | `UNAUTHENTICATED` / `CLIENT_TOKEN_INVALID` | 会话或外部凭证无效 |
+| 403 | `PROJECT_FORBIDDEN` / `CAPABILITY_FORBIDDEN` | 项目或工具/团队无授权 |
+| 404 | `NOT_FOUND` | 不存在或不对该调用方可见 |
+| 409 | `REVISION_CONFLICT` / `IDEMPOTENCY_CONFLICT` | 保存版本或幂等键冲突 |
+| 429 | `PROJECT_CAPACITY_EXCEEDED` / `RATE_LIMITED` | 五名额已满或请求限速 |
+| 502/503 | `EXECUTOR_UNAVAILABLE` / `RUN_LOST` | 内部执行器不可用或运行状态丢失 |
+
+流一旦建立，不再插入新的 HTTP JSON 错误体；按该路由实际协议传送错误，并把运行记录置为失败。上游 Agent 在模型未配置时返回 HTTP 200 与 NDJSON `error` 行；媒体生成在响应头已发出后可返回 HTTP 200、JSON 正文 `code:404`。Spring 适配层须同时检查正文与传输状态，不能仅按 HTTP 200 判成功。上游普通成功响应不强制包裹在这个错误结构里，避免破坏原 Web 代码。[M0 原始失败样例](../validation/evidence/upstream-protocol-limits.json)与[成功流补测](../archive/m0/M0_CLOSEOUT.md)已保存；目标平台仍须解析实际业务终态。
+
+## 2. 新增平台 API
+
+以下方法、字段是**1.0 设计**，以 M1 的 OpenAPI 为精确字段和响应依据。所有会话写接口（含登录）要求 `X-CSRF-Token` 并校验同源 Origin；由 `GET /api/v1/auth/csrf` 取得预登录/当前令牌，登录后轮换。会话 Cookie、分页、默认配置见[冻结记录](M1_CONTRACT_REVIEW.md#2-平台通用规则)。外部 Bearer 请求不使用浏览器会话 CSRF。
+
+### 2.1 账号与会话
+
+| 方法与路径 | 请求 | 成功响应 | 权限 |
+| --- | --- | --- | --- |
+| `GET /api/v1/auth/csrf` | 无 | `{token}`，no-store，必要时设预会话 Cookie | 未登录/已登录 |
+| `POST /api/v1/auth/login` | `{username,password}` | `{user:{id,username,role}}`，设置安全 Cookie | 未登录 |
+| `GET /api/v1/auth/me` | 无 | `{id,username,role,status}` | 已登录 |
+| `POST /api/v1/auth/logout` | 无 | `204`，会话失效 | 已登录 |
+
+管理员账号接口：`POST /api/v1/admin/users` 创建、`GET /api/v1/admin/users` 列表、`PATCH /api/v1/admin/users/{userId}` 停用/启用或重置授权。请求和响应绝不返回 password_hash；初始密码仅通过受控渠道交付。公开注册接口不存在。
+
+### 2.2 项目与成员
+
+| 方法与路径 | 请求 | 成功响应 | 权限 |
+| --- | --- | --- | --- |
+| `GET /api/v1/projects` | 分页参数 | `{items:[{id,name,status}],nextCursor}` | 成员仅获授权项目；管理员可管理全部 |
+| `POST /api/v1/projects` | `{name}` | `201 {id,name,status}` | 管理员 |
+| `GET /api/v1/projects/{projectId}` | 无 | `{id,name,status}` | 项目成员可读；管理员仅有元数据管理权限 |
+| `POST /api/v1/projects/{projectId}/members` | `{userId}` | `201 {userId,projectId}` | 管理员 |
+| `DELETE /api/v1/projects/{projectId}/members/{userId}` | 无 | `204` | 管理员 |
+
+任何响应不返回 `workspace_key` 或服务器 `absolutePath`。被移除成员的后续请求立即失效；已启动生成按运行清理策略处理，不得继续读取项目结果。
+
+### 2.3 公司配置与外部凭证
+
+| 方法与路径 | 请求 | 成功响应 | 权限 |
+| --- | --- | --- | --- |
+| `GET /api/v1/models` | 无 | `{items:[{providerId,modelId,capabilities}]}` | 已登录，仅获批模型 |
+| `PUT /api/v1/admin/providers/{providerId}/secret` | `{apiKey}` | `204` | 管理员；Key 只写 |
+| `GET /api/v1/admin/providers` | 无 | 仅返回标识、是否已配置、更新时间 | 管理员 |
+| `POST /api/v1/admin/external-clients` | `{name,projectId,mcpTools:[],a2aTeams:[]}` | `201 {id,token,scope}` | 管理员；token 仅此响应可见 |
+| `GET /api/v1/admin/external-clients` | 无 | 列表，不含 token 或 secret_hash | 管理员 |
+| `POST /api/v1/admin/external-clients/{clientId}/revoke` | 无 | `204` | 管理员 |
+
+当前本地测试模型标识以[供应商清单](../validation/LOCAL_PROVIDERS.md)为准：h3Local3060 的 5 项模型，以及 qwenImage21Local 的 qwenImage21Text/qwenImage21Edit。旧 localQwenImage21/qwen-image-2.1 已停用，不能继续作为默认请求样例；模型选择仍从安全模型列表查询。现用 Qwen 两模型的真实 Web 请求与成功响应已[独立归档](../validation/evidence/qwen-final-closeout.json)，包含正文 code 200、相对落盘路径和 JSON 保活空白；新平台事件契约回归仍待 M1/M3。
+
+### 2.4 插件市场与管理
+
+在线发现和已安装能力管理属于 1.0 现行范围。以下新增平台 DTO/OpenAPI 已在 M1 冻结，尚未实现后端；原插件管理兼容细项在 M3-08 细化。市场使用公司 TF-Router 账号，不要求员工个人账号；收藏和“我的”沿用公司市场账号语义，收藏变更限管理员。
+
+| 方法与路径 | 请求 / 返回 | 权限 |
+| --- | --- | --- |
+| `POST /api/v1/admin/plugin-market/search` | Body `{page,limit,type,searchKeyword?}`；返回 `{items,total}`，安全目录 DTO | 管理员 |
+| `POST /api/v1/admin/plugin-market/collections/toggle` | Body `{pluginId}`；返回 `{collected}`；上游为切换操作，网络异常不自动重试 | 管理员 |
+| `PUT /api/v1/admin/plugin-market/secret` | Body `{apiKey}`；成功 `204`，只写不回显 | 管理员 |
+| `GET /api/v1/admin/plugin-market/status` | 无请求参数；返回 `{configured}`，不含凭据 | 管理员 |
+| `GET /api/v1/admin/plugins` | 安全已安装元数据，包含停用项；无配置密钥 | 管理员 |
+| `POST /api/v1/admin/plugin-market/install` | `{pluginId,manifest:{type,name,version,sha256},force?}`；核对服务器获批清单 | 管理员 |
+
+`page` 正整数；`limit` 为 1–50；`type` 沿用 `all/node/ext/skill/tool/agent/my/collection`，原版关闭的 Agent 市场安装入口保持关闭。`items` 保留 `id,type,name,displayName,author,description,version,fileName,isCollected` 等展示字段，并给出 installable/获批 manifest；内网目录、凭据、远端认证参数不返回。M0-06 已录制真实原响应 `{code:200,data:{list,total},message,id}` 与无效凭据 HTTP 401；M1 的安全 DTO 字段、缺省和可空性见 OpenAPI 与冻结记录，来源见[市场基线](../archive/m0/M0_PLUGIN_MARKET.md)。
+
+上游源码已核对的外部调用为 `POST https://api.toonflow.net/v1/plugin/getPlugin` 和 `POST .../v1/plugin/toggleCollection`，使用 TF-Router Bearer；不是现有 127 条 Bun 自动路由。新 Web 只调用 Spring，凭据由 Spring 注入，不复用浏览器 settings 中的明文 Key。真实目录、分类、分页、搜索、收藏切换与恢复、官方文档技能下载已取证。
+
+安装、保存、配置、启停、导出、卸载按原 `nodes/tools/skills/ext/agents` 实际支持的方法逐项映射到 `/api/v1/admin/...` 白名单，禁止作为项目创作通配接口透传。管理员可从市场选择插件或上传原版支持的本地包；市场安装先由后端核对目录项、下载地址、类型、版本和摘要，再交 Bun 安装。任意 URL 不因出现在目录中而自动可信；逐跳下载授权及归档校验见[设计](../architecture/DESIGN.md#81-插件市场迁移)。成员调用全部写管理接口返回 403；MCP/A2A 凭证不能安装插件或修改公司配置。
+
+成员能力查询只返回批准且启用的运行元数据和必要客户端资源，配置密钥不回显；内置工具应随发布安装并真实加载。安装冲突、占用、坏包、超时、断网及更新失败均须有可识别错误且不破坏现有可用版本；完整性失败为 409/PLUGIN_INTEGRITY_FAILED，占用为 409/PLUGIN_IN_USE。M0 发现官方条目版本与包内版本不一致、`fileHash` 未定义算法且未被原安装器使用：目标须核对类型/标识/版本、获批 SHA-256 清单，不能信任前端自报摘要。原构建扩展反引号导出被拒绝亦须修复复验。
+
+## 3. 项目创作兼容 API
+
+兼容入口中的 `{upstreamPath}` 是**经过白名单匹配的固定路由**，不是任意代理。上游路径来自[生成路由表](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/router.ts)。方法、字段与响应以下游固定提交为源，网关只进行必要变换：注入服务端目录、过滤不允许能力、校验授权、加审计和容量。所有创作请求带路径中的 `projectId`；请求体或查询中的 `directory`、`absolutePath`、自报用户 ID 必须被拒绝或剥离，不能优先于服务端映射。
+
+| 创作分组 | 路径例子 | 关键契约 |
+| --- | --- | --- |
+| 工作区/文件 | `workspaces/files/{list,read,write,copy,remove,rename}` | 项目相对路径；读写授权；写入修订号 |
+| 素材 | `assets/{list,read,save,remove,rename}` | 仅项目或明确组织作用域；大文件流式上传下载 |
+| 文本/模型 | `ai/models`、`ai/generate` | 已批准模型；文本 SSE 原帧 |
+| 媒体 | `ai/media/{models,generate,balance,price}` | 管理模型/费用字段脱敏；生成占项目名额 |
+| Agent | `agent`、`agent/{create,get,list,message,answer,canvasResult,...}` | 项目及发起人绑定；NDJSON 原事件 |
+| 单 Agent | `singleAgent/{create,run,answer,control,toolResult}` | 项目内计名额；项目外按账号限流 |
+| FFmpeg | `ffmpeg/{execute,events,status}`；程序安装另走管理员入口 | 转码由 execute 返回 SSE，转码取消复用 requestId；download/cancel/progress 是程序安装管理，不是成片下载 |
+| 插件能力 | `nodes/**`、`tools/**`、`skills/**`、`agents/**`、`ext/**` | 成员使用获批能力；市场与安装/修改走独立管理员入口，见 §2.4 |
+| MCP 控制 | `mcp/{status,skill,control/**}` | Web 页面连接与项目绑定，不暴露外部凭证 |
+
+### 3.1 已核对的关键上游形态
+
+- [文件写入](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/routes/workspaces/files/write.ts) 是 `PUT /api/workspaces/files/write`，查询中原有 `directory`、`path`、可选 `expectedRevision`（SHA-256 十六进制）、`exclusive` 和 `encoding`；请求体是 `application/octet-stream`。原实现旧修订号不符返回 409/`ESTALE`。1.0 入口为 `PUT /api/v1/projects/{projectId}/creative/workspaces/files/write?path=...&expectedRevision=...`；不接受外部 `directory`，冲突对页面规范化为 409/`REVISION_CONFLICT`，保留当前内容。首次新建可用 `exclusive=true`。
+- [文本生成](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/routes/ai/generate.ts) 是 `POST /api/ai/generate`，请求含 `providerId`、`modelId`、`context`，可选 `references`；返回 `text/event-stream`，含 `text`、`reasoning`、`done`、`error` 类型的 `data:` JSON 帧和 `: keepalive`。1.0 不能缓冲成普通 JSON；单独文本调用不占 5 名额。
+- [媒体生成](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/routes/ai/media/generate.ts) 是 `POST /api/ai/media/generate`，请求含 `mediaType=image|video|audio` 和该类型生成参数。响应最终为 JSON；等待时可能写入前导空白保活，客户端须容忍；不是 SSE。M0 实测无提供商时 HTTP 为 200，但正文 `code:404`，新平台必须把此情形识别为失败。1.0 先抢占名额，结束或确认取消后释放。
+- [项目 Agent](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/routes/agent.ts) 是 `POST /api/agent`，请求含 `prompt`、`providerId`、`modelId`、可选 `canvas`/附件/会话文件；返回 `application/x-ndjson`，每行一个事件对象，包含 `done` 或 `error`，可插空行保活。1.0 保持事件顺序，并把整个 Agent 运行计 1 个名额。
+
+### 3.2 FFmpeg 原协议与安全边界
+
+`POST /api/ffmpeg/execute` 的 prepare 操作返回普通 JSON，转码返回 SSE，事件含 start/progress/end/error；取消转码使用同一 requestId 和 operation.method=cancel，须等子进程结束后确认取消。`ffmpeg/download`、`cancel`、`progress` 对应程序下载/安装，属于管理员能力；生成媒体通过项目文件接口下载。上游原始 inputOptions/outputOptions、滤镜和清单可产生间接 I/O，显式文件校验不是进程沙箱；成员入口须限制获批操作/参数，或在项目文件系统隔离环境中执行。[实测](../validation/evidence/upstream-ffmpeg-closeout.json)
+
+### 3.3 文件修订与路径
+
+上游 `GET /api/workspaces/files/read?directory=...&path=...&snapshot=true` 返回 `{data:{text,encoding,revision}}`；`revision` 是原文件字节的 SHA-256。普通读取返回文件内容，不带这个 JSON 快照。1.0 的项目文件快照读取应保留 `text`、`encoding`、`revision`，移除外部 `directory` 参数。文档编辑已有 `expectedRevision` 保存与 409/`ESTALE` 冲突处理；画布原自动保存未传该字段，1.0 必须改为读取修订号后提交 `expectedRevision`，并在 409 时停止该画布的继续自动覆盖。新建文件继续支持 `exclusive=true`。冲突响应示例：
+
+```json
+{"code":"REVISION_CONFLICT","message":"文件已被其他人修改，请重新载入后处理","requestId":"req_124","details":{"currentRevision":"<sha256>"}}
+```
+
+所有 `path` 是项目根目录下相对路径。拒绝绝对路径、`..` 穿越、编码变形及符号链接逃逸；文件 ID、下载链接和重命名目标都必须重新授权。响应不得暴露服务器绝对路径。
+
+## 4. 外部 MCP/A2A 协议边界
+
+上游 [MCP 控制](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/utils/mcp/control.ts) 使用单进程页面连接；[A2A 入口](https://github.com/HBAI-Ltd/Toonflow-app/blob/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d/apps/server/src/agent/a2a/index.ts) 使用内存任务。1.0 不自定义新的 MCP/A2A JSON 结构，保持固定上游协议与 SDK 兼容；M0 已录制 Agent Card、工具发现、调用、任务提交/查询/取消及错误样例；M1 将其整理为自动契约测试夹具。
+
+固定提交 A2A 为协议 1.0，客户端须携带 `A2A-Version: 1.0`。缺少该头会被 SDK 视为 0.3 并返回 VERSION_NOT_SUPPORTED。JSON-RPC 方法使用 `SendMessage`、`GetTask`、`CancelTask`，不能套用旧版 message/send 名称；异步提交使用 `configuration.returnImmediately=true`。[已录制样例](../validation/evidence/upstream-a2a-closeout.json)
+
+在协议处理**之前**，Spring 校验 Bearer 凭证、归属项目与工具/团队名单；运行类调用争抢同项目名额。A2A 任务 ID 同时绑定 clientId 和 projectId，查询/取消不因知道 ID 而越权。MCP 画布控制只查找同项目页面连接。上游进程重启导致任务丢失时返回明确的失效/重试错误，不伪造完成结果。原协议若无法表达上述错误，在网关预处理阶段用 HTTP 状态和标准 MCP/A2A 错误对象表达，具体字段由 M1 对照 M0 样例冻结。
+
+## 5. 已有台账与待冻结接口
+
+截至本稿，[迁移清单](../product/TOONFLOW_WEB_MIGRATION.md#3-基于代码路由的迁移清单)列出 127 条自动路由，其中 25 条明确排除，102 条为已有源事实及目标入口处置的 Web 候选；另有独立挂载的 MCP/A2A。102 是**候选数量，不是无条件发布数量**。现有 `docs/api/route-inventory.md` 和逐条明细已记录源事实及目标处置；M1–M3 继续完善：上游方法与路径、前端调用点、请求/响应示例、流式事件、1.0 入口、角色与项目规则、是否占名额、Bun 实现位置、自动测试、迁移状态、验收编号；不设固定负责人。没有台账与测试的路由不得加入公开白名单。
+
+明确拒绝 `/api/desktop/**`、`/api/mobileLink/**`、`/api/browser/{input,stream}`、`/api/workspaces/selectDirectory`、`/api/workspaces/files/reveal`；插件市场与受控远程安装纳入独立管理员契约。管理类路由按实际所需独立授权，不得借创作兼容入口给普通成员透传。
+
+2026-10-22 已完成 [127 条源事实与入口处置](upstream/route-details.md)、[机器可读台账](upstream/route-details.json)和 102 条无参/空输入基础探测。2026-10-24 的 M1 交付 38 个 OpenAPI 操作与 127 条目标映射：8 frozen、92 proposed、25 excluded、2 internal，全部 publicEnabled=false。全部业务成功流及 Spring 身份/项目测试仍由 M2/M3 完成。
+
+## 6. 契约验证与变更规则
+
+1. M0 固定上游提交并录制原 Web 关键路径、MCP/A2A 样例和原项目文件；M1 把平台 API 转成 OpenAPI，把 SSE/NDJSON/MCP/A2A 样例作为测试夹具。
+2. 前端适配层与 Spring 使用同一契约生成类型或同一测试夹具；每批迁移比较响应、事件顺序、取消与错误。
+3. 任何字段或协议变化先更新此文档与机器可读契约，标明兼容性影响，再实现与测试；不得直接修改已冻结的原项目文件正文格式。
+4. 已冻结的错误码、DTO 和线协议可作为客户端依赖；proposed 细项仍须在对应批次评审、测试后冻结。具体上游未核对的路由不得凭路径名称推断方法、参数或状态码。

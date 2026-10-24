@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-22",
+  "commit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "archiveSha256": "0c2836486430d8af981033eb4b0db3cb5b915e5cba01d4bca20dfb8080f21129",
+  "remoteTemporaryDirectory": "/tmp/huimeng-m0-build.etJjYO4v",
+  "container": "huimeng-m0-build-etjjyo4v",
+  "image": "oven/bun:1.3.14",
+  "limits": {
+    "cpus": 2,
+    "memoryGiB": 3,
+    "swapGiB": 0
+  },
+  "command": "bun install --frozen-lockfile && bun run build:server",
+  "retryExitCode": 0,
+  "retryElapsedSeconds": 95.02
+}

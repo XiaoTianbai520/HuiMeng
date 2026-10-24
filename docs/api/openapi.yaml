@@ -1,0 +1,5496 @@
+openapi: 3.1.0
+info:
+  title: 绘梦 1.0 API
+  version: 1.0.0-m1
+  description: M1 平台契约冻结；实现仍在 M2/M3。兼容路由状态见 route-map.json；无通配代理。
+servers:
+- url: /
+  description: 局域网同源 HTTPS；开发代理仅指向 Spring
+security:
+- Session: []
+paths:
+  /api/v1/auth/csrf:
+    get:
+      operationId: getCsrf
+      summary: 取得预登录或当前会话 CSRF 令牌
+      description: 'Cache-Control: no-store；建立预会话 Cookie。登录轮换会话及 CSRF，客户端登录成功后重新读取。'
+      tags:
+      - auth
+      x-contract-status: frozen
+      x-roles:
+      - ANONYMOUS
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  token:
+                    type: string
+                required:
+                - token
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security: []
+  /api/v1/auth/login:
+    post:
+      operationId: login
+      summary: 内部账号登录
+      description: 预登录 CSRF + 同源 Origin 校验；轮换会话；禁止自动重试。
+      tags:
+      - auth
+      x-contract-status: frozen
+      x-roles:
+      - ANONYMOUS
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                required:
+                - user
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      security: []
+  /api/v1/auth/me:
+    get:
+      operationId: me
+      summary: 读取当前账号
+      description: 读取当前账号
+      tags:
+      - auth
+      x-contract-status: frozen
+      x-roles: &id001
+      - AUTHENTICATED
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/auth/logout:
+    post:
+      operationId: logout
+      summary: 退出并撤销当前会话
+      description: 退出并撤销当前会话
+      tags:
+      - auth
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/admin/users:
+    get:
+      operationId: listUsers
+      summary: 账号列表
+      description: 账号列表
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: &id002
+      - ADMIN
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createUser
+      summary: 创建内部账号
+      description: 创建内部账号
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '201':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+  /api/v1/admin/users/{userId}:
+    patch:
+      operationId: updateUser
+      summary: 启停账号、改角色或重置密码
+      description: 至少一个字段；禁止停用或降权最后一个活跃管理员；停用/重置密码撤销已有会话。
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A01
+      x-requirements:
+      - FR-01
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: &id003
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[A-Za-z0-9_-]+$
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+  /api/v1/projects:
+    get:
+      operationId: listProjects
+      summary: 列出授权项目或管理员可管理的元数据
+      description: 列出授权项目或管理员可管理的元数据
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A02
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPage'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createProject
+      summary: 建立项目
+      description: 建立项目
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A02
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '201':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+  /api/v1/projects/{projectId}:
+    get:
+      operationId: getProject
+      summary: 读取项目元数据
+      description: 读取项目元数据
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles:
+      - ADMIN
+      - PROJECT_MEMBER
+      x-acceptance:
+      - A02
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      operationId: updateProject
+      summary: 修改项目元数据
+      description: 修改项目元数据
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A02
+      x-requirements:
+      - FR-02
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+  /api/v1/projects/{projectId}/members:
+    get:
+      operationId: listMembers
+      summary: 成员列表
+      description: 成员列表
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A02
+      x-requirements:
+      - FR-02
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberPage'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: addMember
+      summary: 增加项目成员
+      description: 增加项目成员
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A02
+      x-requirements:
+      - FR-02
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '201':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberInput'
+  /api/v1/projects/{projectId}/members/{userId}:
+    delete:
+      operationId: removeMember
+      summary: 移除成员，阻断后续项目读取
+      description: 移除成员，阻断后续项目读取
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A02
+      x-requirements:
+      - FR-02
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: userId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/models:
+    get:
+      operationId: listModels
+      summary: 仅返回获批且启用的模型
+      description: 仅返回获批且启用的模型
+      tags:
+      - models
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A07
+      - A08
+      - A11
+      x-requirements:
+      - FR-06
+      - FR-09
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Model'
+                required:
+                - items
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/admin/providers:
+    get:
+      operationId: listProviders
+      summary: 供应商配置状态
+      description: 供应商配置状态
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      x-requirements:
+      - FR-09
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProviderStatus'
+                required:
+                - items
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/admin/providers/{providerId}/secret:
+    put:
+      operationId: setProviderSecret
+      summary: 写入公司供应商密钥
+      description: 写入公司供应商密钥
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      x-requirements:
+      - FR-09
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: providerId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretInput'
+  /api/v1/admin/models/approval:
+    put:
+      operationId: approveModel
+      summary: 启停模型批准状态
+      description: 启停模型批准状态
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      x-requirements:
+      - FR-09
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Approval'
+  /api/v1/admin/external-clients:
+    post:
+      operationId: issueClient
+      summary: 签发单项目外部凭证，原文仅返回一次
+      description: 签发单项目外部凭证，原文仅返回一次
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A13
+      x-requirements:
+      - FR-10
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '201':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientIssued'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+    get:
+      operationId: listClients
+      summary: 查看外部授权，不返回凭证原文
+      description: 查看外部授权，不返回凭证原文
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A13
+      x-requirements:
+      - FR-10
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPage'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/admin/external-clients/{clientId}/revoke:
+    post:
+      operationId: revokeClient
+      summary: 撤销外部凭证
+      description: 撤销外部凭证
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A13
+      x-requirements:
+      - FR-10
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/preferences:
+    get:
+      operationId: getPreferences
+      summary: 读取当前账号个人偏好
+      description: 读取当前账号个人偏好
+      tags:
+      - preferences
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A11
+      - A14
+      x-requirements:
+      - FR-09
+      - FR-13
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preferences'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: setPreferences
+      summary: 保存个人偏好，不接受供应商或市场配置
+      description: 保存个人偏好，不接受供应商或市场配置
+      tags:
+      - preferences
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A11
+      - A14
+      x-requirements:
+      - FR-09
+      - FR-13
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preferences'
+  /api/v1/admin/plugin-market/search:
+    post:
+      operationId: searchMarket
+      summary: 公司市场发现、搜索和分页
+      description: 公司市场发现、搜索和分页
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-14
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketSearch'
+  /api/v1/admin/plugin-market/collections/toggle:
+    post:
+      operationId: toggleCollection
+      summary: 切换公司收藏，禁止自动重试
+      description: 切换公司收藏，禁止自动重试
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-14
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  collected: &id004
+                    type: boolean
+                required:
+                - collected
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                pluginId: *id003
+              required:
+              - pluginId
+  /api/v1/admin/plugin-market/secret:
+    put:
+      operationId: setMarketSecret
+      summary: 写入公司 TF-Router 密钥
+      description: 写入公司 TF-Router 密钥
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      - A12
+      x-requirements:
+      - FR-09
+      - FR-14
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretInput'
+  /api/v1/admin/plugin-market/status:
+    get:
+      operationId: getMarketStatus
+      summary: 市场配置状态
+      description: 市场配置状态
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      - A12
+      x-requirements:
+      - FR-09
+      - FR-14
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  configured: *id004
+                required:
+                - configured
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/admin/plugin-market/install:
+    post:
+      operationId: installMarketPlugin
+      summary: 校验清单后安装市场制品
+      description: pluginId 由目录查找地址；类型/标识/版本/明确的 SHA-256 必须与包一致。force 必须经界面明确确认；有运行占用仍拒绝。Agent 市场安装关闭。
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-14
+      x-audit-required: true
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginInstall'
+  /api/v1/admin/plugins:
+    get:
+      operationId: listInstalledPlugins
+      summary: 管理员读取全部已安装能力及安全配置
+      description: 包括已禁用能力；不能复用成员只含批准且启用能力的列表。配置规则不含秘密默认值；秘密省略，保留 configuredSecrets 标识，写接口未提供的秘密保持原值。
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      - A12
+      x-requirements:
+      - FR-09
+      - FR-14
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InstalledPlugin'
+                required:
+                - items
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/runs/{runId}:
+    get:
+      operationId: getRun
+      summary: 查询发起人所属运行
+      description: 查询发起人所属运行
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: &id005
+      - PROJECT_MEMBER
+      x-acceptance:
+      - A16
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: runId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/runs/{runId}/cancel:
+    post:
+      operationId: cancelRun
+      summary: 请求取消，收到确认后才释放名额
+      description: 重复取消不重复执行。202 仅表示请求已接收，state 可能仍为 CANCELLING；断开流不等于取消。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A16
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: runId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '202':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/ai/media/generate:
+    post:
+      operationId: generateMedia
+      summary: 媒体生成，JSON 前导空白保活
+      description: 先占位再调用执行器。HTTP 200 仍须解析正文 code；仅 code=200 表示成功。X-Run-Id 标识运行。模型切换保留合法已选规格，缺省用模型推荐值；提交前显示有效规格，不强制将 2K 改成
+        1K。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A08
+      - A16
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+            X-Run-Id:
+              schema: *id003
+              description: 运行 ID，用于查询及显式取消
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '202':
+          description: 同一幂等键的重试；只返回原运行，不重复执行或重放结果流
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+          headers:
+            X-Run-Id:
+              schema: *id003
+              description: 原运行 ID
+            Location:
+              schema:
+                type: string
+              description: 同源项目运行查询路径
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaGenerate'
+  /api/v1/projects/{projectId}/creative/workspaces/files/read:
+    get:
+      operationId: readFile
+      summary: 读取原字节或带修订号的快照
+      description: 读取原字节或带修订号的快照
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A03
+      - A04
+      - A05
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      - FR-05
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: path
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/RelativePath'
+      - name: snapshot
+        in: query
+        required: false
+        schema: *id004
+      - name: maxBytes
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: Range
+        in: header
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: snapshot=true 时 data 为 Snapshot，否则原文件字节；快照不接受 Range。
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotResult'
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '206':
+          description: Range 部分文件字节
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '416':
+          description: 'Range 超出文件范围，Content-Range: bytes */长度'
+  /api/v1/projects/{projectId}/creative/workspaces/files/write:
+    put:
+      operationId: writeFile
+      summary: 在同一文件锁内校验修订并原子保存
+      description: 已有文件 expectedRevision 必填；新建 exclusive=true。二者必须且只能提供一种。409.details.currentRevision 返回当前修订；前端停止自动覆盖。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A03
+      - A04
+      - A05
+      - A06
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      - FR-05
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: path
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/RelativePath'
+      - name: expectedRevision
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+      - name: exclusive
+        in: query
+        required: false
+        schema: *id004
+      - name: encoding
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - utf-8
+          - utf-8-bom
+          - utf-16le
+          - utf-16be
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+  /api/v1/projects/{projectId}/creative/ai/generate:
+    post:
+      operationId: textGenerate
+      summary: 保留原流式帧与错误终态
+      description: 按 M1_CONTRACT_REVIEW 的心跳/分块/终态规则处理；不缓冲成普通 JSON。完整嵌套事件字段由固定提交类型定义约束。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A07
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              x-event-schema:
+                $ref: '#/components/schemas/TextEvent'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextGenerate'
+  /api/v1/projects/{projectId}/creative/agent:
+    post:
+      operationId: agentGenerate
+      summary: 保留原流式帧与错误终态
+      description: 按 M1_CONTRACT_REVIEW 的心跳/分块/终态规则处理；不缓冲成普通 JSON。完整嵌套事件字段由固定提交类型定义约束。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A09
+      - A16
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+            X-Run-Id:
+              schema: *id003
+              description: 服务端运行 ID；与上游 runId 分开
+          content:
+            application/x-ndjson:
+              schema:
+                type: string
+              x-event-schema:
+                $ref: '#/components/schemas/AgentEvent'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '202':
+          description: 同一幂等键的重试；查询原运行，不重开流或再次执行
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+          headers:
+            X-Run-Id:
+              schema: *id003
+              description: 原运行 ID
+            Location:
+              schema:
+                type: string
+              description: 同源项目运行查询路径
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentGenerate'
+  /api/v1/projects/{projectId}/creative/singleAgent/run:
+    post:
+      operationId: singleAgentRun
+      summary: 保留原流式帧与错误终态
+      description: 按 M1_CONTRACT_REVIEW 的心跳/分块/终态规则处理；不缓冲成普通 JSON。完整嵌套事件字段由固定提交类型定义约束。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A09
+      - A16
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+            X-Run-Id:
+              schema: *id003
+              description: 服务端运行 ID；与上游 runId 分开
+          content:
+            application/x-ndjson:
+              schema:
+                type: string
+              x-event-schema:
+                $ref: '#/components/schemas/AgentEvent'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '202':
+          description: 同一幂等键的重试；查询原运行，不重开流或再次执行
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+          headers:
+            X-Run-Id:
+              schema: *id003
+              description: 原运行 ID
+            Location:
+              schema:
+                type: string
+              description: 同源项目运行查询路径
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleAgentRun'
+  /api/v1/projects/{projectId}/creative/ffmpeg/execute:
+    post:
+      operationId: executeFfmpeg
+      summary: 隔离环境中的 FFmpeg 调用/prepare/取消
+      description: 必须先通过项目文件系统/网络隔离及资源限制验收；未实现隔离不得开放。requestId 绑定发起人+项目；取消等待进程结束。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id005
+      x-acceptance:
+      - A10
+      - A18
+      x-requirements:
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-11
+      x-audit-required: false
+      x-implemented: false
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id003
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyResult'
+            text/event-stream:
+              schema:
+                type: string
+              x-event-schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  event:
+                    type: string
+                    enum:
+                    - start
+                    - progress
+                    - end
+                    - error
+                    - codecData
+                    - stderr
+                  args:
+                    type: array
+                    items: &id014
+                      description: JSON value; only within an explicitly documented payload.
+                required:
+                - event
+                - args
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FfmpegExecute'
+components:
+  securitySchemes:
+    Session:
+      type: apiKey
+      in: cookie
+      name: __Host-huimeng-session
+    ExternalBearer:
+      type: http
+      scheme: bearer
+  schemas:
+    Error:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        message:
+          type: string
+        requestId:
+          type: string
+        details:
+          oneOf:
+          - type: object
+          - &id007
+            type: 'null'
+      required:
+      - code
+      - message
+      - requestId
+      - details
+    ErrorCode:
+      type: string
+      enum:
+      - INVALID_ARGUMENT
+      - PATH_NOT_ALLOWED
+      - UNAUTHENTICATED
+      - CLIENT_TOKEN_INVALID
+      - CSRF_INVALID
+      - PROJECT_FORBIDDEN
+      - CAPABILITY_FORBIDDEN
+      - NOT_FOUND
+      - REVISION_CONFLICT
+      - IDEMPOTENCY_CONFLICT
+      - PROJECT_CAPACITY_EXCEEDED
+      - RATE_LIMITED
+      - EXECUTOR_UNAVAILABLE
+      - RUN_LOST
+      - PLUGIN_INTEGRITY_FAILED
+      - PLUGIN_VERSION_CONFLICT
+      - PLUGIN_IN_USE
+      - MARKET_UNAVAILABLE
+      - UPLOAD_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+    User:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        username: &id006
+          type: string
+          minLength: 1
+          maxLength: 128
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - DISABLED
+      required:
+      - id
+      - username
+      - role
+      - status
+    Login:
+      type: object
+      additionalProperties: false
+      properties:
+        username: *id006
+        password:
+          type: string
+          minLength: 1
+          maxLength: 256
+          writeOnly: true
+      required:
+      - username
+      - password
+    CreateUser:
+      type: object
+      additionalProperties: false
+      properties:
+        username: *id006
+        password:
+          type: string
+          minLength: 12
+          maxLength: 256
+          writeOnly: true
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+          default: USER
+      required:
+      - username
+      - password
+    UpdateUser:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - DISABLED
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+        password:
+          type: string
+          minLength: 12
+          maxLength: 256
+          writeOnly: true
+      minProperties: 1
+    Project:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        name: *id006
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - ARCHIVED
+      required:
+      - id
+      - name
+      - status
+    ProjectInput:
+      type: object
+      additionalProperties: false
+      properties:
+        name: *id006
+      required:
+      - name
+    ProjectUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        name: *id006
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - ARCHIVED
+      minProperties: 1
+    MemberInput:
+      type: object
+      additionalProperties: false
+      properties:
+        userId: *id003
+      required:
+      - userId
+    Member:
+      type: object
+      additionalProperties: false
+      properties:
+        userId: *id003
+        projectId: *id003
+      required:
+      - userId
+      - projectId
+    SecretInput:
+      type: object
+      additionalProperties: false
+      properties:
+        apiKey:
+          type: string
+          minLength: 1
+          maxLength: 16384
+          writeOnly: true
+      required:
+      - apiKey
+    ProviderStatus:
+      type: object
+      additionalProperties: false
+      properties:
+        providerId: *id003
+        configured: *id004
+        updatedAt:
+          oneOf:
+          - &id008
+            type: string
+            format: date-time
+          - *id007
+      required:
+      - providerId
+      - configured
+      - updatedAt
+    Model:
+      type: object
+      additionalProperties: false
+      properties:
+        providerId: *id003
+        modelId: *id006
+        label: *id006
+        capabilities:
+          type: array
+          items:
+            type: string
+            enum:
+            - text
+            - image
+            - video
+            - audio
+            - agent
+        enabled: *id004
+        options:
+          type: object
+          description: 获批模型的公开规格；不得含端点、密钥或服务器目录。
+      required:
+      - providerId
+      - modelId
+      - label
+      - capabilities
+      - enabled
+      - options
+    Approval:
+      type: object
+      additionalProperties: false
+      properties:
+        providerId: *id003
+        modelId: *id006
+        enabled: *id004
+      required:
+      - providerId
+      - modelId
+      - enabled
+    ClientInput:
+      type: object
+      additionalProperties: false
+      properties:
+        name: *id006
+        projectId: *id003
+        mcpTools:
+          type: array
+          items: *id006
+        a2aTeams:
+          type: array
+          items: *id006
+      required:
+      - name
+      - projectId
+      - mcpTools
+      - a2aTeams
+    Client:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        name: *id006
+        projectId: *id003
+        mcpTools:
+          type: array
+          items: *id006
+        a2aTeams:
+          type: array
+          items: *id006
+        createdAt: *id008
+        revokedAt:
+          oneOf:
+          - *id008
+          - *id007
+      required:
+      - id
+      - name
+      - projectId
+      - mcpTools
+      - a2aTeams
+      - createdAt
+      - revokedAt
+    ClientIssued:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        token:
+          type: string
+          readOnly: true
+        scope:
+          $ref: '#/components/schemas/ClientInput'
+      required:
+      - id
+      - token
+      - scope
+    MarketSearch:
+      type: object
+      additionalProperties: false
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+        type:
+          type: string
+          enum:
+          - all
+          - node
+          - ext
+          - skill
+          - tool
+          - agent
+          - my
+          - collection
+        searchKeyword:
+          type: string
+          maxLength: 200
+      required:
+      - page
+      - limit
+      - type
+    MarketItem:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        type:
+          type: string
+          enum:
+          - node
+          - ext
+          - skill
+          - tool
+          - agent
+        name:
+          type: string
+        displayName:
+          type: string
+        author:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        fileName:
+          type: string
+        isCollected: *id004
+        installable: *id004
+        manifest:
+          oneOf:
+          - $ref: '#/components/schemas/PluginManifest'
+          - *id007
+      required:
+      - id
+      - type
+      - name
+      - displayName
+      - author
+      - description
+      - version
+      - fileName
+      - isCollected
+      - installable
+      - manifest
+    MarketResult:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketItem'
+        total:
+          type: integer
+          minimum: 0
+      required:
+      - items
+      - total
+    PluginManifest:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum:
+          - node
+          - ext
+          - skill
+          - tool
+        name: *id006
+        version: *id006
+        sha256:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+      required:
+      - type
+      - name
+      - version
+      - sha256
+    PluginInstall:
+      type: object
+      additionalProperties: false
+      properties:
+        pluginId: *id003
+        manifest:
+          $ref: '#/components/schemas/PluginManifest'
+        force: *id004
+      required:
+      - pluginId
+      - manifest
+    InstalledPlugin:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum:
+          - node
+          - ext
+          - skill
+          - tool
+          - agent
+        name: *id006
+        displayName:
+          type: string
+        author:
+          type: string
+        description:
+          type: string
+        version: *id006
+        enabled: *id004
+        canManage: *id004
+        canConfigure: *id004
+        configRules:
+          type: array
+          items:
+            type: object
+        config:
+          type: object
+          description: 仅非秘密配置；secret 字段省略，不能返回脱敏占位符作为值
+        configuredSecrets:
+          type: array
+          items:
+            type: string
+      required:
+      - type
+      - name
+      - displayName
+      - author
+      - description
+      - version
+      - enabled
+      - canManage
+      - canConfigure
+      - configRules
+      - config
+      - configuredSecrets
+    Run:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id003
+        projectId: *id003
+        kind:
+          type: string
+          enum:
+          - image
+          - video
+          - audio
+          - agent
+          - singleAgent
+        state:
+          type: string
+          enum:
+          - RESERVED
+          - RUNNING
+          - CANCELLING
+          - SUCCEEDED
+          - FAILED
+          - CANCELLED
+          - LOST
+        capacityHeld: *id004
+        createdAt: *id008
+        endedAt:
+          oneOf:
+          - *id008
+          - *id007
+      required:
+      - id
+      - projectId
+      - kind
+      - state
+      - capacityHeld
+      - createdAt
+      - endedAt
+    Preferences:
+      type: object
+      additionalProperties: false
+      properties:
+        ui:
+          type: object
+        general:
+          type: object
+        stores:
+          type: object
+        documentExtensions:
+          type: object
+          additionalProperties:
+            type: string
+    RelativePath:
+      type: string
+      maxLength: 2048
+      pattern: ^(?![\\/])(?!.*(?:^|[\\/])\.\.(?:[\\/]|$))(?!.*[:\x00-\x1f]).*$
+    Snapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        text:
+          type: string
+        encoding:
+          type: string
+          enum:
+          - utf-8
+          - utf-8-bom
+          - utf-16le
+          - utf-16be
+        revision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+      required:
+      - text
+      - encoding
+      - revision
+    UserPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        nextCursor:
+          oneOf:
+          - type: string
+          - *id007
+      required:
+      - items
+      - nextCursor
+    ProjectPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        nextCursor:
+          oneOf:
+          - type: string
+          - *id007
+      required:
+      - items
+      - nextCursor
+    MemberPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+        nextCursor:
+          oneOf:
+          - type: string
+          - *id007
+      required:
+      - items
+      - nextCursor
+    ClientPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+        nextCursor:
+          oneOf:
+          - type: string
+          - *id007
+      required:
+      - items
+      - nextCursor
+    MediaGenerate:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        properties:
+          providerId: *id003
+          modelId: &id009
+            type: string
+            minLength: 1
+            maxLength: 256
+          prompt: &id010
+            type: string
+            minLength: 1
+            maxLength: 100000
+          outputDirectory: &id011
+            $ref: '#/components/schemas/RelativePath'
+          images: &id012
+            type: array
+            items: &id013
+              type: object
+              additionalProperties: false
+              properties:
+                path:
+                  $ref: '#/components/schemas/RelativePath'
+                mimeType:
+                  type: string
+                  pattern: ^(image|video|audio)/[a-zA-Z0-9.+-]+$
+              required:
+              - path
+              - mimeType
+            maxItems: 64
+          mediaType:
+            type: string
+            enum:
+            - image
+          ratio:
+            type: string
+          size:
+            type: string
+            minLength: 1
+            maxLength: 64
+        required:
+        - providerId
+        - modelId
+        - prompt
+        - mediaType
+      - type: object
+        additionalProperties: false
+        properties:
+          providerId: *id003
+          modelId: *id009
+          prompt: *id010
+          outputDirectory: *id011
+          images: *id012
+          mediaType:
+            type: string
+            enum:
+            - video
+          ratio:
+            type: string
+          videos:
+            type: array
+            items: *id013
+          audios:
+            type: array
+            items: *id013
+          firstFrame: *id013
+          lastFrame: *id013
+          resolution:
+            type: string
+            minLength: 1
+            maxLength: 64
+          duration:
+            type: number
+            exclusiveMinimum: 0
+            maximum: 3600
+          generateAudio: *id004
+          mode:
+            oneOf:
+            - type: string
+              enum:
+              - singleImage
+              - startEndRequired
+              - endFrameOptional
+              - startFrameOptional
+              - text
+            - type: array
+              items:
+                type: string
+                pattern: ^(image|video|audio)Reference:([1-9][0-9]?|1[0-9]{2}|2[0-4][0-9]|25[0-6])$
+              minItems: 1
+              maxItems: 3
+        required:
+        - providerId
+        - modelId
+        - prompt
+        - mediaType
+      - type: object
+        additionalProperties: false
+        properties:
+          providerId: *id003
+          modelId: *id009
+          prompt: *id010
+          outputDirectory: *id011
+          images: *id012
+          mediaType:
+            type: string
+            enum:
+            - audio
+          audios:
+            type: array
+            items: *id013
+          voice:
+            type: string
+          speed:
+            type: number
+            exclusiveMinimum: 0
+          volume:
+            type: number
+          pitch:
+            type: number
+          language:
+            type: string
+          format:
+            type: string
+          sampleRate:
+            type: integer
+            minimum: 1
+        required:
+        - providerId
+        - modelId
+        - prompt
+        - mediaType
+    LegacyResult:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: integer
+        data: *id014
+        message:
+          type: string
+      required:
+      - code
+      - data
+      - message
+    GeneratedMedia:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          $ref: '#/components/schemas/RelativePath'
+        mimeType:
+          type: string
+        mediaType:
+          type: string
+          enum:
+          - image
+          - video
+          - audio
+      required:
+      - path
+      - mimeType
+      - mediaType
+    MediaResult:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        properties:
+          code:
+            const: 200
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/GeneratedMedia'
+          message:
+            type: string
+        required:
+        - code
+        - data
+        - message
+      - type: object
+        additionalProperties: false
+        properties:
+          code:
+            type: integer
+            not:
+              const: 200
+          data: *id014
+          message:
+            type: string
+        required:
+        - code
+        - data
+        - message
+    SnapshotResult:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          const: 200
+        data:
+          $ref: '#/components/schemas/Snapshot'
+        message:
+          type: string
+      required:
+      - code
+      - data
+      - message
+    WriteResult:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          const: 200
+        data:
+          type: object
+          additionalProperties: false
+          properties:
+            revision:
+              type: string
+              pattern: ^[a-f0-9]{64}$
+          required:
+          - revision
+        message:
+          type: string
+      required:
+      - code
+      - data
+      - message
+    TextContext:
+      type: object
+      additionalProperties: false
+      properties:
+        systemPrompt:
+          type: string
+          maxLength: 100000
+        messages:
+          type: array
+          items:
+            type: object
+            required:
+            - role
+            - content
+            - timestamp
+            properties:
+              role:
+                type: string
+                enum:
+                - user
+                - assistant
+                - toolResult
+              content:
+                oneOf:
+                - type: string
+                - type: array
+                  items:
+                    type: object
+              timestamp:
+                type: number
+                minimum: 0
+          minItems: 1
+          maxItems: 2000
+        tools:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                pattern: ^[a-z][a-zA-Z0-9]{0,63}$
+              description:
+                type: string
+                minLength: 1
+                maxLength: 10000
+              parameters:
+                type: object
+              constrainedSampling:
+                oneOf:
+                - const: false
+                - type: object
+            required:
+            - name
+            - description
+            - parameters
+          maxItems: 32
+      required:
+      - messages
+      description: SDK Context 原结构；总 UTF-8 JSON <=8 MB，tools 名称唯一；工具 schema 必须 type=object 且 <=100 KB。嵌套 assistant/工具消息按固定
+        SDK 校验，见 route-map R020 源字段。
+    AiReference:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        properties:
+          dataType:
+            const: STRING
+          value:
+            type: string
+            maxLength: 1000000
+        required:
+        - dataType
+        - value
+      - type: object
+        additionalProperties: false
+        properties:
+          dataType:
+            type: string
+            enum:
+            - IMAGE
+            - VIDEO
+            - FILE
+          value:
+            type: object
+            additionalProperties: false
+            properties:
+              url:
+                $ref: '#/components/schemas/RelativePath'
+              mimeType:
+                type: string
+                minLength: 1
+                maxLength: 128
+            required:
+            - url
+            - mimeType
+        required:
+        - dataType
+        - value
+    TextGenerate:
+      type: object
+      additionalProperties: false
+      properties:
+        providerId: *id003
+        modelId: *id006
+        context:
+          $ref: '#/components/schemas/TextContext'
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiReference'
+          maxItems: 32
+      required:
+      - providerId
+      - modelId
+      - context
+    TextEvent:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            type: string
+            enum:
+            - text
+            - reasoning
+          delta:
+            type: string
+        required:
+        - type
+        - delta
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            const: done
+          message:
+            type: object
+        required:
+        - type
+        - message
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            const: error
+          message:
+            type: string
+        required:
+        - type
+        - message
+    AgentGenerate:
+      type: object
+      additionalProperties: false
+      properties:
+        prompt:
+          type: string
+          maxLength: 100000
+        providerId: *id003
+        modelId: *id006
+        attachments:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 255
+              path:
+                $ref: '#/components/schemas/RelativePath'
+              mimeType:
+                type: string
+                minLength: 1
+                maxLength: 128
+            required:
+            - name
+            - path
+            - mimeType
+          maxItems: 20
+        mentions:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                format: uuid
+              label:
+                type: string
+                minLength: 1
+                maxLength: 500
+              source:
+                oneOf:
+                - type: object
+                  additionalProperties: false
+                  properties:
+                    kind:
+                      const: asset
+                    path:
+                      $ref: '#/components/schemas/RelativePath'
+                  required:
+                  - kind
+                  - path
+                - type: object
+                  additionalProperties: false
+                  properties:
+                    kind:
+                      const: canvas
+                    canvasId:
+                      type: string
+                      minLength: 1
+                    canvasName:
+                      type: string
+                      minLength: 1
+                    nodeId:
+                      type: string
+                      minLength: 1
+                    nodeName:
+                      type: string
+                      minLength: 1
+                    outputId:
+                      type: string
+                      minLength: 1
+                    outputName:
+                      type: string
+                      minLength: 1
+                  required:
+                  - kind
+                  - canvasId
+                  - canvasName
+                  - nodeId
+                  - nodeName
+                  - outputId
+                  - outputName
+              dataType:
+                type: string
+                minLength: 1
+                maxLength: 64
+              value: *id014
+            required:
+            - id
+            - label
+            - source
+            - dataType
+            - value
+          maxItems: 20
+        thinkingLevel:
+          type: string
+          enum:
+          - 'off'
+          - low
+          - medium
+          - high
+        sessionFile:
+          type: string
+          pattern: ^[\w-]+\.jsonl$
+        resendFrom:
+          type: string
+          minLength: 1
+          maxLength: 128
+        canvas:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+              minLength: 1
+              maxLength: 256
+            tools:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  nodeId:
+                    type: string
+                    minLength: 1
+                    maxLength: 256
+                  name:
+                    type: string
+                    pattern: ^node:[a-z][a-zA-Z0-9]*$
+                  nodeLabel:
+                    type: string
+                    maxLength: 200
+                  description:
+                    type: string
+                    maxLength: 4000
+                  parameters:
+                    type: object
+                required:
+                - nodeId
+                - name
+                - description
+                - parameters
+              maxItems: 1000
+          required:
+          - id
+          - tools
+      required:
+      - prompt
+      - providerId
+      - modelId
+      description: mentions 按 dataType 校验；单 value 深度<=32、节点<=10000、JSON 长度<=100000，总 mentions<=500000。附件格式使用固定 documentFormats
+        可读格式白名单；canvas tools parameters.type 必须 object。
+    AgentEvent:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - text
+          - thinking
+          - compaction
+          - tool
+          - canvasCall
+          - question
+          - error
+          - session
+          - userMessage
+          - subAgent
+          - subAgentEvent
+          - report
+          - accepted
+          - stats
+          - done
+      description: 保留固定提交 AgentEvent 嵌套结构；完整字段类型保存在独立前端 contracts/agent-types，递归子事件不结束父流。
+    SingleAgentRun:
+      type: object
+      additionalProperties: false
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        runId:
+          type: string
+          format: uuid
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 100000
+        providerId:
+          type: string
+          minLength: 1
+          maxLength: 200
+        modelId:
+          type: string
+          minLength: 1
+          maxLength: 500
+        thinkingLevel:
+          type: string
+          enum:
+          - 'off'
+          - minimal
+          - low
+          - medium
+          - high
+          - xhigh
+      required:
+      - sessionId
+      - runId
+      - prompt
+      - providerId
+      - modelId
+    FfmpegExecute:
+      type: object
+      additionalProperties: false
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        options:
+          type: object
+          additionalProperties: false
+          properties:
+            source:
+              $ref: '#/components/schemas/RelativePath'
+            cwd:
+              $ref: '#/components/schemas/RelativePath'
+            niceness:
+              type: integer
+              minimum: -20
+              maximum: 20
+            priority:
+              type: integer
+              minimum: -20
+              maximum: 20
+            stdoutLines:
+              type: integer
+              minimum: 0
+            timeout:
+              type: number
+              minimum: 0
+        calls:
+          type: array
+          items: &id015
+            type: object
+            additionalProperties: false
+            properties:
+              method:
+                type: string
+                minLength: 1
+                maxLength: 64
+              args:
+                type: array
+                items: *id014
+                maxItems: 128
+              undefinedArgs:
+                type: array
+                items:
+                  type: integer
+                  minimum: 0
+                  maximum: 127
+                maxItems: 128
+            required:
+            - method
+            - args
+          maxItems: 2048
+        operation: *id015
+      required:
+      - requestId
+      - options
+      - calls
+      - operation

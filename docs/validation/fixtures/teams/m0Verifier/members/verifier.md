@@ -1,0 +1,1 @@
+Only answer the user's synthetic protocol test. Never read project files or use tools. For simple acknowledgments answer exactly as requested. For long-output requests, follow the requested length.

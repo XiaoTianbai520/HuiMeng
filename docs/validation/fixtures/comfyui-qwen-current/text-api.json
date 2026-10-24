@@ -1,0 +1,131 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Qwen 2.1 INT8"
+    },
+    "inputs": {
+      "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Qwen3-VL 8B W4A8"
+    },
+    "inputs": {
+      "clip_name": "qwen3vl_8b_w4a8.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Qwen 2.1 VAE"
+    },
+    "inputs": {
+      "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "TextEncodeQwenImage21",
+    "_meta": {
+      "title": "文生图提示词"
+    },
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": "一只蓝色折纸小船漂在宁静的小溪上，水彩动画背景风格，画面中央仅一只小船，远处有柔和的日出，清晰的纸张折痕，水面有倒影，没有文字或水印。",
+      "negative_prompt": "",
+      "resolution": 1024
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "输出画布（32对齐）"
+    },
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "6": {
+    "class_type": "QwenImage21Cache",
+    "_meta": {
+      "title": "原生 KV Cache"
+    },
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "device": "auto",
+      "dtype": "default"
+    }
+  },
+  "7": {
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "基础模型 / 25步 / CFG1"
+    },
+    "inputs": {
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "4",
+        1
+      ],
+      "latent_image": [
+        "5",
+        0
+      ],
+      "seed": 1043236543,
+      "steps": 25,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE 解码"
+    },
+    "inputs": {
+      "samples": [
+        "7",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存 PNG"
+    },
+    "inputs": {
+      "images": [
+        "8",
+        0
+      ],
+      "filename_prefix": "QwenImage21Local/textToImage"
+    }
+  }
+}

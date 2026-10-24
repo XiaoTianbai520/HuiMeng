@@ -1,0 +1,1479 @@
+{
+  "date": "2026-10-22",
+  "fixedCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "baseUrl": "http://127.0.0.1:3002",
+  "statusBefore": {
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "code": 200,
+      "data": {
+        "platform": "win32",
+        "arch": "x64",
+        "target": "win32-x64",
+        "supported": true,
+        "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\ffmpeg\\win32-x64",
+        "version": "6.1.1",
+        "sources": [
+          {
+            "id": "npmmirror",
+            "label": "阿里镜像（推荐）",
+            "description": "国内下载源，建议优先使用",
+            "available": true,
+            "homepage": "https://npmmirror.com/"
+          },
+          {
+            "id": "github",
+            "label": "GitHub 上游",
+            "description": "ffmpeg-static 项目发布的预编译程序",
+            "available": true,
+            "homepage": "https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1"
+          },
+          {
+            "id": "ghProxy",
+            "label": "GH-Proxy 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.org/"
+          },
+          {
+            "id": "ghFast",
+            "label": "GHFast 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://ghfast.top/"
+          },
+          {
+            "id": "ghProxyNet",
+            "label": "GHProxy.net 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://ghproxy.net/"
+          },
+          {
+            "id": "ghJasonZeng",
+            "label": "JasonZeng 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.jasonzeng.dev/"
+          },
+          {
+            "id": "ghGeekertao",
+            "label": "Geekertao 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.dpik.top/"
+          },
+          {
+            "id": "ghLlkk",
+            "label": "LLKK 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.llkk.cc/"
+          },
+          {
+            "id": "ghProxyIpv4",
+            "label": "GH-Proxy IPv4 优选",
+            "description": "GH-Proxy 的 IPv4 优选线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyDualStack",
+            "label": "GH-Proxy 双栈优选",
+            "description": "GH-Proxy 的 IPv4 / IPv6 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyFastly",
+            "label": "GH-Proxy Fastly 线路",
+            "description": "GH-Proxy 的 Fastly CDN 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyAxisNow",
+            "label": "GH-Proxy AxisNow 线路",
+            "description": "GH-Proxy 的 AxisNow 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "tencent",
+            "label": "腾讯云",
+            "description": "未提供已核验的同版本构建，暂不支持自动下载",
+            "available": false,
+            "homepage": "https://mirrors.cloud.tencent.com/"
+          },
+          {
+            "id": "tuna",
+            "label": "清华大学",
+            "description": "暂无已核验的独立预编译程序，暂不支持自动下载",
+            "available": false,
+            "homepage": "https://mirrors.tuna.tsinghua.edu.cn/"
+          }
+        ],
+        "config": {
+          "mode": "download",
+          "source": "npmmirror"
+        },
+        "tools": {
+          "ffmpeg": {
+            "path": null,
+            "origin": null,
+            "version": null,
+            "error": "未找到可用程序"
+          },
+          "ffprobe": {
+            "path": null,
+            "origin": null,
+            "version": null,
+            "error": "未找到可用程序"
+          }
+        },
+        "download": {
+          "phase": "idle",
+          "received": 0
+        }
+      },
+      "message": "成功"
+    }
+  },
+  "downloads": [
+    {
+      "source": "npmmirror",
+      "start": {
+        "httpStatus": 200,
+        "contentType": "application/json; charset=utf-8",
+        "body": {
+          "code": 200,
+          "data": {
+            "phase": "downloading",
+            "received": 0
+          },
+          "message": "成功"
+        }
+      },
+      "phases": [
+        {
+          "phase": "downloading",
+          "file": "ffmpeg",
+          "received": 18654484,
+          "total": 29581307
+        },
+        {
+          "phase": "verifying",
+          "file": "ffmpeg",
+          "received": 29581307,
+          "total": 29581307
+        },
+        {
+          "phase": "downloading",
+          "file": "ffprobe",
+          "received": 15286272,
+          "total": 29521644
+        },
+        {
+          "phase": "verifying",
+          "file": "ffprobe",
+          "received": 29521644,
+          "total": 29521644
+        },
+        {
+          "phase": "completed",
+          "received": 0
+        }
+      ]
+    }
+  ],
+  "statusAfter": {
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "code": 200,
+      "data": {
+        "platform": "win32",
+        "arch": "x64",
+        "target": "win32-x64",
+        "supported": true,
+        "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\ffmpeg\\win32-x64",
+        "version": "6.1.1",
+        "sources": [
+          {
+            "id": "npmmirror",
+            "label": "阿里镜像（推荐）",
+            "description": "国内下载源，建议优先使用",
+            "available": true,
+            "homepage": "https://npmmirror.com/"
+          },
+          {
+            "id": "github",
+            "label": "GitHub 上游",
+            "description": "ffmpeg-static 项目发布的预编译程序",
+            "available": true,
+            "homepage": "https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1"
+          },
+          {
+            "id": "ghProxy",
+            "label": "GH-Proxy 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.org/"
+          },
+          {
+            "id": "ghFast",
+            "label": "GHFast 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://ghfast.top/"
+          },
+          {
+            "id": "ghProxyNet",
+            "label": "GHProxy.net 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://ghproxy.net/"
+          },
+          {
+            "id": "ghJasonZeng",
+            "label": "JasonZeng 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.jasonzeng.dev/"
+          },
+          {
+            "id": "ghGeekertao",
+            "label": "Geekertao 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.dpik.top/"
+          },
+          {
+            "id": "ghLlkk",
+            "label": "LLKK 加速",
+            "description": "第三方 GitHub 加速渠道，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh.llkk.cc/"
+          },
+          {
+            "id": "ghProxyIpv4",
+            "label": "GH-Proxy IPv4 优选",
+            "description": "GH-Proxy 的 IPv4 优选线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyDualStack",
+            "label": "GH-Proxy 双栈优选",
+            "description": "GH-Proxy 的 IPv4 / IPv6 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyFastly",
+            "label": "GH-Proxy Fastly 线路",
+            "description": "GH-Proxy 的 Fastly CDN 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "ghProxyAxisNow",
+            "label": "GH-Proxy AxisNow 线路",
+            "description": "GH-Proxy 的 AxisNow 线路，下载后会验证文件完整性",
+            "available": true,
+            "homepage": "https://gh-proxy.com/"
+          },
+          {
+            "id": "tencent",
+            "label": "腾讯云",
+            "description": "未提供已核验的同版本构建，暂不支持自动下载",
+            "available": false,
+            "homepage": "https://mirrors.cloud.tencent.com/"
+          },
+          {
+            "id": "tuna",
+            "label": "清华大学",
+            "description": "暂无已核验的独立预编译程序，暂不支持自动下载",
+            "available": false,
+            "homepage": "https://mirrors.tuna.tsinghua.edu.cn/"
+          }
+        ],
+        "config": {
+          "mode": "download",
+          "source": "npmmirror"
+        },
+        "tools": {
+          "ffmpeg": {
+            "path": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\ffmpeg\\win32-x64\\ffmpeg.exe",
+            "origin": "download",
+            "version": "ffmpeg version 6.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers",
+            "error": null
+          },
+          "ffprobe": {
+            "path": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\ffmpeg\\win32-x64\\ffprobe.exe",
+            "origin": "download",
+            "version": "ffprobe version 6.1.1-essentials_build-www.gyan.dev Copyright (c) 2007-2023 the FFmpeg developers",
+            "error": null
+          }
+        },
+        "download": {
+          "phase": "completed",
+          "received": 0
+        }
+      },
+      "message": "成功"
+    }
+  },
+  "prepare": {
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "code": 200,
+      "data": null,
+      "message": "成功"
+    }
+  },
+  "transcode": {
+    "request": {
+      "requestId": "fa360699-e488-45e4-825f-ac7806bd0e9e",
+      "directory": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout",
+      "options": {
+        "source": "assets/input.mp4"
+      },
+      "calls": [
+        {
+          "method": "size",
+          "args": [
+            "320x?"
+          ]
+        },
+        {
+          "method": "videoCodec",
+          "args": [
+            "libx264"
+          ]
+        },
+        {
+          "method": "audioCodec",
+          "args": [
+            "aac"
+          ]
+        }
+      ],
+      "operation": {
+        "method": "save",
+        "args": [
+          "assets/transcoded.mp4"
+        ]
+      }
+    },
+    "httpStatus": 200,
+    "contentType": "text/event-stream; charset=utf-8",
+    "events": [
+      {
+        "event": "start",
+        "args": [
+          "ffmpeg -i C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\input.mp4 -y -acodec aac -vcodec libx264 -filter:v scale=w=320:h=trunc(ow/a/2)*2 C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\transcoded.mp4"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "ffmpeg version 6.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  built with gcc 12.2.0 (Rev10, Built by MSYS2 project)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-dxva2 --enable-d3d11va --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavutil      58. 29.100 / 58. 29.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavcodec     60. 31.102 / 60. 31.102"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavformat    60. 16.100 / 60. 16.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavdevice    60.  3.100 / 60.  3.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavfilter     9. 12.100 /  9. 12.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libswscale      7.  5.100 /  7.  5.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libswresample   4. 12.100 /  4. 12.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libpostproc    57.  3.100 / 57.  3.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\input.mp4':"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    major_brand     : isom"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    minor_version   : 512"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    compatible_brands: isomiso2avc1mp41"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\""
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    encoder         : Lavf62.12.102"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Duration: 00:00:05.17, start: 0.000000, bitrate: 1570 kb/s"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 832x480, 1428 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : VideoHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 129 kb/s (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : SoundHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Stream mapping:"
+        ]
+      },
+      {
+        "event": "codecData",
+        "args": [
+          {
+            "format": "mov,mp4,m4a,3gp,3g2,mj2",
+            "audio": "aac (LC) (mp4a / 0x6134706D)",
+            "video": "h264 (High) (avc1 / 0x31637661)",
+            "duration": "00:00:05.17",
+            "video_details": [
+              "h264 (High) (avc1 / 0x31637661)",
+              "yuv420p(tv",
+              "bt709/bt709/iec61966-2-1",
+              "progressive)",
+              "832x480",
+              "1428 kb/s",
+              "24 fps",
+              "24 tbr",
+              "12288 tbn (default)"
+            ],
+            "audio_details": [
+              "aac (LC) (mp4a / 0x6134706D)",
+              "32000 Hz",
+              "stereo",
+              "fltp",
+              "129 kb/s (default)"
+            ]
+          }
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0 -> #0:0 (h264 (native) -> h264 (libx264))"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1 -> #0:1 (aac (native) -> aac (native))"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Press [q] to stop, [?] for help"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] profile High, level 1.2, 4:2:0, 8-bit"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] 264 - core 164 r3172 c1c9931 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=6 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=24 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Output #0, mp4, to 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\transcoded.mp4':"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    major_brand     : isom"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    minor_version   : 512"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    compatible_brands: isomiso2avc1mp41"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\""
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    encoder         : Lavf60.16.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 320x184, q=2-31, 24 fps, 12288 tbn (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : VideoHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      encoder         : Lavc60.31.102 libx264"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Side data:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 128 kb/s (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : SoundHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      encoder         : Lavc60.31.102 aac"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "frame=    0 fps=0.0 q=0.0 size=       0kB time=00:00:00.54 bitrate=   0.7kbits/s speed=17.9x    "
+        ]
+      },
+      {
+        "event": "progress",
+        "args": [
+          {
+            "frames": 0,
+            "currentFps": 0,
+            "currentKbps": 0.7,
+            "targetSize": 0,
+            "timemark": "00:00:00.54",
+            "speed": "17.9x",
+            "percent": 10.450938649119411
+          }
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[out#0/mp4 @ 000001d756e7d280] video:105kB audio:82kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.853729%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "frame=  124 fps=0.0 q=-1.0 Lsize=     193kB time=00:00:05.15 bitrate= 306.1kbits/s speed=22.2x    "
+        ]
+      },
+      {
+        "event": "progress",
+        "args": [
+          {
+            "frames": 124,
+            "currentFps": 0,
+            "currentKbps": 306.1,
+            "targetSize": 193,
+            "timemark": "00:00:05.15",
+            "speed": "22.2x",
+            "percent": 99.67098896845366
+          }
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] frame I:1     Avg QP:23.67  size:  5182"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] frame P:32    Avg QP:23.61  size:  2118"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] frame B:91    Avg QP:27.05  size:   377"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] consecutive B-frames:  1.6%  1.6%  0.0% 96.8%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] mb I  I16..4: 20.0% 45.4% 34.6%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] mb P  I16..4:  1.1%  1.7%  0.8%  P16..4: 44.3% 25.9% 13.2%  0.0%  0.0%    skip:12.8%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] mb B  I16..4:  0.0%  0.0%  0.0%  B16..8: 45.4%  5.5%  1.0%  direct: 1.5%  skip:46.5%  L0:37.3% L1:53.0% BI: 9.7%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] 8x8 transform intra:45.9% inter:59.9%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] coded y,uvDC,uvAC intra: 67.3% 55.9% 15.8% inter: 13.7% 7.7% 0.4%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] i16 v,h,dc,p:  3% 63%  1% 33%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 15% 36% 15%  4%  3%  3% 10%  3% 11%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 21% 35% 11%  4%  5%  3%  7%  3% 11%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] i8c dc,h,v,p: 51% 35%  6%  9%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] Weighted P-Frames: Y:0.0% UV:0.0%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] ref P L0: 67.1% 16.5% 12.2%  4.2%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] ref B L0: 94.8%  4.4%  0.8%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] ref B L1: 96.5%  3.5%"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000001d75700adc0] kb/s:166.12"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[aac @ 000001d7571dc700] Qavg: 418.999"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          ""
+        ]
+      },
+      {
+        "event": "end",
+        "args": [
+          "",
+          "ffmpeg version 6.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers\n  built with gcc 12.2.0 (Rev10, Built by MSYS2 project)\n  configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-dxva2 --enable-d3d11va --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband\n  libavutil      58. 29.100 / 58. 29.100\n  libavcodec     60. 31.102 / 60. 31.102\n  libavformat    60. 16.100 / 60. 16.100\n  libavdevice    60.  3.100 / 60.  3.100\n  libavfilter     9. 12.100 /  9. 12.100\n  libswscale      7.  5.100 /  7.  5.100\n  libswresample   4. 12.100 /  4. 12.100\n  libpostproc    57.  3.100 / 57.  3.100\nInput #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\input.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\"\n    encoder         : Lavf62.12.102\n  Duration: 00:00:05.17, start: 0.000000, bitrate: 1570 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 832x480, 1428 kb/s, 24 fps, 24 tbr, 12288 tbn (default)\n    Metadata:\n      handler_name    : VideoHandler\n      vendor_id       : [0][0][0][0]\n  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 129 kb/s (default)\n    Metadata:\n      handler_name    : SoundHandler\n      vendor_id       : [0][0][0][0]\nStream mapping:\n  Stream #0:0 -> #0:0 (h264 (native) -> h264 (libx264))\n  Stream #0:1 -> #0:1 (aac (native) -> aac (native))\nPress [q] to stop, [?] for help\n[libx264 @ 000001d75700adc0] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2\n[libx264 @ 000001d75700adc0] profile High, level 1.2, 4:2:0, 8-bit\n[libx264 @ 000001d75700adc0] 264 - core 164 r3172 c1c9931 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=6 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=24 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00\nOutput #0, mp4, to 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\transcoded.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\"\n    encoder         : Lavf60.16.100\n  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 320x184, q=2-31, 24 fps, 12288 tbn (default)\n    Metadata:\n      handler_name    : VideoHandler\n      vendor_id       : [0][0][0][0]\n      encoder         : Lavc60.31.102 libx264\n    Side data:\n      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A\n  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 128 kb/s (default)\n    Metadata:\n      handler_name    : SoundHandler\n      vendor_id       : [0][0][0][0]\n      encoder         : Lavc60.31.102 aac\nframe=    0 fps=0.0 q=0.0 size=       0kB time=00:00:00.54 bitrate=   0.7kbits/s speed=17.9x    \n[out#0/mp4 @ 000001d756e7d280] video:105kB audio:82kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.853729%\nframe=  124 fps=0.0 q=-1.0 Lsize=     193kB time=00:00:05.15 bitrate= 306.1kbits/s speed=22.2x    \n[libx264 @ 000001d75700adc0] frame I:1     Avg QP:23.67  size:  5182\n[libx264 @ 000001d75700adc0] frame P:32    Avg QP:23.61  size:  2118\n[libx264 @ 000001d75700adc0] frame B:91    Avg QP:27.05  size:   377\n[libx264 @ 000001d75700adc0] consecutive B-frames:  1.6%  1.6%  0.0% 96.8%\n[libx264 @ 000001d75700adc0] mb I  I16..4: 20.0% 45.4% 34.6%\n[libx264 @ 000001d75700adc0] mb P  I16..4:  1.1%  1.7%  0.8%  P16..4: 44.3% 25.9% 13.2%  0.0%  0.0%    skip:12.8%\n[libx264 @ 000001d75700adc0] mb B  I16..4:  0.0%  0.0%  0.0%  B16..8: 45.4%  5.5%  1.0%  direct: 1.5%  skip:46.5%  L0:37.3% L1:53.0% BI: 9.7%\n[libx264 @ 000001d75700adc0] 8x8 transform intra:45.9% inter:59.9%\n[libx264 @ 000001d75700adc0] coded y,uvDC,uvAC intra: 67.3% 55.9% 15.8% inter: 13.7% 7.7% 0.4%\n[libx264 @ 000001d75700adc0] i16 v,h,dc,p:  3% 63%  1% 33%\n[libx264 @ 000001d75700adc0] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 15% 36% 15%  4%  3%  3% 10%  3% 11%\n[libx264 @ 000001d75700adc0] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 21% 35% 11%  4%  5%  3%  7%  3% 11%\n[libx264 @ 000001d75700adc0] i8c dc,h,v,p: 51% 35%  6%  9%\n[libx264 @ 000001d75700adc0] Weighted P-Frames: Y:0.0% UV:0.0%\n[libx264 @ 000001d75700adc0] ref P L0: 67.1% 16.5% 12.2%  4.2%\n[libx264 @ 000001d75700adc0] ref B L0: 94.8%  4.4%  0.8%\n[libx264 @ 000001d75700adc0] ref B L1: 96.5%  3.5%\n[libx264 @ 000001d75700adc0] kb/s:166.12\n[aac @ 000001d7571dc700] Qavg: 418.999\n"
+        ]
+      }
+    ]
+  },
+  "probe": {
+    "httpStatus": 200,
+    "contentType": "text/event-stream; charset=utf-8",
+    "events": [
+      {
+        "event": "result",
+        "args": [
+          {
+            "streams": [
+              {
+                "index": 0,
+                "codec_name": "h264",
+                "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+                "profile": "High",
+                "codec_type": "video",
+                "codec_tag_string": "avc1",
+                "codec_tag": "0x31637661",
+                "width": 320,
+                "height": 184,
+                "coded_width": 320,
+                "coded_height": 184,
+                "closed_captions": 0,
+                "film_grain": 0,
+                "has_b_frames": 2,
+                "sample_aspect_ratio": "N/A",
+                "display_aspect_ratio": "N/A",
+                "pix_fmt": "yuv420p",
+                "level": 12,
+                "color_range": "tv",
+                "color_space": "bt709",
+                "color_transfer": "iec61966-2-1",
+                "color_primaries": "bt709",
+                "chroma_location": "left",
+                "field_order": "progressive",
+                "refs": 1,
+                "is_avc": "true",
+                "nal_length_size": 4,
+                "id": "0x1",
+                "r_frame_rate": "24/1",
+                "avg_frame_rate": "24/1",
+                "time_base": "1/12288",
+                "start_pts": 0,
+                "start_time": 0,
+                "duration_ts": 63488,
+                "duration": 5.166667,
+                "bit_rate": 167193,
+                "max_bit_rate": "N/A",
+                "bits_per_raw_sample": 8,
+                "nb_frames": 124,
+                "nb_read_frames": "N/A",
+                "nb_read_packets": "N/A",
+                "extradata_size": 48,
+                "tags": {
+                  "language": "und",
+                  "handler_name": "VideoHandler",
+                  "vendor_id": "[0][0][0][0]",
+                  "encoder": "Lavc60.31.102 libx264"
+                },
+                "disposition": {
+                  "default": 1,
+                  "dub": 0,
+                  "original": 0,
+                  "comment": 0,
+                  "lyrics": 0,
+                  "karaoke": 0,
+                  "forced": 0,
+                  "hearing_impaired": 0,
+                  "visual_impaired": 0,
+                  "clean_effects": 0,
+                  "attached_pic": 0,
+                  "timed_thumbnails": 0,
+                  "non_diegetic": 0,
+                  "captions": 0,
+                  "descriptions": 0,
+                  "metadata": 0,
+                  "dependent": 0,
+                  "still_image": 0
+                }
+              },
+              {
+                "index": 1,
+                "codec_name": "aac",
+                "codec_long_name": "AAC (Advanced Audio Coding)",
+                "profile": "LC",
+                "codec_type": "audio",
+                "codec_tag_string": "mp4a",
+                "codec_tag": "0x6134706d",
+                "sample_fmt": "fltp",
+                "sample_rate": 32000,
+                "channels": 2,
+                "channel_layout": "stereo",
+                "bits_per_sample": 0,
+                "initial_padding": 0,
+                "id": "0x2",
+                "r_frame_rate": "0/0",
+                "avg_frame_rate": "0/0",
+                "time_base": "1/32000",
+                "start_pts": 0,
+                "start_time": 0,
+                "duration_ts": 165888,
+                "duration": 5.184,
+                "bit_rate": 128375,
+                "max_bit_rate": "N/A",
+                "bits_per_raw_sample": "N/A",
+                "nb_frames": 163,
+                "nb_read_frames": "N/A",
+                "nb_read_packets": "N/A",
+                "extradata_size": 5,
+                "tags": {
+                  "language": "und",
+                  "handler_name": "SoundHandler",
+                  "vendor_id": "[0][0][0][0]"
+                },
+                "disposition": {
+                  "default": 1,
+                  "dub": 0,
+                  "original": 0,
+                  "comment": 0,
+                  "lyrics": 0,
+                  "karaoke": 0,
+                  "forced": 0,
+                  "hearing_impaired": 0,
+                  "visual_impaired": 0,
+                  "clean_effects": 0,
+                  "attached_pic": 0,
+                  "timed_thumbnails": 0,
+                  "non_diegetic": 0,
+                  "captions": 0,
+                  "descriptions": 0,
+                  "metadata": 0,
+                  "dependent": 0,
+                  "still_image": 0
+                }
+              }
+            ],
+            "format": {
+              "filename": "C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\transcoded.mp4",
+              "nb_streams": 2,
+              "nb_programs": 0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "format_long_name": "QuickTime / MOV",
+              "start_time": 0,
+              "duration": 5.184,
+              "size": 197149,
+              "bit_rate": 304242,
+              "probe_score": 100,
+              "tags": {
+                "major_brand": "isom",
+                "minor_version": "512",
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavf60.16.100"
+              }
+            },
+            "chapters": []
+          }
+        ]
+      }
+    ]
+  },
+  "downloadOutput": {
+    "httpStatus": 200,
+    "bytes": 197149,
+    "sha256": "42bc8774a29d28f5a7cd0780c135f98b0305ba7c7dd2ef7102a31df0fdd3fbee",
+    "matchesDisk": true
+  },
+  "cancelReply": {
+    "httpStatus": 200,
+    "contentType": "application/json; charset=utf-8",
+    "body": {
+      "code": 200,
+      "data": null,
+      "message": "成功"
+    }
+  },
+  "cancelStream": {
+    "httpStatus": 200,
+    "contentType": "text/event-stream; charset=utf-8",
+    "events": [
+      {
+        "event": "start",
+        "args": [
+          "ffmpeg -re -stream_loop -1 -i C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\input.mp4 -y -vcodec libx264 -t 120 C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\cancelled.mp4"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "ffmpeg version 6.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  built with gcc 12.2.0 (Rev10, Built by MSYS2 project)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-dxva2 --enable-d3d11va --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavutil      58. 29.100 / 58. 29.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavcodec     60. 31.102 / 60. 31.102"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavformat    60. 16.100 / 60. 16.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavdevice    60.  3.100 / 60.  3.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libavfilter     9. 12.100 /  9. 12.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libswscale      7.  5.100 /  7.  5.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libswresample   4. 12.100 /  4. 12.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  libpostproc    57.  3.100 / 57.  3.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\input.mp4':"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    major_brand     : isom"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    minor_version   : 512"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    compatible_brands: isomiso2avc1mp41"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\""
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    encoder         : Lavf62.12.102"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Duration: 00:00:05.17, start: 0.000000, bitrate: 1570 kb/s"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 832x480, 1428 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : VideoHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 129 kb/s (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : SoundHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Stream mapping:"
+        ]
+      },
+      {
+        "event": "codecData",
+        "args": [
+          {
+            "format": "mov,mp4,m4a,3gp,3g2,mj2",
+            "audio": "aac (LC) (mp4a / 0x6134706D)",
+            "video": "h264 (High) (avc1 / 0x31637661)",
+            "duration": "00:00:05.17",
+            "video_details": [
+              "h264 (High) (avc1 / 0x31637661)",
+              "yuv420p(tv",
+              "bt709/bt709/iec61966-2-1",
+              "progressive)",
+              "832x480",
+              "1428 kb/s",
+              "24 fps",
+              "24 tbr",
+              "12288 tbn (default)"
+            ],
+            "audio_details": [
+              "aac (LC) (mp4a / 0x6134706D)",
+              "32000 Hz",
+              "stereo",
+              "fltp",
+              "129 kb/s (default)"
+            ]
+          }
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0 -> #0:0 (h264 (native) -> h264 (libx264))"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1 -> #0:1 (aac (native) -> aac (native))"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Press [q] to stop, [?] for help"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000002279a0cd140] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000002279a0cd140] profile High, level 3.0, 4:2:0, 8-bit"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "[libx264 @ 000002279a0cd140] 264 - core 164 r3172 c1c9931 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=15 lookahead_threads=2 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=24 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "Output #0, mp4, to 'C:\\Users\\c1338\\AppData\\Local\\Temp\\huimeng-m0-20261022-5t1pfflj\\data\\workspaces\\m0Closeout\\assets\\cancelled.mp4':"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    major_brand     : isom"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    minor_version   : 512"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    compatible_brands: isomiso2avc1mp41"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    prompt          : {\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_fl2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_int8_convrot.safetensors\", \"type\""
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    encoder         : Lavf60.16.100"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709/bt709/iec61966-2-1, progressive), 832x480, q=2-31, 24 fps, 12288 tbn (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : VideoHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      encoder         : Lavc60.31.102 libx264"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Side data:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 32000 Hz, stereo, fltp, 128 kb/s (default)"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "    Metadata:"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      handler_name    : SoundHandler"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      vendor_id       : [0][0][0][0]"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "      encoder         : Lavc60.31.102 aac"
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          "frame=    0 fps=0.0 q=0.0 size=       0kB time=00:00:00.54 bitrate=   0.7kbits/s speed=4.82x    "
+        ]
+      },
+      {
+        "event": "progress",
+        "args": [
+          {
+            "frames": 0,
+            "currentFps": 0,
+            "currentKbps": 0.7,
+            "targetSize": 0,
+            "timemark": "00:00:00.54",
+            "speed": "4.82x",
+            "percent": 10.450938649119411
+          }
+        ]
+      },
+      {
+        "event": "stderr",
+        "args": [
+          ""
+        ]
+      },
+      {
+        "event": "error",
+        "args": [
+          {
+            "name": "AbortError",
+            "message": "The operation was aborted.",
+            "code": 20
+          }
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "prepare": true,
+    "transcode": true,
+    "progress": true,
+    "probe": true,
+    "download": true,
+    "cancel": true
+  }
+}

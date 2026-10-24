@@ -1,0 +1,32 @@
+{
+  "testedAt": "2026-10-19",
+  "upstreamCommit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "model": { "providerId": "deepSeek", "modelId": "deepseek-flash" },
+  "models": {
+    "endpoint": "GET /api/ai/models",
+    "httpStatus": 200,
+    "configuredModelIds": ["deepseek-flash", "deepseek-v4-pro"],
+    "service": "isolated:3001"
+  },
+  "text": {
+    "endpoint": "POST /api/ai/generate",
+    "httpStatus": 200,
+    "contentType": "text/event-stream; charset=utf-8",
+    "eventTypes": ["reasoning", "text", "done"],
+    "textCharacters": 5,
+    "stopReason": "stop",
+    "errorEvents": 0,
+    "service": "user-running-original:3000"
+  },
+  "agent": {
+    "endpoint": "POST /api/agent",
+    "httpStatus": 200,
+    "contentType": "application/x-ndjson; charset=utf-8",
+    "eventTypesInOrder": ["session", "userMessage", "text", "text", "text", "text", "text", "text", "text", "text", "text", "stats", "done"],
+    "errorEvents": 0,
+    "service": "isolated:3001",
+    "usedProject": "M0样例项目",
+    "toolsRequested": false
+  },
+  "secrets": "No API keys or raw request headers recorded"
+}

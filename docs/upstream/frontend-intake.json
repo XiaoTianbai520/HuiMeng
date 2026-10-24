@@ -1,0 +1,1411 @@
+{
+  "commit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "source": "git archive of the fixed commit; never a working-tree copy",
+  "records": [
+    {
+      "source": "apps/web/src/App.vue",
+      "target": "frontend/src/App.vue",
+      "sha256": "43a371608186a8a5ce80604aef69b54cf30fd416cc909323ab28aaa4aa12e8f6"
+    },
+    {
+      "source": "apps/web/src/main.ts",
+      "target": "frontend/src/main.ts",
+      "sha256": "c51d1e54a746e9c2d985d49e237a6f3c2aece1a80acb00bfa037e693a3af89d4"
+    },
+    {
+      "source": "apps/web/src/assets/image.png",
+      "target": "frontend/src/assets/image.png",
+      "sha256": "f78337d4614a92beafc4f8c78032fb2dafe88eb48fce0353230b0bf3328837ed"
+    },
+    {
+      "source": "apps/web/src/assets/languageFlags.svg",
+      "target": "frontend/src/assets/languageFlags.svg",
+      "sha256": "d773ca91c98ea48a54d910f7910b7055146253da691317f1d145684f2c502ca9"
+    },
+    {
+      "source": "apps/web/src/assets/main.scss",
+      "target": "frontend/src/assets/main.scss",
+      "sha256": "8dc47b795ddeeb2b667c31304603916fd7e71d29754cb0b0333a73fcd823dc99"
+    },
+    {
+      "source": "apps/web/src/components/languageSelect.vue",
+      "target": "frontend/src/components/languageSelect.vue",
+      "sha256": "67799e7b80feda8391a1328d8c3e903a911ab67fc2558558bfdd12ad2177bef0"
+    },
+    {
+      "source": "apps/web/src/components/markdownImage.vue",
+      "target": "frontend/src/components/markdownImage.vue",
+      "sha256": "e5d2c6f7c035ec521aafee4a53cbe46874290d43df3976254821fe785b9fc5f6"
+    },
+    {
+      "source": "apps/web/src/components/markdownOverlays.ts",
+      "target": "frontend/src/components/markdownOverlays.ts",
+      "sha256": "2d0fe7aa2e7f2b7df70783b73f8a7d39394079d1cebd499097203fef8ba80016"
+    },
+    {
+      "source": "apps/web/src/components/messageMarkdown.vue",
+      "target": "frontend/src/components/messageMarkdown.vue",
+      "sha256": "3b4914fd8df47da45695b6e419f0354d96db81c171f205c18efec2df45cb035a"
+    },
+    {
+      "source": "apps/web/src/components/mobileConnect.vue",
+      "target": "frontend/src/components/mobileConnect.vue",
+      "sha256": "2d67094ee17719f75db544964a2f5239fdaefbcf5861d9611f69f19f8ab4c313"
+    },
+    {
+      "source": "apps/web/src/components/modelPopover.vue",
+      "target": "frontend/src/components/modelPopover.vue",
+      "sha256": "253dac2ed7c4c1856f0b2c858731cd0db34afb1764826080914083f06e89d6d0"
+    },
+    {
+      "source": "apps/web/src/components/singleAgentDialog.vue",
+      "target": "frontend/src/components/singleAgentDialog.vue",
+      "sha256": "52e983a15d097091b477c7c97d6b7dfee514ccffbe72b43c43f47eb688c02ab8"
+    },
+    {
+      "source": "apps/web/src/components/updateBox.md",
+      "target": "frontend/src/components/updateBox.md",
+      "sha256": "7febbee05d139e1359dc29726835e1a7dcd474ae0f2b31e69fd206bff66fd03f"
+    },
+    {
+      "source": "apps/web/src/components/updateBox.vue",
+      "target": "frontend/src/components/updateBox.vue",
+      "sha256": "286bae1f4b41dfbdce1051c091e48d76907beb7414c35de4f93fd64dc45ace91"
+    },
+    {
+      "source": "apps/web/src/components/agent/attachmentList.vue",
+      "target": "frontend/src/components/agent/attachmentList.vue",
+      "sha256": "a6dc9a401ac1a8be38f438d5d426f61f74ce44a14e21475bd66b7c6b3b99281c"
+    },
+    {
+      "source": "apps/web/src/components/agent/attachmentPreview.vue",
+      "target": "frontend/src/components/agent/attachmentPreview.vue",
+      "sha256": "e09f60ae3b08a0e365ef6ae8bc9d69ae140662e73ea09efb576d0a69eb2647b6"
+    },
+    {
+      "source": "apps/web/src/components/agent/conversation.vue",
+      "target": "frontend/src/components/agent/conversation.vue",
+      "sha256": "26c1ed5bed48dbf6bca00d6329a17ce84f5ea04cc164392f45c4488d1bbf33e6"
+    },
+    {
+      "source": "apps/web/src/components/agent/index.vue",
+      "target": "frontend/src/components/agent/index.vue",
+      "sha256": "590871cb9b0eceb8b75334f0a53914adab209061d4682876dba7d2acf4c5d58a"
+    },
+    {
+      "source": "apps/web/src/components/agent/mentionContent.vue",
+      "target": "frontend/src/components/agent/mentionContent.vue",
+      "sha256": "4f976cc038a1d5338574b746bf0128581c3f0c5132660a5459b14df193600193"
+    },
+    {
+      "source": "apps/web/src/components/agent/mentionMenu.vue",
+      "target": "frontend/src/components/agent/mentionMenu.vue",
+      "sha256": "5f31cee1e963cac68562dfb18d6bfc7de1e93cf8b2619da39585a8558c720439"
+    },
+    {
+      "source": "apps/web/src/components/agent/mentionSources.ts",
+      "target": "frontend/src/components/agent/mentionSources.ts",
+      "sha256": "e30f0bee3b9db05423b1621d6202c033fc364dd52e8fc325a2f34c51198470ce"
+    },
+    {
+      "source": "apps/web/src/components/agent/mentionText.ts",
+      "target": "frontend/src/components/agent/mentionText.ts",
+      "sha256": "0d24d7af40ecc48a26706b8c6fa2c36be03165776c678cae1cd48c692ae242b1"
+    },
+    {
+      "source": "apps/web/src/components/agent/mentionThumbnail.vue",
+      "target": "frontend/src/components/agent/mentionThumbnail.vue",
+      "sha256": "564ab68ef7ec76a6d671cf02d608e39f51df6e7da022b4cd1026c84dbf5e0ff5"
+    },
+    {
+      "source": "apps/web/src/components/agent/menu.vue",
+      "target": "frontend/src/components/agent/menu.vue",
+      "sha256": "c1515b8f16e129ecad68eb8c4e18ef478ffdaaf890650a355b5605a4bf481004"
+    },
+    {
+      "source": "apps/web/src/components/agent/replyStream.ts",
+      "target": "frontend/src/components/agent/replyStream.ts",
+      "sha256": "e2fc8a1bf2829e9a0e3bbac42f0ed235e15b7c4c0260b8add674646e7f28b19a"
+    },
+    {
+      "source": "apps/web/src/components/agent/skillMenu.vue",
+      "target": "frontend/src/components/agent/skillMenu.vue",
+      "sha256": "1be0cb5e53fcf2a222f0e20f8801702d5b02fa8ad8f6415c1ba7402ceec09a21"
+    },
+    {
+      "source": "apps/web/src/components/agent/textAttachments.ts",
+      "target": "frontend/src/components/agent/textAttachments.ts",
+      "sha256": "939dd234fd3ebf9e4a47d00afe135e9eb59919013ba84598ebdc1e698127f45d"
+    },
+    {
+      "source": "apps/web/src/components/agent/toolMessage.vue",
+      "target": "frontend/src/components/agent/toolMessage.vue",
+      "sha256": "8e578399ab5d928ef389fc941ded2a2b3e948316986115d1a068b4c87ca32225"
+    },
+    {
+      "source": "apps/web/src/components/agent/types.ts",
+      "target": "frontend/src/components/agent/types.ts",
+      "sha256": "e3a1243aa31bb44fc58e9bf50a29164bf822fabf6031bb91b5ef39f5e66201de"
+    },
+    {
+      "source": "apps/web/src/components/settings/ffmpegRequired.vue",
+      "target": "frontend/src/components/settings/ffmpegRequired.vue",
+      "sha256": "eaebfadb0432da67b08c06915c1f301b29470603213f37562d8fa9d6ba93b928"
+    },
+    {
+      "source": "apps/web/src/components/settings/formCreate.ts",
+      "target": "frontend/src/components/settings/formCreate.ts",
+      "sha256": "311d405fb0359207439bcef46e6bd3091c617d8d7c0ac2972a40c88cda62fdf5"
+    },
+    {
+      "source": "apps/web/src/components/settings/index.vue",
+      "target": "frontend/src/components/settings/index.vue",
+      "sha256": "77a0b4fb83e67f6b68babda3117bf5c8d8bfc42e07a5a16195bb9be4bdf15248"
+    },
+    {
+      "source": "apps/web/src/components/settings/installPluginFile.ts",
+      "target": "frontend/src/components/settings/installPluginFile.ts",
+      "sha256": "eaae74ffd790def9e19856505c4d80b57baf0ff114b3bf553ee6bfb0ec1e7219"
+    },
+    {
+      "source": "apps/web/src/components/settings/providerList.scss",
+      "target": "frontend/src/components/settings/providerList.scss",
+      "sha256": "38c6cdecbe80331d548b502b10b35db52b6dbe1930892137aa39716b788bbc6f"
+    },
+    {
+      "source": "apps/web/src/components/settings/tfAccount.vue",
+      "target": "frontend/src/components/settings/tfAccount.vue",
+      "sha256": "92cdb5aed980be3c0c9f702b068ff40dae3fb6c06638304ee26a529f17fd6a96"
+    },
+    {
+      "source": "apps/web/src/components/settings/tfRechargeDialog.vue",
+      "target": "frontend/src/components/settings/tfRechargeDialog.vue",
+      "sha256": "186daf8332b51d28a167bdec65fc68a58c2528fdf2622b6e60df34ef4c4bcf8e"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/about.vue",
+      "target": "frontend/src/components/settings/panels/about.vue",
+      "sha256": "5c8c62c8e9a2d12147649987dd53f7f7ce11a61f3a919e8bd90561dea0756ee0"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/deviceLink.vue",
+      "target": "frontend/src/components/settings/panels/deviceLink.vue",
+      "sha256": "149554cab14379f017fbccdb293fabb3a0d2f609375dcd686afc1cf736a4c80f"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/personalization.vue",
+      "target": "frontend/src/components/settings/panels/personalization.vue",
+      "sha256": "e5ff791b08a6dd1c16c26434860b1cf1a6dba6d62368c4bcded98ed013dd01c9"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/privacy.vue",
+      "target": "frontend/src/components/settings/panels/privacy.vue",
+      "sha256": "f2776959830fb97136f09d26509aefee574880a5f30c5f574bbffcab4eefb263"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/ui.vue",
+      "target": "frontend/src/components/settings/panels/ui.vue",
+      "sha256": "d4c735c0aeb37ee11d9ddfdda666e164dd86b03fae82c9316753dd424c4531e2"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/developer/index.vue",
+      "target": "frontend/src/components/settings/panels/developer/index.vue",
+      "sha256": "d9d7e02391c39d274330c61cc1464a23a25ecce0b3ca77af047fb0868de561e9"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
+      "target": "frontend/src/components/settings/panels/developer/providerDebugDialog.vue",
+      "sha256": "53984382a3765390825a1b138105c16bd2b641d4150bb3fb82186fbf72791b3a"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue",
+      "target": "frontend/src/components/settings/panels/developer/systemPromptDialog.vue",
+      "sha256": "3d463033b5bf0c2075d2b3e651b871bee9f38bb56513e3b5499f97990beca174"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/general/canvasShortcuts.vue",
+      "target": "frontend/src/components/settings/panels/general/canvasShortcuts.vue",
+      "sha256": "7fa5f0b33c9709e49d35cdb47b34101a5d2a9e03d94b4dcef6a8076ca34186a1"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/general/index.vue",
+      "target": "frontend/src/components/settings/panels/general/index.vue",
+      "sha256": "228a88a3c2396dd42501c43b2a89f41d2be149193a98523613405bb365b9b454"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/general/keyInput.vue",
+      "target": "frontend/src/components/settings/panels/general/keyInput.vue",
+      "sha256": "9f71e58a03e2a949ee9f936c215c365ffd2f6b490c5275375f820921b47b70ae"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/general/nodeMenuSettings.vue",
+      "target": "frontend/src/components/settings/panels/general/nodeMenuSettings.vue",
+      "sha256": "f5158261672815e7f336200db0fae4873f54f1154529b50eb990fb0254b4fa89"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+      "target": "frontend/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+      "sha256": "47675f31726653c74db2d52935bf9f5cf89f3f68c56733b8870fa4370ed489b0"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
+      "target": "frontend/src/components/settings/panels/languageModel/addProviderDialog.vue",
+      "sha256": "d83d95fb34a5091518ce85af915edab1772d0efbd4ed2597c8fdb3d6f257c3ae"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/languageModel/index.vue",
+      "target": "frontend/src/components/settings/panels/languageModel/index.vue",
+      "sha256": "e72bafa5e6f89c3c189c93ec70421bf0afdbc7eb6c3b3b5d846a12013eb014f8"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mcp/index.vue",
+      "target": "frontend/src/components/settings/panels/mcp/index.vue",
+      "sha256": "41d07563f3a2400dc3ea5b7f3bb453716768bad45c7f82eb2bb07249ee4a2ef9"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
+      "target": "frontend/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
+      "sha256": "3787d6bf7db66895968821f07740d685f5639ee7cb0ca3bac7ca0114dc9f21c3"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
+      "target": "frontend/src/components/settings/panels/mediaModel/editProviderDialog.vue",
+      "sha256": "5fcdccaaa8cf69cc75d9338c90064fee06ac9d066ea4b3a7375f8f3b40a1f730"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/index.vue",
+      "target": "frontend/src/components/settings/panels/mediaModel/index.vue",
+      "sha256": "6ff588239869a2c5fe27bccfa43a194457bb26ff7f371b3f45d4e0a87c4a821d"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+      "target": "frontend/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+      "sha256": "800d60ff5fe0e005054331bfd965bc7ab19e0d77d3054a64b211129034d95a39"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
+      "target": "frontend/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
+      "sha256": "3ac01e4cdf3b16f4813b3b0e6b3727b6be27d89a7a473af77b0fdf37aa56e610"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/providerPrompt.ts",
+      "target": "frontend/src/components/settings/panels/mediaModel/providerPrompt.ts",
+      "sha256": "46c69974017c153f5506119bbdf09a12b49592e47ea9375cdb0713c9e4bb7278"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/mediaModel/types.ts",
+      "target": "frontend/src/components/settings/panels/mediaModel/types.ts",
+      "sha256": "a3c5053f88815269c13238bc89dfd0c1fd8753f7927ad320efecf61533ce44ac"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
+      "sha256": "237bfc0f70201e9a33f88b181443e79b0d0fb070fece6c22562462cae3eaa611"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
+      "sha256": "c1a27ea92fb1fc7d1e6d22d2039bab1f0a5adeacb8d8865a8f0e14d4717c7464"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
+      "sha256": "c40769ff56f25a554672b0332f75d7d951fe8915efa24f39171031f03bc05650"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/extensionAssociationsDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/extensionAssociationsDialog.vue",
+      "sha256": "9591643639458bbcbefba8f20552a9daeb0d2516afeddf756c3f96f018738cf1"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/ffmpeg.vue",
+      "sha256": "8abb698cf54d6f37579bee80782f58655f3f578144ffaa7374954d5397db57c1"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/index.vue",
+      "sha256": "cc47a49e72c520507c0de5424d85b93111b860359cc9cf7752c0b9a8ebdc6e74"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
+      "sha256": "a5de327155e704fb4878851ea0d7dad271d42e4efd3ce70001d2843b1a8c90f7"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
+      "target": "frontend/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
+      "sha256": "9af17af3b8f1d25e91fe4fff728d262d9e2d365dd23fd95c0a742086dd727331"
+    },
+    {
+      "source": "apps/web/src/components/settings/panels/pluginMarket/types.ts",
+      "target": "frontend/src/components/settings/panels/pluginMarket/types.ts",
+      "sha256": "3093153250f2ab299cd21eef7b5355cde87f4af084cdae20a4c91691feb75f8c"
+    },
+    {
+      "source": "apps/web/src/lib/anonymousData.ts",
+      "target": "frontend/src/lib/anonymousData.ts",
+      "sha256": "0d2ec48eb95482773ca7b8411ff25ad763e13f735c687fc6fc5af13869dcc360"
+    },
+    {
+      "source": "apps/web/src/lib/browserCapabilities.ts",
+      "target": "frontend/src/lib/browserCapabilities.ts",
+      "sha256": "0d13be8749a491850b6a02b164679acceab59957abbb431526c2b668424a6daf"
+    },
+    {
+      "source": "apps/web/src/lib/canvasShortcuts.ts",
+      "target": "frontend/src/lib/canvasShortcuts.ts",
+      "sha256": "098fec71216683df351ca33fe69af3dc1b37166413fead5d7bf534feff8017a8"
+    },
+    {
+      "source": "apps/web/src/lib/clipboard.ts",
+      "target": "frontend/src/lib/clipboard.ts",
+      "sha256": "48fac0ddca35cfb110ccda44e03188caa4ff620199bdc6ce8994329413b91acb"
+    },
+    {
+      "source": "apps/web/src/lib/desktopProtocol.ts",
+      "target": "frontend/src/lib/desktopProtocol.ts",
+      "sha256": "882b3c93cc98e358dd453f2d72977601ac355463c9a55e5176b33f1c97beb9da"
+    },
+    {
+      "source": "apps/web/src/lib/i18n.ts",
+      "target": "frontend/src/lib/i18n.ts",
+      "sha256": "2676a9da1d2977061df34ff683d77b0f60d45f1c8debfa72a84384070125134b"
+    },
+    {
+      "source": "apps/web/src/lib/mcpControl.ts",
+      "target": "frontend/src/lib/mcpControl.ts",
+      "sha256": "a923de402d71063a77049da1e400204a91d1bf64a42f65f445ddcfb84416cb77"
+    },
+    {
+      "source": "apps/web/src/lib/mobile.ts",
+      "target": "frontend/src/lib/mobile.ts",
+      "sha256": "b73734a26dc456a027538b3cf879b2b558b28d16f313b8ce93dd1a64ac11ef08"
+    },
+    {
+      "source": "apps/web/src/lib/platform.ts",
+      "target": "frontend/src/lib/platform.ts",
+      "sha256": "09a4889949245912389931d47f7b4baf81aad6536121016701eb6c510d9613c0"
+    },
+    {
+      "source": "apps/web/src/lib/providerBilling.ts",
+      "target": "frontend/src/lib/providerBilling.ts",
+      "sha256": "582cf6a2dc454079c55c843f5d3f812fe56373f17998dddf5c7898fb2cfa094f"
+    },
+    {
+      "source": "apps/web/src/lib/saveFile.ts",
+      "target": "frontend/src/lib/saveFile.ts",
+      "sha256": "5506ac3183c472bcb5f2fe1f1e09fa2b1a4f105dbbd8e72a819faa36bf74640f"
+    },
+    {
+      "source": "apps/web/src/lib/shiki.ts",
+      "target": "frontend/src/lib/shiki.ts",
+      "sha256": "1224a100aa73dee1ebd665b5943af384cbc52f945c77d65951981868cf1ebf3a"
+    },
+    {
+      "source": "apps/web/src/lib/tf.ts",
+      "target": "frontend/src/lib/tf.ts",
+      "sha256": "b2c9ce71cf539a5e0cf7c420e7f611b5cdc39fd1f8d925a5e064dc353fb67530"
+    },
+    {
+      "source": "apps/web/src/lib/tiptapHost.ts",
+      "target": "frontend/src/lib/tiptapHost.ts",
+      "sha256": "f97692b95ec79136452e51f55329462a4ae894c5d6c9f378ace4f3d233a793ff"
+    },
+    {
+      "source": "apps/web/src/lib/workspaceFiles.ts",
+      "target": "frontend/src/lib/workspaceFiles.ts",
+      "sha256": "f0149676b25d442a58982968a9296395a70f2ba00ea5ffc36af3052c451fe30d"
+    },
+    {
+      "source": "apps/web/src/pages/hello/bg.vue",
+      "target": "frontend/src/pages/hello/bg.vue",
+      "sha256": "e52530cc737f7fa98f25113f73a6024bfb5f69eb98626dc4ed04c8e3397e0471"
+    },
+    {
+      "source": "apps/web/src/pages/hello/index.vue",
+      "target": "frontend/src/pages/hello/index.vue",
+      "sha256": "13b9395c749e80abd3cf854ef2f2764b4d3454e63d1ff818da488a903a9f27a5"
+    },
+    {
+      "source": "apps/web/src/pages/home/bg.vue",
+      "target": "frontend/src/pages/home/bg.vue",
+      "sha256": "e015dfe61afcf6de6a8040ccae5d7d3de4af26fca7c27b2be4727f215507dd6d"
+    },
+    {
+      "source": "apps/web/src/pages/home/index.vue",
+      "target": "frontend/src/pages/home/index.vue",
+      "sha256": "387311a004fb25826377218113387951deee6791117d1024f1cec202ba68d0e8"
+    },
+    {
+      "source": "apps/web/src/pages/home/workspacePicker.vue",
+      "target": "frontend/src/pages/home/workspacePicker.vue",
+      "sha256": "3bcd7cdf0d415865841541836e8bce5c7aad69f26f696be81870b96828f3555b"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/canvasFile.ts",
+      "target": "frontend/src/pages/workspace/canvasFile.ts",
+      "sha256": "e513103046103f279900cd0674ac237292d58ce0e2c0b5f74fc2d0bf29e82cc8"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/index.vue",
+      "target": "frontend/src/pages/workspace/index.vue",
+      "sha256": "1511436afba6ea255b27b90e4254ea54dc6299f02e8ae0eaf8a5cf4bd6db1ea0"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/components/floatingAgent.vue",
+      "target": "frontend/src/pages/workspace/components/floatingAgent.vue",
+      "sha256": "502707349ce03a0b42e26b1da7729e887148d19d7902dab15ee0d2fb6ee28cd9"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/components/workspaceMenu.vue",
+      "target": "frontend/src/pages/workspace/components/workspaceMenu.vue",
+      "sha256": "5a29fb6b52585413e25902bd4808d2d6932166e66154c29c0cd855269e4ee55f"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
+      "sha256": "04a7f2c4fdadd2c0c0608d7ed121a87b5c94995544a250d0a6c5e5d6e43ea807"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+      "sha256": "f4c36a466025132b1fdb8984629ad3fa7fcd626d661d2447cb4fefff6c80ae08"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/canvasDrop.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/canvasDrop.ts",
+      "sha256": "af6dca70a1f706a0f2b0788416327ea393e65e6dbfc6194666add315490443e2"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/canvasFiles.ts",
+      "sha256": "f4229dc280ba264d910f765b00afd2b8328c80b30cfb84a94380bfb366430e76"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/canvasHost.vue",
+      "sha256": "bfa7bb1c9e1a12591ca43e9f31b4642f1ff29fcdd63c6148f74f3abef7dc0dcb"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/canvasQueries.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/canvasQueries.ts",
+      "sha256": "41c581bbba396b87e35239040fff24771bfb5c0686716f9e0670f0ea62475e5a"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/index.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/index.vue",
+      "sha256": "4b9fed2199b9d4b04801b35bf908e5550980b6baaf35dd8a57725194704d3931"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/loadNodeComponent.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/loadNodeComponent.ts",
+      "sha256": "8d078c509b43152df2bacd83b36289d58787740e248598c32c2a743ad1943909"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/nodeClipboard.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/nodeClipboard.ts",
+      "sha256": "61e3e7ef2d6016144881d518b67ea585f272d551672504341c95f92a6341a041"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/selectionConnections.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/selectionConnections.ts",
+      "sha256": "6994fa522db1840b7eb8da9f997fa75c9884041a918e03a3e55ba71d51529b13"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/selectionNodes.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/selectionNodes.ts",
+      "sha256": "fca9016dbe4d166f37ed5df9d49f1c1c6dc1ae72694ccc6901d4d8500e920380"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/useCanvasHistory.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/useCanvasHistory.ts",
+      "sha256": "2b194e6303ae44d1b3daa3ad8891d8c5866f6fed8ee6b078674833a7892ba7c6"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/useCanvasTools.ts",
+      "target": "frontend/src/pages/workspace/panels/canvas/useCanvasTools.ts",
+      "sha256": "67b29e95157722f3f6f46df3d3ceb8b4725ce65257de925f5581d6154dd8a6f1"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
+      "sha256": "79e4c90d622322e4682645b447e775d62c44642346e7c4e41057c1c5b409aae3"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/assetMenu.vue",
+      "sha256": "352f7aa43c1909e83d8f3031470731e81fb764ac506b361d210919b081503856"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/canvasControls.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/canvasControls.vue",
+      "sha256": "124d5ba74a3d36c0c1d1a70d0d70f5bd2eb9cea0a994672d73171b9d6bcbcfa1"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/canvasEmpty.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/canvasEmpty.vue",
+      "sha256": "e084bcdb53458e1e218b60b2c9a1e01a42915d0c76bc3e35bb6e2874c4341862"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+      "sha256": "a9a8c88200c41a6539646e422dbeda373596ebfac028a0705ab10357446d05d2"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/groupNode.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/groupNode.vue",
+      "sha256": "56f63330ea65a6a9dfa8b8066e9432d698952679e144c1f819eb686b1759ba80"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
+      "sha256": "e6dfdfa41892ef9ba1fbe02779b000fd4d17808bf446189b2f0400e46dbc02c0"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/nodeMenuItems.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/nodeMenuItems.vue",
+      "sha256": "7d25307f1c6de6a75f17d792668930f41e64a44f5030761677d39d402f19a639"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/nodeSearch.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/nodeSearch.vue",
+      "sha256": "defff6f0ba81aae75a6059cfdbc7fe0dfc68aa88a6e5d9387916bcb1cf79e4d4"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/remoteNode.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/remoteNode.vue",
+      "sha256": "cc5ffc2d42743d3ccde6777294f741b7817fdcaa771480621c552e7e68292289"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/selectionHandle.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/selectionHandle.vue",
+      "sha256": "1b3b750f4982fd4bb95952793b3eff98df63004bb6d19d025a8a17c208309b79"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+      "target": "frontend/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+      "sha256": "2c060dbe1a57292681d74ae1af0cc7f2f5a7ee4820ad3526d01b46f3dee4c6b8"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/documentSession.ts",
+      "target": "frontend/src/pages/workspace/panels/document/documentSession.ts",
+      "sha256": "684099250bf9a9bcf82c0dbdf404f0f3be3090ec19de9c082ad1388c39084a3e"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/editorHost.vue",
+      "target": "frontend/src/pages/workspace/panels/document/editorHost.vue",
+      "sha256": "65c9915ea9903a77e77eb807a402ee71fd4dac26397ba00a5640c0b6f893385f"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/extensions.ts",
+      "target": "frontend/src/pages/workspace/panels/document/extensions.ts",
+      "sha256": "da64df58ef3f6837a80d9b7e817a453a5cbd3b81e5d0af7ec023e5ed4d71f55c"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/index.vue",
+      "target": "frontend/src/pages/workspace/panels/document/index.vue",
+      "sha256": "ee1a9956ca53966c3e0303b7b2b0e588459bbf697e98726c52eb3b3d87116eb9"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/theme.ts",
+      "target": "frontend/src/pages/workspace/panels/document/theme.ts",
+      "sha256": "c2c89f1484083d054e5732d73b862d71deb197643c007c3950159af38dac27cd"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/editorEmpty.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/editorEmpty.vue",
+      "sha256": "37e3ac20d6a7f1ba4bd58602adaf0cdb277de7d8cbdcf6b2967ad32042b67f79"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/editorTab.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/editorTab.vue",
+      "sha256": "afdf168a4dab779b1b2209bd7d2e2619e309d27dd7a8cb304f8ce5ab4eb27cc5"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/extView.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/extView.vue",
+      "sha256": "f27241bc1ce39a986ee99df19e5caa7efa638290ceb95bfcaa8690da212b60b3"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/fileTree.vue",
+      "sha256": "c3c083354972498842930dce71bf1ab2a0479cbdb7b217904903c1e095ba7678"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/openWithDialog.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/openWithDialog.vue",
+      "sha256": "91a527e58c559946050f22e11b0ede20972a652d3141ee339483ac1ef02d62b4"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/quickOpen.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/quickOpen.vue",
+      "sha256": "75e2303699ab7d2279910552781327ab54e8cad41be338dfbb641d8b308d4b9f"
+    },
+    {
+      "source": "apps/web/src/pages/workspace/panels/document/components/workspaceSearch.vue",
+      "target": "frontend/src/pages/workspace/panels/document/components/workspaceSearch.vue",
+      "sha256": "fc589aa209077bc3501c05abac9af5e90ea26ce1d66263bc6489f59328c9faee"
+    },
+    {
+      "source": "apps/web/src/router/index.ts",
+      "target": "frontend/src/router/index.ts",
+      "sha256": "292f4d70c7610c1ea548e817c2dac078f88fcb94a129cda1c8df1b9e47cbb13c"
+    },
+    {
+      "source": "apps/web/src/stores/desktopUpdate.ts",
+      "target": "frontend/src/stores/desktopUpdate.ts",
+      "sha256": "3ea71a89de6e37caa304aeca1d1fef505bbad9da97aae059dce0ba9a6e794c56"
+    },
+    {
+      "source": "apps/web/src/stores/developer.ts",
+      "target": "frontend/src/stores/developer.ts",
+      "sha256": "28ff35516aa8758dae9914d8661bee4a3c85e5265fce9107e5bc295d7e036e79"
+    },
+    {
+      "source": "apps/web/src/stores/hello.ts",
+      "target": "frontend/src/stores/hello.ts",
+      "sha256": "0210a1d8d8173e61654a6d49cd43d32f70f8abaf417390d1d0b66092a47c8141"
+    },
+    {
+      "source": "apps/web/src/stores/settings.ts",
+      "target": "frontend/src/stores/settings.ts",
+      "sha256": "1c55dae233610fb769676ba93a646f432e217ed6112680fb3ffebc197b00f0a9"
+    },
+    {
+      "source": "apps/web/src/stores/workspace.ts",
+      "target": "frontend/src/stores/workspace.ts",
+      "sha256": "ba75e92c90bc3cfd66d73c2942466b977a8cfb364442ac15763d93251037c6fa"
+    },
+    {
+      "source": "apps/web/src/types/components.d.ts",
+      "target": "frontend/src/types/components.d.ts",
+      "sha256": "cbcf039077d4e4148b658259a80d61ea244418390420219e32cf3b0fd6e8e51c"
+    },
+    {
+      "source": "packages/assets/logo.ico",
+      "target": "frontend/packages/assets/logo.ico",
+      "sha256": "50b6cbbb7096b44b5e5c7e3ff0beee0374357148c3657478f7ca514c35a422e2"
+    },
+    {
+      "source": "packages/assets/logo.svg",
+      "target": "frontend/packages/assets/logo.svg",
+      "sha256": "755e807e006870cc59d59ad39e3ef11b1bfbb4193427e8d8eb5ce192e831b84f"
+    },
+    {
+      "source": "packages/assets/package.json",
+      "target": "frontend/packages/assets/package.json",
+      "sha256": "f772a670895e9a0e8ca1579f432f0dbaa42001ebc33a758bf87f9b3b9f9f4784"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_128x128.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_128x128.png",
+      "sha256": "d45f4ee82b716a8a9565bae3d70852adf3b28d152e116a65b217a8595ecf6c89"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_128x128@2x.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_128x128@2x.png",
+      "sha256": "687a8973e5d48f357203856ec1bf520a5bf18251a52033b2fec813c456edc9e3"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_16x16.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_16x16.png",
+      "sha256": "73561d618609345b8459cfe38f84101e7d23c6704b4be1e050d2451d04aca96c"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_16x16@2x.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_16x16@2x.png",
+      "sha256": "13cced789d43b5a8f5eccfb3f21a56930dabb13c752c69a87beda0a7dec28bbf"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_256x256.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_256x256.png",
+      "sha256": "687a8973e5d48f357203856ec1bf520a5bf18251a52033b2fec813c456edc9e3"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_256x256@2x.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_256x256@2x.png",
+      "sha256": "780e5ba8cac05c6d429f65225854fb72dcdb469159c51806f1a267b457a3eef0"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_32x32.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_32x32.png",
+      "sha256": "13cced789d43b5a8f5eccfb3f21a56930dabb13c752c69a87beda0a7dec28bbf"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_32x32@2x.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_32x32@2x.png",
+      "sha256": "64ec2a139fd0d5a13dd7ec537b7fb1ad0469630daee4f53fdf59186b1111f9e5"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_512x512.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_512x512.png",
+      "sha256": "780e5ba8cac05c6d429f65225854fb72dcdb469159c51806f1a267b457a3eef0"
+    },
+    {
+      "source": "packages/assets/logo.iconset/icon_512x512@2x.png",
+      "target": "frontend/packages/assets/logo.iconset/icon_512x512@2x.png",
+      "sha256": "80f491f4b7fe9c3afb3bba436076f7db7b5b0aa2c1b45be772b5fb64e5047df4"
+    },
+    {
+      "source": "packages/extScaffold/create.ts",
+      "target": "frontend/packages/extScaffold/create.ts",
+      "sha256": "578f622de40c6930b4d4a5bc289eb7bcd82bc46f231024701a6f1b6e08cf60d0"
+    },
+    {
+      "source": "packages/extScaffold/index.ts",
+      "target": "frontend/packages/extScaffold/index.ts",
+      "sha256": "d95e2351cb72f1163cf08a57723599e7bc1a4c56b6fa605684f5badc64438034"
+    },
+    {
+      "source": "packages/extScaffold/package.json",
+      "target": "frontend/packages/extScaffold/package.json",
+      "sha256": "002c5bd9393a8fe58b6daf6cd5ae2761c4aa73524ceb38158b2ed6321766b254"
+    },
+    {
+      "source": "packages/extScaffold/readme.md",
+      "target": "frontend/packages/extScaffold/readme.md",
+      "sha256": "1ec5d5ef329944997d74e59124d2da281fba84644c46b13835d734a61ddf0017"
+    },
+    {
+      "source": "packages/extScaffold/tsconfig.json",
+      "target": "frontend/packages/extScaffold/tsconfig.json",
+      "sha256": "d567772c24aae288b3e0b7915afd71c6430cfdff52c1e31f3218aba463f75b70"
+    },
+    {
+      "source": "packages/extScaffold/src/runtime.ts",
+      "target": "frontend/packages/extScaffold/src/runtime.ts",
+      "sha256": "fafa7b57dba903b7296319775bb77e9b9797e23720505c0a29853792f843f998"
+    },
+    {
+      "source": "packages/i18n/package.json",
+      "target": "frontend/packages/i18n/package.json",
+      "sha256": "268df70cdda332f16b4d11cdd5e3919214e3a6fc041663d35d97bf3a0c2e61fe"
+    },
+    {
+      "source": "packages/i18n/readme.md",
+      "target": "frontend/packages/i18n/readme.md",
+      "sha256": "e9b14d5e5d80f2035a50beb80edf9a14973d5c6515422a035f700c96757a44ab"
+    },
+    {
+      "source": "packages/i18n/regression.md",
+      "target": "frontend/packages/i18n/regression.md",
+      "sha256": "0d835a21a39f22df7e97ce6f25f3291923bc49edec12398382f3b6aef8fb3024"
+    },
+    {
+      "source": "packages/i18n/tsconfig.json",
+      "target": "frontend/packages/i18n/tsconfig.json",
+      "sha256": "728b882141733f425893de788d0e2e37142129123ee9472063afffc759cfd68d"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus.ts",
+      "target": "frontend/packages/i18n/src/elementPlus.ts",
+      "sha256": "1184bf64885340ab25bcac234cc4b43aa80ebcc04d1ed13a279b070898011672"
+    },
+    {
+      "source": "packages/i18n/src/errors.ts",
+      "target": "frontend/packages/i18n/src/errors.ts",
+      "sha256": "2db8f07a1b2d9a99edcf92fdea2b3a0f8fa6ab118081b063b704a024f0558cd4"
+    },
+    {
+      "source": "packages/i18n/src/extract.ts",
+      "target": "frontend/packages/i18n/src/extract.ts",
+      "sha256": "3b33d4f0e86e017f051a0857666353466ee4c24b515f6ea27e2a1d1355fd8551"
+    },
+    {
+      "source": "packages/i18n/src/index.ts",
+      "target": "frontend/packages/i18n/src/index.ts",
+      "sha256": "2c13f23437b42f163d4b547fa9abfb030ad69b1b804cfa5486c4180f388ae1cd"
+    },
+    {
+      "source": "packages/i18n/src/messageSources.json",
+      "target": "frontend/packages/i18n/src/messageSources.json",
+      "sha256": "f027a648593bdb56a3f24aad009f75ca4503b2352474c34824dcbb85d9627d01"
+    },
+    {
+      "source": "packages/i18n/src/messageText.ts",
+      "target": "frontend/packages/i18n/src/messageText.ts",
+      "sha256": "2f0af5be4fa900682e625800c8fc3a04d7cc66b2ba21f3b759c4b0b875ef7b76"
+    },
+    {
+      "source": "packages/i18n/src/transform.ts",
+      "target": "frontend/packages/i18n/src/transform.ts",
+      "sha256": "135c9c981b27710d7544207fc6c9a0f1f3ff5997a312b78c700be9270eaa862f"
+    },
+    {
+      "source": "packages/i18n/src/vite.ts",
+      "target": "frontend/packages/i18n/src/vite.ts",
+      "sha256": "10878b9f2003bb0482f7abbbde718746861a5383e6cca8b21b4070eb8b7981e8"
+    },
+    {
+      "source": "packages/i18n/src/vue.ts",
+      "target": "frontend/packages/i18n/src/vue.ts",
+      "sha256": "42c69e0bf6208cffa5940a48033165e1821d2e0af8e8f39e7ddd04bc6a881dca"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ar.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ar.json",
+      "sha256": "a31b893d3e8ae3f539b397193f710252c1718e1aceabb119cd0d6aec058c5196"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/bn.json",
+      "target": "frontend/packages/i18n/src/elementPlus/bn.json",
+      "sha256": "9526b866b63ed13fbc8e5e3c999c375c2b0e7df9f42b524790b009a27c49e81a"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/en.json",
+      "target": "frontend/packages/i18n/src/elementPlus/en.json",
+      "sha256": "a60ef529688fa32d6c790e49a7bc98a2cf11cab57b3f7f01cf916efb9fe9e9a8"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/fa.json",
+      "target": "frontend/packages/i18n/src/elementPlus/fa.json",
+      "sha256": "6eead69481742c94b7a6b74cf6e79f11ce6e878f7633fba5a2215e854274afd0"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/fil.json",
+      "target": "frontend/packages/i18n/src/elementPlus/fil.json",
+      "sha256": "2e2d2c98aed639f7f751de9150ca000d69ed1acefd2e608e2e8b15d03c553e78"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/hi.json",
+      "target": "frontend/packages/i18n/src/elementPlus/hi.json",
+      "sha256": "26803a78b7fb76627da374a066d3b5583f38cec3df4e4de15ae5ec9fc84296cb"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/id.json",
+      "target": "frontend/packages/i18n/src/elementPlus/id.json",
+      "sha256": "6696c18293e8fae9c2bb7bb881fd1cb39f5eb024e93456d06c604ac2e5ef56e6"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ja.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ja.json",
+      "sha256": "650da4ef909543f19912a45d392ad4f333dc1183415e71abba6a4729ce808eea"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ko.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ko.json",
+      "sha256": "1be811646ebcd291ae19e7dcea82d723c873519237a21ada189de9345b3345a5"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/license.txt",
+      "target": "frontend/packages/i18n/src/elementPlus/license.txt",
+      "sha256": "7d6560ca47099f18ae7dc4d2fcdb3e0dcc207430a442525177f8af6dc229d1cc"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/mr.json",
+      "target": "frontend/packages/i18n/src/elementPlus/mr.json",
+      "sha256": "2dc51ffc483d40be76c5f00c80270f57bf914ee442cf3edc24a5c972d481b263"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ms.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ms.json",
+      "sha256": "9b4414f016b3a1de0d189ac8a2975f2ebff1f6b9a5f88d17ebc7e11f09983c9d"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/pa.json",
+      "target": "frontend/packages/i18n/src/elementPlus/pa.json",
+      "sha256": "7d5b77ad5d80239bf62873a598af39d621cf4727255665b954bf21ad1f95fcb3"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ru.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ru.json",
+      "sha256": "4da229f46921e09c9c9f7d282ba2f44a788eb884c95521f4eee9646b354c3fde"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ta.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ta.json",
+      "sha256": "e4d4a5c13a3b964db6bde961c3a2412fe06c379d4dfcf826326ec1fb79006ed1"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/te.json",
+      "target": "frontend/packages/i18n/src/elementPlus/te.json",
+      "sha256": "591565cc776870671bee753d52443f25965ed69fe8142bc756f738b8a6210155"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/th.json",
+      "target": "frontend/packages/i18n/src/elementPlus/th.json",
+      "sha256": "2d11ea92679ab5dbc77d09462d6b2c5403d7e9511439005f31ac6b6dee6a0b37"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/tr.json",
+      "target": "frontend/packages/i18n/src/elementPlus/tr.json",
+      "sha256": "af9591ea1a733a86051864c6160ce560e5129676b2a01593c305c48a1e3d1ba8"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/ur.json",
+      "target": "frontend/packages/i18n/src/elementPlus/ur.json",
+      "sha256": "99e844ce9d67fab69edaebec9274ffc46e18220113739665744c574dba2b0bad"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/vi.json",
+      "target": "frontend/packages/i18n/src/elementPlus/vi.json",
+      "sha256": "62894095f6c8360bfa0ada52e2778175e9cbbdace644150df8fd100f9d422d9c"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/zhCn.json",
+      "target": "frontend/packages/i18n/src/elementPlus/zhCn.json",
+      "sha256": "b073c522ed9d0fbccbdac02a553ef0805e4e703215e782afb9240ffd68fa42ac"
+    },
+    {
+      "source": "packages/i18n/src/elementPlus/zhTw.json",
+      "target": "frontend/packages/i18n/src/elementPlus/zhTw.json",
+      "sha256": "2423c4ca72e7a5ec61da2cd524b994e8652c36f49bd0d064be8dd0d937c2c35c"
+    },
+    {
+      "source": "packages/i18n/src/locales/ar.json",
+      "target": "frontend/packages/i18n/src/locales/ar.json",
+      "sha256": "aa63fdf1206b7d2e1070351ee7176cdcc8f2b7d3edaeb1af2dbd2ea0b7e42557"
+    },
+    {
+      "source": "packages/i18n/src/locales/bn.json",
+      "target": "frontend/packages/i18n/src/locales/bn.json",
+      "sha256": "8f958cf03cd5c95884e485dac44a0d9529a659887bc63925bbdbaf0c34e83537"
+    },
+    {
+      "source": "packages/i18n/src/locales/en.json",
+      "target": "frontend/packages/i18n/src/locales/en.json",
+      "sha256": "c528579e8ebad5f8f7bf08b7252f593e9172b2f14ca9a5bcd1ba9299b1247aea"
+    },
+    {
+      "source": "packages/i18n/src/locales/fa.json",
+      "target": "frontend/packages/i18n/src/locales/fa.json",
+      "sha256": "16975445914f3c8b4e0195b0d25b3ef2d94da4c07a359f2a698f354ec665b2d3"
+    },
+    {
+      "source": "packages/i18n/src/locales/fil.json",
+      "target": "frontend/packages/i18n/src/locales/fil.json",
+      "sha256": "d0ec70f26a7ec121701fecc9018f3b1da51457c89cce2528c82f2f0e280548d9"
+    },
+    {
+      "source": "packages/i18n/src/locales/hi.json",
+      "target": "frontend/packages/i18n/src/locales/hi.json",
+      "sha256": "41d1ad9f18aaa14073606a35d861d74def5d4d16d0fe33d22dfd1d83402bcaec"
+    },
+    {
+      "source": "packages/i18n/src/locales/id.json",
+      "target": "frontend/packages/i18n/src/locales/id.json",
+      "sha256": "5c8d7cca504bbbf4601eb93edd9c71429ad543703e94d8dadbaf9287613d2603"
+    },
+    {
+      "source": "packages/i18n/src/locales/ja.json",
+      "target": "frontend/packages/i18n/src/locales/ja.json",
+      "sha256": "5c5975883a07d6a1a500fbbab093c54df0609202a8d2519676e7e236cc5e77dd"
+    },
+    {
+      "source": "packages/i18n/src/locales/ko.json",
+      "target": "frontend/packages/i18n/src/locales/ko.json",
+      "sha256": "77132eaa267ea9e91066a1cc28e8885a9da07693b4801d728a67d8a67750ad7b"
+    },
+    {
+      "source": "packages/i18n/src/locales/mr.json",
+      "target": "frontend/packages/i18n/src/locales/mr.json",
+      "sha256": "8758e2e213ffc92a0dff0d57bb6a1a648e97fe5339d8a51122e04d474c51be04"
+    },
+    {
+      "source": "packages/i18n/src/locales/ms.json",
+      "target": "frontend/packages/i18n/src/locales/ms.json",
+      "sha256": "3b4767088ca9edcdd751c4bd0f38bd26f39df5198b11e6434835662c4a4fb831"
+    },
+    {
+      "source": "packages/i18n/src/locales/pa.json",
+      "target": "frontend/packages/i18n/src/locales/pa.json",
+      "sha256": "b67d23736fc62b0a7d2cc647d3e65ea9c1b19a994f0cbc828efacb16ece25f15"
+    },
+    {
+      "source": "packages/i18n/src/locales/ru.json",
+      "target": "frontend/packages/i18n/src/locales/ru.json",
+      "sha256": "4b41938e5b8cce8954b97877132f205a471061d12fe383895c29bf6cf0018f8e"
+    },
+    {
+      "source": "packages/i18n/src/locales/ta.json",
+      "target": "frontend/packages/i18n/src/locales/ta.json",
+      "sha256": "ab7352eceb50f505aa5950e498a24992356150c68cb891645ce4dd49c36fbe86"
+    },
+    {
+      "source": "packages/i18n/src/locales/te.json",
+      "target": "frontend/packages/i18n/src/locales/te.json",
+      "sha256": "9c3568556579360c528341d66b81e70431d317cbfafb7e0ff9953999fff5a6de"
+    },
+    {
+      "source": "packages/i18n/src/locales/th.json",
+      "target": "frontend/packages/i18n/src/locales/th.json",
+      "sha256": "ac4d5decc1d981222a58350dc9314b66e55302d5a7673cf6b81f8557614178ad"
+    },
+    {
+      "source": "packages/i18n/src/locales/tr.json",
+      "target": "frontend/packages/i18n/src/locales/tr.json",
+      "sha256": "42a0bd2fadbc573f9759f8748e95574b058ffa76d45cec13db5a221acaad227c"
+    },
+    {
+      "source": "packages/i18n/src/locales/ur.json",
+      "target": "frontend/packages/i18n/src/locales/ur.json",
+      "sha256": "247643b02cf78baa045342449c7c6c400f3d5ba89292e0a17464211d8bcf60d5"
+    },
+    {
+      "source": "packages/i18n/src/locales/vi.json",
+      "target": "frontend/packages/i18n/src/locales/vi.json",
+      "sha256": "36f5fdb78d04a7acdc185c275f8ab59b5272b76731a6ab246fd85c50472bdf14"
+    },
+    {
+      "source": "packages/i18n/src/locales/zhCn.json",
+      "target": "frontend/packages/i18n/src/locales/zhCn.json",
+      "sha256": "167292286795770f94af279e49f81bf29da75673b169a8858fab13a053f39bcf"
+    },
+    {
+      "source": "packages/i18n/src/locales/zhTw.json",
+      "target": "frontend/packages/i18n/src/locales/zhTw.json",
+      "sha256": "18cd979ce080bc5d25763c6929034343e0e589c36550a0f37a7e5d5173bdb9c3"
+    },
+    {
+      "source": "packages/modelIcons/package.json",
+      "target": "frontend/packages/modelIcons/package.json",
+      "sha256": "21b09479a4ef86f37c918434fb2da3e8adcaa0f03b55fa1edb4c554f069d6d40"
+    },
+    {
+      "source": "packages/modelIcons/src/getModelIcon.ts",
+      "target": "frontend/packages/modelIcons/src/getModelIcon.ts",
+      "sha256": "944ddbeaa2926ef6fe8aa654426ebee2c081263e9cfb4faa1047497472e9a4a2"
+    },
+    {
+      "source": "packages/modelIcons/src/index.ts",
+      "target": "frontend/packages/modelIcons/src/index.ts",
+      "sha256": "15e5e9c35b3f21403ce183ef5c543978413fc8c5f824f9f2411d04cdb861dfc5"
+    },
+    {
+      "source": "packages/modelIcons/src/modelIcon.vue",
+      "target": "frontend/packages/modelIcons/src/modelIcon.vue",
+      "sha256": "df0a43896ed621db5b9060cdb1c5a0f74c91c71db64fae3bf4c69327af27d805"
+    },
+    {
+      "source": "packages/nodeScaffold/index.ts",
+      "target": "frontend/packages/nodeScaffold/index.ts",
+      "sha256": "5ab248c6616f2aab9dc8e2547ff7b88059c04eedea66348f33a9697d350627b8"
+    },
+    {
+      "source": "packages/nodeScaffold/package.json",
+      "target": "frontend/packages/nodeScaffold/package.json",
+      "sha256": "2532100ccccf3e5e6cd0a4e876daa2c4595bf9afe8f789b8b2bd7cf998a4aa0b"
+    },
+    {
+      "source": "packages/nodeScaffold/readme.md",
+      "target": "frontend/packages/nodeScaffold/readme.md",
+      "sha256": "078fe99040ac620ab365bb0331e9398af3d25151a24d8b488b9c4d04025e45f6"
+    },
+    {
+      "source": "packages/nodeScaffold/tsconfig.json",
+      "target": "frontend/packages/nodeScaffold/tsconfig.json",
+      "sha256": "6975d1ebbee2e2103f6ecc29875392d5a4e4fbc43498d75b7de0e71ce88083ec"
+    },
+    {
+      "source": "packages/nodeScaffold/src/connection.ts",
+      "target": "frontend/packages/nodeScaffold/src/connection.ts",
+      "sha256": "82c8c56a4afad9ea6418d96af26b58a947aa23ca9a12e62d99b4532c2ce1082e"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeAi.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeAi.ts",
+      "sha256": "6b8694d71c376307d5c95088e9e088883238351b8abf3f4639d1bf9b421c26dd"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeDocument.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeDocument.ts",
+      "sha256": "6ef354de3a093964e4a435ad5e8516c228b4d1096f463288a0702d54c5e91d65"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeEvent.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeEvent.ts",
+      "sha256": "c797bf6d60629b0f5d53ea78c4dc08d9bc5adbf2fe24cc63cf92f2439aa0003e"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeFfmpeg.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeFfmpeg.ts",
+      "sha256": "793c29756833aaef3f30432dd445793ecf7b0c9ed7160099740831b17e4409e8"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeInputs.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeInputs.ts",
+      "sha256": "7372ce95c4b0ea94de3f3f3a521202dd76a3c31741e0dbec13eb3f34c44a3d5d"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeSkeleton.vue",
+      "target": "frontend/packages/nodeScaffold/src/nodeSkeleton.vue",
+      "sha256": "1d389a37407d1bdb24d6dc93d72bdb47579a78b86381f9dcd0e2fcdc69f2bb7c"
+    },
+    {
+      "source": "packages/nodeScaffold/src/nodeTools.ts",
+      "target": "frontend/packages/nodeScaffold/src/nodeTools.ts",
+      "sha256": "6f37f4e8739752ca64fb9ac13383d52b5dddb7b82c2b80a1e82dfa79c43e1810"
+    },
+    {
+      "source": "packages/nodeScaffold/src/runtime.ts",
+      "target": "frontend/packages/nodeScaffold/src/runtime.ts",
+      "sha256": "15bb0527cdbc4401dc94d19b81a84f0de5d0e8dd26078d4cbcdec3339bc417b0"
+    },
+    {
+      "source": "packages/nodeScaffold/src/useNode.ts",
+      "target": "frontend/packages/nodeScaffold/src/useNode.ts",
+      "sha256": "c619820caf4b5b79f4399d3cf60e8b9eebaa5503b25fa55d68cb0f156e1bfc3f"
+    },
+    {
+      "source": "packages/nodeScaffold/src/useNodePreviewReady.ts",
+      "target": "frontend/packages/nodeScaffold/src/useNodePreviewReady.ts",
+      "sha256": "fabefd2e0e6182b93b3469cf6b390d8291e8859086869250046a33ab23a658f4"
+    },
+    {
+      "source": "packages/nodeScaffold/src/values.ts",
+      "target": "frontend/packages/nodeScaffold/src/values.ts",
+      "sha256": "5f6aab3d3d8898b4372c4d3507902ec938147c3b7cc4014e8df9c24140c01722"
+    },
+    {
+      "source": "packages/nodeScaffold/src/workspaceFiles.ts",
+      "target": "frontend/packages/nodeScaffold/src/workspaceFiles.ts",
+      "sha256": "0e257e3f5864c99cafdf3f7a6fd9e878f80aecdd963693978b7e08576d985681"
+    },
+    {
+      "source": "packages/toolScaffold/index.ts",
+      "target": "frontend/packages/toolScaffold/index.ts",
+      "sha256": "a429624ce3e6967bf49937138172a394829b4cbc700ca6ebe9bcd814a8f785db"
+    },
+    {
+      "source": "packages/toolScaffold/package.json",
+      "target": "frontend/packages/toolScaffold/package.json",
+      "sha256": "3b879194b51c33d5f9571ebce5247b2c250f47828ea090e297dda8c1bb14f630"
+    },
+    {
+      "source": "packages/toolScaffold/readme.md",
+      "target": "frontend/packages/toolScaffold/readme.md",
+      "sha256": "b1dae0b3e604d6d0c02987bf994f539c4f6253c4edee22a329decda4b938841e"
+    },
+    {
+      "source": "packages/toolScaffold/tsconfig.json",
+      "target": "frontend/packages/toolScaffold/tsconfig.json",
+      "sha256": "b8ea2faa6577788c8a08105b14ac1d28f9e72fa70c951b0898262693970fcc86"
+    },
+    {
+      "source": "packages/toolScaffold/src/client.ts",
+      "target": "frontend/packages/toolScaffold/src/client.ts",
+      "sha256": "86f0815091fffca38225b08a2692cf9fb8782c3d1650eff46fc7acfd740ad7aa"
+    },
+    {
+      "source": "packages/toolScaffold/src/runtime.ts",
+      "target": "frontend/packages/toolScaffold/src/runtime.ts",
+      "sha256": "b199ad17924aadf79f18f057f94de0c5d56425900417037775e798fba598597b"
+    },
+    {
+      "source": "packages/providers/index.ts",
+      "target": "frontend/packages/providers/index.ts",
+      "sha256": "e59e12c1408fe9b4ac41ad8a8141733b11a8cac81f8cb5855de01a8216bd259e"
+    },
+    {
+      "source": "packages/providers/package.json",
+      "target": "frontend/packages/providers/package.json",
+      "sha256": "693a9ec6b6e0b06373d864238df131d8c8231e1efc27458f18a71b88e222c02f"
+    },
+    {
+      "source": "packages/providers/tsconfig.json",
+      "target": "frontend/packages/providers/tsconfig.json",
+      "sha256": "576a28f2b1c973245eb7d74280137428907bbf9ee5574027be66a6c80f6a81c5"
+    },
+    {
+      "source": "packages/providers/types.d.ts",
+      "target": "frontend/packages/providers/types.d.ts",
+      "sha256": "d185dc8b72f044c5e2331a2922f0b80e0167df558e338978f89d6ac8ba505788"
+    },
+    {
+      "source": "packages/providers/src/language/deepSeek.ts",
+      "target": "frontend/packages/providers/src/language/deepSeek.ts",
+      "sha256": "e88c23389fd82a44eaffcd21a98ba859fea59e4d38774f5e466eea79053c7aa2"
+    },
+    {
+      "source": "packages/providers/src/language/tfRouter.ts",
+      "target": "frontend/packages/providers/src/language/tfRouter.ts",
+      "sha256": "e0b5dec719f4d989ac848eff363c2088d490b73dc4343a08f074702d7cedf506"
+    },
+    {
+      "source": "packages/providers/src/media/apiMart.ts",
+      "target": "frontend/packages/providers/src/media/apiMart.ts",
+      "sha256": "8aed9572938602ff3a7eedfc29a0d309bf18c08d3cd1f3fac921ceaef5567ef3"
+    },
+    {
+      "source": "packages/providers/src/media/compshare.ts",
+      "target": "frontend/packages/providers/src/media/compshare.ts",
+      "sha256": "fb034dddb77f60eba42390d2fac755a3bc6287ae617af65fe0df9e4b76ef8874"
+    },
+    {
+      "source": "packages/providers/src/media/metaso.ts",
+      "target": "frontend/packages/providers/src/media/metaso.ts",
+      "sha256": "2d9b2d097260f2326f01e6b7c3aa1f0de1849e3fb647254317c3536586c5af4b"
+    },
+    {
+      "source": "packages/providers/src/media/tfRouter.ts",
+      "target": "frontend/packages/providers/src/media/tfRouter.ts",
+      "sha256": "8b37f462a43ce82caa036bcc5c9d99bd149124189cb40f7ff91580d41bd1e729"
+    },
+    {
+      "source": "packages/ffmpeg/package.json",
+      "target": "frontend/packages/ffmpeg/package.json",
+      "sha256": "f6441562a8e78da9541105d5b06603430989a9328cf6e034bce28c4e556a0158"
+    },
+    {
+      "source": "packages/ffmpeg/tsconfig.json",
+      "target": "frontend/packages/ffmpeg/tsconfig.json",
+      "sha256": "89373675573b0edc850621ad2388b8f1943d1840ed09f89358dd51884784312b"
+    },
+    {
+      "source": "packages/ffmpeg/src/browser.ts",
+      "target": "frontend/packages/ffmpeg/src/browser.ts",
+      "sha256": "ed764f8d71ca8d1f484681c6a17cd450b10de71de43f0a4eb4a06831ccc7c2a9"
+    },
+    {
+      "source": "packages/ffmpeg/src/browserTypes.ts",
+      "target": "frontend/packages/ffmpeg/src/browserTypes.ts",
+      "sha256": "24d63ff8650979bd383d7cf04381ed6b457480de1924963c9a1bd08c0673a187"
+    },
+    {
+      "source": "packages/ffmpeg/src/catalog.ts",
+      "target": "frontend/packages/ffmpeg/src/catalog.ts",
+      "sha256": "9ddfc939b8604f2a084f605017d3d193f0a6ee53dc2420cb2fae55be6489f827"
+    },
+    {
+      "source": "packages/ffmpeg/src/index.ts",
+      "target": "frontend/packages/ffmpeg/src/index.ts",
+      "sha256": "836343bc3e05e97fcaf2b848025580e53a6906143f720c70a387446c44efe51d"
+    },
+    {
+      "source": "packages/ffmpeg/src/remote.ts",
+      "target": "frontend/packages/ffmpeg/src/remote.ts",
+      "sha256": "2c19980e4256057367d22501cae2a1a16e92684bd785c7d5d16cb94717a85276"
+    },
+    {
+      "source": "packages/ffmpeg/src/runtime.ts",
+      "target": "frontend/packages/ffmpeg/src/runtime.ts",
+      "sha256": "59ff628cd6467b00ef98af323ea9269f4cdfaa4819d19354a2c071f6b7985140"
+    },
+    {
+      "source": "packages/ffmpeg/src/types.ts",
+      "target": "frontend/packages/ffmpeg/src/types.ts",
+      "sha256": "6e784c0b52293afa9eaf2cb5c7f9ae89c5df9505a8f01a6a2665cf0249254c9c"
+    },
+    {
+      "source": "packages/file/package.json",
+      "target": "frontend/packages/file/package.json",
+      "sha256": "a237241544da10439811e344d5073ae8bbd206e251ec0b99150bd8df859185a9"
+    },
+    {
+      "source": "packages/file/readme.md",
+      "target": "frontend/packages/file/readme.md",
+      "sha256": "85d5d228bea253e153f4a4aebf1cfde54c0469dde02b02db076d00c5d61f5dd1"
+    },
+    {
+      "source": "packages/file/tsconfig.json",
+      "target": "frontend/packages/file/tsconfig.json",
+      "sha256": "89373675573b0edc850621ad2388b8f1943d1840ed09f89358dd51884784312b"
+    },
+    {
+      "source": "packages/file/src/access.ts",
+      "target": "frontend/packages/file/src/access.ts",
+      "sha256": "6736ad424b4cda1cd3721fa2d64c76f89b9a3567848c276d13070ce60a650c99"
+    },
+    {
+      "source": "packages/file/src/bun.ts",
+      "target": "frontend/packages/file/src/bun.ts",
+      "sha256": "78333542ef33af0e78423612d9751497ac47f9ebd0908345eb17ce46669f58da"
+    },
+    {
+      "source": "packages/file/src/index.ts",
+      "target": "frontend/packages/file/src/index.ts",
+      "sha256": "07efe7f758518cb7c8475b71900a59f7f512c7d794cbb750aaa263a3bf01b3af"
+    },
+    {
+      "source": "packages/file/src/renameExclusive.ts",
+      "target": "frontend/packages/file/src/renameExclusive.ts",
+      "sha256": "0bf2a7f5c167437b710005579e1a52079c7c03830cbbe5919b204ba6c2ac8f5d"
+    },
+    {
+      "source": "packages/tools/canvas/build.ts",
+      "target": "frontend/packages/tools/canvas/build.ts",
+      "sha256": "976dd57f2e8e483395685bd8c2d2a68358c5667a587d8c7c71c887fcfdcd7ee8"
+    },
+    {
+      "source": "packages/tools/canvas/package.json",
+      "target": "frontend/packages/tools/canvas/package.json",
+      "sha256": "1da3c579e38e86c6b5aeac6a1426ff86f7f706817cc14a569c4b273461932e47"
+    },
+    {
+      "source": "packages/tools/canvas/readme.md",
+      "target": "frontend/packages/tools/canvas/readme.md",
+      "sha256": "b33016bdd27c871c1cdd69bb06e23f23de963be59882e333bf092a31a3fe54df"
+    },
+    {
+      "source": "packages/tools/canvas/tsconfig.json",
+      "target": "frontend/packages/tools/canvas/tsconfig.json",
+      "sha256": "daad5b12824c402c8293aa5e9f10eb625ee166be0a2e586623c81c5cf006444b"
+    },
+    {
+      "source": "packages/tools/canvas/src/index.ts",
+      "target": "frontend/packages/tools/canvas/src/index.ts",
+      "sha256": "a0a19351a6a57f4c9434531c134da8a2cfc9ed53f355aea152543d78b4ea9529"
+    },
+    {
+      "source": "packages/tools/canvas/src/nodeFocusCard.vue",
+      "target": "frontend/packages/tools/canvas/src/nodeFocusCard.vue",
+      "sha256": "67db52b65cf0a32332245be5bb78a0932b1179f17a51a935753426a95c212244"
+    },
+    {
+      "source": "packages/tools/canvas/src/runtime.ts",
+      "target": "frontend/packages/tools/canvas/src/runtime.ts",
+      "sha256": "c0ad8c42c197c999bb66e9bb65cc2fa2ce96c8fa6f29477b5c93a8deee5e3e19"
+    },
+    {
+      "source": "patches/vueFlowCore.patch",
+      "target": "frontend/patches/vueFlowCore.patch",
+      "sha256": "6546b69af2cc0591aae7342d2eb8901ba6d205fa71a154de3365ecbcdc04bcd3"
+    },
+    {
+      "source": "apps/web/index.html",
+      "target": "frontend/index.html",
+      "sha256": "1e9cea92fa5b1aa65c0bdfb18816653fe86c580af17a9079c4cad16092f1274e"
+    },
+    {
+      "source": "LICENSE",
+      "target": "frontend/LICENSE.Toonflow",
+      "sha256": "0b6fb7c6a2d19ed3519474a4ee4165a836af9ee2a2f80e6ef92f14d7cec3d2ea"
+    },
+    {
+      "source": "postcss.config.ts",
+      "target": "frontend/postcss.config.ts",
+      "sha256": "a837de58d606b0674d4ead307f0d23c9c531df71a0756aa58125496bcd764514"
+    },
+    {
+      "source": "apps/server/src/lib/nodeMenu.ts",
+      "target": "frontend/packages/contracts/nodeMenu.ts",
+      "sha256": "3c30f1d519f6eba60d11d9f773c0f293ff971489c58e7e725b01046b92a6dbf5",
+      "kind": "browser-pure-helper-or-type"
+    },
+    {
+      "source": "apps/server/src/lib/documentFormats.ts",
+      "target": "frontend/packages/contracts/documentFormats.ts",
+      "sha256": "17e8969f626de3f6b92468571a58d3542964991703ed6e3371a66df22e064fc8",
+      "kind": "browser-pure-helper-or-type"
+    },
+    {
+      "source": "apps/server/src/agent/runtime/types.ts",
+      "target": "frontend/packages/contracts/agent-types.ts",
+      "sha256": "24b7239ce2714c943e1f7cde644d4f9ec0d51f7c6df66e1c4f7914f978848f3c",
+      "kind": "browser-pure-helper-or-type"
+    },
+    {
+      "source": "apps/server/src/agent/mentionSources.ts",
+      "target": "frontend/packages/contracts/mentionSources.ts",
+      "sha256": "c8c259ae3ee6257b7a15984d85dec66a4cf175b3a7045bc25b550849eb3b2d89",
+      "kind": "browser-pure-helper-or-type"
+    },
+    {
+      "source": "apps/server/src/utils/singleAgent/types.ts",
+      "target": "frontend/packages/contracts/singleAgent-types.ts",
+      "sha256": "80305ca8e4d1b4ee93de5ceb8a44a66e4aafb304a3ecb2fbdfff15d817779165",
+      "kind": "browser-pure-helper-or-type"
+    }
+  ]
+}

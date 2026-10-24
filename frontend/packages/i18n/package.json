@@ -1,0 +1,24 @@
+{
+  "name": "@toonflow/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vue": "./src/vue.ts",
+    "./vite": "./src/vite.ts",
+    "./transform": "./src/transform.ts",
+    "./errors": "./src/errors.ts",
+    "./elementPlus": "./src/elementPlus.ts"
+  },
+  "scripts": {
+    "extract": "bun src/extract.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "intl-messageformat": "10.7.18"
+  },
+  "peerDependencies": {
+    "vue": "3.5.42"
+  }
+}

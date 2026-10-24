@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-22",
+  "supplierId": "localQwenImage21",
+  "version": "0.1.2",
+  "beforeSha256": "e6e98133d25fe759e385a35922f0517e3e4a9e00455dd3603030ca7e5626ffbc",
+  "afterSha256": "001c71301e5df486d2683fa2dc8412dd8ddf0525730bd69e0f32e965f853b307",
+  "backup": "C:\\Users\\c1338\\Desktop\\workplace\\toonflow\\Toonflow-app\\data\\providerBackups\\localQwenImage21BeforeM0Fix20261022.ts",
+  "installedRevision": "001c71301e5df486d2683fa2dc8412dd8ddf0525730bd69e0f32e965f853b307",
+  "loadError": "",
+  "changes": [
+    "base64 decoding uses the existing sandbox Buffer global",
+    "multipart upload uses Buffer instead of unavailable FormData"
+  ],
+  "validationEvidence": "upstream-qwen-current-closeout.json"
+}

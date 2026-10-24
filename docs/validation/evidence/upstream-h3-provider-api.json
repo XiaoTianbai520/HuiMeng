@@ -1,0 +1,61 @@
+{
+  "status": 200,
+  "contentType": "application/json; charset=utf-8",
+  "elapsedSeconds": 618.61,
+  "model": {
+    "providerId": "localMiniMaxH3",
+    "providerLabel": "本地 MiniMax H3（M0 测试）",
+    "modelId": "minimax-h3-local",
+    "label": "MiniMax H3 本地视频",
+    "type": "video",
+    "supportsPrice": false,
+    "mode": [
+      "text",
+      "singleImage",
+      "startFrameOptional",
+      "startEndRequired"
+    ],
+    "durationResolutionMap": [
+      {
+        "duration": [
+          5
+        ],
+        "resolution": [
+          "480p"
+        ]
+      }
+    ],
+    "audio": true
+  },
+  "request": {
+    "mediaType": "video",
+    "providerId": "localMiniMaxH3",
+    "modelId": "minimax-h3-local",
+    "prompt": "integrated_multimodal_description: [Shot 1] A single continuous shot of a small paper boat floating slowly down a calm stream at sunrise. The camera tracks beside it. Soft warm light; gentle, steady movement.\n\noverall_soundscape: Quiet flowing water and a few distant birds.\n\nnon_diegetic_music: None.",
+    "ratio": "16:9",
+    "resolution": "480p",
+    "duration": 5,
+    "generateAudio": true,
+    "outputDirectory": "assets/m0-h3"
+  },
+  "response": {
+    "code": 200,
+    "data": [
+      {
+        "path": "assets/m0-h3/videoec3da9f6-acc5-4a7f-8e89-378daca560b6.mp4",
+        "mimeType": "video/mp4",
+        "mediaType": "video"
+      }
+    ],
+    "message": "成功"
+  },
+  "leadingWhitespaceBytes": 30,
+  "files": [
+    {
+      "path": "assets/m0-h3/videoec3da9f6-acc5-4a7f-8e89-378daca560b6.mp4",
+      "bytes": 1014250,
+      "sha256": "6552b8a8f291fd3fb08584e25899737bd9afcdf2b1678c028ef8afc7d23fa5ac",
+      "mp4": true
+    }
+  ]
+}

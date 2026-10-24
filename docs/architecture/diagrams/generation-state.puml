@@ -1,0 +1,34 @@
+@startuml
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+title { FontSize 14; FontStyle bold; FontColor #000000; BackGroundColor transparent; LineColor transparent; LineThickness 0 }
+stateDiagram {
+  state { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  arrow { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+title Huimeng 1.0 - Generation Run State
+[*] --> RESERVED : slot admitted
+RESERVED --> RUNNING : Bun accepts
+RESERVED --> FAILED : dispatch fails
+RUNNING --> SUCCEEDED : final result
+RUNNING --> FAILED : execution error
+RUNNING --> CANCELLING : cancel requested
+CANCELLING --> CANCELLED : Bun confirms stop
+CANCELLING --> FAILED : cancellation fails and execution ends
+RUNNING --> LOST : restart; cannot recover
+CANCELLING --> LOST : restart; cannot recover
+SUCCEEDED --> [*]
+FAILED --> [*]
+CANCELLED --> [*]
+LOST --> [*] : only after execution is confirmed stopped
+@enduml

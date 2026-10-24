@@ -1,0 +1,844 @@
+{
+  "routes": [
+    {
+      "id": "R001",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R002",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent/answer",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/answer",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R003",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent/canvasResult",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/canvasResult",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R004",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent/create",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/create",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R005",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agent/get",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/get",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R006",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agent/list",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/list",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R007",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agent/mentionSource",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/mentionSource",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R008",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/agent/message",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/message",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R009",
+      "sourceMethod": "PATCH",
+      "sourcePath": "/api/agent/rename",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/rename",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R010",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agent/skills",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/skills",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R011",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agents/a2a/get",
+      "targetPath": "/api/v1/admin/agents/a2a/get",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R012",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/agents/a2a/save",
+      "targetPath": "/api/v1/admin/agents/a2a/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R013",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agents/connect",
+      "targetPath": "/api/v1/admin/agents/connect",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R014",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agents/get",
+      "targetPath": "/api/v1/capabilities/agents/get",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R015",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agents/install",
+      "targetPath": "/api/v1/admin/agents/install",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R016",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/agents/read",
+      "targetPath": "/api/v1/admin/agents/read",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R017",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/agents/save",
+      "targetPath": "/api/v1/admin/agents/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R018",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/agents/setEnabled",
+      "targetPath": "/api/v1/admin/agents/setEnabled",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R019",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/agents/uninstall",
+      "targetPath": "/api/v1/admin/agents/uninstall",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R020",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ai/generate",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ai/generate",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R021",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ai/media/balance",
+      "targetPath": "/api/v1/admin/ai/media/balance",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R022",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ai/media/balanceEvents",
+      "targetPath": "/api/v1/admin/ai/media/balanceEvents",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R023",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ai/media/generate",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ai/media/generate",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R024",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ai/media/models",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ai/media/models",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R025",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ai/media/price",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ai/media/price",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R026",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ai/models",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ai/models",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R027",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/assets/list",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/list",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R028",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/assets/mkdir",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/mkdir",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R029",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/assets/read",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/read",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R030",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/assets/remove",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/remove",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R031",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/assets/rename",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/rename",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R032",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/assets/save",
+      "targetPath": "/api/v1/projects/{projectId}/creative/assets/save",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R050",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ext/install",
+      "targetPath": "/api/v1/admin/ext/install",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R051",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ext/list",
+      "targetPath": "/api/v1/capabilities/ext/list",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R052",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ext/read",
+      "targetPath": "/api/v1/capabilities/ext/read",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R053",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/ext/save",
+      "targetPath": "/api/v1/admin/ext/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R054",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/ext/setEnabled",
+      "targetPath": "/api/v1/admin/ext/setEnabled",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R055",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/ext/uninstall",
+      "targetPath": "/api/v1/admin/ext/uninstall",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R056",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ffmpeg/cancel",
+      "targetPath": "/api/v1/admin/ffmpeg/cancel",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R057",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ffmpeg/download",
+      "targetPath": "/api/v1/admin/ffmpeg/download",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R058",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ffmpeg/events",
+      "targetPath": "/api/v1/capabilities/ffmpeg/events",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R059",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/ffmpeg/execute",
+      "targetPath": "/api/v1/projects/{projectId}/creative/ffmpeg/execute",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R060",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ffmpeg/progress",
+      "targetPath": "/api/v1/admin/ffmpeg/progress",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R061",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/ffmpeg/status",
+      "targetPath": "/api/v1/capabilities/ffmpeg/status",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R062",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/mcp/control/events",
+      "targetPath": "/api/v1/projects/{projectId}/creative/mcp/control/events",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R063",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/mcp/control/result",
+      "targetPath": "/api/v1/projects/{projectId}/creative/mcp/control/result",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R064",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/mcp/control/state",
+      "targetPath": "/api/v1/projects/{projectId}/creative/mcp/control/state",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R065",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/mcp/skill",
+      "targetPath": "/api/v1/capabilities/mcp/skill",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R066",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/mcp/status",
+      "targetPath": "/api/v1/capabilities/mcp/status",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R073",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/nodes/files",
+      "targetPath": "/api/v1/capabilities/nodes/files",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R074",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/nodes/get",
+      "targetPath": "/api/v1/capabilities/nodes/get",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R075",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/nodes/install",
+      "targetPath": "/api/v1/admin/nodes/install",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R076",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/nodes/save",
+      "targetPath": "/api/v1/admin/nodes/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R077",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/nodes/setEnabled",
+      "targetPath": "/api/v1/admin/nodes/setEnabled",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R078",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/nodes/uninstall",
+      "targetPath": "/api/v1/admin/nodes/uninstall",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R079",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/plugins/export",
+      "targetPath": "/api/v1/admin/plugins/export",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R082",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/providers/media/add",
+      "targetPath": "/api/v1/admin/providers/media/add",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R083",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/providers/media/delete",
+      "targetPath": "/api/v1/admin/providers/media/delete",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R084",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/providers/media/list",
+      "targetPath": "/api/v1/admin/providers/media/list",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R085",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/providers/media/models",
+      "targetPath": "/api/v1/admin/providers/media/models",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R086",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/providers/media/save",
+      "targetPath": "/api/v1/admin/providers/media/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R087",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/providers/media/validate",
+      "targetPath": "/api/v1/admin/providers/media/validate",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R088",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/providers/models",
+      "targetPath": "/api/v1/admin/providers/models",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R090",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/settings/personalization/get",
+      "targetPath": "/api/v1/preferences/personalization",
+      "disposition": "个人配置适配"
+    },
+    {
+      "id": "R091",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/settings/personalization/save",
+      "targetPath": "/api/v1/preferences/personalization",
+      "disposition": "个人配置适配"
+    },
+    {
+      "id": "R093",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/settings/systemPrompt",
+      "targetPath": "/api/v1/admin/settings/systemPrompt",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R094",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/singleAgent/answer",
+      "targetPath": "/api/v1/projects/{projectId}/creative/singleAgent/answer",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R095",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/singleAgent/control",
+      "targetPath": "/api/v1/projects/{projectId}/creative/singleAgent/control",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R096",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/singleAgent/create",
+      "targetPath": "/api/v1/projects/{projectId}/creative/singleAgent/create",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R097",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/singleAgent/run",
+      "targetPath": "/api/v1/projects/{projectId}/creative/singleAgent/run",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R098",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/singleAgent/toolResult",
+      "targetPath": "/api/v1/projects/{projectId}/creative/singleAgent/toolResult",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R099",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/skills/create",
+      "targetPath": "/api/v1/admin/skills/create",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R100",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/skills/get",
+      "targetPath": "/api/v1/admin/skills/get",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R101",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/skills/install",
+      "targetPath": "/api/v1/admin/skills/install",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R102",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/skills/list",
+      "targetPath": "/api/v1/admin/skills/list",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R103",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/skills/move",
+      "targetPath": "/api/v1/admin/skills/move",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R104",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/skills/order",
+      "targetPath": "/api/v1/admin/skills/order",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R105",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/skills/read",
+      "targetPath": "/api/v1/admin/skills/read",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R106",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/skills/save",
+      "targetPath": "/api/v1/admin/skills/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R107",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/skills/setEnabled",
+      "targetPath": "/api/v1/admin/skills/setEnabled",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R108",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/skills/uninstall",
+      "targetPath": "/api/v1/admin/skills/uninstall",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R109",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/tools/client",
+      "targetPath": "/api/v1/capabilities/tools/client",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R110",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/tools/get",
+      "targetPath": "/api/v1/capabilities/tools/get",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R111",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/tools/install",
+      "targetPath": "/api/v1/admin/tools/install",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R112",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/tools/renderers",
+      "targetPath": "/api/v1/capabilities/tools/renderers",
+      "disposition": "成员安全视图"
+    },
+    {
+      "id": "R113",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/tools/save",
+      "targetPath": "/api/v1/admin/tools/save",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R114",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/tools/setEnabled",
+      "targetPath": "/api/v1/admin/tools/setEnabled",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R115",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/tools/uninstall",
+      "targetPath": "/api/v1/admin/tools/uninstall",
+      "disposition": "管理员适配"
+    },
+    {
+      "id": "R116",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/workspaces/check",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/check",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R117",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/workspaces/files/copy",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/copy",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R118",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/workspaces/files/importImage",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/importImage",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R119",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/workspaces/files/list",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/list",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R120",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/workspaces/files/mkdir",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/mkdir",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R121",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/workspaces/files/read",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/read",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R122",
+      "sourceMethod": "DELETE",
+      "sourcePath": "/api/workspaces/files/remove",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/remove",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R123",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/workspaces/files/rename",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/rename",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R125",
+      "sourceMethod": "PUT",
+      "sourcePath": "/api/workspaces/files/write",
+      "targetPath": "/api/v1/projects/{projectId}/creative/workspaces/files/write",
+      "disposition": "项目创作适配"
+    },
+    {
+      "id": "R126",
+      "sourceMethod": "GET",
+      "sourcePath": "/api/workspaces/list",
+      "targetPath": "/api/v1/projects",
+      "disposition": "替换项目入口"
+    }
+  ],
+  "platform": [
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/csrf"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/users"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/users/{userId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/projects/{projectId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/members"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/members"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/projects/{projectId}/members/{userId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/providers/{providerId}/secret"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/models/approval"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/external-clients"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/external-clients"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/external-clients/{clientId}/revoke"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/preferences"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/preferences"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/plugin-market/search"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/plugin-market/collections/toggle"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/plugin-market/secret"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/plugin-market/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/plugin-market/install"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/plugins"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/runs/{runId}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/runs/{runId}/cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/ai/media/generate"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/read"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/write"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/ai/generate"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/agent"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/singleAgent/run"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/ffmpeg/execute"
+    }
+  ]
+}
