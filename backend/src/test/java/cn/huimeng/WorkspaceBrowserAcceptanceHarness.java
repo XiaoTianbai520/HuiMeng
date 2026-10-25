@@ -19,7 +19,7 @@ import org.springframework.test.context.DynamicPropertySource;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     properties = {
-      "server.port=18091",
+      "server.port=${hm.browser.port:18091}",
       "server.address=127.0.0.1",
       "huimeng.public-origin=http://localhost:5187",
       "huimeng.storage.enabled=false",

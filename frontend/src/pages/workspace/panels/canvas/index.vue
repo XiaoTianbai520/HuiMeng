@@ -124,7 +124,7 @@
 import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, onScopeDispose, provide, ref, shallowReactive, shallowRef, watch } from "vue";
 import axios from "@huimeng/api/client";
 import { debounce } from "lodash-es";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { isMobile, isDesktop } from "@/lib/platform";
 import { storeToRefs } from "pinia";
 import { IconUnlink } from "@tabler/icons-vue";
@@ -175,7 +175,7 @@ import { useNodeToolsContext } from "@toonflow/nodes-scaffold/nodeTools";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { generalSettings } from "@/stores/settings";
 import { getShortcutBindings, shortcutLabel, shortcutMatches, shortcutPressed } from "@/lib/canvasShortcuts";
-import useWorkspaceFiles from "@/lib/workspaceFiles";
+import useWorkspaceFiles, { fileErrorCode } from "@/lib/workspaceFiles";
 import anonymousData from "@/lib/anonymousData";
 import { createClipboardMediaFile, dropCanvasFiles, getClipboardMediaFiles, importCanvasFiles, isCanvasFileDrag } from "./canvasDrop";
 import "@vue-flow/core/dist/style.css";
@@ -233,6 +233,8 @@ const flow = useVueFlow(props.runtimeKey);
 const nodeDocument: NodeDocumentContext = { targets: shallowReactive(new Map()), mounts: new Map(), states: shallowReactive(new Map()) };
 const canvasDirty = ref(false);
 const canvasSaveError = ref("");
+// ACT: 409 修订冲突后暂停本画布的自动覆盖；内存修改保留，须人工重新读取后恢复。
+const canvasConflict = ref(false);
 const documentObservers = new Set<() => void>();
 onScopeDispose(() => { for (const release of documentObservers) release(); });
 provide("nodeDocument", nodeDocument);
@@ -394,7 +396,7 @@ function documentHandles(node: Node<DocumentNodeData>) {
 async function readDocumentCanvas(directory: string, canvasPath: string, nodeId: string) {
   checkDocumentDirectory(directory);
   const files = useWorkspaceFiles(directory);
-  const canvas = await files.readJson<{ toonflowCanvas?: boolean; nodes?: Node<DocumentNodeData>[] }>(canvasPath);
+  const { data: canvas, snapshot } = await files.readJsonSnapshot<{ toonflowCanvas?: boolean; nodes?: Node<DocumentNodeData>[] }>(canvasPath);
   checkDocumentDirectory(directory);
   if (canvas?.toonflowCanvas !== true || !Array.isArray(canvas.nodes)) throw new Error("文件不是有效画布");
   const node = canvas.nodes.find((item) => item && item.id === nodeId);
@@ -412,7 +414,7 @@ async function readDocumentCanvas(directory: string, canvasPath: string, nodeId:
       textPath.split(/[\\/]/).includes(".."))
   )
     throw new Error("文本文件路径必须位于工作区内");
-  return { files, canvas, node, liveNode, textPath };
+  return { files, canvas, snapshot, node, liveNode, textPath };
 }
 
 async function readDocumentNode(directory: string, canvasPath: string, nodeId: string) {
@@ -439,7 +441,7 @@ async function readDocumentNode(directory: string, canvasPath: string, nodeId: s
 async function saveDocumentNode(directory: string, canvasPath: string, nodeId: string, handleId: string, text: string, expectedText?: string) {
   checkDocumentDirectory(directory);
   await flushCanvasSave(async () => {
-    const { files, canvas, node, liveNode, textPath } = await readDocumentCanvas(directory, canvasPath, nodeId);
+    const { files, canvas, snapshot, node, liveNode, textPath } = await readDocumentCanvas(directory, canvasPath, nodeId);
     if (!documentHandles(liveNode ?? node).some((handle) => handle.id === handleId)) throw new Error("文本输出已删除，请重新打开节点");
     if (expectedText !== undefined) {
       const output = (liveNode ?? node).data?.outputs?.[handleId];
@@ -459,13 +461,18 @@ async function saveDocumentNode(directory: string, canvasPath: string, nodeId: s
     }
     canvasMenuRef.value?.syncDocumentNode(canvasPath, nodeId, handleId, text, textPath === undefined);
     if (textPath !== undefined) {
-      await files.write(textPath, text);
+      // ACT: 覆盖保存携带最新读取修订号；他人已修改时由服务端 409 拒绝，不静默覆盖。
+      const snapshot = await files.readTextSnapshot(textPath);
+      await files.writeTextSnapshot(textPath, text, snapshot);
     } else {
       const data = (node.data ??= {});
       const output = data.outputs?.[handleId];
       if (output?.dataType === "STRING") output.value = text;
       else (data.outputs ??= {})[handleId] = { dataType: "STRING", value: text };
-      await files.writeJson(canvasPath, canvas);
+      const serialized = `${JSON.stringify(canvas, null, 2)}\n`;
+      const next = await files.writeTextSnapshot(canvasPath, serialized, snapshot);
+      // ACT: 文档写回已推进磁盘修订号；同步对应画布快照，避免后续自动保存误报冲突。
+      canvasMenuRef.value?.setCanvasSnapshot({ ...snapshot, text: serialized, revision: next }, canvasPath);
     }
     checkDocumentDirectory(directory);
   });
@@ -559,31 +566,60 @@ let saveRevision = 0;
 const saveCanvas = debounce((directory: string, fileName: string) => {
   const flow = toObject();
   const revision = saveRevision;
-  // ACT: 同页保存按顺序完成，防止慢请求覆盖后续修改；不处理多个客户端的并发编辑。
+  // ACT: 同页保存按顺序完成，覆盖写携带读取修订号；服务端 409 时不允许静默覆盖他人修改。
   saving = saving.then(async () => {
     try {
-      await useWorkspaceFiles(directory).writeJson(fileName, { toonflowCanvas: true, nodes: flow.nodes, edges: flow.edges, viewport: flow.viewport });
+      const snapshot = canvasMenuRef.value?.getCanvasSnapshot(fileName);
+      if (!snapshot) throw new Error("画布尚未完成读取，不能保存");
+      const text = `${JSON.stringify({ toonflowCanvas: true, nodes: flow.nodes, edges: flow.edges, viewport: flow.viewport }, null, 2)}\n`;
+      const next = await useWorkspaceFiles(directory).writeTextSnapshot(fileName, text, snapshot);
+      canvasMenuRef.value?.setCanvasSnapshot({ ...snapshot, text, revision: next }, fileName);
       saveError = undefined;
       canvasSaveError.value = "";
       if (revision === saveRevision) canvasDirty.value = false;
     } catch (err) {
       saveError = err;
-      canvasSaveError.value = axios.isAxiosError<{ message?: string }>(err) ? err.response?.data.message || err.message : err instanceof Error ? err.message : "画布保存失败";
-      ElMessage.error(
-        axios.isAxiosError<{ message?: string }>(err)
-          ? err.response?.data.message || "画布保存失败"
-          : err instanceof Error
-          ? err.message
-          : "画布保存失败"
-      );
+      const message = axios.isAxiosError<{ message?: string }>(err) ? err.response?.data.message || err.message : err instanceof Error ? err.message : "画布保存失败";
+      canvasSaveError.value = message;
+      if (axios.isAxiosError(err) && err.response?.status === 409 && fileErrorCode(err) === "REVISION_CONFLICT") {
+        canvasConflict.value = true;
+        canvasSaveError.value = "画布已被其他成员修改，自动保存已暂停；请重新读取后处理";
+        void ElMessageBox.confirm(
+          "画布文件已被其他成员修改。自动保存已暂停，本地未保存的修改仍保留在内存中。重新读取将丢弃这些修改并载入最新文件。",
+          "画布保存冲突",
+          { confirmButtonText: "重新读取画布", cancelButtonText: "保留修改并继续暂停", type: "warning" },
+        ).then(() => resolveCanvasConflict(), () => {});
+      } else {
+        ElMessage.error(message);
+      }
     }
   });
 }, 500);
+
+async function resolveCanvasConflict() {
+  const menu = canvasMenuRef.value;
+  if (!menu || !canvasConflict.value) return;
+  try {
+    // 先丢弃冲突期间排队的保存与错误，再强制重读文件；watch 会在重新绑定时复位冲突状态。
+    saveError = undefined;
+    changedWhilePaused = false;
+    saveCanvas.cancel();
+    await menu.reloadActiveCanvas();
+    canvasConflict.value = false;
+    canvasSaveError.value = "";
+    canvasDirty.value = false;
+  } catch (err) {
+    canvasSaveError.value = axios.isAxiosError<{ message?: string }>(err) ? err.response?.data.message || err.message : err instanceof Error ? err.message : "重新读取画布失败";
+    ElMessage.error(canvasSaveError.value);
+  }
+}
 
 function scheduleCanvasSave() {
   if (saveCancelled) return;
   canvasDirty.value = true;
   saveRevision++;
+  // ACT: 冲突期间只在内存保留修改，不再排队自动保存，等待人工重新读取。
+  if (canvasConflict.value) return;
   if (savePaused) {
     changedWhilePaused = true;
     return;
@@ -665,12 +701,17 @@ watch(
     dragCopy = undefined;
     pointerPosition = undefined;
     resetCanvasKeys();
+    if (directory !== previousDirectory || fileName !== previousFileName) {
+      // ACT: 画布重新绑定（含冲突后的强制重读）时复位冲突状态，使用最新读取的修订号。
+      canvasConflict.value = false;
+      saveError = undefined;
+    }
     // 同一实例只在重新装载画布时失效；重命名仅更新保存路径。
     if (directory !== previousDirectory || !fileName || !previousFileName) {
       canvasController.abort(new Error("画布已重新加载，本次画布调用已停止"));
       canvasController = new AbortController();
     }
-    if (!savePaused) saveCanvas.flush();
+    if (!savePaused && !canvasConflict.value) saveCanvas.flush();
   },
   { flush: "sync" }
 );
@@ -699,18 +740,18 @@ async function saveCanvasState(action?: () => Promise<void>) {
   await Promise.all(flow.getNodes.value.map((node) => useNodeEvent(node.id, flow).emit("save")));
   await nextTick();
   if (saveCancelled) throw new Error("画布保存已取消");
-  if (saveError && project.value?.directory && canvasId.value) saveCanvas(project.value.directory, canvasId.value);
+  if (saveError && !canvasConflict.value && project.value?.directory && canvasId.value) saveCanvas(project.value.directory, canvasId.value);
   if (action) savePaused = true;
   try {
     let revision: number;
     do {
       if (saveCancelled) throw new Error("画布保存已取消");
       revision = saveRevision;
-      if (changedWhilePaused && project.value?.directory && canvasId.value) {
+      if (changedWhilePaused && !canvasConflict.value && project.value?.directory && canvasId.value) {
         saveCanvas(project.value.directory, canvasId.value);
         changedWhilePaused = false;
       }
-      saveCanvas.flush();
+      if (!canvasConflict.value) saveCanvas.flush();
       await saving;
       if (saveError) throw saveError;
       // 画布写入期间节点可能完成生成，等新增落盘后重新保存变化。
@@ -722,7 +763,7 @@ async function saveCanvasState(action?: () => Promise<void>) {
   } finally {
     if (action && !saveCancelled) {
       savePaused = false;
-      if (changedWhilePaused && project.value?.directory && canvasId.value) saveCanvas(project.value.directory, canvasId.value);
+      if (changedWhilePaused && !canvasConflict.value && project.value?.directory && canvasId.value) saveCanvas(project.value.directory, canvasId.value);
       changedWhilePaused = false;
     }
   }

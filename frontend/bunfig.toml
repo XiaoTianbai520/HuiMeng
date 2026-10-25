@@ -1,2 +1,6 @@
 [install]
 registry = "https://registry.npmjs.org"
+
+[test]
+# 在任何测试模块（含 axios 适配器）加载前注入离线浏览器全局，顺序见 tests/browserGlobals.ts。
+preload = ["./tests/browserGlobals.ts"]

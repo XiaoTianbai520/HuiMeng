@@ -1,6 +1,7 @@
 import type { Edge, Node, ViewportTransform } from "@vue-flow/core";
 import axios from "@huimeng/api/client";
 import type useWorkspaceFiles from "@/lib/workspaceFiles";
+import { fileErrorCode } from "@/lib/workspaceFiles";
 import { isCanvasFile } from "@/pages/workspace/canvasFile";
 
 type Files = ReturnType<typeof useWorkspaceFiles>;
@@ -97,8 +98,8 @@ export async function copyCanvasFiles(files: Files, path: string, target: string
           const destination = `assets/${node.id}/content.md`;
           if (remapPath(textPath) !== destination) {
             if (!root.some(entry => entry.path === "assets") && !createdAssets) {
-              createdAssets = await files.mkdir("assets").then(() => true, (error: { response?: { data?: { data?: { code?: string } } } }) => {
-                if (error.response?.data?.data?.code !== "EEXIST") throw error;
+              createdAssets = await files.mkdir("assets").then(() => true, (error: unknown) => {
+                if (!["EEXIST", "FILE_ALREADY_EXISTS"].includes(fileErrorCode(error) ?? "")) throw error;
                 return false;
               });
               root.push({ name: "assets", path: "assets", type: "directory" });
@@ -125,7 +126,9 @@ export async function copyCanvasFiles(files: Files, path: string, target: string
       }
       for (const edge of canvas.data.edges) Object.assign(edge, { id: crypto.randomUUID(), source: ids.get(edge.source)!, target: ids.get(edge.target)!, selected: false });
       const suffix = canvas.id.slice(path.length);
-      await files.writeJson(temporary + suffix, canvas.data);
+      // ACT: 复制产生的临时项已存在，覆盖写前读取其修订号；最终发布仍由 rename 保证不覆盖目标。
+      const snapshot = await files.readTextSnapshot(temporary + suffix);
+      await files.writeTextSnapshot(temporary + suffix, `${JSON.stringify(canvas.data, null, 2)}\n`, snapshot);
       canvas.id = target + suffix;
       canvas.name = canvas.id.split("/").at(-1)!.slice(0, -5);
     }

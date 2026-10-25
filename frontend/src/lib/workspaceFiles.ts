@@ -6,6 +6,15 @@ import { registerApiLanguage } from "@/lib/i18n";
 
 type WorkspaceEntry = { name: string; path: string; type: "file" | "directory" };
 export type TextSnapshot = { text: string; revision: string; encoding: "utf-8" | "utf-8-bom" | "utf-16le" | "utf-16be" };
+
+/** 兼容新契约顶层错误码与上游旧嵌套包装；文件操作按语义识别冲突、缺失等终态。 */
+export function fileErrorCode(error: unknown): string | undefined {
+  if (!axios.isAxiosError<{ code?: string | number; data?: { code?: string } }>(error)) return;
+  const body = error.response?.data;
+  // ACT: 旧包装顶层 code 是 HTTP 数字，字符串业务码在 data.code；新契约顶层即字符串业务码。
+  if (typeof body?.code === "string") return body.code;
+  return body?.data?.code;
+}
 const client = axios.create({ baseURL: "/api/workspaces/files", headers: { "x-toonflow-workspace": "1" } });
 registerApiLanguage(client);
 const fileUrls = new Map<string, { directory: string; path: string; url: Promise<string>; users: number }>();
@@ -113,6 +122,23 @@ export default function useWorkspaceFiles(directory?: MaybeRefOrGetter<string | 
     return data.data.revision;
   }
 
+  async function readJsonSnapshot<T = unknown>(path: string, signal?: AbortSignal): Promise<{ data: T; snapshot: TextSnapshot }> {
+    const snapshot = await readTextSnapshot(path, { signal });
+    signal?.throwIfAborted();
+    return { data: JSON.parse(snapshot.text) as T, snapshot };
+  }
+
+  // ACT: 新建文件必须用 exclusive，服务端返回首个修订号供后续覆盖保存使用。
+  async function writeExclusiveText(path: string, text: string, encoding: TextSnapshot["encoding"] = "utf-8") {
+    const directory = getDirectory();
+    const { data } = await client.put<{ data: { revision: string } }>("/write", text, {
+      params: { directory, path, exclusive: true, encoding },
+      headers: { "Content-Type": "application/octet-stream" },
+    });
+    invalidateUrls(directory, path);
+    return data.data.revision;
+  }
+
   async function write(path: string, content: string | Blob | ArrayBuffer, exclusive = false, signal?: AbortSignal) {
     const directory = getDirectory();
     await client.put("/write", content, { params: { directory, path, exclusive }, signal, headers: { "Content-Type": "application/octet-stream" } });
@@ -150,5 +176,5 @@ export default function useWorkspaceFiles(directory?: MaybeRefOrGetter<string | 
   async function reveal(_path: string): Promise<void> { throw new Error("Web 平台请使用项目文件下载"); }
 
   // ACT: 当前目录逐次读取；跨 await 或防抖的操作传入目录字符串，固定本次目标。
-  return { list, read, importImage, acquireUrl, readText, readJson, readTextSnapshot, writeTextSnapshot, write, writeJson, rename, copy, reveal, remove, mkdir };
+  return { list, read, importImage, acquireUrl, readText, readJson, readTextSnapshot, readJsonSnapshot, writeTextSnapshot, writeExclusiveText, write, writeJson, rename, copy, reveal, remove, mkdir };
 }

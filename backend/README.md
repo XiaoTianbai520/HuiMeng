@@ -148,8 +148,16 @@ python scripts/Prepare-NativeLibraries.py
 HM_WORKSPACE_BROWSER=true MAVEN_USER_HOME="$PWD/.m2" sh ./mvnw -s .mvn/settings.xml -B -ntp '-Dtest=WorkspaceBrowserAcceptanceHarness' "-Djna.boot.library.path=$PWD/target/native" -Djna.nounpack=true -Djna.nosys=true test
 ```
 
+夹具端口可用 `-Dhm.browser.port=<端口>` 覆盖（默认 18091）；若宿主机 18091 已被 MinIO 等既有服务占用，改用空闲回环端口并同步调整转发，不停止既有服务。临时 JDK 镜像缺少 `unzip` 时 Maven wrapper 会改下 `.tar.gz` 而与发行版 `.zip` 校验值不符，须先安装 `unzip`，不得删除或替换 SHA-256 校验。
+
 先按本页 verify 构建；此工具只属于测试源码，普通 verify 不运行，不进入生产 JAR。只创建独立 H2/随机工作区/测试密钥，关闭真实存储与 ComfyUI，不读取 .runtime。就绪标记 target/workspace-browser.ready；合成账号 ui-admin/ui-member/ui-outsider 与公开密码 M3-browser-fixture-only 仅用于该夹具。不得改为真实账号、数据库或已有项目。
 
 服务器验证时只做回环 SSH 转发：本机 127.0.0.1:18086 → 已核实服务器 127.0.0.1:18091；不发布宿主对外端口。前端目录设置 HUIMENG_API_TARGET=http://127.0.0.1:18086 后运行 `bun run dev --port 5187 --strictPort`，浏览器打开 http://localhost:5187/ 。目录操作 HTTP 回归从仓库根运行 `python docs/validation/scripts/m3WorkspaceBoundary.py`，固定只访问该转发夹具，创建/归档自己的合成项目。浏览器人工操作可在另一个夹具项目中进行。
 
 结束在 Linux backend 创建 target/workspace-browser.stop，工具清理本次随机工作区，最长自动停止两小时；随后停止自有前端和转发。不要复用旧 ready 标记或将测试端口指向正常应用。Linux 保存回归可沿用上一节 M3FileAcceptanceHarness，并将 SecureWorkspaceOperationsTests 纳入同轮显式运行。本轮没有使用真实 MySQL/MinIO/模型，也没有验证新镜像正式数据库启动。
+
+## M3-01 原页面修订链接收
+
+M3-W03 已接通原文件树/文档面板/画布读取修订、覆盖保存、409 冲突暂停/草稿保留及素材相对引用；内置纯文本编辑器在扩展清单未接通时回退。后端业务接口未新增；前端 26 项测试/102 断言、39 项 HTTP 文件操作及 19 项真实浏览器检查通过，完整范围见[M3-W03 记录](../docs/validation/M3_W03_PAGES.md)。
+
+夹具启动沿用上一节命令，端口冲突时用 `-Dhm.browser.port=18096` 覆盖（18090/18091 为既有 MinIO 映射，不得停止）。临时 JDK 镜像需先安装 `unzip` 使 wrapper 下载 `.zip` 并通过 SHA-256 校验。静态/代理与浏览器脚本用法见[验证脚本](../docs/validation/scripts/README.md#m3-01-原页面浏览器验收)。本批用生产 dist 代替 Vite，以避开本机删除保护；Bun fetch 代理不稳定时改 Node 原生 http，未改变应用或安全行为。

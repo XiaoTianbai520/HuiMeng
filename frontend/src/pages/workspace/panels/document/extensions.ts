@@ -111,9 +111,21 @@ function loadExtension(extension: InstalledExtension) {
 }
 
 export async function extensionCandidates(resource: ExtResource) {
-  await listExtensions();
-  return matchingExtensions(resource);
+  // M3-W03：扩展清单未接通时不再阻断文本编辑；M3-05 接入后优先使用获批远程扩展。
+  await listExtensions().catch(() => undefined);
+  const installed = matchingExtensions(resource);
+  if (installed.length) return installed;
+  const suffix = resource.path.split(".").at(-1)?.toLowerCase() ?? "";
+  if (resource.kind === "canvasNode") return [builtinCanvasNodeEditor];
+  return PLAIN_TEXT_SUFFIXES.has(suffix) ? [builtinFileEditor] : [];
 }
+
+const PLAIN_TEXT_SUFFIXES = new Set(["md", "markdown", "txt", "json", "yaml", "yml", "csv", "log", "xml", "html", "css", "scss", "js", "ts"]);
+const builtinFileEditor: InstalledExtension = {
+  id: "ext-plaintext", displayName: "纯文本编辑器（内置）", extensions: [...PLAIN_TEXT_SUFFIXES], resourceKind: "file", text: true,
+  name: "内置纯文本", enabled: true, url: "", version: "builtin",
+};
+const builtinCanvasNodeEditor: InstalledExtension = { ...builtinFileEditor, resourceKind: "canvasNode", extensions: [] };
 
 function matchingExtensions(resource: ExtResource) {
   const suffix = resource.path.split(".").at(-1)?.toLowerCase();
@@ -173,5 +185,6 @@ import.meta.hot?.dispose(() => {
 export async function resolveExtension(resource: ExtResource, id: string): Promise<ExtDefinition> {
   const extension = (await extensionCandidates(resource)).find(extension => extension.id === id);
   if (!extension) throw new Error(`尚未启用支持此文件的扩展，请到插件市场安装或启用：${resource.label}`);
+  if (extension.id === "ext-plaintext") return defineExt({ ...extension, load: async () => ({ default: (await import("./components/plainTextEditor.vue")).default }) });
   return defineExt({ ...extension, load: async () => (await loadExtension(extension)).load() });
 }

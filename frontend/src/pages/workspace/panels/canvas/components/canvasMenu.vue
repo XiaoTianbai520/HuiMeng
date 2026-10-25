@@ -87,7 +87,7 @@ import { Panel, useVueFlow, type FlowExportObject } from "@vue-flow/core";
 import { ElMessage, ElMessageBox, type DropdownInstance, type FilterNodeMethodFunction, type InputInstance, type LoadFunction, type TreeInstance } from "element-plus";
 import { IconVector, IconCheck, IconChevronDown, IconChevronUp, IconChevronRight, IconDots, IconFolder, IconFolderOpen, IconFolderPlus, IconPlus, IconSearch } from "@tabler/icons-vue";
 import { useWorkspaceStore } from "@/stores/workspace";
-import useWorkspaceFiles from "@/lib/workspaceFiles";
+import useWorkspaceFiles, { fileErrorCode, type TextSnapshot } from "@/lib/workspaceFiles";
 import { getCanvasAssetDirectories, isCanvasFile } from "@/pages/workspace/canvasFile";
 import tfAccount from "@/components/settings/tfAccount.vue";
 import { providerBalances, tfBalanceApiKey, saveTfMediaApiKey, refreshProviderBalance } from "@/lib/providerBilling";
@@ -115,12 +115,20 @@ function saveProjectName(event: Event) {
   projectNameDraft.value = workspaceName.value;
 }
 
-type Canvas = { id: string; name: string; flow?: Pick<FlowExportObject, "nodes" | "edges" | "viewport"> };
+type Canvas = { id: string; name: string; flow?: Pick<FlowExportObject, "nodes" | "edges" | "viewport">; snapshot?: TextSnapshot };
 const canvases = inject<ShallowRef<Canvas[]>>("canvasList", shallowRef<Canvas[]>([]));
 const getRetainedNodes = inject<(id: string) => { id: string; data?: unknown }[]>("canvasAssetNodes", () => []);
 const performFileAction = inject<(directory: string, action: "copy" | "rename" | "move" | "delete", path: string, target?: string, entryType?: "canvas" | "directory") => Promise<void>>("performWorkspaceFileAction");
 const boundCanvas = shallowRef<Canvas>();
 const activeCanvasId = defineModel<string>("canvasId", { default: "" });
+// ACT: 修订快照随各画布对象保存，仅在成功绑定时生效；按画布 ID 读写，保存期间切换目标不会串号。
+function getCanvasSnapshot(canvasId?: string) {
+  return canvasId ? canvases.value.find(item => item.id === canvasId)?.snapshot : boundCanvas.value?.snapshot;
+}
+function setCanvasSnapshot(snapshot: TextSnapshot, canvasId?: string) {
+  const target = canvasId ? canvases.value.find(item => item.id === canvasId) : boundCanvas.value;
+  if (target) target.snapshot = snapshot;
+}
 watch(canvases, () => {
   if (boundCanvas.value) activeCanvasId.value = canvases.value.includes(boundCanvas.value) ? boundCanvas.value.id : "";
 }, { flush: "sync" });
@@ -318,7 +326,7 @@ watch(() => props.directory, async (directory, _previous, onCleanup) => {
       try {
         loaded = [await createCanvasFile(directory, "画布1")];
       } catch (err) {
-        if (!axios.isAxiosError<{ data?: { code?: string } }>(err) || err.response?.status !== 409 || err.response.data.data?.code !== "EEXIST") throw err;
+        if (!axios.isAxiosError(err) || err.response?.status !== 409 || !["EEXIST", "REVISION_CONFLICT"].includes(fileErrorCode(err) ?? "")) throw err;
         // 同时打开工作区时，读取另一请求刚创建的默认画布，不覆盖同名文件。
         entries = await listCanvases(directory, "", false, controller.signal);
         const refreshed = entries.canvases;
@@ -384,13 +392,14 @@ async function applyCanvas(canvasId: string, directory: string, signal?: AbortSi
     return;
   }
   if (!nextCanvas.flow) {
-    const data = await useWorkspaceFiles(directory).readJson<Partial<NonNullable<Canvas["flow"]>> & { toonflowCanvas?: boolean } | null>(nextCanvas.id);
+    const { data, snapshot } = await useWorkspaceFiles(directory).readJsonSnapshot<Partial<NonNullable<Canvas["flow"]>> & { toonflowCanvas?: boolean } | null>(nextCanvas.id);
     checkCanvasDirectory(directory, signal);
     if (data?.toonflowCanvas !== true || !Array.isArray(data.nodes) || !Array.isArray(data.edges) || !data.viewport
       || ![data.viewport.x, data.viewport.y, data.viewport.zoom].every(Number.isFinite) || data.viewport.zoom <= 0) throw new Error("画布文件格式无效");
     // 旧画布可能保存了临时导出进度，重新打开时任务已不存在。
     for (const node of data.nodes) if (node.type === "remote-videoNode" && node.data) delete node.data.exportProgress;
     nextCanvas.flow = { nodes: data.nodes, edges: data.edges, viewport: data.viewport };
+    nextCanvas.snapshot = snapshot;
   }
   await props.flushSave();
   checkCanvasDirectory(directory, signal);
@@ -416,6 +425,36 @@ async function switchCanvas(canvasId: string, signal?: AbortSignal) {
     if (props.activateCanvas) await props.activateCanvas(canvasId, signal);
     else await applyCanvas(canvasId, directory, signal);
     checkCanvasDirectory(directory, signal);
+  } finally {
+    if (props.directory === directory) busy.value = false;
+  }
+}
+
+// ACT: 409 冲突后由宿主调用；在当前实例内强制重读文件并替换绑定数据，不走同画布/多实例的快捷分支。
+async function reloadActiveCanvas() {
+  const directory = getCanvasDirectory();
+  const id = activeCanvasId.value;
+  if (!id) throw new Error("当前没有可重新读取的画布");
+  busy.value = true;
+  try {
+    const { data, snapshot } = await useWorkspaceFiles(directory).readJsonSnapshot<Partial<NonNullable<Canvas["flow"]>> & { toonflowCanvas?: boolean } | null>(id);
+    checkCanvasDirectory(directory);
+    if (data?.toonflowCanvas !== true || !Array.isArray(data.nodes) || !Array.isArray(data.edges) || !data.viewport
+      || ![data.viewport.x, data.viewport.y, data.viewport.zoom].every(Number.isFinite) || data.viewport.zoom <= 0) throw new Error("画布文件格式无效");
+    for (const node of data.nodes) if (node.type === "remote-videoNode" && node.data) delete node.data.exportProgress;
+    const canvas = canvases.value.find(item => item.id === id);
+    if (!canvas) throw new Error("画布已移除，请重新选择");
+    canvas.flow = { nodes: data.nodes, edges: data.edges, viewport: data.viewport };
+    canvas.snapshot = snapshot;
+    // 与 applyCanvas 相同：绑定前清空文件名，避免初始化触发自动保存。
+    activeCanvasId.value = "";
+    setNodes(canvas.flow.nodes);
+    setEdges(canvas.flow.edges.map(({ interactionWidth, ...edge }) => edge));
+    await setViewport(canvas.flow.viewport);
+    await nextTick();
+    checkCanvasDirectory(directory);
+    boundCanvas.value = canvas;
+    activeCanvasId.value = id;
   } finally {
     if (props.directory === directory) busy.value = false;
   }
@@ -472,7 +511,7 @@ async function removeCanvas(canvas: Canvas) {
       const assetDirectories = getCanvasAssetDirectories(removedNodes, retainedNodes);
       checkCanvasDirectory(directory);
       const results = await Promise.allSettled(assetDirectories.map(path => files.remove(path, true).catch(error => {
-        if (!axios.isAxiosError<{ data?: { code?: string } }>(error) || error.response?.data.data?.code !== "ENOENT") throw error;
+        if (!["ENOENT", "NOT_FOUND"].includes(fileErrorCode(error) ?? "")) throw error;
       })));
       const failed = results.flatMap((result, index) => result.status === "rejected" ? [assetDirectories[index]] : []);
       if (failed.length) throw new Error(`画布已删除，但 ${failed.length} 个素材目录清理失败：${failed.join("、")}`);
@@ -485,7 +524,7 @@ async function removeCanvas(canvas: Canvas) {
   }
 }
 
-async function createCanvasFile(directory: string, name?: string, signal?: AbortSignal) {
+async function createCanvasFile(directory: string, name?: string, signal?: AbortSignal): Promise<Canvas> {
   if (name !== undefined) name = normalizeCanvasName(name);
   const files = useWorkspaceFiles(directory);
   const flow = { nodes: [], edges: [], viewport: { x: 0, y: 0, zoom: 1 } };
@@ -494,10 +533,11 @@ async function createCanvasFile(directory: string, name?: string, signal?: Abort
     const canvasName = name ?? `画布${number}`;
     const id = `${canvasName}.json`;
     try {
-      await files.writeJson(id, { toonflowCanvas: true, ...flow }, true);
-      return { id, name: canvasName, flow };
+      const text = `${JSON.stringify({ toonflowCanvas: true, ...flow }, null, 2)}\n`;
+      const revision = await files.writeExclusiveText(id, text);
+      return { id, name: canvasName, flow, snapshot: { text, encoding: "utf-8", revision } };
     } catch (err) {
-      if (name !== undefined || !axios.isAxiosError<{ data?: { code?: string } }>(err) || err.response?.status !== 409 || err.response.data.data?.code !== "EEXIST") throw err;
+      if (name !== undefined || !axios.isAxiosError(err) || err.response?.status !== 409 || !["EEXIST", "REVISION_CONFLICT"].includes(fileErrorCode(err) ?? "")) throw err;
     }
   }
 }
@@ -807,7 +847,7 @@ function syncDocumentNode(canvasId: string, nodeId: string, handleId: string, te
   else if (inline) (data.outputs ??= {})[handleId] = { dataType: "STRING", value: text };
 }
 
-defineExpose({ getCanvases, peekCanvases, initialized, addCanvas, switchCanvas, renameCanvas, syncCanvasPath, syncDocumentNode, loadError });
+defineExpose({ getCanvases, peekCanvases, initialized, addCanvas, switchCanvas, renameCanvas, syncCanvasPath, syncDocumentNode, loadError, getCanvasSnapshot, setCanvasSnapshot, reloadActiveCanvas });
 </script>
 
 <style lang="scss" scoped>

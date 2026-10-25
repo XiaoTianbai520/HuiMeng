@@ -61,6 +61,8 @@ export function createDocumentSession(resource: ExtResource, extension: ExtDefin
     }
     while (!disposed) {
       clearTimeout(timer);
+      // ACT: 409 修订冲突后暂停自动覆盖；草稿保留在内存，须重新读取或另存副本后恢复。
+      if (session.conflict) return;
       if (context.dirty && queuedRevision !== revision) {
         const currentRevision = revision;
         const text = context.text;
@@ -79,7 +81,9 @@ export function createDocumentSession(resource: ExtResource, extension: ExtDefin
         }).catch(error => {
           if (queuedRevision === currentRevision) queuedRevision = -1;
           context.error = documentError(error);
-          session.conflict = axios.isAxiosError(error) && error.response?.status === 409 && error.response?.data?.data?.code === "ESTALE";
+          // ACT: 兼容新契约顶层 code 与上游离线夹具的嵌套 code；409 即按冲突暂停，等待人工重新读取。
+          session.conflict = axios.isAxiosError(error) && error.response?.status === 409
+            && (error.response?.data?.code === "REVISION_CONFLICT" || error.response?.data?.data?.code === "ESTALE");
           throw error;
         });
       }

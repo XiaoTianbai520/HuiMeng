@@ -182,7 +182,7 @@ import { mentionName, mentionParts, mentionPlainText, mentionThumbnailProps } fr
 import toolMessage from "./toolMessage.vue";
 import attachmentList from "./attachmentList.vue";
 import { createPastedTextFile, readTextAttachment } from "./textAttachments";
-import useWorkspaceFiles from "@/lib/workspaceFiles";
+import useWorkspaceFiles, { fileErrorCode } from "@/lib/workspaceFiles";
 import { writeClipboardText } from "@/lib/clipboard";
 import anonymousData from "@/lib/anonymousData";
 import { modelChoices } from "@/stores/settings";
@@ -574,7 +574,7 @@ async function uploadAttachments(attachments: AgentAttachment[], directory: stri
   const files = useWorkspaceFiles(directory);
   for (const path of ["assets", "assets/chat"]) {
     await files.mkdir(path).catch(error => {
-      if (error?.response?.data?.data?.code !== "EEXIST") throw error;
+      if (!["EEXIST", "FILE_ALREADY_EXISTS"].includes(fileErrorCode(error) ?? "")) throw error;
     });
     signal.throwIfAborted();
   }
