@@ -6,7 +6,6 @@
           <component :is="currentComponent" />
         </transition>
       </router-view>
-      <ffmpegRequired v-if="sessionUser" />
     </config-provider>
   </el-config-provider>
 </template>
@@ -28,7 +27,6 @@ import { chatLocale } from "@/lib/i18n";
 import { sessionUser } from "@/stores/session";
 import { uiSettings } from "@/stores/settings";
 import { useMcpControl } from "@/lib/mcpControl";
-import ffmpegRequired from "@/components/settings/ffmpegRequired.vue";
 import "element-plus/theme-chalk/dark/css-vars.css";
 
 useMcpControl();

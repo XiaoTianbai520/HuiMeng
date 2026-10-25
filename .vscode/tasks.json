@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "process",
+      "command": "powershell",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "problemMatcher": [],
+      "label": "绘梦：连接开发数据库",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/backend/scripts/Start-MySqlDev.ps1",
+        "-ConnectOnly"
+      ]
+    },
+    {
+      "type": "process",
+      "command": "powershell",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "problemMatcher": [],
+      "label": "绘梦：关闭开发数据库隧道",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/backend/scripts/Start-MySqlDev.ps1",
+        "-Stop"
+      ]
+    }
+  ]
+}

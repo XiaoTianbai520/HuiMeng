@@ -44,9 +44,11 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     pendingAgentMessage.value = null;
     projectList.value = [project.value, ...projectList.value.filter(item => item.directory !== data.id)];
   }
-  function renameProject(id: string, name: string) {
+  async function renameProject(id: string, name: string) {
+    const { data } = await client.patch<ProjectDto>(`/api/v1/projects/${encodeURIComponent(id)}`, { name });
     const item = projectList.value.find(value => value.directory === id);
-    if (item) item.name = name;
+    if (item) item.name = data.name;
+    if (project.value?.directory === id) project.value.name = data.name;
   }
   function removeProject(id: string) {
     projectList.value = projectList.value.filter(item => item.directory !== id);

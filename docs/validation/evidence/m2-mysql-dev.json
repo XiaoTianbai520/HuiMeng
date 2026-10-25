@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-25",
+  "sourceBaseline": "d8020fa",
+  "sourceState": "local uncommitted changes; not pushed or deployed",
+  "authorization": "User authorized existing server database connection and migration",
+  "mysqlVersion": "8.4.11",
+  "developmentSchema": "huimeng_dev",
+  "productionSchema": "huimeng",
+  "tableCount": 12,
+  "businessTableCount": 11,
+  "engine": "InnoDB",
+  "collation": "utf8mb4_bin",
+  "migrationVersions": [
+    "1",
+    "2",
+    "3"
+  ],
+  "firstMigration": "PASS",
+  "repeatedMigrationNoPending": "PASS",
+  "migrationSqlChanged": false,
+  "jarSha256UsedForMigration": "d0fc1189f2112cefdd6099c2f47b38b7e66b1369a597068ac4c0d381489e6cd8",
+  "runtimeAccountDistinctFromMigrationAccount": true,
+  "accountSourceScope": "exact observed host-loopback bridge source",
+  "runtimeJdbcChecks": {
+    "developmentSchemaAndUtcSession": "PASS",
+    "ddlDenied": "PASS",
+    "auditUpdateDenied": "PASS",
+    "migrationHistoryUpdateDenied": "PASS",
+    "productionSchemaReadDenied": "PASS"
+  },
+  "credentials": {
+    "generatedDevelopmentOnly": true,
+    "productionCredentialsCopied": false,
+    "serverDirectoryMode": "0700",
+    "serverCredentialFileMode": "0600",
+    "localAcl": "current user and SYSTEM; inheritance disabled",
+    "gitIgnored": true,
+    "valuesIncludedInEvidence": false
+  },
+  "developmentConnection": "host-key-verified SSH tunnel; local loopback only",
+  "localTunnelPort": 13306,
+  "localApiPort": 18085,
+  "normalApplication": "HuiMengApplication with protected additional properties location",
+  "normalApplicationHttpChecks": 14,
+  "browserUiExercised": false,
+  "editorF5InteractionExercised": false,
+  "helperChecks": {
+    "powershellSyntax": "PASS",
+    "launchAndTaskJson": "PASS",
+    "unownedOccupiedPortRefused": "PASS",
+    "ownedTunnelStop": "PASS"
+  },
+  "temporaryApplicationAndTunnelStopped": true,
+  "productionMigrationVersionsUnchanged": [
+    "1",
+    "2",
+    "3"
+  ],
+  "productionDatabaseChanged": false,
+  "productionDeploymentChanged": false,
+  "originalContainersRunning": [
+    "api",
+    "boundary",
+    "web"
+  ],
+  "serverNetworkOrPortsChanged": false,
+  "modelCalls": 0,
+  "pendingAcceptance": [
+    "M2-03 file/download with M3",
+    "M2-04 actual model/export with M3"
+  ]
+}

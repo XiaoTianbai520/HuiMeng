@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-24",
+  "sourceBaseline": "d8020fa",
+  "sourceState": "local M2 changes, not committed or pushed",
+  "origin": "https://192.168.1.102:18443",
+  "springBoot": "3.5.7",
+  "flyway": "11.15.0",
+  "mysql": "8.4.11",
+  "databaseSchema": "huimeng",
+  "databaseVersion": "3",
+  "newMigrationsInFollowup": 0,
+  "jarSha256": "2ed861b01f34caf8d48d403595f1e307c52c99097cbb165e291aa73ed9508833",
+  "apiImageId": "sha256:ec19099ecd8ca693b815d236737229f74c5640e4062f4cbef33b54e9de3f58fb",
+  "frontendIndexSha256": "e7a5a50d1b068dd45266cba2047678b17de044f44a92178847d39c3000e716a0",
+  "localAndDeployedArtifactDigestsMatch": true,
+  "frontendArtifactBackup": "/data/backup/huimeng/frontend-before-followup-20261024.tar.gz",
+  "backupScope": "static artifacts only; not M4 database/workspace recovery acceptance",
+  "contractOperations": 39,
+  "implementedOperations": 26,
+  "publicEnabledSourceRoutes": 0,
+  "verification": {
+    "backendTests": 30,
+    "backendFailures": 0,
+    "backendSkipped": 0,
+    "frontendTests": 21,
+    "frontendAssertions": 78,
+    "localRealSpringBrowserChecks": 15,
+    "deployedHttpsChecks": 49,
+    "recordingComparisonTests": 2,
+    "productionJarExcludesBrowserHarnessAndH2": true,
+    "strictTlsStaticStatus": 200,
+    "apiAndBoundaryHaveNoPublishedPorts": true,
+    "temporaryBrowserTestServersStopped": true,
+    "modelCalls": 0
+  },
+  "userDecisions": {
+    "usage": "personal team project",
+    "deviceCaTrustInstallation": "optional; no trust installation performed",
+    "httpsAndSecureCookies": "retained",
+    "productionBrowserTrustClaimed": false
+  },
+  "pending": [
+    "M2-03 A03/A17 file and download acceptance with corresponding M3 implementation",
+    "M2-04 A11 actual model and export acceptance with corresponding M3 implementation",
+    "Actual external WAN probe; only binding, network and non-LAN ACL were verified",
+    "M3/M4 business and release acceptance"
+  ]
+}

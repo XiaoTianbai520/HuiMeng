@@ -3,6 +3,9 @@
     <bg class="pageBackground" />
     <el-header class="pageHeader">
       <div class="headerActions">
+        <span>{{ sessionUser?.username }}</span>
+        <el-button v-if="isAdmin" round size="large" @click="router.push('/team')">团队管理</el-button>
+        <el-button round size="large" :loading="loggingOut" @click="signOut">退出登录</el-button>
         <el-badge isDot :hidden="!hasDesktopUpdate">
           <el-button round size="large" :icon="IconSettings" :aria-label="hasDesktopUpdate ? '设置，有新版本可用' : '设置'" @click="settingsVisible = true">设置</el-button>
         </el-badge>
@@ -69,6 +72,7 @@
           </el-space>
         </div>
         <div class="projectItems" :class="{ listView: viewMode === 'list' }">
+          <el-empty v-if="!projectList.length" description="暂无授权项目，请联系管理员加入项目" />
           <el-card v-for="project in sortedProjects" :key="project.directory" class="projectCard" shadow="hover" :bodyStyle="{ padding: '0' }">
             <button class="projectEntry" type="button" :disabled="creating || opening" :aria-label="`打开项目 ${project.name}`" @click="openProject(project)">
               <icon-folder class="projectIcon" :size="28" aria-hidden="true" />
@@ -79,7 +83,7 @@
               </span>
             </button>
             <div class="projectActions">
-              <el-button text :icon="IconEdit" :disabled="creating || opening" :aria-label="`重命名项目 ${project.name}`" title="重命名" @click="renameProject(project)" />
+              <el-button v-if="isAdmin" text :icon="IconEdit" :disabled="creating || opening" :aria-label="`重命名项目 ${project.name}`" title="重命名" @click="renameProject(project)" />
               <el-button text type="danger" :icon="IconFolderMinus" :disabled="creating || opening" :aria-label="`移除项目 ${project.name}`" title="从列表移除，不删除文件" @click="workspaceStore.removeProject(project.directory)" />
             </div>
           </el-card>
@@ -117,6 +121,9 @@ import useWorkspaceFiles from "@/lib/workspaceFiles";
 import settings from "@/components/settings/index.vue";
 import bg from "./bg.vue";
 import workspacePicker from "./workspacePicker.vue";
+import { isAdmin, logout, sessionUser } from "@/stores/session";
+const loggingOut = ref(false);
+async function signOut() { loggingOut.value = true; try { await logout(); } catch { ElMessage.error("退出失败，请重试。"); } finally { loggingOut.value = false; } }
 
 const settingsVisible = ref(false);
 const router = useRouter();
@@ -342,7 +349,10 @@ async function renameProject(project: Project) {
     inputValue: project.name, confirmButtonText: "保存", cancelButtonText: "取消",
     inputValidator: value => !!value?.trim() || "项目名称不能为空",
   }).catch(() => null);
-  if (result) workspaceStore.renameProject(project.directory, result.value);
+  if (result) {
+    try { await workspaceStore.renameProject(project.directory, result.value.trim()); }
+    catch { ElMessage.error("项目名称保存失败，请重试。"); }
+  }
 }
 
 async function createProject(fromPrompt = true) {

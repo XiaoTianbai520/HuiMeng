@@ -1,0 +1,33 @@
+{
+  "phase": "M2",
+  "operations": [
+    "getCsrf",
+    "login",
+    "me",
+    "logout",
+    "listUsers",
+    "createUser",
+    "updateUser",
+    "listProjects",
+    "createProject",
+    "getProject",
+    "updateProject",
+    "listMembers",
+    "addMember",
+    "removeMember",
+    "listModels",
+    "listProviders",
+    "setProviderSecret",
+    "approveModel",
+    "issueClient",
+    "listClients",
+    "revokeClient",
+    "setMarketSecret",
+    "getMarketStatus",
+    "getPreferences",
+    "setPreferences",
+    "listAdminModels"
+  ],
+  "evidence": "docs/validation/M2_REPORT.md",
+  "businessAcceptance": "M2 identity/UI/deployment foundations verified; M2-03/04 full file/model acceptance remains for M3; device CA installation optional"
+}

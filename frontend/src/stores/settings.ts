@@ -106,10 +106,10 @@ export const modelChoices = computed(() => customProviders.value.flatMap(provide
   value: JSON.stringify([provider.id, model.id]), providerId: provider.id, modelId: model.id, label: model.label, contextWindow: model.contextWindow,
 }))));
 
-export async function loadSettings() {
+export async function loadSettings(force = false) {
   const actorId = context().actor?.id;
   if (!actorId) throw new Error("请先登录");
-  if (settingsReady && settingsOwner === actorId) return;
+  if (!force && settingsReady && settingsOwner === actorId) return;
   const [preferences, models] = await Promise.all([
     axios.get<Record<string, unknown>>("/api/v1/preferences"),
     axios.get<{ items: { providerId: string; modelId: string; label: string; capabilities: string[] }[] }>("/api/v1/models"),

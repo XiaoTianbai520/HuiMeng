@@ -8,6 +8,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 API = ROOT / 'docs/api'
+IMPLEMENTED = set(json.loads((ROOT / 'backend/api-implementation.json').read_text(encoding='utf-8'))['operations'])
 FR_BY_ACCEPTANCE = {'A01': ['FR-01'], 'A02': ['FR-02'], 'A03': ['FR-02', 'FR-04'],
     'A04': ['FR-03'], 'A05': ['FR-05'], 'A06': ['FR-04'], 'A07': ['FR-06'], 'A08': ['FR-06'],
     'A09': ['FR-07'], 'A10': ['FR-08'], 'A11': ['FR-09'], 'A12': ['FR-14'], 'A13': ['FR-10'],
@@ -131,7 +132,7 @@ def operation(method, path, op_id, summary, roles, acceptance, request=None, res
         'tags': [path.split('/')[3]], 'x-contract-status': 'frozen', 'x-roles': roles, 'x-acceptance': acceptance,
         'x-requirements': sorted({fr for a in acceptance for fr in FR_BY_ACCEPTANCE[a]}),
         'x-audit-required': 'ADMIN' in roles and method not in ['get', 'head'],
-        'x-implemented': False, 'parameters': parameters,
+        'x-implemented': op_id in IMPLEMENTED, 'parameters': parameters,
         'responses': {str(status): {'description': '成功', 'headers': {
             'X-Request-Id': {'schema': string(), 'description': '规范化关联 ID'}}}}}
     if response:
@@ -173,6 +174,7 @@ def main():
     operation('delete', p + '/projects/{projectId}/members/{userId}', 'removeMember', '移除成员，阻断后续项目读取', admin, ['A02'], status=204)
     operation('get', p + '/models', 'listModels', '仅返回获批且启用的模型', member, ['A07', 'A08', 'A11'], response=obj({'items': arr(ref('Model'))}, ['items']))
     operation('get', p + '/admin/providers', 'listProviders', '供应商配置状态', admin, ['A11'], response=obj({'items': arr(ref('ProviderStatus'))}, ['items']))
+    operation('get', p + '/admin/models', 'listAdminModels', '管理员读取已登记模型及批准状态', admin, ['A11'], response=obj({'items': arr(ref('Model'))}, ['items']), description='包含未批准模型的公开元数据，供管理员启停批准；不返回端点、密钥或物理目录。')
     operation('put', p + '/admin/providers/{providerId}/secret', 'setProviderSecret', '写入公司供应商密钥', admin, ['A11'], ref('SecretInput'), status=204)
     operation('put', p + '/admin/models/approval', 'approveModel', '启停模型批准状态', admin, ['A11'], ref('Approval'), status=204)
     operation('post', p + '/admin/external-clients', 'issueClient', '签发单项目外部凭证，原文仅返回一次', admin, ['A13'], ref('ClientInput'), ref('ClientIssued'), 201)

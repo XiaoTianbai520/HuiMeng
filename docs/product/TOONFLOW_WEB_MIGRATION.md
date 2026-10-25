@@ -22,8 +22,8 @@ Vue 独立前端 → Spring Boot 唯一业务入口 → 单实例 Bun 内部执�
 | Agent 会话（10） | `agent`、`agent/{answer,canvasResult,create,get,list,mentionSource,message,rename,skills}` | Spring 入口 → Bun Agent | 一次 Agent 运行占每项目 1 个并发名额，内部生成调用不重复计数；会话绑定项目与发起人；保留 NDJSON 事件和问答回调 |
 | 单 Agent（5） | `singleAgent/{answer,control,create,run,toolResult}` | Spring 入口 → Bun Agent | 上游 `run` 不带项目目录；项目外使用按账号单独限流，项目内使用需先绑定项目并占 1 个名额；临时会话与工具结果绑定发起用户 |
 | FFmpeg（6） | `ffmpeg/{cancel,download,events,execute,progress,status}` | Spring 入口 → Bun FFmpeg | 限制单用户并发与资源占用；结果文件仅授权项目可访问；保留 SSE/进度/取消行为 |
-| 供应商（9） | `providers/models`、`providers/debug/{inspect,run}`、`providers/media/{add,delete,list,models,save,validate}` | Spring 管理入口 → Bun 适配 | 公司管理员配置与调试；返回值脱敏。项目成员通过 `ai/models` 选择获批模型，不能调用供应商接口读取密钥或探测任意地址 |
-| 设置（5） | `settings/{get,save,systemPrompt}`、`settings/personalization/{get,save}` | 优先由 Spring 改造 | 分离个人界面偏好与公司统一模型配置；替代全局整包读写；密钥只写不回显 |
+| 供应商（9） | `providers/models`、`providers/debug/{inspect,run}`、`providers/media/{add,delete,list,models,save,validate}` | Spring 管理入口 → Bun 适配 | 团队管理员配置与调试；返回值脱敏。项目成员通过 `ai/models` 选择获批模型，不能调用供应商接口读取密钥或探测任意地址 |
+| 设置（5） | `settings/{get,save,systemPrompt}`、`settings/personalization/{get,save}` | 优先由 Spring 改造 | 分离个人界面偏好与团队统一模型配置；替代全局整包读写；密钥只写不回显 |
 | 扩展（6） | `ext/{install,list,read,save,setEnabled,uninstall}` | 保留市场及已安装扩展管理接口 | 保留在线及本地文件安装；更新和启停限管理员，记录来源并隔离执行 |
 | 节点（6） | `nodes/{files,get,install,save,setEnabled,uninstall}` | Spring 管理入口 → Bun 插件运行 | 迁移在线及本地文件安装管理；项目成员使用已批准节点 |
 | 工具（7） | `tools/{client,get,install,renderers,save,setEnabled,uninstall}` | Spring 管理入口 → Bun 插件运行 | 迁移在线及本地文件安装管理；客户端工具须逐项评估 Web 可用性 |
@@ -69,7 +69,7 @@ Vue 独立前端 → Spring Boot 唯一业务入口 → 单实例 Bun 内部执�
 | A08 | 图像/视频/音频生成 | 图片、视频提交、进度、结果预览、失败重试与素材落盘可用；任务归属正确。独立音频接口及默认供应商配置保留，本轮按业务确认不执行独立音频成功流测试 | 图片与视频使用本地 ComfyUI 小样本回归；音频仅检查路由、配置与权限，不声称生成成功已验证 |
 | A09 | Agent 与画布 | 会话创建、问答、画布操作、取消、恢复；NDJSON 事件顺序和结束标志正确 | 样例脚本与页面回归 |
 | A10 | FFmpeg | 合成/转码、进度、取消和下载可用；超时后资源释放 | 样例媒体回归 |
-| A11 | 设置和密钥 | 公司管理员可配置供应商密钥，项目成员只能选获批模型；密钥不出现在日志、响应、导出中，配置后模型可用 | 接口检查与日志抽查 |
+| A11 | 设置和密钥 | 团队管理员可配置供应商密钥，项目成员只能选获批模型；密钥不出现在日志、响应、导出中，配置后模型可用 | 接口检查与日志抽查 |
 | A12 | 插件市场与能力管理 | 在线发现/搜索/分类/分页/卡片描述与版本/收藏、已安装列表可用；管理员在线及本地文件安装/更新、配置、启停、导出和允许的卸载可用；成员不能管理插件或读取凭据；Agent 工具实际加载；市场故障不影响已安装能力；原关闭入口沿用原状态 | 市场补验、页面、网络、角色与执行隔离回归 |
 | A13 | MCP/A2A 对外入口 | 局域网内的外部客户端凭专用凭证可通过 Spring HTTPS 访问 `/mcp`、`/a2a`；工具、团队、画布和任务均受项目权限限制；无效/撤销凭证、跨项目调用被拒绝；Bun 原端口无法从客户端访问，平台不发布公网 | MCP 工具、A2A 提交/查询/取消、凭证撤销和跨项目测试 |
 | A14 | Web 专用体验 | 无桌面、移动、设备互联、本机文件管理器入口；仅桌面端可用的浏览器工具不出现在 Web 节点菜单；主流程没有 404 调用 | 页面遍历与网络记录 |

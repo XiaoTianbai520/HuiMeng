@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-25",
+  "sourceBaseline": "d8020fa",
+  "sourceState": "local uncommitted M2 changes; not pushed or deployed",
+  "scope": "Java structure and isolated local debugging only",
+  "javaTarget": 17,
+  "springBoot": "3.5.7",
+  "dependencyChanges": false,
+  "publicApiContractChanged": false,
+  "databaseMigrationsChanged": false,
+  "backendTests": {
+    "cn.huimeng.SecurityIntegrationTests": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.ArchitectureTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.debug.LocalDebugLauncherTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "totalTests": 36,
+  "testFailures": 0,
+  "testSkipped": 0,
+  "productionJarSha256": "d0fc1189f2112cefdd6099c2f47b38b7e66b1369a597068ac4c0d381489e6cd8",
+  "productionJarExcludesH2AndDebugHarnessAndRetiredApiPackage": true,
+  "debugSymbolsPresent": [
+    "SourceFile",
+    "LineNumberTable",
+    "LocalVariableTable"
+  ],
+  "editorLaunchConfigurationChecked": true,
+  "editorUiBreakpointInteractionExercised": false,
+  "localDebugHttpChecks": 11,
+  "localDebugProcessStopped": true,
+  "serverDeploymentChanged": false,
+  "contracts": {
+    "operations": 39,
+    "implemented": 26,
+    "sourceRoutes": 127,
+    "publicEnabledSourceRoutes": 0,
+    "standardAndGeneratedMetadataChecks": "PASS"
+  },
+  "migrationSha256": {
+    "V1__security_foundation.sql": "fdeb17db08a7da56c499f7c0e3e6b5dbe51f27bc7e0da25adddaa4ba957a7577",
+    "V2__mysql_storage.sql": "9b1ab50fd3294fa886f9c891f87cf14c5a00228ee10f0c1cd15116bad060054e",
+    "V3__disabled_model_catalog.sql": "09078acac2856b8c6d1b90bf8b1c3d55a77a87635880f02d1044b5608b4a75a9"
+  },
+  "modelCalls": 0,
+  "pendingAcceptance": [
+    "M2-03 file/download with M3",
+    "M2-04 actual model/export with M3"
+  ]
+}

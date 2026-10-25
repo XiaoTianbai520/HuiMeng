@@ -1,0 +1,54 @@
+server:
+  address: ${HM_BIND_ADDRESS:127.0.0.1}
+  port: ${HM_PORT:18085}
+  forward-headers-strategy: none
+  error:
+    include-message: never
+    include-stacktrace: never
+  servlet:
+    session:
+      timeout: 8h
+      tracking-modes: cookie
+      cookie:
+        name: __Host-huimeng-session
+        secure: true
+        http-only: true
+        same-site: lax
+        path: /
+spring:
+  application:
+    name: huimeng-api
+  datasource:
+    url: ${HM_DB_URL}
+    username: ${HM_DB_USER}
+    password: ${HM_DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 8
+      connection-init-sql: SET time_zone = '+00:00'
+  flyway:
+    enabled: false
+    clean-disabled: true
+    validate-on-migrate: true
+    baseline-on-migrate: false
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+    time-zone: UTC
+  mvc:
+    log-request-details: false
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 513MB
+huimeng:
+  public-origin: ${HM_PUBLIC_ORIGIN:https://localhost:18443}
+  workspace-root: ${HM_WORKSPACE_ROOT:/data/huimeng/workspaces}
+  master-key-file: ${HM_MASTER_KEY_FILE}
+  internal-key-file: ${HM_INTERNAL_KEY_FILE}
+  audit-retention-days: 180
+logging:
+  level:
+    root: WARN
+    cn.huimeng: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN

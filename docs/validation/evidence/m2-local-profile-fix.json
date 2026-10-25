@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-25",
+  "sourceBaseline": "d8020fa",
+  "sourceState": "local uncommitted changes, not deployed",
+  "reportedFailure": "datasource URL must start with jdbc",
+  "reproduction": "normal main without local configuration reproduces failure before database connection",
+  "privateConfigurationHasValidJdbcUrl": true,
+  "fix": "explicit local profile, stored IDE configurations, safe startup failure analysis",
+  "testSuites": {
+    "cn.huimeng.SecurityIntegrationTests": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.ArchitectureTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.debug.LocalDebugLauncherTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.LocalProfileConfigurationTests": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "totalTests": 41,
+  "failed": 0,
+  "skipped": 0,
+  "localProfileMySqlHttpChecks": 14,
+  "unconfiguredJarDiagnosticChecked": true,
+  "ideRunXmlChecked": true,
+  "editorUiExercised": false,
+  "jarSha256": "0294758410a3a32f09d593ab6c6d2dd0a0ae314d24fb14ec2c315c8ebb961107",
+  "productionJarExcludesH2AndPrivateConfiguration": true,
+  "failureAnalyzerRegistrationPath": "META-INF/spring.factories",
+  "windowsPowerShellSyntax": "PASS",
+  "replacementTunnelSurvivesOldApplicationExit": true,
+  "temporaryApplicationAndTunnelStopped": true,
+  "databaseMigrationsChanged": false,
+  "productionDatabaseChanged": false,
+  "serverDeploymentChanged": false,
+  "modelCalls": 0
+}

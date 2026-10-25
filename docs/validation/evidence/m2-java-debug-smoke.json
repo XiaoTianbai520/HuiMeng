@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-25",
+  "environment": "real LocalDebugApplication, loopback HTTP, isolated in-memory H2, public synthetic fixtures only",
+  "browserUiExercised": false,
+  "serverDeploymentChanged": false,
+  "checks": {
+    "realLocalDebugMainLoginAndTypedResponse": "PASS",
+    "secureCookieAttributes": "PASS",
+    "typedCursorPagination": "PASS",
+    "modelCatalogSerialization": "PASS",
+    "oneTimeCredentialAndSafeListShape": "PASS",
+    "credentialRevoke": "PASS",
+    "memberProjectIsolation": "PASS",
+    "safeErrorShapeAndAdminDenial": "PASS",
+    "preferencesRoundtrip": "PASS",
+    "unassignedAccountEmptyProjects": "PASS",
+    "logoutInvalidatesSession": "PASS"
+  },
+  "modelCalls": 0
+}

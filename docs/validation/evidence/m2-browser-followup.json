@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-24",
+  "environment": {
+    "frontend": "Vue via Vite loopback",
+    "backend": "real Spring Boot 3.5.7",
+    "database": "isolated in-memory H2 with Flyway",
+    "origin": "http://localhost:5187",
+    "accounts": "explicit synthetic fixtures only",
+    "productionCaTrustChanged": false,
+    "productionBrowserClaimed": false
+  },
+  "checks": {
+    "realSpringAdminLogin": "PASS",
+    "preferencesLoadedAfterLogin": "PASS",
+    "adminUsersRead": "PASS",
+    "projectMembersRead": "PASS",
+    "transientPasswordCleared": "PASS",
+    "adminUnapprovedCatalogRead": "PASS",
+    "transientKeyCleared": "PASS",
+    "externalProjectSelector": "PASS",
+    "browserLogout": "PASS",
+    "memberOnlyOwnProjects": "PASS",
+    "memberAdminEntryAbsent": "PASS",
+    "memberAdminRouteRedirect": "PASS",
+    "personalPreferencePersistsOnReload": "PASS",
+    "outsiderEmptyProjectState": "PASS",
+    "consoleErrorsAbsent": "PASS"
+  },
+  "adminWriteFormSubmission": "not exercised in browser; covered by real HTTP integration and deployed HTTPS checks",
+  "modelCalls": 0
+}

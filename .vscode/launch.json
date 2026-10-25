@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "绘梦：本地隔离调试",
+      "request": "launch",
+      "mainClass": "cn.huimeng.debug.LocalDebugApplication",
+      "projectName": "huimeng-api",
+      "cwd": "${workspaceFolder}/backend",
+      "classPaths": [
+        "$Test"
+      ],
+      "args": "--local-debug",
+      "console": "internalConsole"
+    },
+    {
+      "type": "java",
+      "name": "绘梦：附加本地 JVM 5005",
+      "request": "attach",
+      "hostName": "127.0.0.1",
+      "port": 5005,
+      "projectName": "huimeng-api"
+    },
+    {
+      "type": "java",
+      "name": "绘梦：服务器 MySQL 开发调试",
+      "request": "launch",
+      "mainClass": "cn.huimeng.HuiMengApplication",
+      "projectName": "huimeng-api",
+      "cwd": "${workspaceFolder}/backend",
+      "classPaths": [
+        "$Runtime"
+      ],
+      "args": "--spring.profiles.active=local",
+      "console": "internalConsole"
+    }
+  ]
+}

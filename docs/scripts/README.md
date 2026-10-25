@@ -28,6 +28,7 @@ python -m unittest discover -s docs/scripts -p test_compare_contracts.py
 ```
 
 - [build_openapi.py](build_openapi.py) 是 OpenAPI 生成源；修改后运行它生成 `docs/api/openapi.yaml`，再执行校验和类型同步。
+- M2 已实现操作由[后端清单](../../backend/api-implementation.json)驱动 x-implemented；不得用此标记放行源路由。所有 127 条源路由仍 publicEnabled=false，业务验收见[M2 报告](../validation/M2_REPORT.md)。
 - [check_contracts.py](check_contracts.py) 校验 OpenAPI 3.1 标准、角色/CSRF/项目/幂等、来源与 A/FR、127 条映射状态及请求正反例；不代表后端实现通过。
 - [sync_frontend_contracts.py](sync_frontend_contracts.py) 从 OpenAPI/route-map 生成前端 DTO 和最小路由元数据；不带 `--check` 时写文件，带该参数时只检查一致性。
 - [compare_contracts.py](compare_contracts.py) 对已录制的 JSON 严格比对；允许逐一声明动态字段 JSON Pointer，保留事件顺序、错误和文件摘要。用法见[离线回归](../validation/contracts/README.md)。

@@ -20,12 +20,13 @@ def main():
     assert {r['id'] for r in mapped} == {r['id'] for r in source}
     originals = {r['id']: r for r in source}
     operation_ids = set()
+    implemented = set(json.loads((ROOT / 'backend/api-implementation.json').read_text(encoding='utf-8'))['operations'])
     for path, methods in spec['paths'].items():
         assert '*' not in path and '{upstreamPath}' not in path
         for method, operation in methods.items():
             assert operation['operationId'] not in operation_ids
             operation_ids.add(operation['operationId'])
-            assert operation['x-implemented'] is False
+            assert operation['x-implemented'] is (operation['operationId'] in implemented)
             assert operation['x-roles'] and operation['x-acceptance'] and operation['x-requirements']
             assert set(re.findall(r'\{(\w+)\}', path)) == {
                 p['name'] for p in operation['parameters'] if p['in'] == 'path' and p['required']}
@@ -43,6 +44,8 @@ def main():
             assert route['targetPath'] in spec['paths']
         for block in route['request']:
             assert not any(f.get('name') in ['directory', 'absolutePath'] for f in block['fields'])
+    assert implemented <= operation_ids
+    assert len(implemented) == 26
     counts = Counter(r['contractStatus'] for r in mapped)
     assert counts['excluded'] == 25 and counts['internal'] == 2
     for name, schema in spec['components']['schemas'].items():

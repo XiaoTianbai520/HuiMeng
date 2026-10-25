@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-25",
+  "sourceBaseline": "d8020fa",
+  "sourceState": "local uncommitted changes; not deployed",
+  "reportedFailure": "local profile loaded but development SSH tunnel was not listening",
+  "currentDevelopmentTransport": "direct LAN MySQL TLS",
+  "schema": "huimeng_dev",
+  "schemaVersion": 3,
+  "sslMode": "VERIFY_CA",
+  "hostnameVerificationClaimed": false,
+  "applicationOnlyTruststore": true,
+  "systemTrustStoreChanged": false,
+  "serverPrivateKeyCopied": false,
+  "publicMysqlCaSha256": "b6b36050fcb33a6af6c9acf717dd4fc03829321bfa3f2c05d1a276b6d4980ef2",
+  "clientAccounts": "exact workstation source; REQUIRE SSL; separate runtime/migration privileges",
+  "jdbcChecks": {
+    "schemaAndUtcAndTlsCipher": "PASS",
+    "wrongCaRejected": "PASS",
+    "plaintextRejected": "PASS",
+    "runtimeDdlDenied": "PASS",
+    "auditUpdateDenied": "PASS",
+    "migrationHistoryUpdateDenied": "PASS",
+    "productionSchemaReadDenied": "PASS"
+  },
+  "testSuites": {
+    "cn.huimeng.SecurityIntegrationTests": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.ArchitectureTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.debug.LocalDebugLauncherTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cn.huimeng.LocalProfileConfigurationTests": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "totalTests": 41,
+  "testFailures": 0,
+  "testSkipped": 0,
+  "realMysqlHttpChecks": 14,
+  "prestartedSshTunnel": false,
+  "sshRequiredForNormalMain": false,
+  "jarSha256": "09ad15c8cd3c415eb55f87cc32740651919a2cd32df9405a31f0469c5a9d49f8",
+  "temporaryApplicationStopped": true,
+  "localApiAndSshPortsReleased": true,
+  "ideRunConfigurationsChecked": true,
+  "ideUiExercised": false,
+  "productionDatabaseChanged": false,
+  "serverDeploymentChanged": false,
+  "serverPortsChanged": false,
+  "databaseMigrationsChanged": false,
+  "modelCalls": 0
+}

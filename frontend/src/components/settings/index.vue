@@ -24,8 +24,9 @@
             <keep-alive include="personalization">
               <component
                 :is="activePanel.component"
+                @navigate="visible = false"
                 v-bind="
-                  ['pluginMarket', 'languageModel', 'mediaModel', 'personalization', 'deviceLink'].includes(activePanel.id) ? { visible } : {}
+                  ['pluginMarket', 'mcp', 'personalization'].includes(activePanel.id) ? { visible } : {}
                 " />
             </keep-alive>
           </transition>
@@ -58,14 +59,7 @@ import { isAdmin } from "@/stores/session";
 const allPanels = [
   { id: "ui", label: "界面设置", icon: IconPalette, component: defineAsyncComponent(() => import("./panels/ui.vue")) },
   { id: "general", label: "常规配置", icon: IconSettings, component: defineAsyncComponent(() => import("./panels/general/index.vue")) },
-  {
-    id: "languageModel",
-    label: "文本模型",
-    icon: IconSubtitlesAi,
-    groupLabel: "模型",
-    component: defineAsyncComponent(() => import("./panels/languageModel/index.vue")),
-  },
-  { id: "mediaModel", label: "媒体模型", icon: IconPhotoVideo, component: defineAsyncComponent(() => import("./panels/mediaModel/index.vue")) },
+  { id: "teamAdmin", label: "团队管理", icon: IconUserCog, groupLabel: "管理", component: defineAsyncComponent(() => import("./panels/teamAdmin.vue")) },
   {
     id: "pluginMarket",
     label: "插件市场",
@@ -84,7 +78,7 @@ const allPanels = [
   { id: "privacy", label: "隐私", icon: IconShieldLock, component: defineAsyncComponent(() => import("./panels/privacy.vue")) },
   { id: "about", label: "关于", icon: IconInfoCircle, component: defineAsyncComponent(() => import("./panels/about.vue")) },
 ];
-const settingsPanels = computed(() => allPanels.filter(item => isAdmin.value || !["languageModel", "mediaModel", "pluginMarket", "mcp"].includes(item.id)));
+const settingsPanels = computed(() => allPanels.filter(item => isAdmin.value || !["teamAdmin", "pluginMarket", "mcp"].includes(item.id)));
 const activePanel = shallowRef(allPanels[0]!);
 watch(settingsPanels, panels => { if (!panels.includes(activePanel.value)) activePanel.value = panels[0]!; });
 const visible = defineModel<boolean>({ default: false });

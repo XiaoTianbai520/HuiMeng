@@ -9,7 +9,7 @@
       <el-input id="password" v-model="password" type="password" autocomplete="current-password" show-password :disabled="busy" />
       <p v-if="error" role="alert" class="loginError">{{ error }}</p>
       <el-button native-type="submit" type="primary" :loading="busy" :disabled="!username.trim() || !password">登录</el-button>
-      <p class="loginHint">使用管理员开通的公司内部账号。</p>
+      <p class="loginHint">使用管理员为你开通的团队账号。</p>
     </form>
   </main>
 </template>

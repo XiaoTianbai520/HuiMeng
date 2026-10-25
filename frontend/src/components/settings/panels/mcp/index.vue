@@ -4,7 +4,7 @@
     <el-alert v-if="error" :title="error" type="error" :closable="false" />
     <form class="clientForm" @submit.prevent="issue">
       <label for="clientName">客户端名称</label><el-input id="clientName" v-model="name" />
-      <label for="clientProject">项目 ID</label><el-input id="clientProject" v-model="projectId" />
+      <label for="clientProject">授权项目</label><select id="clientProject" v-model="projectId" :disabled="busy"><option value="">请选择项目</option><option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option></select>
       <label for="clientTools">允许的 MCP 工具（逗号分隔）</label><el-input id="clientTools" v-model="tools" />
       <label for="clientTeams">允许的 A2A 团队（逗号分隔）</label><el-input id="clientTeams" v-model="teams" />
       <el-button type="primary" native-type="submit" :loading="busy" :disabled="!name.trim() || !projectId.trim()">签发凭证</el-button>
@@ -16,17 +16,21 @@
     <el-button :loading="busy" @click="refresh">刷新授权列表</el-button>
     <el-table :data="clients" empty-text="暂无外部客户端">
       <el-table-column prop="name" label="名称" />
-      <el-table-column prop="projectId" label="项目" />
+      <el-table-column label="项目"><template #default="{ row }">{{ projects.find(project => project.id === row.projectId)?.name ?? row.projectId }}</template></el-table-column>
       <el-table-column label="状态"><template #default="{ row }">{{ row.revokedAt ? '已撤销' : '有效' }}</template></el-table-column>
       <el-table-column label="操作"><template #default="{ row }"><el-button :disabled="!!row.revokedAt || busy" @click="revoke(row.id)">撤销</el-button></template></el-table-column>
     </el-table>
     <p>MCP：{{ endpoint }}</p>
+    <p>凭证只授予所列能力；创作调用仍需对应能力开放。</p>
   </div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import client from "@huimeng/api/client";
-import type { Client, ClientIssued, ClientPage } from "@huimeng/contracts/platform";
+import type { Client, ClientIssued, Project } from "@huimeng/contracts/platform";
+import { readAll } from "@/lib/teamAdmin";
+const props = withDefaults(defineProps<{ visible?: boolean }>(), { visible: true });
+const projects = ref<Project[]>([]);
 const name = ref("");
 const projectId = ref("");
 const tools = ref("");
@@ -37,19 +41,24 @@ const busy = ref(false);
 const error = ref("");
 const endpoint = new URL("/mcp", window.location.origin).href;
 const controller = new AbortController();
+let displayGeneration = 0;
 const list = (value: string) => [...new Set(value.split(/[,，]/).map(item => item.trim()).filter(Boolean))];
 async function refresh() {
   error.value = "";
-  try { clients.value = (await client.get<ClientPage>("/api/v1/admin/external-clients", { signal: controller.signal })).data.items; }
+  try {
+    const [clientItems, projectItems] = await Promise.all([readAll<Client>("/api/v1/admin/external-clients", controller.signal), readAll<Project>("/api/v1/projects", controller.signal)]);
+    clients.value = clientItems; projects.value = projectItems.filter(project => project.status === "ACTIVE");
+  }
   catch { if (!controller.signal.aborted) error.value = "无法读取授权列表，请重试。"; }
 }
 async function issue() {
+  const generation = ++displayGeneration;
   busy.value = true;
   error.value = "";
   issuedToken.value = "";
   try {
     const { data } = await client.post<ClientIssued>("/api/v1/admin/external-clients", { name: name.value.trim(), projectId: projectId.value.trim(), mcpTools: list(tools.value), a2aTeams: list(teams.value) }, { signal: controller.signal });
-    issuedToken.value = data.token;
+    if (generation === displayGeneration && props.visible && !controller.signal.aborted) issuedToken.value = data.token;
     await refresh();
   } catch { if (!controller.signal.aborted) error.value = "签发失败，请检查项目及能力标识。"; }
   finally { busy.value = false; }
@@ -61,6 +70,7 @@ async function revoke(id: string) {
   finally { busy.value = false; }
 }
 onMounted(refresh);
-onBeforeUnmount(() => { issuedToken.value = ""; controller.abort(); });
+watch(() => props.visible, () => { displayGeneration++; issuedToken.value = ""; });
+onBeforeUnmount(() => { displayGeneration++; issuedToken.value = ""; controller.abort(); });
 </script>
 <style scoped>.clientForm { display: grid; gap: 10px; margin: 20px 0; } .clientForm label { font-size: 13px; }</style>

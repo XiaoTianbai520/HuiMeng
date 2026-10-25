@@ -24,7 +24,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -126,7 +126,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -240,7 +240,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -334,7 +334,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -431,7 +431,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -538,7 +538,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -644,7 +644,7 @@ paths:
       x-requirements:
       - FR-01
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: userId
         in: path
@@ -760,7 +760,7 @@ paths:
       - FR-02
       - FR-04
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -869,7 +869,7 @@ paths:
       - FR-02
       - FR-04
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -979,7 +979,7 @@ paths:
       - FR-02
       - FR-04
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -1076,7 +1076,7 @@ paths:
       x-requirements:
       - FR-02
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -1186,7 +1186,7 @@ paths:
       x-requirements:
       - FR-02
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -1297,7 +1297,7 @@ paths:
       x-requirements:
       - FR-02
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -1407,7 +1407,7 @@ paths:
       x-requirements:
       - FR-02
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -1514,7 +1514,7 @@ paths:
       - FR-06
       - FR-09
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -1616,7 +1616,7 @@ paths:
       x-requirements:
       - FR-09
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -1704,6 +1704,108 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /api/v1/admin/models:
+    get:
+      operationId: listAdminModels
+      summary: 管理员读取已登记模型及批准状态
+      description: 包含未批准模型的公开元数据，供管理员启停批准；不返回端点、密钥或物理目录。
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      x-requirements:
+      - FR-09
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Model'
+                required:
+                - items
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/admin/providers/{providerId}/secret:
     put:
       operationId: setProviderSecret
@@ -1718,7 +1820,7 @@ paths:
       x-requirements:
       - FR-09
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: providerId
         in: path
@@ -1824,7 +1926,7 @@ paths:
       x-requirements:
       - FR-09
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -1926,7 +2028,7 @@ paths:
       x-requirements:
       - FR-10
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -2031,7 +2133,7 @@ paths:
       x-requirements:
       - FR-10
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -2139,7 +2241,7 @@ paths:
       x-requirements:
       - FR-10
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: clientId
         in: path
@@ -2241,7 +2343,7 @@ paths:
       - FR-09
       - FR-13
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -2336,7 +2438,7 @@ paths:
       - FR-09
       - FR-13
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -2663,7 +2765,7 @@ paths:
       - FR-09
       - FR-14
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -2767,7 +2869,7 @@ paths:
       - FR-09
       - FR-14
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header

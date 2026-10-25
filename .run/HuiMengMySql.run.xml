@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="绘梦 MySQL 本地" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="cn.huimeng.HuiMengApplication" />
+    <module name="huimeng-api" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=local" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

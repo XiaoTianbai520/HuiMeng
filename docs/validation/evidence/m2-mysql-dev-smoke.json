@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-25",
+  "application": "normal HuiMengApplication with protected local configuration",
+  "database": "independent MySQL 8.4.11 development schema huimeng_dev via loopback SSH tunnel",
+  "browserUiExercised": false,
+  "productionDatabaseChanged": false,
+  "checks": {
+    "normalApplicationBootstrappedAndAuthenticatedOnMySql": "PASS",
+    "secureSessionCookieAttributes": "PASS",
+    "accountCreationPersisted": "PASS",
+    "memberProjectListFiltered": "PASS",
+    "crossProjectReadDenied": "PASS",
+    "memberAdminApiDenied": "PASS",
+    "personalPreferencesPersistAndStayIsolated": "PASS",
+    "registeredModelCatalogRemainsUnapproved": "PASS",
+    "credentialIssuedOnceAndNotListed": "PASS",
+    "creativeProtocolStaysUnavailableDuringM2": "PASS",
+    "revocationTakesEffectImmediately": "PASS",
+    "disabledAccountSessionRejected": "PASS",
+    "syntheticAccountDisabledProjectsArchivedCredentialRevoked": "PASS",
+    "logoutInvalidatesSession": "PASS"
+  },
+  "modelCalls": 0
+}

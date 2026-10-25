@@ -1,7 +1,16 @@
 .m0-work/
 .m1-work/
+.m2-work/
+.m2-work-*.log
+backend/.m2/
+backend/target/
+backend/.runtime/
+backend/*.log
+**/.env
+**/secrets/
 .workbuddy/
 **/node_modules/
 frontend/dist/
 frontend/coverage/
 **/__pycache__/
+**/.idea/
