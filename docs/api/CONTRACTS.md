@@ -1,6 +1,6 @@
 # 绘梦 1.0 接口与数据契约（CONTRACTS）
 
-> **状态：M1 冻结契约；当前 44 操作/37 路径中 35 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 92 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
+> **状态：M1 冻结契约；当前 44 操作/37 路径中 36 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 92 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
 
 ## 1. 版本、域名与认证
 
@@ -184,7 +184,7 @@ ProjectMedia 仅含 id、projectId、filename、byteSize、sha256、createdAt；
 
 ## 6. M2 实现状态
 
-[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：当前 44 个操作中 35 个为 true（含安全导出、精确文件读取、四个媒体操作与三个生成/运行操作），其余 9 个保持 false。生成操作用 x-implementation-scope 标明仅 Qwen 文生图 1K/1:1；接口实现不代表关联 A 编号所有业务已验收，最新范围见[M2 验收](../validation/M2_ACCEPTANCE.md)。所有源创作路由 publicEnabled 仍为 false。
+[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：当前 44 个操作中 36 个为 true（含安全导出、精确文件读取/写入、四个媒体操作与三个生成/运行操作），其余 8 个保持 false。生成操作用 x-implementation-scope 标明仅 Qwen 文生图 1K/1:1；接口实现不代表关联 A 编号所有业务已验收，最新范围见[M2 验收](../validation/M2_ACCEPTANCE.md)。所有源创作路由 publicEnabled 仍为 false。
 
 MCP/A2A 的 M2 入口只执行凭证及能力拒绝，不运行 SDK 或上游；合法凭证的未迁移业务返回 503/EXECUTOR_UNAVAILABLE，可解析 JSON-RPC 保留 id，通知不伪造 id。此临时拒绝不是协议握手或业务实现，M3-06 再补原协议分派。登录成功严格使用 OpenAPI User DTO（含 status）；CONTRACTS §2.1 的精简示意不替代字段字典。
 
@@ -202,3 +202,10 @@ POST `/api/v1/projects/{projectId}/creative/ai/media/generate` 要求成员会�
 首次请求维持原 JSON 空白保活/业务终态协议，以 X-Run-Id 和 Location 标识运行；同一幂等键返回原 Run（202），不同请求摘要为 409。GET `/api/v1/projects/{projectId}/runs/{runId}`、POST 同路径加 `/cancel` 均要求仍有效的成员和原发起人，取消另需 CSRF。成功结果含受控媒体 ID 和虚拟相对路径，下载经项目授权；取消/LOST 等状态不伪装成功。完整字段继续以 OpenAPI 为准。
 
 `.huimeng-media/{mediaId}.png` 为项目 read 的虚拟对象引用，不支持 snapshot 文档语义。公开模型 options 只返回确认的 resolutions/defaultResolution，保留 2K 元数据；其他私有字段、端点与任意嵌套配置均不回显。批准或成员关系撤回后，旧客户端调用同样拒绝。
+
+
+### 6.3 M3-01 首批保存接口
+
+PUT 项目 creative/workspaces/files/write 已实现。现阶段正文及编码后大小均不超过 8 MiB，Content-Length 必填；父目录必须存在。新建 exclusive=true，覆盖 expectedRevision=读取时字节 SHA-256，二者恰选一种；缺少前置或非法/重复参数为 400。正文原字节保存；指定 encoding 时输入为 UTF-8 文本，按 UTF-8/BOM/UTF-16 LE/BE 保存，非法文本 415、超限 413。成功返回 WriteResult，冲突 409/REVISION_CONFLICT 的 details.currentRevision 为当前摘要或文件已删除时 null。
+
+当前仅单 Spring 写入者，通过安全目录句柄和同路径锁保存，Windows 不支持时 503；不隐式建目录，不使用对象键或任意服务器路径。写入不表示原画布自动保存或整个 CRUD 已接通，页面修订链继续 M3-W03。真实允许/拒绝与兼容证据见[M3 记录](../validation/M3_FILE_WRITE.md)。

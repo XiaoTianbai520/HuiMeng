@@ -58,7 +58,7 @@ localhost Cookie 行为依据[浏览器文档](https://developer.mozilla.org/en-
 
 ## M2 读取、导出与模型验收
 
-管理员模型与密钥页的“导出安全配置”调用 GET `/api/v1/admin/configuration/export`，只含版本、导出时间、供应商配置状态、市场是否配置及模型批准标识，不含任意 options、密钥、密文、端点或路径；成员禁止访问，导出写审计。文件精确路径为 GET `/api/v1/projects/{projectId}/creative/workspaces/files/read`，只收 path/snapshot/maxBytes，快照最大 8 MiB，下载最大 512 MiB；无文件写入/上传或通配入口。
+管理员模型与密钥页的“导出安全配置”调用 GET `/api/v1/admin/configuration/export`，只含版本、导出时间、供应商配置状态、市场是否配置及模型批准标识，不含任意 options、密钥、密文、端点或路径；成员禁止访问，导出写审计。文件精确路径为 GET `/api/v1/projects/{projectId}/creative/workspaces/files/read`，只收 path/snapshot/maxBytes，快照最大 8 MiB，下载最大 512 MiB；该 M2 前批未提供写入，当前精确 write 见 M3-01 小节，没有通配入口。
 
 以下均为**显式选择**的测试源码工具，不在普通 verify 中执行，不进入生产 JAR。工作目录 backend：
 
@@ -121,3 +121,16 @@ finally { Remove-Item Env:HM_BROWSER_ACCEPTANCE }
 MySqlAdmissionHarness 固定独立开发库及 TLS，六请求验证五名额后恢复批准、停用合成账号并归档项目；拒绝已有活动运行。浏览器工具用新 H2、真实 MinIO 和真实 ComfyUI，按本页前端命令操作合成账号页面上传/生成。完成后在仓库根运行 `python docs/validation/scripts/m2AcceptanceBoundary.py`，它仅访问显式浏览器夹具，末尾移除合成成员以检查页面撤权；不得指向正常应用或正式库。结束创建 stop 文件并停止临时前端。
 
 查询/取消只限原发起人和有效成员；LOST 状态保留名额，不能通过重启清零。完整取消/重启、跨入口和真实容量仍属 M3/M4。最新源码没有覆盖正式 V3 部署。
+
+
+## M3-01 原格式保存
+
+首批实现精确 PUT 项目 creative/workspaces/files/write；请求体 application/octet-stream，Content-Length 必填，原始及编码后均最大 8 MiB。新建 exclusive=true；覆盖 expectedRevision 为读取时 SHA-256，两者恰选一种。encoding 可选 utf-8/utf-8-bom/utf-16le/utf-16be，指定时请求体为 UTF-8 文本。成功返回 WriteResult；409 含当前修订号，不能无条件重试覆盖。只支持单 Spring 写入者和已有父目录，Windows 缺少安全句柄仍返回 503，媒体可继续走 MinIO。
+
+普通 verify 当前 77 项；成功 I/O/CAS 必须在 Linux 验证。本批未连接业务数据库或更新正式部署，完整文件操作及原文档/画布页面仍待迁移。详见[M3 记录](../docs/validation/M3_FILE_WRITE.md)。Linux 完整仓库、JDK 17+、Python 3 和回环 18090 空闲时，从 backend 执行显式工具：
+
+```bash
+HM_M3_FILE_ACCEPTANCE=true MAVEN_USER_HOME="$PWD/.m2" sh ./mvnw -s .mvn/settings.xml -B -ntp '-Dtest=M3FileAcceptanceHarness,SecureFileWriterTests' test
+```
+
+该工具仅用新 H2 和随机 target/validation 目录，不访问 MySQL/MinIO/ComfyUI，不进入运行 JAR，普通 verify 不运行它。结果在 target/validation/m3-files-*/result.json。无 Python 的临时 JDK 容器可以显式设置 HM_M3_EXTERNAL_PYTHON=true，由受控宿主工具读取 target/m3-file.ready，并只对该随机夹具运行配套 Python 检查；禁止改成正常应用或业务工作区。

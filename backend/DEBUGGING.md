@@ -134,3 +134,5 @@ $env:MAVEN_USER_HOME = Join-Path $PWD '.m2'
 正常 IDEA main/local 入口不变。项目文件页与 Qwen 1K/1:1 已接通，可从 `MediaGenerationController` → `MediaGenerationServiceImpl.generate` → `GenerationRunMapper.lockProject/countHeld/insert` 跟踪权限、幂等和五名额；后台 `execute` → `ComfyImageClient` → `ProjectMediaServiceImpl` 跟踪真实生成/落存储。使用源码实际方法定位断点，不展开密钥对象或打印请求提示词。模型批准和项目成员在入场及发布前均重新校验。
 
 ComfyUI 由用户手动启动，可选受限配置见[后端 README](README.md#m2-最终受控生成与重跑)。未启动会在占位前拒绝；未知状态 LOST 保留名额而不是误报完成，先核对上游运行状态。重跑工具和最新验证见[M2 最终验收](../docs/validation/M2_ACCEPTANCE.md)。
+
+原格式保存断点：`ProjectFileController.write` → `ProjectFileServiceImpl.write` → `SecureFileWriter.write`，观察前置修订、同路径锁、提交前成员复核和原子替换；不要打印正文。Linux 成功验证及 Windows 限制见[M3 首批记录](../docs/validation/M3_FILE_WRITE.md)。

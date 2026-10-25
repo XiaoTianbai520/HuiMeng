@@ -2,7 +2,10 @@ package cn.huimeng.service.impl;
 
 import cn.huimeng.common.exception.ApiException;
 import cn.huimeng.common.io.*;
+import cn.huimeng.dto.req.FileWriteReqDTO;
 import cn.huimeng.dto.resp.*;
+import cn.huimeng.security.RequestContext;
+import cn.huimeng.service.AuditService;
 import cn.huimeng.service.ProjectFileService;
 import cn.huimeng.service.ProjectMediaService;
 import cn.huimeng.service.ProjectService;
@@ -21,10 +24,87 @@ public class ProjectFileServiceImpl implements ProjectFileService {
   private static final long MAX_DOWNLOAD = 512L * 1024 * 1024;
   private final ProjectService projects;
   private final ProjectMediaService media;
+  private final AuditService audit;
 
-  public ProjectFileServiceImpl(ProjectService projects, ProjectMediaService media) {
+  public ProjectFileServiceImpl(
+      ProjectService projects, ProjectMediaService media, AuditService audit) {
     this.projects = projects;
     this.media = media;
+    this.audit = audit;
+  }
+
+  @Override
+  public WriteResultRespDTO write(
+      String projectId, FileWriteReqDTO input, java.io.InputStream content, String requestId) {
+    Path target = projects.resolve(projectId, input.path(), true);
+    if (input.path().length() > 2048
+        || java.util.Arrays.stream(input.path().split("/")).anyMatch(p -> p.startsWith(".huimeng-"))
+        || input.exclusive() == (input.expectedRevision() != null)
+        || input.expectedRevision() != null && !input.expectedRevision().matches("[a-f0-9]{64}")
+        || input.encoding() != null
+            && !java.util.Set.of("utf-8", "utf-8-bom", "utf-16le", "utf-16be")
+                .contains(input.encoding())
+        || input.byteLength() < 0) throw ApiException.invalid();
+    if (input.byteLength() > MAX_SNAPSHOT)
+      throw new ApiException(413, "INVALID_ARGUMENT", "文件超过本批保存上限");
+    try {
+      byte[] bytes = content.readNBytes((int) input.byteLength() + 1);
+      if (bytes.length != input.byteLength()) throw ApiException.invalid();
+      if (input.encoding() != null) {
+        String text =
+            StandardCharsets.UTF_8
+                .newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(bytes))
+                .toString();
+        Charset charset =
+            switch (input.encoding()) {
+              case "utf-16le" -> StandardCharsets.UTF_16LE;
+              case "utf-16be" -> StandardCharsets.UTF_16BE;
+              default -> StandardCharsets.UTF_8;
+            };
+        byte[] bom =
+            switch (input.encoding()) {
+              case "utf-8-bom" -> new byte[] {(byte) 239, (byte) 187, (byte) 191};
+              case "utf-16le" -> new byte[] {(byte) 255, (byte) 254};
+              case "utf-16be" -> new byte[] {(byte) 254, (byte) 255};
+              default -> new byte[0];
+            };
+        ByteBuffer encoded =
+            charset
+                .newEncoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .encode(java.nio.CharBuffer.wrap(text));
+        bytes = new byte[bom.length + encoded.remaining()];
+        System.arraycopy(bom, 0, bytes, 0, bom.length);
+        encoded.get(bytes, bom.length, encoded.remaining());
+      }
+      if (bytes.length > MAX_SNAPSHOT)
+        throw new ApiException(413, "INVALID_ARGUMENT", "编码后文件超过本批保存上限");
+      String actorId = RequestContext.actor().id();
+      String revision =
+          SecureFileWriter.write(
+              target,
+              bytes,
+              input.expectedRevision(),
+              input.exclusive(),
+              () -> {
+                projects.requireMember(projectId, true);
+                audit.record(actorId, projectId, "FILE_WRITE", null, "ATTEMPT", requestId);
+              });
+      audit.record(actorId, projectId, "FILE_WRITE", revision, "SUCCESS", requestId);
+      return new WriteResultRespDTO(200, new WriteResultRespDTO.Revision(revision), "success");
+    } catch (CharacterCodingException ex) {
+      throw new ApiException(415, "UNSUPPORTED_MEDIA_TYPE", "写入正文不是有效 UTF-8 文本");
+    } catch (UnsupportedOperationException | AtomicMoveNotSupportedException ex) {
+      throw new ApiException(503, "EXECUTOR_UNAVAILABLE", "当前文件系统不支持安全原子保存");
+    } catch (NoSuchFileException ex) {
+      throw new ApiException(404, "NOT_FOUND", "父目录不可用");
+    } catch (IOException ex) {
+      throw new ApiException(503, "EXECUTOR_UNAVAILABLE", "文件保存未确认，请重新读取后核对");
+    }
   }
 
   private SecureFileReader.OpenFile open(

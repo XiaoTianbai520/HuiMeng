@@ -89,7 +89,10 @@ public class SecurityConfiguration {
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/v1/preferences")
+                .requestMatchers(
+                    HttpMethod.PUT,
+                    "/api/v1/preferences",
+                    "/api/v1/projects/*/creative/workspaces/files/write")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/projects/*/media")
                 .authenticated()

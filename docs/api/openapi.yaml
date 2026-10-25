@@ -4218,7 +4218,8 @@ paths:
     put:
       operationId: writeFile
       summary: 在同一文件锁内校验修订并原子保存
-      description: 已有文件 expectedRevision 必填；新建 exclusive=true。二者必须且只能提供一种。409.details.currentRevision 返回当前修订；前端停止自动覆盖。
+      description: 已有文件 expectedRevision 必填；新建 exclusive=true。二者必须且只能提供一种。409.details.currentRevision 返回当前修订；前端停止自动覆盖。 当前
+        M3 首批要求已有父目录、单 Spring 写入者，正文及编码后均不超过 8 MiB；缺少安全目录句柄或原子替换能力时 503。
       tags:
       - projects
       x-contract-status: frozen
@@ -4234,7 +4235,7 @@ paths:
       - FR-04
       - FR-05
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -4277,6 +4278,13 @@ paths:
           - utf-8-bom
           - utf-16le
           - utf-16be
+      - name: Content-Length
+        in: header
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 8388608
       responses:
         '200':
           description: 成功
@@ -4320,13 +4328,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '413':
-          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          description: 正文或编码后文件超过 8 MiB
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '415':
-          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          description: 指定 encoding 时输入不是有效 UTF-8 文本
           content:
             application/json:
               schema:

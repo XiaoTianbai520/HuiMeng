@@ -35,11 +35,13 @@
     "deleteProjectMedia",
     "generateMedia",
     "getRun",
-    "cancelRun"
+    "cancelRun",
+    "writeFile"
   ],
-  "evidence": "docs/validation/M2_REPORT.md",
-  "businessAcceptance": "M2 file read/export and test-only approved ComfyUI invocation verified; full A03/A17 pages and public model chain remain pending; canonical deployment unchanged",
+  "evidence": "docs/validation/M3_FILE_WRITE.md",
+  "businessAcceptance": "M2 connected development scope accepted; M3-01 first write/revision batch only, full workspace pages and CRUD pending; canonical deployment unchanged",
   "operationScopes": {
-    "generateMedia": "Qwen qwenImage21Text image 1K 1:1 only; other M3 providers/specs remain unavailable"
+    "generateMedia": "Qwen qwenImage21Text image 1K 1:1 only; other M3 providers/specs remain unavailable",
+    "writeFile": "Single Spring writer; existing parent; 8 MiB body and encoded result; exclusive create or expectedRevision CAS; SecureDirectoryStream required"
   }
 }

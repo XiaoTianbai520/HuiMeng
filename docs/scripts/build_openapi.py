@@ -274,6 +274,10 @@ def main():
     write['parameters'] += [param('path', 'query', ref('RelativePath'), True),
         param('expectedRevision', 'query', string(pattern='^[a-f0-9]{64}$')), param('exclusive', 'query', BOOL),
         param('encoding', 'query', string(enum=['utf-8', 'utf-8-bom', 'utf-16le', 'utf-16be']))]
+    write['parameters'].append(param('Content-Length', 'header', {'type': 'integer', 'minimum': 0, 'maximum': 8388608}, True))
+    write['description'] += ' 当前 M3 首批要求已有父目录、单 Spring 写入者，正文及编码后均不超过 8 MiB；缺少安全目录句柄或原子替换能力时 503。'
+    for status, description in [('413', '正文或编码后文件超过 8 MiB'), ('415', '指定 encoding 时输入不是有效 UTF-8 文本')]:
+        write['responses'][status] = {'description': description, 'content': {'application/json': {'schema': ref('Error')}}}
     write['requestBody'] = {'required': True, 'content': {'application/octet-stream': {'schema': string(format='binary')}}}
     # Opaque model context parts remain JSON as defined by the pinned model SDK;
     # top-level request fields and transport are stable at the gateway boundary.

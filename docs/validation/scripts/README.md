@@ -50,3 +50,8 @@ python docs/validation/scripts/m0Market.py plugins --runtime <临时实例清单
 仓库根执行 `python docs/validation/scripts/m2AcceptanceBoundary.py` 前，须按[后端 README](../../../backend/README.md#m2-最终受控生成与重跑)显式开启独立 Spring/H2 浏览器夹具，完成真实页面上传和固定 Qwen 生成。脚本固定只访问回环 18086，以公开合成账号验证 32 项允许/拒绝，记录 PNG/摘要；末尾移除合成成员，便于浏览器检查清空状态。它不是正常 MySQL 应用测试，不得改端口/账号指向真实业务环境。
 
 模型会消耗本机 GPU，须先核对队列和现用模型；不启动 ComfyUI、不下载权重、不读取远程 Key。测试完主动 stop 夹具，由夹具删除自己在专用桶建立的对象并销毁 H2，停止临时 Vite。证据及实际范围见[M2 最终验收](../M2_ACCEPTANCE.md)。
+
+
+## M3-01 原格式保存边界
+
+m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹具、固定回环 18090，不得用于正常应用或既有工作区。按[后端 README](../../../backend/README.md#m3-01-原格式保存)显式启动工具后调用；要求 --fixture-root、--report 和 --isolated-h2-fixture，验证真实字节/编码/冲突、成员/CSRF/链接与撤权。合成账号仅属于此夹具，结束清理自己新建的随机目录。46 项结果和限制见[M3 记录](../M3_FILE_WRITE.md)。

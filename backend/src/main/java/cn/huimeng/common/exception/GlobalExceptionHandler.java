@@ -34,6 +34,16 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(ApiException.class)
   ResponseEntity<ErrorRespDTO> known(ApiException ex, HttpServletRequest request) {
+    if (ex instanceof RevisionConflictException conflict) {
+      var safe = body(request, ex.code, ex.getMessage());
+      return ResponseEntity.status(ex.status)
+          .body(
+              new ErrorRespDTO(
+                  safe.code(),
+                  safe.message(),
+                  safe.requestId(),
+                  java.util.Collections.singletonMap("currentRevision", conflict.currentRevision)));
+    }
     return ResponseEntity.status(ex.status).body(body(request, ex.code, ex.getMessage()));
   }
 

@@ -162,6 +162,125 @@ class SecurityIntegrationTests {
     return "/api/v1/projects/" + project + "/creative/ai/media/generate";
   }
 
+  MockHttpServletRequestBuilder fileWrite(String project, byte[] content) throws Exception {
+    return write(
+            put("/api/v1/projects/" + project + "/creative/workspaces/files/write"),
+            admin,
+            Map.of())
+        .contentType("application/octet-stream")
+        .content(content);
+  }
+
+  @Test
+  void fileWritesRequireCsrfMembershipAndRejectClaimedDirectories() throws Exception {
+    String project = createProject("write-gates");
+    String route = "/api/v1/projects/" + project + "/creative/workspaces/files/write";
+    mvc.perform(
+            put(route)
+                .secure(true)
+                .session(admin)
+                .header("Origin", ORIGIN)
+                .contentType("application/octet-stream")
+                .content("x")
+                .param("path", "a.txt")
+                .param("exclusive", "true"))
+        .andExpect(status().isForbidden());
+    mvc.perform(fileWrite(project, new byte[0]).param("path", "a.txt").param("exclusive", "true"))
+        .andExpect(status().isForbidden());
+    member(project, adminId);
+    mvc.perform(
+            fileWrite(project, new byte[0])
+                .param("path", "a.txt")
+                .param("exclusive", "true")
+                .param("directory", "/tmp"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0]).param("path", "../a.txt").param("exclusive", "true"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0])
+                .param("path", ".huimeng-media/a.png")
+                .param("exclusive", "true"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void fileWriteRequiresExactlyOneRevisionOrExclusiveAndStrictEncoding() throws Exception {
+    String project = createProject("write-input");
+    member(project, adminId);
+    mvc.perform(fileWrite(project, new byte[0]).param("path", "a.txt"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0])
+                .param("path", "a.txt")
+                .param("exclusive", "true")
+                .param("expectedRevision", "a".repeat(64)))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0]).param("path", "a.txt").param("expectedRevision", "bad"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0])
+                .param("path", "a.txt", "b.txt")
+                .param("exclusive", "true"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[0])
+                .param("path", "a.txt")
+                .param("exclusive", "true")
+                .param("encoding", "legacy"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            fileWrite(project, new byte[] {(byte) 255})
+                .param("path", "a.txt")
+                .param("exclusive", "true")
+                .param("encoding", "utf-8"))
+        .andExpect(status().isUnsupportedMediaType());
+  }
+
+  @Test
+  void fileWriteUsesSafeAtomicRevisionOrRefusesUnsupportedFilesystem() throws Exception {
+    String project = createProject("write-real-file");
+    member(project, adminId);
+    String key =
+        jdbc.queryForObject("SELECT workspace_key FROM projects WHERE id=?", String.class, project);
+    Path base = Path.of("target/test-workspaces", key), target = base.resolve("剧本.md");
+    Files.writeString(target, "original");
+    String revision =
+        cn.huimeng.common.io.SecureFileWriter.revision(
+            "original".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    boolean supported;
+    try (var dir = Files.newDirectoryStream(base)) {
+      supported = dir instanceof SecureDirectoryStream<?>;
+    }
+    var result =
+        mvc.perform(
+            fileWrite(project, "已保存\r\n".getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                .param("path", "剧本.md")
+                .param("expectedRevision", revision)
+                .param("encoding", "utf-8"));
+    if (!supported) {
+      result.andExpect(status().isServiceUnavailable());
+      assertThat(Files.readString(target)).isEqualTo("original");
+    } else {
+      var saved = body(result.andExpect(status().isOk()).andReturn());
+      String next = saved.at("/data/revision").asText();
+      assertThat(Files.readString(target)).isEqualTo("已保存\r\n");
+      mvc.perform(
+              fileWrite(project, "stale".getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                  .param("path", "剧本.md")
+                  .param("expectedRevision", revision))
+          .andExpect(status().isConflict())
+          .andExpect(jsonPath("$.code").value("REVISION_CONFLICT"))
+          .andExpect(jsonPath("$.details.currentRevision").value(next));
+      assertThat(Files.readString(target)).isEqualTo("已保存\r\n");
+    }
+    try (var entries = Files.list(base)) {
+      assertThat(entries.noneMatch(p -> p.getFileName().toString().startsWith(".huimeng-write-")))
+          .isTrue();
+    }
+  }
+
   void awaitReleased(String project) throws Exception {
     for (int i = 0; i < 100; i++) {
       if (generationRuns.held(project) == 0) return;
