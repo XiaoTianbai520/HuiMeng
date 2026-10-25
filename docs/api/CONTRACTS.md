@@ -215,3 +215,9 @@ PUT 项目 creative/workspaces/files/write 已实现。现阶段正文及编码�
 精确 GET list 只接 path（空值为根），返回 FileListResult，directory=项目 ID；POST mkdir/copy/rename 与 DELETE remove 使用 JSON，字段为 path、可选 target 或 recursive。拒绝未知/重复查询及未知 JSON 字段；不能操作项目根或跨项目目标。目标存在返回 409/FILE_ALREADY_EXISTS；非递归删除非空目录为 409/DIRECTORY_NOT_EMPTY；I/O 可能部分完成时为 503/FILE_OPERATION_INCOMPLETE，应刷新核对。列表 5000 项、复制 512 MiB/10000 项/64 层上限和安全原语限制均见 OpenAPI。
 
 R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excluded、2 internal；源 publicEnabled 不变。独立文档区域已有快照/手动保存、冲突暂停和另存，原文件树/文档面板与画布自动保存仍待迁移。实际范围及双标签浏览器证据见[本批报告](../validation/M3_WORKSPACE.md)。
+
+### 6.5 M3-01 原页面修订链接通（2026-10-26）
+
+原文件树/文档面板/画布已复用同一精确文件 API 完成读取修订与覆盖保存：画布打开/新建记录随各画布对象的快照，自动保存、节点正文与画布写回、复制临时项覆盖均携带 `expectedRevision`；成功后更新为新返回修订号，快照按画布 ID 定位。409/`REVISION_CONFLICT` 时前端暂停该画布自动覆盖并保留内存修改，可强制重读恢复；文档会话冲突后同样暂停自动覆盖、保留草稿。`write` 的 exclusive 已存在与覆盖修订不符在本实现中均为 409/`REVISION_CONFLICT`，前端已据此统一识别；mkdir 已存在为 409/`FILE_ALREADY_EXISTS`，删除/读取缺失为 404/`NOT_FOUND`。
+
+`ext-plaintext` 为内置最小文本编辑器，仅在远程扩展清单未接通或无可用扩展时回退，支持常见文本后缀与 canvasNode 正文；它不是新的公开 API，也不代表扩展体系已完成。19 项真实浏览器检查覆盖连续保存、文档/画布冲突保留与重读、素材相对引用，见[M3-W03 记录](../validation/M3_W03_PAGES.md)。

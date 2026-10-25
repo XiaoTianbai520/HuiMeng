@@ -2,6 +2,7 @@
 .m1-work/
 .m2-work/
 .m2-work-*.log
+.playwright-cli/
 backend/.m2/
 backend/target/
 backend/.runtime/
