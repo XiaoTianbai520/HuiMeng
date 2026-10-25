@@ -45,7 +45,7 @@ def main():
         for block in route['request']:
             assert not any(f.get('name') in ['directory', 'absolutePath'] for f in block['fields'])
     assert implemented <= operation_ids
-    assert len(implemented) == 36
+    assert len(implemented) == 41
     counts = Counter(r['contractStatus'] for r in mapped)
     assert counts['excluded'] == 25 and counts['internal'] == 2
     for name, schema in spec['components']['schemas'].items():

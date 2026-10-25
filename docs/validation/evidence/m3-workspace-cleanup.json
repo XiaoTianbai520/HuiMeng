@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checkedAt": "2026-10-25T22:08:34.228812+08:00",
+  "remoteLoopbackPortsFree": [
+    18090,
+    18091
+  ],
+  "existingLanMinioListenersPreserved": true,
+  "temporaryContainersRemoved": true,
+  "temporaryImageRemoved": true,
+  "randomFixtureDirectoriesCleaned": true,
+  "productionDeploymentChanged": false,
+  "businessDatabaseStorageOrModelsUsed": false,
+  "ownedValidationBundleRemoved": true,
+  "localTemporaryPortsFree": [
+    5187,
+    18086
+  ]
+}

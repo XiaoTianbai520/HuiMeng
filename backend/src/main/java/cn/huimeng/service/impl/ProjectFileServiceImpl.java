@@ -36,6 +36,12 @@ public class ProjectFileServiceImpl implements ProjectFileService {
   @Override
   public WriteResultRespDTO write(
       String projectId, FileWriteReqDTO input, java.io.InputStream content, String requestId) {
+    return WorkspaceMutationCoordinator.mutate(
+        projectId, () -> writeCoordinated(projectId, input, content, requestId));
+  }
+
+  private WriteResultRespDTO writeCoordinated(
+      String projectId, FileWriteReqDTO input, java.io.InputStream content, String requestId) {
     Path target = projects.resolve(projectId, input.path(), true);
     if (input.path().length() > 2048
         || java.util.Arrays.stream(input.path().split("/")).anyMatch(p -> p.startsWith(".huimeng-"))
@@ -105,6 +111,111 @@ public class ProjectFileServiceImpl implements ProjectFileService {
     } catch (IOException ex) {
       throw new ApiException(503, "EXECUTOR_UNAVAILABLE", "文件保存未确认，请重新读取后核对");
     }
+  }
+
+  private Path publicPath(String project, String path, boolean write) {
+    Path resolved = projects.resolve(project, path, write);
+    if (path.length() > 2048
+        || java.util.Arrays.stream(path.split("/"))
+            .anyMatch(part -> !SecureWorkspaceOperations.publicName(part)))
+      throw ApiException.invalid();
+    return resolved;
+  }
+
+  private <T> T io(java.util.concurrent.Callable<T> action) {
+    try {
+      return action.call();
+    } catch (ApiException ex) {
+      throw ex;
+    } catch (UnsupportedOperationException | AtomicMoveNotSupportedException ex) {
+      throw new ApiException(503, "EXECUTOR_UNAVAILABLE", "当前文件系统不支持此安全文件操作");
+    } catch (NoSuchFileException ex) {
+      throw new ApiException(404, "NOT_FOUND", "文件或目录不可用");
+    } catch (DirectoryNotEmptyException ex) {
+      throw new ApiException(409, "DIRECTORY_NOT_EMPTY", "目录不为空，请确认后选择递归删除");
+    } catch (NotDirectoryException ex) {
+      throw new ApiException(400, "PATH_NOT_ALLOWED", "目录路径不被允许");
+    } catch (Exception ex) {
+      throw new ApiException(503, "FILE_OPERATION_INCOMPLETE", "操作未确认完成，部分更改可能已生效，请刷新后核对");
+    }
+  }
+
+  @Override
+  public FileListRespDTO list(String project, String path) {
+    String relative = path == null ? "" : path;
+    Path directory =
+        relative.isEmpty()
+            ? projects.workspaceRoot(project, false)
+            : publicPath(project, relative, false);
+    return io(
+        () -> {
+          var entries =
+              SecureWorkspaceOperations.list(directory, relative).stream()
+                  .map(entry -> new FileListRespDTO.Entry(entry.name(), entry.path(), entry.type()))
+                  .toList();
+          projects.requireMember(project, false);
+          return new FileListRespDTO(
+              200, new FileListRespDTO.Data(project, entries.isEmpty(), entries), "success");
+        });
+  }
+
+  private void beforeMutation(String project, String action, String requestId) {
+    projects.requireMember(project, true);
+    audit.record(RequestContext.actor().id(), project, action, null, "ATTEMPT", requestId);
+  }
+
+  private FileOperationRespDTO afterMutation(String project, String action, String requestId) {
+    audit.record(RequestContext.actor().id(), project, action, null, "SUCCESS", requestId);
+    return FileOperationRespDTO.success();
+  }
+
+  @Override
+  public FileOperationRespDTO mkdir(String project, String path, String requestId) {
+    return WorkspaceMutationCoordinator.mutate(
+        project,
+        () ->
+            io(
+                () -> {
+                  Path target = publicPath(project, path, true);
+                  beforeMutation(project, "FILE_MKDIR", requestId);
+                  LinuxDirectoryPrimitives.mkdir(target);
+                  return afterMutation(project, "FILE_MKDIR", requestId);
+                }));
+  }
+
+  @Override
+  public FileOperationRespDTO transfer(
+      String project, cn.huimeng.dto.req.FileTransferReqDTO input, boolean copy, String requestId) {
+    return WorkspaceMutationCoordinator.mutate(
+        project,
+        () ->
+            io(
+                () -> {
+                  Path source = publicPath(project, input.path(), true),
+                      target = publicPath(project, input.target(), true);
+                  if (source.equals(target) || target.startsWith(source))
+                    throw ApiException.invalid();
+                  String action = copy ? "FILE_COPY" : "FILE_RENAME";
+                  Runnable check = () -> beforeMutation(project, action, requestId);
+                  if (copy) SecureWorkspaceOperations.copy(source, target, check);
+                  else SecureWorkspaceOperations.rename(source, target, check);
+                  return afterMutation(project, action, requestId);
+                }));
+  }
+
+  @Override
+  public FileOperationRespDTO remove(
+      String project, cn.huimeng.dto.req.FileRemoveReqDTO input, String requestId) {
+    return WorkspaceMutationCoordinator.mutate(
+        project,
+        () ->
+            io(
+                () -> {
+                  Path target = publicPath(project, input.path(), true);
+                  beforeMutation(project, "FILE_REMOVE", requestId);
+                  SecureWorkspaceOperations.remove(target, input.recursive(), true);
+                  return afterMutation(project, "FILE_REMOVE", requestId);
+                }));
   }
 
   private SecureFileReader.OpenFile open(

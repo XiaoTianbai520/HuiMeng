@@ -1,6 +1,7 @@
 <template>
   <main class="teamPage">
     <header class="teamHeader"><div><span class="teamBrand">绘梦 <small>项目文件</small></span><h1>{{ projectName || '项目文件' }}</h1></div><router-link to="/home">返回项目</router-link></header>
+    <WorkspaceDocuments v-if="projectName" :project-id="projectId()" />
     <section class="teamPanel" aria-label="项目文件与素材">
       <header class="panelHeading"><div><h2>文件与素材</h2><p>上传素材和生成结果保存在当前项目，访问时重新检查成员权限。</p></div><el-button :disabled="busy" @click="refresh">刷新文件</el-button></header>
       <p v-if="error" role="alert" class="panelError">{{ error }}</p>
@@ -35,6 +36,7 @@ import type { ProjectMedia, Model, MediaResult, Run } from "@huimeng/contracts/p
 import { readAll, adminError } from "@/lib/teamAdmin";
 import { useWorkspaceStore } from "@/stores/workspace";
 import "@/components/team/team.scss";
+import WorkspaceDocuments from "./WorkspaceDocuments.vue";
 const route = useRoute(), workspace = useWorkspaceStore();
 const projectName = ref(""), items = ref<ProjectMedia[]>([]), busy = ref(false), error = ref(""), authorized = ref(false);
 const selected = ref<File>(), uploadInput = ref<HTMLInputElement>(), previewItem = ref<ProjectMedia>(), previewUrl = ref("");

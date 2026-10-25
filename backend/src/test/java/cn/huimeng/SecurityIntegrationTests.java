@@ -162,6 +162,63 @@ class SecurityIntegrationTests {
     return "/api/v1/projects/" + project + "/creative/ai/media/generate";
   }
 
+  @Test
+  void workspaceOperationsCheckMembershipCsrfAndRejectLegacyDirectory() throws Exception {
+    String project = createProject("workspace-gates");
+    String base = "/api/v1/projects/" + project + "/creative/workspaces/files";
+    mvc.perform(get(base + "/list").session(admin).secure(true)).andExpect(status().isForbidden());
+    mvc.perform(write(post(base + "/mkdir"), admin, Map.of("path", "folder")))
+        .andExpect(status().isForbidden());
+    for (String operation : List.of("copy", "rename"))
+      mvc.perform(
+              write(post(base + "/" + operation), admin, Map.of("path", "file", "target", "other")))
+          .andExpect(status().isForbidden());
+    member(project, adminId);
+    mvc.perform(
+            write(post(base + "/mkdir"), admin, Map.of("path", "folder", "directory", "/private")))
+        .andExpect(status().isBadRequest());
+    mvc.perform(write(post(base + "/copy"), admin, Map.of("path", "file", "target", "../outside")))
+        .andExpect(status().isBadRequest());
+    mvc.perform(write(delete(base + "/remove"), admin, Map.of("path", "")))
+        .andExpect(status().isBadRequest());
+    mvc.perform(get(base + "/list").session(admin).secure(true).param("directory", "/private"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            post(base + "/mkdir")
+                .session(admin)
+                .secure(true)
+                .header("Origin", ORIGIN)
+                .contentType("application/json")
+                .content("{\"path\":\"folder\"}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void workspaceRootListDoesNotExposePhysicalDirectoryOrEscape() throws Exception {
+    String project = createProject("workspace-list");
+    member(project, adminId);
+    String route = "/api/v1/projects/" + project + "/creative/workspaces/files/list";
+    String key =
+        jdbc.queryForObject("SELECT workspace_key FROM projects WHERE id=?", String.class, project);
+    Path root = Path.of("target/test-workspaces", key);
+    Files.writeString(root.resolve("visible.md"), "public");
+    Files.writeString(root.resolve(".huimeng-private"), "internal");
+    boolean supported;
+    try (var directory = Files.newDirectoryStream(root)) {
+      supported = directory instanceof SecureDirectoryStream<?>;
+    }
+    var result = mvc.perform(get(route).secure(true).session(admin));
+    if (supported)
+      result
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.data.directory").value(project))
+          .andExpect(jsonPath("$.data.entries.length()").value(1))
+          .andExpect(jsonPath("$.data.entries[0].path").value("visible.md"));
+    else result.andExpect(status().isServiceUnavailable());
+    mvc.perform(get(route).secure(true).session(admin).param("path", ".."))
+        .andExpect(status().isBadRequest());
+  }
+
   MockHttpServletRequestBuilder fileWrite(String project, byte[] content) throws Exception {
     return write(
             put("/api/v1/projects/" + project + "/creative/workspaces/files/write"),

@@ -140,8 +140,20 @@ public class ProjectServiceImpl implements ProjectService {
 
   /** 校验成员关系与项目路径；未来文件执行仍须使用隔离或原子 I/O。 */
   @Override
-  public Path resolve(String id, String relative, boolean write) {
+  public Path workspaceRoot(String id, boolean write) {
     requireMember(id, write);
+    String key = requireProject(id).workspaceKey();
+    if (!key.matches("[A-Za-z0-9_-]{1,128}")) throw pathDenied();
+    Path base = workspaceRoot.resolve(key);
+    if (Files.isSymbolicLink(workspaceRoot)
+        || Files.isSymbolicLink(base)
+        || !Files.isDirectory(base, LinkOption.NOFOLLOW_LINKS)) throw pathDenied();
+    return base;
+  }
+
+  @Override
+  public Path resolve(String id, String relative, boolean write) {
+    Path base = workspaceRoot(id, write);
     if (relative == null
         || relative.isEmpty()
         || relative.length() > 4096
@@ -152,13 +164,10 @@ public class ProjectServiceImpl implements ProjectService {
         || relative.chars().anyMatch(c -> c < 32)
         || Arrays.stream(relative.split("/", -1))
             .anyMatch(p -> p.isEmpty() || p.equals(".") || p.equals(".."))) throw pathDenied();
-    String key = requireProject(id).workspaceKey();
-    if (!key.matches("[A-Za-z0-9_-]{1,128}")) throw pathDenied();
     try {
       if (Files.isSymbolicLink(workspaceRoot)) throw pathDenied();
       // 保留受控根的词法路径，让实际打开还能拒绝根目录祖先被替换为符号链接。
       Path root = workspaceRoot;
-      Path base = root.resolve(key);
       if (Files.isSymbolicLink(base) || !Files.isDirectory(base, LinkOption.NOFOLLOW_LINKS))
         throw pathDenied();
       Path result = base.resolve(relative).normalize();

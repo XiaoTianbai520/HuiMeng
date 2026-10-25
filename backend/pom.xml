@@ -15,11 +15,17 @@
     <java.version>17</java.version>
     <flyway.version>11.15.0</flyway.version>
     <aws-sdk.version>2.57.2</aws-sdk.version>
+    <jna.version>5.17.0</jna.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>${jna.version}</version>
+    </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>

@@ -22,3 +22,7 @@
 ## 最终验收工具
 
 MySqlAdmissionHarness 为测试源码，固定受限 huimeng_dev TLS 配置，六请求验证五名额；拒绝已有活动任务，结束恢复模型批准并停用/归档合成数据。供应商与存储用替身，不调用模型。显式环境开关、命令及真实浏览器/模型重跑见[后端 README](../README.md#m2-最终受控生成与重跑)。不要把开发资源地址/机密改成正式资源重跑。
+
+## M3 本地库与许可准备
+
+工作目录 backend，先 Maven verify，再运行 `python scripts/Archive-RuntimeLicenses.py` 与 `python scripts/Prepare-NativeLibraries.py`。后者只读取已构建 JAR 及已归档的固定法律文本，提取 JNA 5.17.0 的 Linux x86_64 libjnidispatch.so 至 target/native，写 licenses/native-runtime.json 的源 JAR/本地库/法律文本 SHA-256；不联网、不读凭据。随镜像携带 JAR、本地库和两份补充法律文本，见[部署说明](../deploy/README.md)。普通应用启动无需运行此脚本，镜像构建和 noexec Linux 验证需要准备这些制品。

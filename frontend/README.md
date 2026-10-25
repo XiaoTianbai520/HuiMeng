@@ -40,3 +40,5 @@ bun run dev --port 5186 --strictPort
 ## 历史辅助文件
 
 [local-nodes](local-nodes/README.md) 是 M0 旧供应商节点预设及辅助脚本，不参加应用构建和类型检查。现用模型见[当前供应商](../docs/validation/LOCAL_PROVIDERS.md)，不得据旧夹具恢复供应商。
+
+当前项目文件页同时包含[独立文档区域](src/pages/files/README.md)及媒体/最小生成表单。目录操作、手动保存、同账号双标签冲突另存和撤权清空已做真实浏览器测试；原文件树/文档面板与画布仍按 M3-W03 接线，详见[本批验收](../docs/validation/M3_WORKSPACE.md)。

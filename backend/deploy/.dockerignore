@@ -2,3 +2,7 @@
 !Dockerfile
 !target/
 !target/huimeng-api-1.0.0-SNAPSHOT.jar
+!target/native/
+!target/native/libjnidispatch.so
+!target/native/JNA-AL2.0.txt
+!target/native/LIBFFI-LICENSE.txt

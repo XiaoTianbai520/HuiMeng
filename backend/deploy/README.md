@@ -4,11 +4,15 @@
 
 ## 首次准备
 
+M3 工作区文件操作增加固定 JNA 5.17.0。在 backend 完成 verify 后，先执行 `python scripts/Prepare-NativeLibraries.py`，从构建 JAR 提取 Linux x86_64 本地库到 target/native，SHA-256 见 licenses/native-runtime.json。新的 Dockerfile 要求同时携带 JAR、该固定库及 JNA/libffi 两份法律文本；`.dockerignore` 只放行这些制品和 Dockerfile，仍排除配置与凭据。构建上下文中的相对路径保持 target/huimeng-api-1.0.0-SNAPSHOT.jar 与 target/native/libjnidispatch.so，以及同目录 JNA-AL2.0.txt、LIBFFI-LICENSE.txt。不要将其覆盖到旧正式部署后直接重启；先按升级步骤准备 V4、独立存储与回滚。
+
+本地库从只读应用目录加载，禁止临时解包或加载系统同名版本，继续保留只读根目录与 /tmp 的 noexec。隔离环境已验证该组合；当前只核对 Linux x86_64，其他平台或缺少原语时明确 503，不降低路径保护。实际 Dockerfile 的非 root/只读/noexec 组合及目录权限已在临时镜像通过 5 项原生操作验证，见[本批报告](../../docs/validation/M3_WORKSPACE.md)。正式部署尚未升级，正式数据库启动、完整创作集成与发布仍在后续验收。
+
 工作目录为仓库根目录。先在 `backend/` 验证并打包，再构建镜像。所有服务器命令只针对新绘梦目录；不得覆盖已有目标。`provision.py` 在服务器执行，遇已有绘梦库/账号/目录即拒绝，凭据只由服务器安全随机生成，保存在 `/opt/apps/huimeng/secrets/`，不回传到仓库或日志。MySQL root 仅用于创建新库和限定账号，不供应用连接。
 
 运行 `python3 provision.py` 前核实 `172.29.46.0/24` 未与已有网络冲突；为绘梦新建 `docker network create --internal --subnet 172.29.46.0/24 huimeng_database`，将现有 `mysql` 容器额外连接到此专用网络，不重启、不改变其原端口和网络。迁移账号只对 `huimeng.*` 有 DML/CREATE/ALTER/INDEX/REFERENCES；运行账号只有 DML，没有全局授权、建库、GRANT、DROP 或其他业务库权限。应用显式 UTC，不修改全局 MySQL 时区。
 
-应用 JAR 放 `/opt/apps/huimeng/target/`，Bun 边界文件放 `executor-boundary/`，前端 dist 内容放 `/var/www/huimeng/`。静态目录须为 755、公开构建文件可读，机密目录继续 700。复制本目录 Compose、Nginx 配置、Dockerfile、`.dockerignore` 和 Python 部署脚本到应用目录；`.dockerignore` 仅允许 JAR 进入构建上下文，排除 secrets。
+应用 JAR 放 `/opt/apps/huimeng/target/`，固定本地库与法律文本放该 target/native/，Bun 边界文件放 `executor-boundary/`，前端 dist 内容放 `/var/www/huimeng/`。静态目录须为 755、公开构建文件可读，机密目录继续 700。复制本目录 Compose、Nginx 配置、Dockerfile、`.dockerignore` 和 Python 部署脚本到应用目录；`.dockerignore` 只允许上文列出的 JAR、本地库/法律文本及 Dockerfile 进入构建上下文，排除 secrets。
 
 首次部署的工作目录为服务器 `/opt/apps/huimeng/`；已经存在的部署不能重跑 provision 或重签证书。在首次 provision 和数据库网络建立后，按顺序执行：
 

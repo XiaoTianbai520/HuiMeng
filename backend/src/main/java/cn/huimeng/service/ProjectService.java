@@ -7,6 +7,8 @@ import java.nio.file.Path;
 
 /** 项目元数据、成员授权与工作区映射；管理员元数据权限不自动授予创作权限。 */
 public interface ProjectService {
+  /** 当前项目受控工作区根，仅服务端 I/O 使用，不能进入客户端 DTO。 */
+  java.nio.file.Path workspaceRoot(String id, boolean write);
 
   /** 当前项目是否包含指定账号。 */
   boolean member(String projectId, String userId);

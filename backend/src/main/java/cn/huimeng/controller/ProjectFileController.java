@@ -1,10 +1,11 @@
 package cn.huimeng.controller;
 
 import cn.huimeng.common.exception.ApiException;
-import cn.huimeng.dto.req.FileWriteReqDTO;
-import cn.huimeng.dto.resp.WriteResultRespDTO;
+import cn.huimeng.dto.req.*;
+import cn.huimeng.dto.resp.*;
 import cn.huimeng.service.ProjectFileService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import org.springframework.core.io.InputStreamResource;
@@ -21,6 +22,57 @@ public class ProjectFileController {
     this.files = files;
   }
 
+  @GetMapping("/list")
+  public FileListRespDTO list(
+      @PathVariable String projectId,
+      @RequestParam(defaultValue = "") String path,
+      HttpServletRequest request) {
+    if (!Set.of("path").containsAll(request.getParameterMap().keySet())
+        || request.getParameterMap().values().stream().anyMatch(values -> values.length != 1))
+      throw ApiException.invalid();
+    return files.list(projectId, path);
+  }
+
+  @PostMapping("/mkdir")
+  public FileOperationRespDTO mkdir(
+      @PathVariable String projectId,
+      @Valid @RequestBody FilePathReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    return files.mkdir(projectId, input.path(), (String) request.getAttribute("requestId"));
+  }
+
+  @PostMapping("/copy")
+  public FileOperationRespDTO copy(
+      @PathVariable String projectId,
+      @Valid @RequestBody FileTransferReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    return files.transfer(projectId, input, true, (String) request.getAttribute("requestId"));
+  }
+
+  @PostMapping("/rename")
+  public FileOperationRespDTO rename(
+      @PathVariable String projectId,
+      @Valid @RequestBody FileTransferReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    return files.transfer(projectId, input, false, (String) request.getAttribute("requestId"));
+  }
+
+  @DeleteMapping("/remove")
+  public FileOperationRespDTO remove(
+      @PathVariable String projectId,
+      @Valid @RequestBody FileRemoveReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    return files.remove(projectId, input, (String) request.getAttribute("requestId"));
+  }
+
+  private void noQuery(HttpServletRequest request) {
+    if (!request.getParameterMap().isEmpty()) throw ApiException.invalid();
+  }
+
   /** 返回快照或原字节；客户端不提供物理目录、下载令牌或自报身份。 */
   @GetMapping("/read")
   public ResponseEntity<?> read(
@@ -30,7 +82,8 @@ public class ProjectFileController {
       @RequestParam(required = false) Long maxBytes,
       @RequestHeader(value = "Range", required = false) String range,
       HttpServletRequest request) {
-    if (!Set.of("path", "snapshot", "maxBytes").containsAll(request.getParameterMap().keySet()))
+    if (!Set.of("path", "snapshot", "maxBytes").containsAll(request.getParameterMap().keySet())
+        || request.getParameterMap().values().stream().anyMatch(values -> values.length != 1))
       throw ApiException.invalid();
     if (snapshot)
       return ResponseEntity.ok()

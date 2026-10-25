@@ -55,3 +55,9 @@ python docs/validation/scripts/m0Market.py plugins --runtime <临时实例清单
 ## M3-01 原格式保存边界
 
 m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹具、固定回环 18090，不得用于正常应用或既有工作区。按[后端 README](../../../backend/README.md#m3-01-原格式保存)显式启动工具后调用；要求 --fixture-root、--report 和 --isolated-h2-fixture，验证真实字节/编码/冲突、成员/CSRF/链接与撤权。合成账号仅属于此夹具，结束清理自己新建的随机目录。46 项结果和限制见[M3 记录](../M3_FILE_WRITE.md)。
+
+## M3-01 目录操作与页面
+
+仓库根运行 `python docs/validation/scripts/m3WorkspaceBoundary.py` 前，按[后端 README](../../../backend/README.md#m3-01-目录操作与文档浏览器验收)在 Linux 显式启动 WorkspaceBrowserAcceptanceHarness，并仅转发服务器回环 18091 到本机回环 18086。脚本固定该回环端口、Origin localhost:5187 及公开合成账号；不修改为正常应用或真实数据库。检查在本次 H2 另建项目中进行，涵盖复制/重命名/递归删除/根目录保护/撤权等 39 项，末尾撤权并归档自己的项目。不得将合成账号密码替换为团队凭据。
+
+浏览器从 localhost:5187 操作独立文档区域，文档新建/编辑/冲突另存与撤权证据见[本批报告](../M3_WORKSPACE.md)。实际删除由 HTTP 测试执行，浏览器只验证删除确认与取消。测试完主动停止夹具、转发和 Vite，不访问真实存储/模型；测试工具不进入运行 JAR。

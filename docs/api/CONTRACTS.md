@@ -1,6 +1,6 @@
 # 绘梦 1.0 接口与数据契约（CONTRACTS）
 
-> **状态：M1 冻结契约；当前 44 操作/37 路径中 36 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 92 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
+> **状态：M1 冻结契约；当前 49 操作/42 路径中 41 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 13 条 frozen、87 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
 
 ## 1. 版本、域名与认证
 
@@ -184,7 +184,7 @@ ProjectMedia 仅含 id、projectId、filename、byteSize、sha256、createdAt；
 
 ## 6. M2 实现状态
 
-[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：当前 44 个操作中 36 个为 true（含安全导出、精确文件读取/写入、四个媒体操作与三个生成/运行操作），其余 8 个保持 false。生成操作用 x-implementation-scope 标明仅 Qwen 文生图 1K/1:1；接口实现不代表关联 A 编号所有业务已验收，最新范围见[M2 验收](../validation/M2_ACCEPTANCE.md)。所有源创作路由 publicEnabled 仍为 false。
+[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：当前 49 个操作中 41 个为 true（含安全导出、精确文件读取/写入及五个目录操作、四个媒体操作与三个生成/运行操作），其余 8 个保持 false。生成操作用 x-implementation-scope 标明仅 Qwen 文生图 1K/1:1；接口实现不代表关联 A 编号所有业务已验收，最新范围见[M2 验收](../validation/M2_ACCEPTANCE.md)。所有源创作路由 publicEnabled 仍为 false。
 
 MCP/A2A 的 M2 入口只执行凭证及能力拒绝，不运行 SDK 或上游；合法凭证的未迁移业务返回 503/EXECUTOR_UNAVAILABLE，可解析 JSON-RPC 保留 id，通知不伪造 id。此临时拒绝不是协议握手或业务实现，M3-06 再补原协议分派。登录成功严格使用 OpenAPI User DTO（含 status）；CONTRACTS §2.1 的精简示意不替代字段字典。
 
@@ -208,4 +208,10 @@ POST `/api/v1/projects/{projectId}/creative/ai/media/generate` 要求成员会�
 
 PUT 项目 creative/workspaces/files/write 已实现。现阶段正文及编码后大小均不超过 8 MiB，Content-Length 必填；父目录必须存在。新建 exclusive=true，覆盖 expectedRevision=读取时字节 SHA-256，二者恰选一种；缺少前置或非法/重复参数为 400。正文原字节保存；指定 encoding 时输入为 UTF-8 文本，按 UTF-8/BOM/UTF-16 LE/BE 保存，非法文本 415、超限 413。成功返回 WriteResult，冲突 409/REVISION_CONFLICT 的 details.currentRevision 为当前摘要或文件已删除时 null。
 
-当前仅单 Spring 写入者，通过安全目录句柄和同路径锁保存，Windows 不支持时 503；不隐式建目录，不使用对象键或任意服务器路径。写入不表示原画布自动保存或整个 CRUD 已接通，页面修订链继续 M3-W03。真实允许/拒绝与兼容证据见[M3 记录](../validation/M3_FILE_WRITE.md)。
+当前仅单 Spring 写入者，通过安全目录句柄、项目变更协调及文件锁保存，Windows 不支持时 503；不隐式建目录，不使用对象键或任意服务器路径。写入不表示原画布自动保存或整个 CRUD 已接通，页面修订链继续 M3-W03。真实允许/拒绝与兼容证据见[M3 记录](../validation/M3_FILE_WRITE.md)。
+
+### 6.4 M3-01 目录操作与独立文档区域
+
+精确 GET list 只接 path（空值为根），返回 FileListResult，directory=项目 ID；POST mkdir/copy/rename 与 DELETE remove 使用 JSON，字段为 path、可选 target 或 recursive。拒绝未知/重复查询及未知 JSON 字段；不能操作项目根或跨项目目标。目标存在返回 409/FILE_ALREADY_EXISTS；非递归删除非空目录为 409/DIRECTORY_NOT_EMPTY；I/O 可能部分完成时为 503/FILE_OPERATION_INCOMPLETE，应刷新核对。列表 5000 项、复制 512 MiB/10000 项/64 层上限和安全原语限制均见 OpenAPI。
+
+R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excluded、2 internal；源 publicEnabled 不变。独立文档区域已有快照/手动保存、冲突暂停和另存，原文件树/文档面板与画布自动保存仍待迁移。实际范围及双标签浏览器证据见[本批报告](../validation/M3_WORKSPACE.md)。

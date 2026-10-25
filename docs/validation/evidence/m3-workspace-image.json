@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "dockerfileBuildPassed": true,
+  "imageId": "sha256:10baa76ec5a4128bc701675fe93278eec66f4d802a2b3348caeeae22d209f019",
+  "user": "10001:10001",
+  "network": "none",
+  "readOnlyRoot": true,
+  "readOnlyApplicationAndTestMounts": true,
+  "tmpNoexec": true,
+  "nativeBootPath": "/opt/huimeng/native",
+  "nativeJunitTests": 5,
+  "artifactSha256": "23f7e7aad1040ae501f0069f96c6cde9839c7c8d61159b8b518d43a6950ce570",
+  "productionDeploymentChanged": false,
+  "businessDataOrCredentialsUsed": false,
+  "temporaryImageRemoved": true
+}

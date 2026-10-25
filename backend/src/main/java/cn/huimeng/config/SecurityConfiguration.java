@@ -85,7 +85,8 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/media",
                     "/api/v1/projects/*/media/*/content",
                     "/api/v1/projects/*/runs/*",
-                    "/api/v1/projects/*/creative/workspaces/files/read")
+                    "/api/v1/projects/*/creative/workspaces/files/read",
+                    "/api/v1/projects/*/creative/workspaces/files/list")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
@@ -95,6 +96,15 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/workspaces/files/write")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/projects/*/media")
+                .authenticated()
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/projects/*/creative/workspaces/files/mkdir",
+                    "/api/v1/projects/*/creative/workspaces/files/copy",
+                    "/api/v1/projects/*/creative/workspaces/files/rename")
+                .authenticated()
+                .requestMatchers(
+                    HttpMethod.DELETE, "/api/v1/projects/*/creative/workspaces/files/remove")
                 .authenticated()
                 .requestMatchers(
                     HttpMethod.POST,

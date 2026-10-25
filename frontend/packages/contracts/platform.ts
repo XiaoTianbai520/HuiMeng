@@ -1,6 +1,6 @@
 // Generated from docs/api/openapi.yaml. Run docs/scripts/sync_frontend_contracts.py.
 export type Error = { "code": ErrorCode; "message": string; "requestId": string; "details": (Record<string, unknown> | null); };
-export type ErrorCode = "INVALID_ARGUMENT" | "PATH_NOT_ALLOWED" | "UNAUTHENTICATED" | "CLIENT_TOKEN_INVALID" | "CSRF_INVALID" | "PROJECT_FORBIDDEN" | "CAPABILITY_FORBIDDEN" | "NOT_FOUND" | "REVISION_CONFLICT" | "IDEMPOTENCY_CONFLICT" | "PROJECT_CAPACITY_EXCEEDED" | "RATE_LIMITED" | "EXECUTOR_UNAVAILABLE" | "RUN_LOST" | "PLUGIN_INTEGRITY_FAILED" | "PLUGIN_VERSION_CONFLICT" | "PLUGIN_IN_USE" | "MARKET_UNAVAILABLE" | "UPLOAD_TOO_LARGE" | "UNSUPPORTED_MEDIA_TYPE";
+export type ErrorCode = "INVALID_ARGUMENT" | "PATH_NOT_ALLOWED" | "UNAUTHENTICATED" | "CLIENT_TOKEN_INVALID" | "CSRF_INVALID" | "PROJECT_FORBIDDEN" | "CAPABILITY_FORBIDDEN" | "NOT_FOUND" | "REVISION_CONFLICT" | "IDEMPOTENCY_CONFLICT" | "PROJECT_CAPACITY_EXCEEDED" | "RATE_LIMITED" | "EXECUTOR_UNAVAILABLE" | "RUN_LOST" | "PLUGIN_INTEGRITY_FAILED" | "PLUGIN_VERSION_CONFLICT" | "PLUGIN_IN_USE" | "MARKET_UNAVAILABLE" | "UPLOAD_TOO_LARGE" | "UNSUPPORTED_MEDIA_TYPE" | "FILE_ALREADY_EXISTS" | "DIRECTORY_NOT_EMPTY" | "FILE_OPERATION_INCOMPLETE";
 export type User = { "id": string; "username": string; "role": "ADMIN" | "USER"; "status": "ACTIVE" | "DISABLED"; };
 export type Login = { "username": string; "password": string; };
 export type CreateUser = { "username": string; "password": string; "role"?: "ADMIN" | "USER"; };
@@ -41,6 +41,12 @@ export type GeneratedMedia = { "path": RelativePath; "mimeType": string; "mediaT
 export type MediaResult = ({ "code": 200; "data": (GeneratedMedia)[]; "message": string; } | { "code": number; "data": unknown; "message": string; });
 export type SnapshotResult = { "code": 200; "data": Snapshot; "message": string; };
 export type WriteResult = { "code": 200; "data": { "revision": string; }; "message": string; };
+export type FileEntry = { "name": string; "path": RelativePath; "type": "file" | "directory"; };
+export type FileListResult = { "code": 200; "data": { "directory": string; "empty": boolean; "entries": (FileEntry)[]; }; "message": string; };
+export type FileOperationResult = { "code": 200; "data": null; "message": string; };
+export type FileTransferInput = { "path": RelativePath; "target": RelativePath; };
+export type FilePathInput = { "path": RelativePath; };
+export type FileRemoveInput = { "path": RelativePath; "recursive"?: boolean; };
 export type TextContext = { "systemPrompt"?: string; "messages": ({ "role": "user" | "assistant" | "toolResult"; "content": (string | (Record<string, unknown>)[]); "timestamp": number; })[]; "tools"?: ({ "name": string; "description": string; "parameters": Record<string, unknown>; "constrainedSampling"?: (false | Record<string, unknown>); })[]; };
 export type AiReference = ({ "dataType": "STRING"; "value": string; } | { "dataType": "IMAGE" | "VIDEO" | "FILE"; "value": { "url": RelativePath; "mimeType": string; }; });
 export type TextGenerate = { "providerId": string; "modelId": string; "context": TextContext; "references"?: (AiReference)[]; };

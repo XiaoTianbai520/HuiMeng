@@ -1,5 +1,5 @@
 {
-  "phase": "M2",
+  "phase": "M3",
   "operations": [
     "getCsrf",
     "login",
@@ -36,12 +36,22 @@
     "generateMedia",
     "getRun",
     "cancelRun",
-    "writeFile"
+    "writeFile",
+    "listWorkspaceFiles",
+    "createWorkspaceDirectory",
+    "copyWorkspaceFile",
+    "renameWorkspaceFile",
+    "removeWorkspaceFile"
   ],
-  "evidence": "docs/validation/M3_FILE_WRITE.md",
-  "businessAcceptance": "M2 connected development scope accepted; M3-01 first write/revision batch only, full workspace pages and CRUD pending; canonical deployment unchanged",
+  "evidence": "docs/validation/M3_WORKSPACE.md",
+  "businessAcceptance": "M3-W02 and standalone document area verified; original file tree/document panels, canvas and full M3 remain pending; production unchanged",
   "operationScopes": {
     "generateMedia": "Qwen qwenImage21Text image 1K 1:1 only; other M3 providers/specs remain unavailable",
-    "writeFile": "Single Spring writer; existing parent; 8 MiB body and encoded result; exclusive create or expectedRevision CAS; SecureDirectoryStream required"
+    "writeFile": "Single Spring writer; shared project mutation coordinator; existing parent; 8 MiB body and encoded result; exclusive create or expectedRevision CAS; SecureDirectoryStream required",
+    "listWorkspaceFiles": "Project-relative paths only; project ID as directory; hides links and private items; scans at most 5000 entries; SecureDirectoryStream required",
+    "createWorkspaceDirectory": "Single Spring writer and shared project mutation coordinator; Linux x86_64 secure primitives; no overwrite or project root mutation; copy 512 MiB/10000 entries/64 levels",
+    "copyWorkspaceFile": "Single Spring writer and shared project mutation coordinator; Linux x86_64 secure primitives; no overwrite or project root mutation; copy 512 MiB/10000 entries/64 levels",
+    "renameWorkspaceFile": "Single Spring writer and shared project mutation coordinator; Linux x86_64 secure primitives; no overwrite or project root mutation; copy 512 MiB/10000 entries/64 levels",
+    "removeWorkspaceFile": "Single Spring writer and shared project mutation coordinator; Linux x86_64 secure primitives; no overwrite or project root mutation; copy 512 MiB/10000 entries/64 levels"
   }
 }

@@ -1,0 +1,20 @@
+{
+  "dependency": "net.java.dev.jna:jna:5.17.0",
+  "platform": "linux-x86-64",
+  "sourceEntry": "com/sun/jna/linux-x86-64/libjnidispatch.so",
+  "sha256": "ca07953d595210082339753d9e818a1fdb40509a17a41914d9a2cb0d2df6b6af",
+  "chosenLicense": "Apache-2.0",
+  "sourceJarSha256": "b3a9408e7c51e08ef0e3bfcc08f443f6ec0f6191ba8cd7c18d53d2b22e5bdbc0",
+  "supportingLegalTexts": [
+    {
+      "path": "texts/jna-5.17.0.jar/JNA-AL2.0.txt",
+      "source": "https://raw.githubusercontent.com/java-native-access/jna/5.17.0/AL2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "texts/jna-5.17.0.jar/LIBFFI-LICENSE.txt",
+      "source": "https://raw.githubusercontent.com/java-native-access/jna/5.17.0/native/libffi/LICENSE",
+      "sha256": "2c9c2acb9743e6b007b91350475308aee44691d96aa20eacef8e199988c8c388"
+    }
+  ]
+}

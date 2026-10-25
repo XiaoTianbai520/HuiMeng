@@ -536,6 +536,18 @@
       "textReviewPending": true
     },
     {
+      "runtimeJar": "jna-5.17.0.jar",
+      "sha256": "b3a9408e7c51e08ef0e3bfcc08f443f6ec0f6191ba8cd7c18d53d2b22e5bdbc0",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jna-5.17.0.jar/META-INF__LICENSE",
+          "sha256": "07c938b23950ab7d47a24ef35f9f5da3a05ae164278dc959ad6994135ed59ff1"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
       "runtimeJar": "json-utils-2.57.2.jar",
       "sha256": "e5418891aec7e77bf25d71a4d62145dbc10835eb40603b977ab05a973c4188b6",
       "embeddedLegalTexts": [

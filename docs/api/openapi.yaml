@@ -4364,6 +4364,580 @@ paths:
             schema:
               type: string
               format: binary
+  /api/v1/projects/{projectId}/creative/workspaces/files/list:
+    get:
+      operationId: listWorkspaceFiles
+      summary: 列出授权项目目录
+      description: path 空值表示项目根。directory 返回项目 ID；不返回服务器目录，隐藏内部临时项与链接，最多检查 5000 条目录项。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A04
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: path
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+          default: ''
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileListResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/workspaces/files/mkdir:
+    post:
+      operationId: createWorkspaceDirectory
+      summary: 授权项目文件操作：mkdir
+      description: 活动项目成员逐次授权。新建/复制/重命名不覆盖目标；Linux x86_64 安全目录句柄必需，缺失时 503。单 Spring 共用项目写锁；路径最多 2048 字符、复制总量 512 MiB、10000
+        项、递归 64 层。remove 需 recursive=true 才清空目录，部分失败可能已改变文件，须刷新核对。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A04
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileOperationResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilePathInput'
+  /api/v1/projects/{projectId}/creative/workspaces/files/copy:
+    post:
+      operationId: copyWorkspaceFile
+      summary: 授权项目文件操作：copy
+      description: 活动项目成员逐次授权。新建/复制/重命名不覆盖目标；Linux x86_64 安全目录句柄必需，缺失时 503。单 Spring 共用项目写锁；路径最多 2048 字符、复制总量 512 MiB、10000
+        项、递归 64 层。remove 需 recursive=true 才清空目录，部分失败可能已改变文件，须刷新核对。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A04
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileOperationResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileTransferInput'
+  /api/v1/projects/{projectId}/creative/workspaces/files/rename:
+    post:
+      operationId: renameWorkspaceFile
+      summary: 授权项目文件操作：rename
+      description: 活动项目成员逐次授权。新建/复制/重命名不覆盖目标；Linux x86_64 安全目录句柄必需，缺失时 503。单 Spring 共用项目写锁；路径最多 2048 字符、复制总量 512 MiB、10000
+        项、递归 64 层。remove 需 recursive=true 才清空目录，部分失败可能已改变文件，须刷新核对。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A04
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileOperationResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileTransferInput'
+  /api/v1/projects/{projectId}/creative/workspaces/files/remove:
+    delete:
+      operationId: removeWorkspaceFile
+      summary: 授权项目文件操作：remove
+      description: 活动项目成员逐次授权。新建/复制/重命名不覆盖目标；Linux x86_64 安全目录句柄必需，缺失时 503。单 Spring 共用项目写锁；路径最多 2048 字符、复制总量 512 MiB、10000
+        项、递归 64 层。remove 需 recursive=true 才清空目录，部分失败可能已改变文件，须刷新核对。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A04
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-03
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileOperationResult'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRemoveInput'
   /api/v1/projects/{projectId}/creative/ai/generate:
     post:
       operationId: textGenerate
@@ -4952,6 +5526,9 @@ components:
       - MARKET_UNAVAILABLE
       - UPLOAD_TOO_LARGE
       - UNSUPPORTED_MEDIA_TYPE
+      - FILE_ALREADY_EXISTS
+      - DIRECTORY_NOT_EMPTY
+      - FILE_OPERATION_INCOMPLETE
     User:
       type: object
       additionalProperties: false
@@ -5807,6 +6384,93 @@ components:
       - code
       - data
       - message
+    FileEntry:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 1
+        path:
+          $ref: '#/components/schemas/RelativePath'
+        type:
+          type: string
+          enum:
+          - file
+          - directory
+      required:
+      - name
+      - path
+      - type
+    FileListResult:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          const: 200
+        data:
+          type: object
+          additionalProperties: false
+          properties:
+            directory: *id002
+            empty: *id005
+            entries:
+              type: array
+              items:
+                $ref: '#/components/schemas/FileEntry'
+          required:
+          - directory
+          - empty
+          - entries
+        message:
+          type: string
+      required:
+      - code
+      - data
+      - message
+    FileOperationResult:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          const: 200
+        data: *id007
+        message:
+          type: string
+      required:
+      - code
+      - data
+      - message
+    FileTransferInput:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          $ref: '#/components/schemas/RelativePath'
+        target:
+          $ref: '#/components/schemas/RelativePath'
+      required:
+      - path
+      - target
+    FilePathInput:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          $ref: '#/components/schemas/RelativePath'
+      required:
+      - path
+    FileRemoveInput:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          $ref: '#/components/schemas/RelativePath'
+        recursive:
+          type: boolean
+          default: false
+      required:
+      - path
     TextContext:
       type: object
       additionalProperties: false

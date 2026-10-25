@@ -3,5 +3,6 @@
 # Preserve the exact bytes used by archived checksums and recorded evidence.
 frontend/LICENSE.Toonflow -text
 frontend/licenses/** -text
+backend/licenses/texts/** -text -diff
 docs/validation/evidence/** -text
 docs/validation/fixtures/** -text

@@ -1,6 +1,6 @@
 # 绘梦 Spring 安全入口
 
-M2 模块，独立于前端和原 Toonflow。遵守[现行设计](../docs/architecture/DESIGN.md)和[冻结契约](../docs/api/CONTRACTS.md)，创作路由、插件执行与真实 MCP/A2A 分派按 M3 接续；没有通配代理。
+M2 安全基座与分批迁入的 M3 模块，独立于前端和原 Toonflow。遵守[现行设计](../docs/architecture/DESIGN.md)和[冻结契约](../docs/api/CONTRACTS.md)，创作路由、插件执行与真实 MCP/A2A 分派按 M3 接续；没有通配代理。
 
 ## 结构与版本
 
@@ -50,7 +50,7 @@ localhost Cookie 行为依据[浏览器文档](https://developer.mozilla.org/en-
 
 会话 Cookie 为 `__Host-huimeng-session`，Secure/HttpOnly/SameSite=Lax/Path=/；闲置 8 小时、最长 24 小时。所有浏览器写操作含登录要求同源 Origin 和会话 CSRF；登录更换会话与令牌。账号连续失败最多 10 次/15 分钟，来源 IP 最多 100 次/15 分钟；敏感写操作每账号 60 次/分钟。限速状态为单实例内存数据，重启清空；没有在当前 M2 设计中承诺多 Spring 实例会话共享。
 
-项目列表按成员过滤，管理员仅多出元数据管理；创作仍须成员关系。项目/路径服务拒绝绝对路径、父目录、反斜线、盘符/ADS、编码歧义及符号链接。精确 GET 文件 read 控制器以 SecureDirectoryStream 逐层无链接打开；Windows 默认文件系统不支持时返回 503。独立 MinIO 媒体 API 已实现，详见下节；原文档写入、上传、修订冲突及完整创作执行留 M3。
+项目列表按成员过滤，管理员仅多出元数据管理；创作仍须成员关系。项目/路径服务拒绝绝对路径、父目录、反斜线、盘符/ADS、编码歧义及符号链接。精确 GET 文件 read 控制器以 SecureDirectoryStream 逐层无链接打开；Windows 默认文件系统不支持时返回 503。独立 MinIO 媒体 API 已实现，详见下节；原格式写入、目录操作及独立文档区域已在 M3 接通；原文件树/画布、完整素材与创作执行继续 M3。
 
 团队供应商与 TF-Router Key 使用 AES-256-GCM（标识及密钥版本作 AAD）、独立主密钥、随机 nonce；只写不回显。模型目录默认全部未批准，仅管理员可启停已登记模型；Qwen 保留 2K。外部凭证为 256 位随机数、SHA-256 存储、单项目及显式能力范围、逐请求重查并可撤销；团队成员会话不能代用。MCP/A2A 未接通时合法凭证也不会执行创作。
 
@@ -127,10 +127,29 @@ MySqlAdmissionHarness 固定独立开发库及 TLS，六请求验证五名额后
 
 首批实现精确 PUT 项目 creative/workspaces/files/write；请求体 application/octet-stream，Content-Length 必填，原始及编码后均最大 8 MiB。新建 exclusive=true；覆盖 expectedRevision 为读取时 SHA-256，两者恰选一种。encoding 可选 utf-8/utf-8-bom/utf-16le/utf-16be，指定时请求体为 UTF-8 文本。成功返回 WriteResult；409 含当前修订号，不能无条件重试覆盖。只支持单 Spring 写入者和已有父目录，Windows 缺少安全句柄仍返回 503，媒体可继续走 MinIO。
 
-普通 verify 当前 77 项；成功 I/O/CAS 必须在 Linux 验证。本批未连接业务数据库或更新正式部署，完整文件操作及原文档/画布页面仍待迁移。详见[M3 记录](../docs/validation/M3_FILE_WRITE.md)。Linux 完整仓库、JDK 17+、Python 3 和回环 18090 空闲时，从 backend 执行显式工具：
+首批普通 verify 为 77 项；当前第二批为 84 项，见下节。成功 I/O/CAS 必须在 Linux 验证。本批未连接业务数据库或更新正式部署，完整文件操作及原文档/画布页面仍待迁移。详见[M3 记录](../docs/validation/M3_FILE_WRITE.md)。Linux 完整仓库、JDK 17+、Python 3 和回环 18090 空闲时，从 backend 执行显式工具：
 
 ```bash
 HM_M3_FILE_ACCEPTANCE=true MAVEN_USER_HOME="$PWD/.m2" sh ./mvnw -s .mvn/settings.xml -B -ntp '-Dtest=M3FileAcceptanceHarness,SecureFileWriterTests' test
 ```
 
 该工具仅用新 H2 和随机 target/validation 目录，不访问 MySQL/MinIO/ComfyUI，不进入运行 JAR，普通 verify 不运行它。结果在 target/validation/m3-files-*/result.json。无 Python 的临时 JDK 容器可以显式设置 HM_M3_EXTERNAL_PYTHON=true，由受控宿主工具读取 target/m3-file.ready，并只对该随机夹具运行配套 Python 检查；禁止改成正常应用或业务工作区。
+
+## M3-01 目录操作与文档浏览器验收
+
+当前目录 list/mkdir/copy/rename/remove 已通过精确 Spring 入口实现；复制/重命名不覆盖，删除非空目录须显式 recursive=true。与 writeFile 共用单进程项目协调；列表最多 5000 项，复制最多 512 MiB/10000 项/64 层。JNA 固定 5.17.0，仅验证 Linux x86_64；Windows 默认文件系统的原文档操作仍返回 503，MinIO 媒体可用。84 项默认后端、21 项前端、39 项文件 HTTP 与 21 项真实浏览器检查通过，完整范围见[本批报告](../docs/validation/M3_WORKSPACE.md)。
+
+镜像构建前在 backend 运行 `python scripts/Prepare-NativeLibraries.py`，提取固定本地库和法律文本；摘要及 Apache-2.0 选择见 licenses/native-runtime.json。当前 Dockerfile 保留非 root、只读根和 noexec 临时目录，通过固定路径加载，不能省略 target/native 或改为临时解包。
+
+Linux 完整源码、JDK 17+、Python 3、回环 18091 空闲时，工作目录 backend：
+
+```bash
+python scripts/Prepare-NativeLibraries.py
+HM_WORKSPACE_BROWSER=true MAVEN_USER_HOME="$PWD/.m2" sh ./mvnw -s .mvn/settings.xml -B -ntp '-Dtest=WorkspaceBrowserAcceptanceHarness' "-Djna.boot.library.path=$PWD/target/native" -Djna.nounpack=true -Djna.nosys=true test
+```
+
+先按本页 verify 构建；此工具只属于测试源码，普通 verify 不运行，不进入生产 JAR。只创建独立 H2/随机工作区/测试密钥，关闭真实存储与 ComfyUI，不读取 .runtime。就绪标记 target/workspace-browser.ready；合成账号 ui-admin/ui-member/ui-outsider 与公开密码 M3-browser-fixture-only 仅用于该夹具。不得改为真实账号、数据库或已有项目。
+
+服务器验证时只做回环 SSH 转发：本机 127.0.0.1:18086 → 已核实服务器 127.0.0.1:18091；不发布宿主对外端口。前端目录设置 HUIMENG_API_TARGET=http://127.0.0.1:18086 后运行 `bun run dev --port 5187 --strictPort`，浏览器打开 http://localhost:5187/ 。目录操作 HTTP 回归从仓库根运行 `python docs/validation/scripts/m3WorkspaceBoundary.py`，固定只访问该转发夹具，创建/归档自己的合成项目。浏览器人工操作可在另一个夹具项目中进行。
+
+结束在 Linux backend 创建 target/workspace-browser.stop，工具清理本次随机工作区，最长自动停止两小时；随后停止自有前端和转发。不要复用旧 ready 标记或将测试端口指向正常应用。Linux 保存回归可沿用上一节 M3FileAcceptanceHarness，并将 SecureWorkspaceOperationsTests 纳入同轮显式运行。本轮没有使用真实 MySQL/MinIO/模型，也没有验证新镜像正式数据库启动。

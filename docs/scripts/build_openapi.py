@@ -48,7 +48,7 @@ SCHEMAS = {
         'CSRF_INVALID', 'PROJECT_FORBIDDEN', 'CAPABILITY_FORBIDDEN', 'NOT_FOUND', 'REVISION_CONFLICT',
         'IDEMPOTENCY_CONFLICT', 'PROJECT_CAPACITY_EXCEEDED', 'RATE_LIMITED', 'EXECUTOR_UNAVAILABLE', 'RUN_LOST',
         'PLUGIN_INTEGRITY_FAILED', 'PLUGIN_VERSION_CONFLICT', 'PLUGIN_IN_USE', 'MARKET_UNAVAILABLE',
-        'UPLOAD_TOO_LARGE', 'UNSUPPORTED_MEDIA_TYPE']),
+        'UPLOAD_TOO_LARGE', 'UNSUPPORTED_MEDIA_TYPE', 'FILE_ALREADY_EXISTS', 'DIRECTORY_NOT_EMPTY', 'FILE_OPERATION_INCOMPLETE']),
     'User': obj({'id': ID, 'username': NAME, 'role': string(enum=['ADMIN', 'USER']),
                  'status': string(enum=['ACTIVE', 'DISABLED'])}, ['id', 'username', 'role', 'status']),
     'Login': obj({'username': NAME, 'password': string(minLength=1, maxLength=256, writeOnly=True)}, ['username', 'password']),
@@ -279,6 +279,25 @@ def main():
     for status, description in [('413', '正文或编码后文件超过 8 MiB'), ('415', '指定 encoding 时输入不是有效 UTF-8 文本')]:
         write['responses'][status] = {'description': description, 'content': {'application/json': {'schema': ref('Error')}}}
     write['requestBody'] = {'required': True, 'content': {'application/octet-stream': {'schema': string(format='binary')}}}
+    SCHEMAS['FileEntry'] = obj({'name': string(minLength=1), 'path': ref('RelativePath'), 'type': string(enum=['file', 'directory'])}, ['name', 'path', 'type'])
+    SCHEMAS['FileListResult'] = obj({'code': {'const': 200}, 'data': obj({'directory': ID, 'empty': BOOL,
+        'entries': arr(ref('FileEntry'))}, ['directory', 'empty', 'entries']), 'message': string()}, ['code', 'data', 'message'])
+    SCHEMAS['FileOperationResult'] = obj({'code': {'const': 200}, 'data': NULL, 'message': string()}, ['code', 'data', 'message'])
+    SCHEMAS['FileTransferInput'] = obj({'path': ref('RelativePath'), 'target': ref('RelativePath')}, ['path', 'target'])
+    SCHEMAS['FilePathInput'] = obj({'path': ref('RelativePath')}, ['path'])
+    SCHEMAS['FileRemoveInput'] = obj({'path': ref('RelativePath'), 'recursive': {'type': 'boolean', 'default': False}}, ['path'])
+    listing = operation('get', creative+'workspaces/files/list', 'listWorkspaceFiles', '列出授权项目目录', project,
+        ['A03', 'A04', 'A06', 'A17'], response=ref('FileListResult'),
+        description='path 空值表示项目根。directory 返回项目 ID；不返回服务器目录，隐藏内部临时项与链接，最多检查 5000 条目录项。')
+    listing['parameters'].append(param('path', 'query', string(maxLength=2048, default='')))
+    for method, suffix, operation_id, request_schema in [
+        ('post', 'mkdir', 'createWorkspaceDirectory', 'FilePathInput'),
+        ('post', 'copy', 'copyWorkspaceFile', 'FileTransferInput'),
+        ('post', 'rename', 'renameWorkspaceFile', 'FileTransferInput'),
+        ('delete', 'remove', 'removeWorkspaceFile', 'FileRemoveInput')]:
+        operation(method, creative+'workspaces/files/'+suffix, operation_id, '授权项目文件操作：'+suffix,
+            project, ['A03', 'A04', 'A06', 'A17'], ref(request_schema), ref('FileOperationResult'),
+            description='活动项目成员逐次授权。新建/复制/重命名不覆盖目标；Linux x86_64 安全目录句柄必需，缺失时 503。单 Spring 共用项目写锁；路径最多 2048 字符、复制总量 512 MiB、10000 项、递归 64 层。remove 需 recursive=true 才清空目录，部分失败可能已改变文件，须刷新核对。')
     # Opaque model context parts remain JSON as defined by the pinned model SDK;
     # top-level request fields and transport are stable at the gateway boundary.
     SCHEMAS['TextContext'] = obj({'systemPrompt': string(maxLength=100000),

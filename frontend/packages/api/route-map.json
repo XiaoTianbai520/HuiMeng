@@ -849,6 +849,26 @@
       "path": "/api/v1/projects/{projectId}/creative/workspaces/files/write"
     },
     {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/mkdir"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/copy"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/rename"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/projects/{projectId}/creative/workspaces/files/remove"
+    },
+    {
       "method": "POST",
       "path": "/api/v1/projects/{projectId}/creative/ai/generate"
     },
