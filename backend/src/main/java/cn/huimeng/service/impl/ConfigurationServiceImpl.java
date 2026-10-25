@@ -86,12 +86,33 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                     row.label(),
                     row.enabled(),
                     json.readTree(row.capabilitiesJson()),
-                    json.readTree(row.optionsJson()));
+                    publicOptions(json.readTree(row.optionsJson())));
               } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
                 throw new IllegalStateException("Model metadata unavailable");
               }
             })
         .toList();
+  }
+
+  /** 只发布已登记的公开规格，避免未来配置字段被原样带进成员响应。 */
+  private com.fasterxml.jackson.databind.node.ObjectNode publicOptions(
+      com.fasterxml.jackson.databind.JsonNode value) {
+    var result = json.createObjectNode();
+    var resolutions = json.createArrayNode();
+    if (value.path("resolutions").isArray()) {
+      for (var item : value.path("resolutions")) {
+        if (item.isTextual() && java.util.Set.of("1K", "0.5MP", "2K").contains(item.asText()))
+          resolutions.add(item.asText());
+      }
+      result.set("resolutions", resolutions);
+    }
+    var defaultResolution = value.path("defaultResolution");
+    if (defaultResolution.isTextual()) {
+      for (var resolution : resolutions)
+        if (resolution.asText().equals(defaultResolution.asText()))
+          result.put("defaultResolution", defaultResolution.asText());
+    }
+    return result;
   }
 
   @Override

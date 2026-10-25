@@ -1,6 +1,6 @@
 # 文档入口
 
-> 当前阶段：**M0、M1 完成，M2 基座已实现、部分验收待完成，M3–M4 未开始**。团队管理、账号/会话和部署基础收尾已验证；M2-03/04 仍待跨阶段业务验收，CA 安装可选。见 [M2 报告](validation/M2_REPORT.md)。
+> 当前阶段：**M0、M1、M2 安全基座及当前接通范围的开发/隔离验收完成**，见[M2 最终验收](validation/M2_ACCEPTANCE.md)。M3-01/03 仅补齐最小依赖；完整 M3/M4、1.0 及最新源码的正式部署仍待完成。内部 CA 安装可选。
 
 ## 接手与实施
 
@@ -13,7 +13,7 @@
 | [PRD](product/PRD.md) | 业务需求与版本边界 |
 | [DESIGN](architecture/DESIGN.md) | 架构、安全、数据与部署设计 |
 | [CONTRACTS](api/CONTRACTS.md) | 公共契约、已核对的上游协议及兼容接口细化边界 |
-| [OpenAPI](api/openapi.yaml) · [冻结记录](api/M1_CONTRACT_REVIEW.md) | M1 的 38 操作加 M2 新增 1 个安全管理读接口；39 个操作中已实现 26 个，创作及安装业务继续关闭 |
+| [OpenAPI](api/openapi.yaml) · [冻结记录](api/M1_CONTRACT_REVIEW.md) | 当前 44 操作/37 路径，其中 35 实现；当前仅接通固定 Qwen 文生图和私有媒体，其他创作及安装业务仍待迁移 |
 | [TASKS](plan/TASKS.md) | 任务依赖、状态和完成标准 |
 | [迁移与验收矩阵](product/TOONFLOW_WEB_MIGRATION.md) | 路由分组与 A01–A18 定义 |
 | [插件市场范围](product/PLUGIN_MARKET.md) | 原市场及插件管理的现行范围 |
@@ -41,3 +41,5 @@
 - [测试夹具](validation/fixtures/README.md) · [原始证据](validation/evidence/) · [协议取证脚本](validation/scripts/README.md)
 - [文档维护与只读检查](scripts/README.md)
 - [历史报告归档](archive/README.md)：旧安装说明和阶段过程不进入默认阅读路径。
+
+- [M2 私有 MinIO 媒体存储接入](validation/M2_MINIO.md)：独立开发桶、V4、四个媒体操作与真实联调证据。

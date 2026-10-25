@@ -9,6 +9,473 @@ servers:
 security:
 - Session: []
 paths:
+  /api/v1/projects/{projectId}/media:
+    get:
+      operationId: listProjectMedia
+      summary: 读取当前项目 READY 媒体列表
+      description: 读取当前项目 READY 媒体列表
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: &id001
+      - PROJECT_MEMBER
+      x-acceptance:
+      - A03
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: &id002
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[A-Za-z0-9_-]+$
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 2048
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectMediaPage'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: uploadProjectMedia
+      summary: 流式上传媒体到私有对象桶
+      description: Content-Length 必填，0–512 MiB；禁止自动重试。仅显示文件名，不接收对象键/目录/URL。PENDING/FAILED 不出现在成员列表，DB/S3 不声称原子提交。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: true
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: filename
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      responses:
+        '201':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectMedia'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+  /api/v1/projects/{projectId}/media/{mediaId}/content:
+    get:
+      operationId: downloadProjectMedia
+      summary: 重新授权后下载媒体原字节
+      description: 不重定向到对象存储，不发预签名 URL；每次重新检查项目成员，单 Range。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: mediaId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: Range
+        in: header
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '206':
+          description: 单 Range，Content-Range 与 Content-Length 对应原对象
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '416':
+          description: '无效范围，Content-Range: bytes */长度'
+  /api/v1/projects/{projectId}/media/{mediaId}:
+    delete:
+      operationId: deleteProjectMedia
+      summary: 删除当前项目媒体
+      description: 失败保留 DELETING，可用相同 ID 重试；禁止覆盖原对象。归档项目禁止写入。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A03
+      - A06
+      - A17
+      x-requirements:
+      - FR-02
+      - FR-04
+      x-audit-required: true
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: mediaId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/auth/csrf:
     get:
       operationId: getCsrf
@@ -233,7 +700,7 @@ paths:
       tags:
       - auth
       x-contract-status: frozen
-      x-roles: &id001
+      x-roles: &id003
       - AUTHENTICATED
       x-acceptance:
       - A01
@@ -328,7 +795,7 @@ paths:
       tags:
       - auth
       x-contract-status: frozen
-      x-roles: *id001
+      x-roles: *id003
       x-acceptance:
       - A01
       x-requirements:
@@ -424,7 +891,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: &id002
+      x-roles: &id004
       - ADMIN
       x-acceptance:
       - A01
@@ -532,7 +999,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A01
       x-requirements:
@@ -638,7 +1105,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A01
       x-requirements:
@@ -649,11 +1116,7 @@ paths:
       - name: userId
         in: path
         required: true
-        schema: &id003
-          type: string
-          minLength: 1
-          maxLength: 128
-          pattern: ^[A-Za-z0-9_-]+$
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -752,7 +1215,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id001
+      x-roles: *id003
       x-acceptance:
       - A02
       - A17
@@ -861,7 +1324,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A02
       - A17
@@ -984,7 +1447,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -1070,7 +1533,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A02
       x-requirements:
@@ -1081,7 +1544,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -1180,7 +1643,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A02
       x-requirements:
@@ -1191,7 +1654,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -1291,7 +1754,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A02
       x-requirements:
@@ -1302,7 +1765,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -1401,7 +1864,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A02
       x-requirements:
@@ -1412,11 +1875,11 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: userId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -1505,7 +1968,7 @@ paths:
       tags:
       - models
       x-contract-status: frozen
-      x-roles: *id001
+      x-roles: *id003
       x-acceptance:
       - A07
       - A08
@@ -1610,7 +2073,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       x-requirements:
@@ -1712,7 +2175,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       x-requirements:
@@ -1806,7 +2269,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       x-requirements:
@@ -1908,7 +2371,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       x-requirements:
@@ -1919,7 +2382,7 @@ paths:
       - name: providerId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -2014,7 +2477,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       x-requirements:
@@ -2116,7 +2579,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A13
       x-requirements:
@@ -2221,7 +2684,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A13
       x-requirements:
@@ -2329,7 +2792,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A13
       x-requirements:
@@ -2340,7 +2803,7 @@ paths:
       - name: clientId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -2429,7 +2892,7 @@ paths:
       tags:
       - preferences
       x-contract-status: frozen
-      x-roles: *id001
+      x-roles: *id003
       x-acceptance:
       - A11
       - A14
@@ -2524,7 +2987,7 @@ paths:
       tags:
       - preferences
       x-contract-status: frozen
-      x-roles: *id001
+      x-roles: *id003
       x-acceptance:
       - A11
       - A14
@@ -2628,7 +3091,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A12
       x-requirements:
@@ -2734,7 +3197,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A12
       x-requirements:
@@ -2768,7 +3231,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  collected: &id004
+                  collected: &id005
                     type: boolean
                 required:
                 - collected
@@ -2840,7 +3303,7 @@ paths:
               type: object
               additionalProperties: false
               properties:
-                pluginId: *id003
+                pluginId: *id002
               required:
               - pluginId
   /api/v1/admin/plugin-market/secret:
@@ -2851,7 +3314,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       - A12
@@ -2955,7 +3418,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       - A12
@@ -2985,7 +3448,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  configured: *id004
+                  configured: *id005
                 required:
                 - configured
         '400':
@@ -3056,7 +3519,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A12
       x-requirements:
@@ -3158,7 +3621,7 @@ paths:
       tags:
       - admin
       x-contract-status: frozen
-      x-roles: *id002
+      x-roles: *id004
       x-acceptance:
       - A11
       - A12
@@ -3262,8 +3725,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: &id005
-      - PROJECT_MEMBER
+      x-roles: *id001
       x-acceptance:
       - A16
       - A18
@@ -3273,16 +3735,16 @@ paths:
       - FR-08
       - FR-11
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: runId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -3369,7 +3831,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A16
       - A18
@@ -3379,16 +3841,16 @@ paths:
       - FR-08
       - FR-11
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: runId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -3482,7 +3944,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A08
       - A16
@@ -3493,12 +3955,12 @@ paths:
       - FR-08
       - FR-11
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -3527,7 +3989,7 @@ paths:
                 type: string
               description: 规范化关联 ID
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 运行 ID，用于查询及显式取消
           content:
             application/json:
@@ -3601,7 +4063,7 @@ paths:
                 $ref: '#/components/schemas/Run'
           headers:
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 原运行 ID
             Location:
               schema:
@@ -3613,6 +4075,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MediaGenerate'
+      x-implementation-scope: Qwen qwenImage21Text / image / 1K / 1:1 only; other providers and specs pending M3
   /api/v1/projects/{projectId}/creative/workspaces/files/read:
     get:
       operationId: readFile
@@ -3621,7 +4084,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A03
       - A04
@@ -3639,7 +4102,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -3654,7 +4117,7 @@ paths:
       - name: snapshot
         in: query
         required: false
-        schema: *id004
+        schema: *id005
       - name: maxBytes
         in: query
         required: false
@@ -3759,7 +4222,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A03
       - A04
@@ -3776,7 +4239,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -3803,7 +4266,7 @@ paths:
       - name: exclusive
         in: query
         required: false
-        schema: *id004
+        schema: *id005
       - name: encoding
         in: query
         required: false
@@ -3901,7 +4364,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A07
       - A18
@@ -3916,7 +4379,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -4017,7 +4480,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A09
       - A16
@@ -4033,7 +4496,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -4062,7 +4525,7 @@ paths:
                 type: string
               description: 规范化关联 ID
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 服务端运行 ID；与上游 runId 分开
           content:
             application/x-ndjson:
@@ -4138,7 +4601,7 @@ paths:
                 $ref: '#/components/schemas/Run'
           headers:
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 原运行 ID
             Location:
               schema:
@@ -4158,7 +4621,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A09
       - A16
@@ -4174,7 +4637,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -4203,7 +4666,7 @@ paths:
                 type: string
               description: 规范化关联 ID
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 服务端运行 ID；与上游 runId 分开
           content:
             application/x-ndjson:
@@ -4279,7 +4742,7 @@ paths:
                 $ref: '#/components/schemas/Run'
           headers:
             X-Run-Id:
-              schema: *id003
+              schema: *id002
               description: 原运行 ID
             Location:
               schema:
@@ -4299,7 +4762,7 @@ paths:
       tags:
       - projects
       x-contract-status: frozen
-      x-roles: *id005
+      x-roles: *id001
       x-acceptance:
       - A10
       - A18
@@ -4314,7 +4777,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        schema: *id003
+        schema: *id002
       - name: X-Request-Id
         in: header
         required: false
@@ -4485,7 +4948,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
+        id: *id002
         username: &id006
           type: string
           minLength: 1
@@ -4561,7 +5024,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
+        id: *id002
         name: *id006
         status:
           type: string
@@ -4594,15 +5057,15 @@ components:
       type: object
       additionalProperties: false
       properties:
-        userId: *id003
+        userId: *id002
       required:
       - userId
     Member:
       type: object
       additionalProperties: false
       properties:
-        userId: *id003
-        projectId: *id003
+        userId: *id002
+        projectId: *id002
       required:
       - userId
       - projectId
@@ -4621,8 +5084,8 @@ components:
       type: object
       additionalProperties: false
       properties:
-        providerId: *id003
-        configured: *id004
+        providerId: *id002
+        configured: *id005
         updatedAt:
           oneOf:
           - &id008
@@ -4637,7 +5100,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        providerId: *id003
+        providerId: *id002
         modelId: *id006
         label: *id006
         capabilities:
@@ -4650,7 +5113,7 @@ components:
             - video
             - audio
             - agent
-        enabled: *id004
+        enabled: *id005
         options:
           type: object
           description: 获批模型的公开规格；不得含端点、密钥或服务器目录。
@@ -4665,9 +5128,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        providerId: *id003
+        providerId: *id002
         modelId: *id006
-        enabled: *id004
+        enabled: *id005
       required:
       - providerId
       - modelId
@@ -4676,9 +5139,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        providerId: *id003
+        providerId: *id002
         modelId: *id006
-        enabled: *id004
+        enabled: *id005
       required:
       - providerId
       - modelId
@@ -4695,7 +5158,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProviderStatus'
-        marketConfigured: *id004
+        marketConfigured: *id005
         models:
           type: array
           items:
@@ -4711,7 +5174,7 @@ components:
       additionalProperties: false
       properties:
         name: *id006
-        projectId: *id003
+        projectId: *id002
         mcpTools:
           type: array
           items: *id006
@@ -4727,9 +5190,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
+        id: *id002
         name: *id006
-        projectId: *id003
+        projectId: *id002
         mcpTools:
           type: array
           items: *id006
@@ -4753,7 +5216,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
+        id: *id002
         token:
           type: string
           readOnly: true
@@ -4798,7 +5261,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
+        id: *id002
         type:
           type: string
           enum:
@@ -4819,8 +5282,8 @@ components:
           type: string
         fileName:
           type: string
-        isCollected: *id004
-        installable: *id004
+        isCollected: *id005
+        installable: *id005
         manifest:
           oneOf:
           - $ref: '#/components/schemas/PluginManifest'
@@ -4876,10 +5339,10 @@ components:
       type: object
       additionalProperties: false
       properties:
-        pluginId: *id003
+        pluginId: *id002
         manifest:
           $ref: '#/components/schemas/PluginManifest'
-        force: *id004
+        force: *id005
       required:
       - pluginId
       - manifest
@@ -4903,9 +5366,9 @@ components:
         description:
           type: string
         version: *id006
-        enabled: *id004
-        canManage: *id004
-        canConfigure: *id004
+        enabled: *id005
+        canManage: *id005
+        canConfigure: *id005
         configRules:
           type: array
           items:
@@ -4934,8 +5397,8 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id003
-        projectId: *id003
+        id: *id002
+        projectId: *id002
         kind:
           type: string
           enum:
@@ -4954,7 +5417,7 @@ components:
           - FAILED
           - CANCELLED
           - LOST
-        capacityHeld: *id004
+        capacityHeld: *id005
         createdAt: *id008
         endedAt:
           oneOf:
@@ -5006,6 +5469,31 @@ components:
       - text
       - encoding
       - revision
+    ProjectMedia:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id002
+        projectId: *id002
+        filename:
+          type: string
+          minLength: 1
+          maxLength: 255
+        byteSize:
+          type: integer
+          minimum: 0
+          maximum: 536870912
+        sha256:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        createdAt: *id008
+      required:
+      - id
+      - projectId
+      - filename
+      - byteSize
+      - sha256
+      - createdAt
     UserPage:
       type: object
       additionalProperties: false
@@ -5066,12 +5554,27 @@ components:
       required:
       - items
       - nextCursor
+    ProjectMediaPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectMedia'
+        nextCursor:
+          oneOf:
+          - type: string
+          - *id007
+      required:
+      - items
+      - nextCursor
     MediaGenerate:
       oneOf:
       - type: object
         additionalProperties: false
         properties:
-          providerId: *id003
+          providerId: *id002
           modelId: &id009
             type: string
             minLength: 1
@@ -5115,7 +5618,7 @@ components:
       - type: object
         additionalProperties: false
         properties:
-          providerId: *id003
+          providerId: *id002
           modelId: *id009
           prompt: *id010
           outputDirectory: *id011
@@ -5142,7 +5645,7 @@ components:
             type: number
             exclusiveMinimum: 0
             maximum: 3600
-          generateAudio: *id004
+          generateAudio: *id005
           mode:
             oneOf:
             - type: string
@@ -5166,7 +5669,7 @@ components:
       - type: object
         additionalProperties: false
         properties:
-          providerId: *id003
+          providerId: *id002
           modelId: *id009
           prompt: *id010
           outputDirectory: *id011
@@ -5399,7 +5902,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        providerId: *id003
+        providerId: *id002
         modelId: *id006
         context:
           $ref: '#/components/schemas/TextContext'
@@ -5454,7 +5957,7 @@ components:
         prompt:
           type: string
           maxLength: 100000
-        providerId: *id003
+        providerId: *id002
         modelId: *id006
         attachments:
           type: array

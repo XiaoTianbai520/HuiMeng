@@ -1,0 +1,21 @@
+{
+  "runs": [
+    {
+      "runId": "22a8f367-8aa0-4104-ad06-fd6194766c13",
+      "httpStatus": 200,
+      "state": "FAILED",
+      "capacityHeld": false
+    },
+    {
+      "runId": "40614417-be48-4eb5-801e-4ae175937452",
+      "httpStatus": 200,
+      "state": "FAILED",
+      "capacityHeld": false
+    }
+  ],
+  "fixedCauses": [
+    "restore reviewed Qwen 2.1 VAE",
+    "normalize Windows result subfolder separators within exact project boundary"
+  ],
+  "notClaimedSuccessful": true
+}

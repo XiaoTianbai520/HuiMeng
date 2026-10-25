@@ -4,6 +4,7 @@ import cn.huimeng.common.exception.ApiException;
 import cn.huimeng.common.io.*;
 import cn.huimeng.dto.resp.*;
 import cn.huimeng.service.ProjectFileService;
+import cn.huimeng.service.ProjectMediaService;
 import cn.huimeng.service.ProjectService;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,9 +20,11 @@ public class ProjectFileServiceImpl implements ProjectFileService {
   private static final long MAX_SNAPSHOT = 8L * 1024 * 1024;
   private static final long MAX_DOWNLOAD = 512L * 1024 * 1024;
   private final ProjectService projects;
+  private final ProjectMediaService media;
 
-  public ProjectFileServiceImpl(ProjectService projects) {
+  public ProjectFileServiceImpl(ProjectService projects, ProjectMediaService media) {
     this.projects = projects;
+    this.media = media;
   }
 
   private SecureFileReader.OpenFile open(
@@ -54,6 +57,10 @@ public class ProjectFileServiceImpl implements ProjectFileService {
   @Override
   public SnapshotResultRespDTO snapshot(
       String projectId, String path, Long maxBytes, String range) {
+    if (path != null && path.startsWith(".huimeng-media/")) {
+      projects.requireMember(projectId, false);
+      throw new ApiException(415, "UNSUPPORTED_MEDIA_TYPE", "媒体不提供文本快照");
+    }
     if (range != null) throw ApiException.invalid();
     try (var file = open(projectId, path, maxBytes, MAX_SNAPSHOT)) {
       byte[] bytes = file.readAllBytes();
@@ -97,6 +104,14 @@ public class ProjectFileServiceImpl implements ProjectFileService {
 
   @Override
   public FileDownload download(String projectId, String path, Long maxBytes, String range) {
+    if (path != null && path.startsWith(".huimeng-media/")) {
+      projects.requireMember(projectId, false);
+      var matcher =
+          java.util.regex.Pattern.compile("^\\.huimeng-media/([a-f0-9-]{36})\\.png$").matcher(path);
+      if (!matcher.matches()) throw new ApiException(400, "PATH_NOT_ALLOWED", "媒体路径无效");
+      if (maxBytes != null) throw ApiException.invalid();
+      return media.download(projectId, matcher.group(1), range);
+    }
     var file = open(projectId, path, maxBytes, MAX_DOWNLOAD);
     try {
       var requested = ByteRange.parse(range, file.size());

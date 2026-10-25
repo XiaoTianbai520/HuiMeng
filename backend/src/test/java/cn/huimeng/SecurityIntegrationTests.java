@@ -1,15 +1,19 @@
 package cn.huimeng;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import cn.huimeng.common.exception.*;
+import cn.huimeng.common.storage.*;
 import cn.huimeng.dto.req.CreateUserReqDTO;
 import cn.huimeng.dto.req.IssueExternalClientReqDTO;
 import cn.huimeng.security.*;
 import cn.huimeng.service.*;
 import com.fasterxml.jackson.databind.*;
+import java.io.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
@@ -55,6 +59,12 @@ class SecurityIntegrationTests {
   @Autowired SecretBox secrets;
   @Autowired InternalIdentityService internalIdentity;
   @Autowired ModelAuthorizationService modelAuthorization;
+  @Autowired ProjectMediaService projectMedia;
+  @Autowired MediaGenerationService generation;
+  @Autowired cn.huimeng.dao.mapper.GenerationRunMapper generationRuns;
+  @org.springframework.boot.test.mock.mockito.MockBean cn.huimeng.common.io.ComfyImageClient comfy;
+  @org.springframework.boot.test.mock.mockito.MockBean ObjectStorage objectStorage;
+  final Map<String, byte[]> mediaObjects = new HashMap<>();
   MockHttpSession admin;
   String adminId;
 
@@ -63,6 +73,7 @@ class SecurityIntegrationTests {
     for (String table :
         List.of(
             "audit_events",
+            "project_media",
             "generation_runs",
             "external_grants",
             "external_clients",
@@ -76,11 +87,554 @@ class SecurityIntegrationTests {
     users.bootstrap("admin", PASSWORD);
     adminId = jdbc.queryForObject("SELECT id FROM users WHERE username='admin'", String.class);
     admin = login("admin", PASSWORD);
+    when(comfy.history(anyString()))
+        .thenReturn(json.readTree("{\"status\":{\"status_str\":\"success\",\"completed\":true}}"));
+    when(comfy.output(anyString(), anyString(), any()))
+        .thenReturn(new byte[] {(byte) 137, 80, 78, 71, 13, 10, 26, 10, 1});
+    when(comfy.cancel(anyString())).thenReturn(true);
+    when(comfy.active(anyString())).thenReturn(false);
+    mediaObjects.clear();
+    doAnswer(
+            call -> {
+              String key = call.getArgument(0);
+              byte[] bytes = ((InputStream) call.getArgument(1)).readAllBytes();
+              mediaObjects.put(key, bytes);
+              return null;
+            })
+        .when(objectStorage)
+        .put(anyString(), any(InputStream.class), anyLong());
+    when(objectStorage.head(anyString()))
+        .thenAnswer(
+            call -> {
+              byte[] bytes = mediaObjects.get(call.getArgument(0));
+              if (bytes == null) throw S3ObjectStorage.unavailable();
+              return new ObjectStorage.StoredObject(bytes.length, "synthetic-etag");
+            });
+    when(objectStorage.get(anyString(), anyString(), nullable(String.class)))
+        .thenAnswer(
+            call -> {
+              byte[] bytes = mediaObjects.get(call.getArgument(0));
+              String range = call.getArgument(2);
+              if (range != null) {
+                String[] ends = range.substring(6).split("-");
+                bytes =
+                    Arrays.copyOfRange(
+                        bytes, Integer.parseInt(ends[0]), Integer.parseInt(ends[1]) + 1);
+              }
+              return new ByteArrayInputStream(bytes);
+            });
+    doAnswer(
+            call -> {
+              mediaObjects.remove(call.getArgument(0));
+              return null;
+            })
+        .when(objectStorage)
+        .delete(anyString());
   }
 
   @AfterEach
   void clear() {
     SecurityContextHolder.clearContext();
+  }
+
+  Map<String, Object> imageInput() {
+    return Map.of(
+        "providerId",
+        "qwenImage21Local",
+        "modelId",
+        "qwenImage21Text",
+        "mediaType",
+        "image",
+        "prompt",
+        "synthetic mug",
+        "size",
+        "1K",
+        "ratio",
+        "1:1");
+  }
+
+  void approveImage() {
+    jdbc.update(
+        "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'");
+  }
+
+  String imagePath(String project) {
+    return "/api/v1/projects/" + project + "/creative/ai/media/generate";
+  }
+
+  void awaitReleased(String project) throws Exception {
+    for (int i = 0; i < 100; i++) {
+      if (generationRuns.held(project) == 0) return;
+      Thread.sleep(50);
+    }
+    fail("Generation capacity was not released");
+  }
+
+  @Test
+  void mediaGenerationChecksMembershipApprovalAndInputBeforeCallingExecutor() throws Exception {
+    String project = createProject("generate-gates");
+    mvc.perform(
+            write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, imageInput()))
+        .andExpect(status().isForbidden());
+    member(project, adminId);
+    mvc.perform(
+            write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, imageInput()))
+        .andExpect(status().isForbidden());
+    approveImage();
+    var input = new HashMap<>(imageInput());
+    input.put("directory", "/private");
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, input))
+        .andExpect(status().isBadRequest());
+    input = new HashMap<>(imageInput());
+    input.put("size", "2K");
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, input))
+        .andExpect(status().isBadRequest());
+    mvc.perform(write(post(imagePath(project)), admin, imageInput()))
+        .andExpect(status().isBadRequest());
+    verify(comfy, never()).submit(anyString(), anyString(), anyString());
+    assertThat(generationRuns.held(project)).isZero();
+  }
+
+  @Test
+  void unavailableExecutorIsRejectedWithoutConsumingProjectCapacity() throws Exception {
+    String project = createProject("generate-offline");
+    member(project, adminId);
+    approveImage();
+    doThrow(cn.huimeng.common.io.ComfyImageClient.unavailable()).when(comfy).checkReady();
+    mvc.perform(
+            write(
+                post(imagePath(project)).header("Idempotency-Key", "offline"), admin, imageInput()))
+        .andExpect(status().isServiceUnavailable());
+    assertThat(generationRuns.held(project)).isZero();
+    verify(comfy, never()).submit(anyString(), anyString(), anyString());
+  }
+
+  @Test
+  void approvedGenerationPersistsProjectMediaAndDeduplicatesRetries() throws Exception {
+    String project = createProject("generate-success");
+    member(project, adminId);
+    approveImage();
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "same"),
+                    admin,
+                    imageInput()))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    var result = mvc.perform(asyncDispatch(initial)).andExpect(status().isOk()).andReturn();
+    String text = result.getResponse().getContentAsString();
+    JsonNode response = json.readTree(text);
+    assertThat(response.path("code").asInt()).isEqualTo(200);
+    String path = response.path("data").get(0).path("path").asText();
+    mvc.perform(
+            get("/api/v1/projects/" + project + "/creative/workspaces/files/read")
+                .param("path", path)
+                .session(admin))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes(new byte[] {(byte) 137, 80, 78, 71, 13, 10, 26, 10, 1}));
+    mvc.perform(get("/api/v1/projects/" + project + "/runs/" + run).session(admin))
+        .andExpect(jsonPath("$.state").value("SUCCEEDED"))
+        .andExpect(jsonPath("$.capacityHeld").value(false));
+    mvc.perform(
+            write(post(imagePath(project)).header("Idempotency-Key", "same"), admin, imageInput()))
+        .andExpect(status().isAccepted())
+        .andExpect(jsonPath("$.id").value(run));
+    var changed = new HashMap<>(imageInput());
+    changed.put("prompt", "different");
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "same"), admin, changed))
+        .andExpect(status().isConflict());
+    verify(comfy, times(1)).submit(eq(project), eq(run), anyString());
+  }
+
+  @Test
+  void generationSixthSlotIsRejectedAndAnotherProjectHasItsOwnCapacity() throws Exception {
+    String full = createProject("generate-full"), other = createProject("generate-other");
+    member(full, adminId);
+    member(other, adminId);
+    approveImage();
+    for (int i = 0; i < 5; i++)
+      generationRuns.insert(
+          full, UUID.randomUUID().toString(), adminId, "seed-" + i, "synthetic-hash");
+    mvc.perform(
+            write(post(imagePath(full)).header("Idempotency-Key", "sixth"), admin, imageInput()))
+        .andExpect(status().isTooManyRequests());
+    verify(comfy, never()).submit(eq(full), anyString(), anyString());
+    var request =
+        mvc.perform(
+                write(
+                    post(imagePath(other)).header("Idempotency-Key", "other"), admin, imageInput()))
+            .andReturn();
+    mvc.perform(asyncDispatch(request)).andExpect(status().isOk());
+    assertThat(generationRuns.held(full)).isEqualTo(5);
+    assertThat(generationRuns.held(other)).isZero();
+  }
+
+  @Test
+  void generationCancellationOnlyStopsOwnedRunAfterExecutorConfirmation() throws Exception {
+    String project = createProject("generate-cancel");
+    member(project, adminId);
+    approveImage();
+    when(comfy.history(anyString())).thenReturn(null);
+    when(comfy.active(anyString())).thenReturn(true);
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "cancel"),
+                    admin,
+                    imageInput()))
+            .andReturn();
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    mvc.perform(
+            write(
+                post("/api/v1/projects/" + project + "/runs/" + run + "/cancel"), admin, Map.of()))
+        .andExpect(status().isAccepted());
+    verify(comfy, timeout(2500).atLeastOnce()).cancel(eq(run));
+    assertThat(generationRuns.held(project)).isEqualTo(1);
+    when(comfy.active(anyString())).thenReturn(false);
+    mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());
+    assertThat(generationRuns.find(project, run).state()).isEqualTo("CANCELLED");
+    assertThat(generationRuns.held(project)).isZero();
+    assertThat(mediaObjects).isEmpty();
+    createUser("run-outsider");
+    mvc.perform(
+            get("/api/v1/projects/" + project + "/runs/" + run)
+                .session(login("run-outsider", PASSWORD)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void generationUnknownRemoteStateRetainsSlotUntilConfirmedTerminal() throws Exception {
+    String project = createProject("generate-lost");
+    member(project, adminId);
+    approveImage();
+    when(comfy.history(anyString())).thenReturn(null);
+    doThrow(cn.huimeng.common.io.ComfyImageClient.unavailable())
+        .when(comfy)
+        .submit(anyString(), anyString(), anyString());
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "lost"),
+                    admin,
+                    imageInput()))
+            .andReturn();
+    mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    assertThat(generationRuns.find(project, run).state()).isEqualTo("LOST");
+    assertThat(generationRuns.held(project)).isEqualTo(1);
+    when(comfy.history(anyString()))
+        .thenReturn(json.readTree("{\"status\":{\"status_str\":\"error\",\"completed\":false}}"));
+    ((cn.huimeng.service.impl.MediaGenerationServiceImpl) generation).reconcileLost();
+    assertThat(generationRuns.find(project, run).state()).isEqualTo("LOST");
+    assertThat(generationRuns.held(project)).isZero();
+  }
+
+  @Test
+  void generationRevokedMembershipBeforePublicationDoesNotPersistResult() throws Exception {
+    String project = createProject("generate-revoke");
+    member(project, adminId);
+    approveImage();
+    when(comfy.output(eq(project), anyString(), any()))
+        .thenAnswer(
+            call -> {
+              jdbc.update(
+                  "DELETE FROM project_members WHERE project_id=? AND user_id=?", project, adminId);
+              return new byte[] {1};
+            });
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "revoke"),
+                    admin,
+                    imageInput()))
+            .andReturn();
+    mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());
+    awaitReleased(project);
+    assertThat(mediaObjects).isEmpty();
+  }
+
+  @Test
+  void sixConcurrentRequestsAtomicallyAdmitOnlyFiveAndCancellationReleasesThem() throws Exception {
+    String project = createProject("generate-concurrent");
+    member(project, adminId);
+    approveImage();
+    when(comfy.history(anyString())).thenReturn(null);
+    var callers = java.util.concurrent.Executors.newFixedThreadPool(6);
+    var gate = new java.util.concurrent.CountDownLatch(1);
+    try {
+      var futures = new ArrayList<java.util.concurrent.Future<String>>();
+      for (int i = 0; i < 6; i++) {
+        final String key = "concurrent-" + i;
+        futures.add(
+            callers.submit(
+                () -> {
+                  gate.await();
+                  actAdmin();
+                  try {
+                    return generation
+                        .generate(
+                            project,
+                            new cn.huimeng.dto.req.GenerateImageReqDTO(
+                                "qwenImage21Local",
+                                "qwenImage21Text",
+                                "image",
+                                "synthetic",
+                                "1K",
+                                "1:1"),
+                            key,
+                            "concurrency")
+                        .run()
+                        .id();
+                  } catch (ApiException ex) {
+                    if (ex.status == 429) return "REJECTED";
+                    throw ex;
+                  } finally {
+                    SecurityContextHolder.clearContext();
+                  }
+                }));
+      }
+      gate.countDown();
+      var values = new ArrayList<String>();
+      for (var future : futures) values.add(future.get(15, java.util.concurrent.TimeUnit.SECONDS));
+      assertThat(values.stream().filter("REJECTED"::equals).count()).isEqualTo(1);
+      assertThat(generationRuns.held(project)).isEqualTo(5);
+    } finally {
+      actAdmin();
+      for (String id :
+          jdbc.queryForList(
+              "SELECT id FROM generation_runs WHERE project_id=?", String.class, project))
+        generation.cancel(project, id);
+      awaitReleased(project);
+      callers.shutdownNow();
+      SecurityContextHolder.clearContext();
+    }
+  }
+
+  MockHttpServletRequestBuilder mediaUpload(String project, String name, byte[] content)
+      throws Exception {
+    return write(
+            post("/api/v1/projects/" + project + "/media").param("filename", name), admin, Map.of())
+        .contentType("application/octet-stream")
+        .content(content);
+  }
+
+  JsonNode uploadedMedia(String project) throws Exception {
+    return body(
+        mvc.perform(mediaUpload(project, "素材.png", "0123456789".getBytes()))
+            .andExpect(status().isCreated())
+            .andReturn());
+  }
+
+  @Test
+  void membershipRemovedDuringUploadPreventsPublicationAndCompensatesObject() throws Exception {
+    String project = createProject("media-revoke-mid-upload");
+    member(project, adminId);
+    doAnswer(
+            call -> {
+              mediaObjects.put(
+                  call.getArgument(0), ((InputStream) call.getArgument(1)).readAllBytes());
+              jdbc.update(
+                  "DELETE FROM project_members WHERE project_id=? AND user_id=?", project, adminId);
+              return null;
+            })
+        .when(objectStorage)
+        .put(anyString(), any(), anyLong());
+    mvc.perform(mediaUpload(project, "safe.bin", new byte[] {1, 2}))
+        .andExpect(status().isForbidden());
+    assertThat(mediaObjects).isEmpty();
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT state FROM project_media WHERE project_id=?", String.class, project))
+        .isEqualTo("FAILED");
+  }
+
+  @Test
+  void uploadLengthMismatchAndMissingLengthNeverPublishReadyMedia() throws Exception {
+    String project = createProject("media-short-upload");
+    member(project, adminId);
+    actAdmin();
+    assertThatThrownBy(
+            () ->
+                projectMedia.upload(
+                    project, "short.bin", 10, new ByteArrayInputStream(new byte[] {1}), "short"))
+        .isInstanceOfSatisfying(ApiException.class, ex -> assertThat(ex.status).isEqualTo(400));
+    assertThatThrownBy(
+            () ->
+                projectMedia.upload(
+                    project, "missing.bin", -1, InputStream.nullInputStream(), "missing"))
+        .isInstanceOfSatisfying(ApiException.class, ex -> assertThat(ex.status).isEqualTo(400));
+    assertThat(mediaObjects).isEmpty();
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM project_media WHERE project_id=? AND state='READY'",
+                Integer.class,
+                project))
+        .isZero();
+  }
+
+  @Test
+  void mediaAuditFailureRollsBackReadyStateAndRemovesUploadedObject() throws Exception {
+    String project = createProject("media-audit-rollback");
+    member(project, adminId);
+    actAdmin();
+    // request_id NOT NULL forces the audit insert to fail after the READY update.
+    assertThatThrownBy(
+            () ->
+                projectMedia.upload(
+                    project, "audit.bin", 1, new ByteArrayInputStream(new byte[] {1}), null))
+        .isInstanceOfSatisfying(ApiException.class, ex -> assertThat(ex.status).isEqualTo(503));
+    assertThat(mediaObjects).isEmpty();
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT state FROM project_media WHERE project_id=?", String.class, project))
+        .isEqualTo("FAILED");
+  }
+
+  @Test
+  void objectMediaRoundTripIsPrivateScopedHasDigestAndSingleRange() throws Exception {
+    String project = createProject("media-roundtrip");
+    member(project, adminId);
+    JsonNode value = uploadedMedia(project);
+    assertThat(value.toString()).doesNotContain("objectKey", "bucket", "endpoint", "access-key");
+    assertThat(value.path("sha256").asText())
+        .isEqualTo("84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882");
+    String path = "/api/v1/projects/" + project + "/media/" + value.path("id").asText();
+    mvc.perform(get(path + "/content").session(admin))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes("0123456789".getBytes()))
+        .andExpect(header().string("Content-Length", "10"));
+    mvc.perform(get(path + "/content").header("Range", "bytes=2-4").session(admin))
+        .andExpect(status().isPartialContent())
+        .andExpect(content().bytes("234".getBytes()))
+        .andExpect(header().string("Content-Range", "bytes 2-4/10"));
+    mvc.perform(get(path + "/content").header("Range", "bytes=30-").session(admin))
+        .andExpect(status().isRequestedRangeNotSatisfiable())
+        .andExpect(header().string("Content-Range", "bytes */10"));
+    mvc.perform(get("/api/v1/projects/" + project + "/media").session(admin))
+        .andExpect(jsonPath("$.items.length()").value(1));
+    mvc.perform(write(delete(path), admin, Map.of())).andExpect(status().isNoContent());
+    mvc.perform(get(path + "/content").session(admin)).andExpect(status().isNotFound());
+    assertThat(mediaObjects).isEmpty();
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM audit_events WHERE action IN ('MEDIA_UPLOAD','MEDIA_DELETE')",
+                Integer.class))
+        .isEqualTo(2);
+  }
+
+  @Test
+  void objectMediaRequiresMembershipEvenForAdminAndFreshlyChecksRemoval() throws Exception {
+    String own = createProject("media-own"), other = createProject("media-other");
+    mvc.perform(mediaUpload(own, "safe.bin", new byte[] {1})).andExpect(status().isForbidden());
+    verify(objectStorage, never()).put(anyString(), any(), anyLong());
+    member(own, adminId);
+    member(other, adminId);
+    String id = uploadedMedia(own).path("id").asText();
+    mvc.perform(get("/api/v1/projects/" + other + "/media/" + id + "/content").session(admin))
+        .andExpect(status().isNotFound());
+    jdbc.update("DELETE FROM project_members WHERE project_id=? AND user_id=?", own, adminId);
+    mvc.perform(get("/api/v1/projects/" + own + "/media/" + id + "/content").session(admin))
+        .andExpect(status().isForbidden());
+    mvc.perform(get("/api/v1/projects/" + own + "/media").session(admin))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void objectMediaRejectsCsrfPathsExtraFieldsOversizeAndArchivedWrites() throws Exception {
+    String project = createProject("media-input");
+    member(project, adminId);
+    mvc.perform(
+            write(post("/api/v1/projects/" + project + "/media"), admin, Map.of())
+                .contentType("application/octet-stream")
+                .content(new byte[] {1}))
+        .andExpect(status().isBadRequest());
+    mvc.perform(
+            write(
+                post("/api/v1/projects/" + project + "/media").param("filename", "safe.bin"),
+                admin,
+                Map.of()))
+        .andExpect(status().isUnsupportedMediaType());
+    mvc.perform(
+            post("/api/v1/projects/" + project + "/media")
+                .param("filename", "safe.bin")
+                .session(admin)
+                .header("Origin", ORIGIN)
+                .contentType("application/octet-stream")
+                .content(new byte[] {1}))
+        .andExpect(status().isForbidden());
+    for (String name : List.of("../secret", "C:\\private", "a%2fb", "..", "a\nb"))
+      mvc.perform(mediaUpload(project, name, new byte[] {1})).andExpect(status().isBadRequest());
+    mvc.perform(mediaUpload(project, "safe.bin", new byte[] {1}).param("objectKey", "other"))
+        .andExpect(status().isBadRequest());
+    actAdmin();
+    assertThatThrownBy(
+            () ->
+                projectMedia.upload(
+                    project, "safe.bin", 536870913L, InputStream.nullInputStream(), "oversize"))
+        .isInstanceOfSatisfying(ApiException.class, ex -> assertThat(ex.status).isEqualTo(413));
+    SecurityContextHolder.clearContext();
+    jdbc.update("UPDATE projects SET status='ARCHIVED' WHERE id=?", project);
+    mvc.perform(mediaUpload(project, "safe.bin", new byte[] {1})).andExpect(status().isForbidden());
+    verify(objectStorage, never()).put(anyString(), any(), anyLong());
+  }
+
+  @Test
+  void objectMediaFailedUploadIsHiddenAndDeleteFailureCanBeRetried() throws Exception {
+    String project = createProject("media-failure");
+    member(project, adminId);
+    doThrow(S3ObjectStorage.unavailable()).when(objectStorage).put(anyString(), any(), anyLong());
+    mvc.perform(mediaUpload(project, "failed.bin", new byte[] {1}))
+        .andExpect(status().isServiceUnavailable());
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT state FROM project_media WHERE project_id=?", String.class, project))
+        .isEqualTo("FAILED");
+    mvc.perform(get("/api/v1/projects/" + project + "/media").session(admin))
+        .andExpect(jsonPath("$.items.length()").value(0));
+    String id =
+        jdbc.queryForObject(
+            "SELECT id FROM project_media WHERE project_id=?", String.class, project);
+    String path = "/api/v1/projects/" + project + "/media/" + id;
+    doThrow(S3ObjectStorage.unavailable()).when(objectStorage).delete(anyString());
+    mvc.perform(write(delete(path), admin, Map.of())).andExpect(status().isServiceUnavailable());
+    assertThat(jdbc.queryForObject("SELECT state FROM project_media WHERE id=?", String.class, id))
+        .isEqualTo("DELETING");
+    doNothing().when(objectStorage).delete(anyString());
+    mvc.perform(write(delete(path), admin, Map.of())).andExpect(status().isNoContent());
+  }
+
+  @Test
+  void objectMediaZeroByteAndPagingAreSupportedWithoutLocalFileHandles() throws Exception {
+    String project = createProject("media-empty");
+    member(project, adminId);
+    String id =
+        body(mvc.perform(mediaUpload(project, "empty.bin", new byte[0]))
+                .andExpect(status().isCreated())
+                .andReturn())
+            .path("id")
+            .asText();
+    mvc.perform(get("/api/v1/projects/" + project + "/media/" + id + "/content").session(admin))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes(new byte[0]));
+    uploadedMedia(project);
+    JsonNode page =
+        body(
+            mvc.perform(get("/api/v1/projects/" + project + "/media?limit=1").session(admin))
+                .andExpect(status().isOk())
+                .andReturn());
+    mvc.perform(
+            get("/api/v1/projects/" + project + "/media")
+                .param("cursor", page.path("nextCursor").asText())
+                .session(admin))
+        .andExpect(jsonPath("$.items.length()").value(1));
   }
 
   @Test
@@ -121,6 +675,49 @@ class SecurityIntegrationTests {
     createUser("export-member");
     mvc.perform(get("/api/v1/admin/configuration/export").session(login("export-member", PASSWORD)))
         .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void modelCatalogOnlyPublishesReviewedSpecsForAdminAndMember() throws Exception {
+    String original =
+        jdbc.queryForObject(
+            "SELECT options_json FROM approved_models WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'",
+            String.class);
+    try {
+      jdbc.update(
+          "UPDATE approved_models SET enabled=TRUE,options_json=? WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'",
+          "{\"resolutions\":[\"1K\",\"2K\",\"synthetic-secret-url\",{\"apiKey\":\"synthetic-options-secret\"}],\"defaultResolution\":\"1K\",\"endpoint\":\"synthetic-private-endpoint\",\"apiKey\":\"synthetic-options-secret\"}");
+      for (String path : List.of("/api/v1/admin/models", "/api/v1/models")) {
+        String result =
+            mvc.perform(get(path).session(admin))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        assertThat(result)
+            .contains("1K", "2K")
+            .doesNotContain(
+                "apiKey",
+                "endpoint",
+                "synthetic-options-secret",
+                "synthetic-secret-url",
+                "synthetic-private-endpoint");
+      }
+      createUser("spec-member");
+      String result =
+          mvc.perform(get("/api/v1/models").session(login("spec-member", PASSWORD)))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse()
+              .getContentAsString();
+      assertThat(result)
+          .contains("1K", "2K")
+          .doesNotContain("apiKey", "endpoint", "synthetic-options-secret");
+    } finally {
+      jdbc.update(
+          "UPDATE approved_models SET options_json=? WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'",
+          original);
+    }
   }
 
   @Test
@@ -412,7 +1009,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(3);
+        .isEqualTo(4);
     assertThatThrownBy(
             () ->
                 jdbc.update(

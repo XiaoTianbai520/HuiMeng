@@ -19,7 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
     properties = {
       "server.port=18086",
       "server.address=127.0.0.1",
-      "huimeng.public-origin=http://localhost:5187"
+      "huimeng.public-origin=http://localhost:5187",
+      "spring.config.import=optional:file:.runtime/object-storage/application.properties"
     })
 @ActiveProfiles("test")
 public class BrowserAcceptanceHarness {
@@ -40,6 +41,13 @@ public class BrowserAcceptanceHarness {
 
   @Autowired UserService users;
   @Autowired ProjectService projects;
+  @Autowired ProjectMediaService media;
+  @Autowired ConfigurationService configuration;
+  @Autowired org.springframework.jdbc.core.JdbcTemplate jdbc;
+  @Autowired cn.huimeng.common.storage.ObjectStorage storage;
+
+  @org.springframework.beans.factory.annotation.Value("${huimeng.storage.enabled:false}")
+  boolean storageEnabled;
 
   @Test
   void serveSyntheticBrowserAcceptanceUntilStopped() throws Exception {
@@ -56,12 +64,38 @@ public class BrowserAcceptanceHarness {
     var project = projects.create(new CreateProjectReqDTO("浏览器验收项目"), "browser-harness");
     projects.create(new CreateProjectReqDTO("仅管理员管理的项目"), "browser-harness");
     projects.addMember(project.id(), employee.id(), "browser-harness");
+    if (storageEnabled) {
+      projects.addMember(project.id(), admin.id(), "browser-harness");
+      byte[] image =
+          Files.readAllBytes(
+              Path.of("../docs/validation/fixtures/sample-project/assets/M0-sample.png"));
+      media.upload(
+          project.id(),
+          "验收素材.png",
+          image.length,
+          new java.io.ByteArrayInputStream(image),
+          "browser-harness");
+      configuration.approve(
+          new ModelApprovalReqDTO("qwenImage21Local", "qwenImage21Text", true), "browser-harness");
+    }
     SecurityContextHolder.clearContext();
     Path stop = Path.of("target/browser-harness.stop");
     Files.deleteIfExists(stop);
     Files.writeString(
         Path.of("target/browser-harness.ready"), "Synthetic real Spring/H2 browser fixture ready");
-    long deadline = Instant.now().getEpochSecond() + 1800;
-    while (!Files.exists(stop) && Instant.now().getEpochSecond() < deadline) Thread.sleep(1000);
+    long deadline = Instant.now().getEpochSecond() + 7200;
+    try {
+      while (!Files.exists(stop) && Instant.now().getEpochSecond() < deadline) Thread.sleep(1000);
+    } finally {
+      if (storageEnabled) {
+        if (jdbc.queryForObject(
+                "SELECT COUNT(*) FROM generation_runs WHERE capacity_held=TRUE", Integer.class)
+            > 0)
+          throw new IllegalStateException(
+              "Wait for owned validation runs before stopping this fixture");
+        for (String key : jdbc.queryForList("SELECT object_key FROM project_media", String.class))
+          storage.delete(key);
+      }
+    }
   }
 }

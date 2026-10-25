@@ -83,6 +83,7 @@
               </span>
             </button>
             <div class="projectActions">
+              <el-button text :disabled="creating || opening" :aria-label="`项目文件 ${project.name}`" @click="router.push(`/projects/${encodeURIComponent(project.directory)}/files`)">文件与素材</el-button>
               <el-button v-if="isAdmin" text :icon="IconEdit" :disabled="creating || opening" :aria-label="`重命名项目 ${project.name}`" title="重命名" @click="renameProject(project)" />
               <el-button text type="danger" :icon="IconFolderMinus" :disabled="creating || opening" :aria-label="`移除项目 ${project.name}`" title="从列表移除，不删除文件" @click="workspaceStore.removeProject(project.directory)" />
             </div>

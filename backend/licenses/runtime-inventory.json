@@ -1,0 +1,1225 @@
+{
+  "artifacts": [
+    {
+      "runtimeJar": "HikariCP-6.3.3.jar",
+      "sha256": "709f378c05756280939ce50fc1b1f1a53bb8e1899dc1b249f21f12703640b48b",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "annotations-2.57.2.jar",
+      "sha256": "02ab0b20d94f305286043a8b72993ab0defe8791f7a0fec214c9d2e0e6732726",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/annotations-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/annotations-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "apache5-client-2.57.2.jar",
+      "sha256": "16624803e178bc5e87d0d6a4170164f5335bdfd43c64b3a133f06a3e1e36298e",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/apache5-client-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/apache5-client-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "arns-2.57.2.jar",
+      "sha256": "bf6eb803464a33e8d4afb77daeec2c8f4a40cc95d71eafce93dc72a956da95ce",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/arns-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/arns-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "auth-2.57.2.jar",
+      "sha256": "11e6e0d8ebfeb7dc312a6363e7a9840a768c88f11852d47505eefb894f979dbe",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/auth-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/auth-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "aws-core-2.57.2.jar",
+      "sha256": "3dff04ca76931dce91ab02f3934034b64a2cbdb7a66c3a881d1b63b1c9d9267e",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/aws-core-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/aws-core-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "aws-query-protocol-2.57.2.jar",
+      "sha256": "be06f4e5c506ed9791f57373cf38fafaf1b0535970e727df496fa65148b820d7",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/aws-query-protocol-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/aws-query-protocol-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "aws-xml-protocol-2.57.2.jar",
+      "sha256": "f5114d1b55fae5453a6c63edc08d71cacc225b9b5e3ee4f70beb817deda69d06",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/aws-xml-protocol-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/aws-xml-protocol-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "checksums-2.57.2.jar",
+      "sha256": "b04e113c243c737f06fad1b64c33a589daec6b809df280f3042256868a188269",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/checksums-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/checksums-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "checksums-spi-2.57.2.jar",
+      "sha256": "f005086be1e819a8c334c6d2c5a4f53e9a7dd458778a87d5162c6519f2fc8ffd",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/checksums-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/checksums-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "classmate-1.7.1.jar",
+      "sha256": "cc3299e5df4fc24180e69477c890d07d38db79dd2decc0ef20e74a986897c0a1",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/classmate-1.7.1.jar/META-INF__LICENSE",
+          "sha256": "7d8d549eb31995fe67822c860acc7ac3dd958a03a5a71aef4069033e7df72d94"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/classmate-1.7.1.jar/META-INF__NOTICE",
+          "sha256": "1a8c67aaade274bc7bf06a7044571ab280d59fe3686941b6499b2176a072ea6d"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "crt-core-2.57.2.jar",
+      "sha256": "016a557d2f65a0794442f8301fabdeb7ec892fa6db724f3e445e9c45dd68ce34",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/crt-core-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/crt-core-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "endpoints-spi-2.57.2.jar",
+      "sha256": "9af7985b97b81d133f94a373225235979bf9bc5d972675573ca7cc142ed76a65",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/endpoints-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/endpoints-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "eventstream-2.57.2.jar",
+      "sha256": "56d853b708c53c3f315280e750cfc79814fe5d1cce1edd155509641a41d88752",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/eventstream-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/eventstream-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "flyway-core-11.15.0.jar",
+      "sha256": "7a1b59be00bb76dbb5d2a05d694f2c90c6782fa9a2bb12b880e59c20a61a2620",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/flyway-core-11.15.0.jar/META-INF__LICENSE.txt",
+          "sha256": "73332bc915a16b4ca4bb913d4a55b66e865c6ef0d5feb289063248556fab48b8"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "flyway-mysql-11.15.0.jar",
+      "sha256": "1dd7290c045562ab8f20e11a481568a186d267b480b1a7266f921cecf857719c",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "hibernate-validator-8.0.3.Final.jar",
+      "sha256": "2ad24670fd08e21d3f43d3105d5326bd5ef6b01e819c5cd103823866b954517e",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "http-auth-2.57.2.jar",
+      "sha256": "de5c3b6e193538f7a3a6438e532f64da730ff0eb703739ce85ac56b1f2ec3958",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/http-auth-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/http-auth-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "http-auth-aws-2.57.2.jar",
+      "sha256": "4cfc9b6afb7c44aee03d117aa595d49acf288b517eefff287266f2aae79eb73f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/http-auth-aws-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/http-auth-aws-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "http-auth-aws-eventstream-2.57.2.jar",
+      "sha256": "60bd499d4a31c20be40f429f492545e826d2ebe4bd35cc7991a1ee52cfd908fe",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/http-auth-aws-eventstream-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/http-auth-aws-eventstream-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "http-auth-spi-2.57.2.jar",
+      "sha256": "8d74751a926d4f57df3b57437428987f710b11d0ce4aa9198f4128bd4d12c168",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/http-auth-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/http-auth-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "http-client-spi-2.57.2.jar",
+      "sha256": "6b93297236444dc63fced6e0b8e580af3fffa1e8405a4d37ec8fe7e6d836f3dd",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/http-client-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/http-client-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "httpclient5-5.5.1.jar",
+      "sha256": "2e1e5d0ccf60d078bac6e3b029076afa8433a6a6d93eefdb46bce50720b58b7d",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/httpclient5-5.5.1.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/httpclient5-5.5.1.jar/META-INF__NOTICE",
+          "sha256": "4ad1973880c25e0c41fdf45fb47fbb3cb935b322982cca535d4dbf8062cc5a47"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "httpcore5-5.3.6.jar",
+      "sha256": "8fb4528d3e970aca440523a1bd698a389fa710ecfea4c5c6096698b86d1669ce",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/httpcore5-5.3.6.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/httpcore5-5.3.6.jar/META-INF__NOTICE",
+          "sha256": "94a71d64ef74b0ca85db2d5e538118a4265ff8eed2f978eda58d2cfa5d88a310"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "httpcore5-h2-5.3.6.jar",
+      "sha256": "479a8aa5e6f99030a2a446a68d1f62320698932746f811fc656a1ea06b94184d",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/httpcore5-h2-5.3.6.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/httpcore5-h2-5.3.6.jar/META-INF__NOTICE",
+          "sha256": "9c9b2e926919e38adf222b3191267806a742ce1adcd1e13dc91d11014b85bd57"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "identity-spi-2.57.2.jar",
+      "sha256": "817c74a4b753a4b40ed354bfc8026a3fe1dda7238b35a29b0d13aabd5f30a8e6",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/identity-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/identity-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-annotations-2.19.2.jar",
+      "sha256": "e516743a316dcf83c572ffc9cb6e8c5e8c134880c8c5155b02f7b34e9c5dc3cf",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-annotations-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-annotations-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "612b14bc77c944ce229cbba0d14919162cfea8ed802cbf06a8e865e032d03201"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-core-2.19.2.jar",
+      "sha256": "aa77eaf29293a868c47372194f7c5287d77d9370b04ea25d3fffc1e4904b5880",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-core-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-core-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "0a0042db627fe915c6a1d9ef74927af5081446063e8888494be6718d692dd2b8"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-databind-2.19.2.jar",
+      "sha256": "0a1bd4e9b0d670e632d40ee8c625ad376233502f03c2f5889baea95d025b47a7",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-databind-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-databind-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "612b14bc77c944ce229cbba0d14919162cfea8ed802cbf06a8e865e032d03201"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-datatype-jdk8-2.19.2.jar",
+      "sha256": "6055fef10756e8bd1b0e8807aa1d881338c63ca95d59271e1da4922b9a17581e",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-datatype-jdk8-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "bc3d1a9b9fe02f5b9186447ca2896a63015e5e626eccfdda6a04bd7d71be3ce0"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-datatype-jdk8-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "7347397a0665f6898b32894a1869a514251abef7da7620902b0e57c5026cf1ed"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-datatype-jsr310-2.19.2.jar",
+      "sha256": "9709f43e0fa5625633ee66db6c078fb1e8c7ca02092696ba95ea785dbf0fa6a1",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-datatype-jsr310-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "66ea9c8987b1674aababbcc24f61c83ab4fb7baf3af1d701caf0a3aaea97fa92"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-datatype-jsr310-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "7347397a0665f6898b32894a1869a514251abef7da7620902b0e57c5026cf1ed"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jackson-module-parameter-names-2.19.2.jar",
+      "sha256": "5cafef98759b40a418631e91257930a5e30abc162d9a690c1e365dbbdacdfecb",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/jackson-module-parameter-names-2.19.2.jar/META-INF__LICENSE",
+          "sha256": "a09ba3adcfdcac2d7e31b89e8e7799cec96d7303dc82c0bb3d38d8a352d41d19"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/jackson-module-parameter-names-2.19.2.jar/META-INF__NOTICE",
+          "sha256": "7347397a0665f6898b32894a1869a514251abef7da7620902b0e57c5026cf1ed"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jakarta.annotation-api-2.1.1.jar",
+      "sha256": "5f65fdaf424eee2b55e1d882ba9bb376be93fb09b37b808be6e22e8851c909fe",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.md",
+          "path": "texts/jakarta.annotation-api-2.1.1.jar/META-INF__LICENSE.md",
+          "sha256": "6e1f002892b81cbe0647019b150c8a056efc1add565671a4f8af629b6cd2cc7b"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.md",
+          "path": "texts/jakarta.annotation-api-2.1.1.jar/META-INF__NOTICE.md",
+          "sha256": "3852834ebb4c2e04ecc18c9d099a05eab72cbd6edf35fb191390be6306019b4c"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jakarta.validation-api-3.0.2.jar",
+      "sha256": "291c25e6910cc6a7ebd96d4c6baebf6d7c37676c5482c2d96146e901b62c1fc9",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jboss-logging-3.6.1.Final.jar",
+      "sha256": "5e08a4b092dc85b337f0910a740571d8720cfa565fabd880a8caf94a657ca416",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "json-utils-2.57.2.jar",
+      "sha256": "e5418891aec7e77bf25d71a4d62145dbc10835eb40603b977ab05a973c4188b6",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/json-utils-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/json-utils-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "jul-to-slf4j-2.0.17.jar",
+      "sha256": "a7afcd23b9cfd1475e55c94f943b808c5922035e7e2c2a5c65a487a4106bc538",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/jul-to-slf4j-2.0.17.jar/META-INF__LICENSE.txt",
+          "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "log4j-api-2.24.3.jar",
+      "sha256": "5b4a0a0cd0e751ded431c162442bdbdd53328d1f8bb2bae5fc1bbeee0f66d80f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/log4j-api-2.24.3.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/log4j-api-2.24.3.jar/META-INF__NOTICE",
+          "sha256": "6d95ce9a738c31425a584ee91eb6d9b6fbe18e351fb206b9f79104bcf7d7bf15"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "log4j-to-slf4j-2.24.3.jar",
+      "sha256": "c7f2b0c612a4eb05b1587d1c880eb4cf5f4f53850676a8ede8da2b8fabb4f73f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/log4j-to-slf4j-2.24.3.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/log4j-to-slf4j-2.24.3.jar/META-INF__NOTICE",
+          "sha256": "a57ab7958eb6d37c460b0f64080c67ab184c4ffc97abdf06187168019c62b047"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "logback-classic-1.5.20.jar",
+      "sha256": "1228db99e1af602e191a2b142252d8aaf68129e643c19e7f92137ce5f7209ad3",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "logback-core-1.5.20.jar",
+      "sha256": "29fe095bb7b7f850907aec3fddeb40c8d399d85e5680e8d3533e3da5d9aae917",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "metrics-spi-2.57.2.jar",
+      "sha256": "8448512305b5fbf56f6a99b85038df6d140b83c76af49f3483887e37e389f51d",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/metrics-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/metrics-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "micrometer-commons-1.15.5.jar",
+      "sha256": "55fc55ec22f8e2965fa9a7c3521d4e5f1fc020bf236f919a12cbb68cafabf83f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/micrometer-commons-1.15.5.jar/META-INF__LICENSE",
+          "sha256": "62fb8a3a9621dc2388174caaabe9c2317b694bb9a1d46c98bcf5655b68f51be3"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/micrometer-commons-1.15.5.jar/META-INF__NOTICE",
+          "sha256": "df207ca1a2ea3794caf112d7c1f024c87b4ddfe91d3f243977ad1d3cd085d538"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "micrometer-observation-1.15.5.jar",
+      "sha256": "69fac03f20b5b6b4f90abcf463682e0134b21e27925b0e223f2c3a64ca04e0c3",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/micrometer-observation-1.15.5.jar/META-INF__LICENSE",
+          "sha256": "62fb8a3a9621dc2388174caaabe9c2317b694bb9a1d46c98bcf5655b68f51be3"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/micrometer-observation-1.15.5.jar/META-INF__NOTICE",
+          "sha256": "df207ca1a2ea3794caf112d7c1f024c87b4ddfe91d3f243977ad1d3cd085d538"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "mysql-connector-j-9.4.0.jar",
+      "sha256": "49ed93c8b2bea9cb0929b85a8a28837b191d0f8eac6919fdcef16e36e2cd53b3",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "LICENSE",
+          "path": "texts/mysql-connector-j-9.4.0.jar/LICENSE",
+          "sha256": "9e4fc787862832cab79b69256d67691eec923d9a23e8adf134bc0e559cefd563"
+        },
+        {
+          "sourceEntry": "com/mysql/cj/protocol/x/Notice.class",
+          "path": "texts/mysql-connector-j-9.4.0.jar/com__mysql__cj__protocol__x__Notice.class",
+          "sha256": "a9fa8d35a5272db7c773f9b3455d2b9bff9ea4827198f4fc1e53e78734e74420"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "profiles-2.57.2.jar",
+      "sha256": "e0469b6b5b864791c69045c1c71764fa9c1b64b493849f06bd0be626f1c18281",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/profiles-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/profiles-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "protocol-core-2.57.2.jar",
+      "sha256": "79c5c5d2a49b193344eb65d8a5a992f649c6cd134bef40baa1548a141981aa2b",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/protocol-core-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/protocol-core-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "reactive-streams-1.0.4.jar",
+      "sha256": "f75ca597789b3dac58f61857b9ac2e1034a68fa672db35055a8fb4509e325f28",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "regions-2.57.2.jar",
+      "sha256": "e60783f7db82bd2ef76fd5ca5f62abf1697eb199775433eec8a7caee453aa1df",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/regions-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/regions-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "retries-2.57.2.jar",
+      "sha256": "57d3b0c304cf266d5698d9a81277ab6d2a71997bf84f9aebb67f067fd356e8a9",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/retries-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/retries-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "retries-spi-2.57.2.jar",
+      "sha256": "463d7caab68ed66802c5f6e8995483e6603d68b30f0777848eea896d1bde44e4",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/retries-spi-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/retries-spi-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "s3-2.57.2.jar",
+      "sha256": "51a67bff088adced8321a3dbc997a634c2a5ebb077202b2a5b971b5901b71fcd",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/s3-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/s3-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "sdk-core-2.57.2.jar",
+      "sha256": "6d664079be4960115c990d44029a39fcbcd21a8fc7bb2f04646e87a591535152",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/sdk-core-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/sdk-core-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "slf4j-api-2.0.17.jar",
+      "sha256": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/slf4j-api-2.0.17.jar/META-INF__LICENSE.txt",
+          "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "snakeyaml-2.4.jar",
+      "sha256": "ef779af5d29a9dde8cc70ce0341f5c6f7735e23edff9685ceaa9d35359b7bb7f",
+      "embeddedLegalTexts": [],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-aop-6.2.12.jar",
+      "sha256": "befc1dc092de62dab3aae3c7a0e11f797c6060fffc2121e1fe8fb95c94272655",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-aop-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-aop-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-beans-6.2.12.jar",
+      "sha256": "26ab8ce28a42fe951b0a4ebaf8dbe97478effca833a7b2f51b45d6540fe7179f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-beans-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-beans-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-boot-3.5.7.jar",
+      "sha256": "fdb3611f0baaa3a55b59b69c420d3bffac45cfb8868aaec8d6ee64451fb68e08",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-boot-3.5.7.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/spring-boot-3.5.7.jar/META-INF__NOTICE.txt",
+          "sha256": "02ce9221870e15ec0b7442b7e5c5cf537173bd99109a786b9f320cb72c44bba5"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-boot-autoconfigure-3.5.7.jar",
+      "sha256": "0f078fa10ab1deaf41f1aeb0133c08661d06592e7e50c7bcaafa9ec0b62b8a19",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-boot-autoconfigure-3.5.7.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/spring-boot-autoconfigure-3.5.7.jar/META-INF__NOTICE.txt",
+          "sha256": "02ce9221870e15ec0b7442b7e5c5cf537173bd99109a786b9f320cb72c44bba5"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-boot-jarmode-tools-3.5.7.jar",
+      "sha256": "0b2e56b36aae7bd49d0523adea1999ffbf3a95122398b6e6f24ef1ea4d49e70e",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-boot-jarmode-tools-3.5.7.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/spring-boot-jarmode-tools-3.5.7.jar/META-INF__NOTICE.txt",
+          "sha256": "02ce9221870e15ec0b7442b7e5c5cf537173bd99109a786b9f320cb72c44bba5"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-context-6.2.12.jar",
+      "sha256": "0439fb9cb09a8b8d04c4e37dcba592e489b690882c56940aa33b58cf3f0b69cb",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-context-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-context-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-core-6.2.12.jar",
+      "sha256": "bddc5a5be2d94191ebcfbadc672fa4d81e6ab51e38a9eaf41d5d035cb17548d4",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-core-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-core-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-expression-6.2.12.jar",
+      "sha256": "62e68f4f18b8c5580180de6ef8578b1d1fc170ed993b5a7d59b946b63e5ebefd",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-expression-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-expression-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-jcl-6.2.12.jar",
+      "sha256": "8244ee2a515291f41ed4f99aa89b4cd41fc13961c21d7c271a381210f6075fed",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-jcl-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-jcl-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-jdbc-6.2.12.jar",
+      "sha256": "13bed660294c76846a460daac301b2b16919e708c28d172b03300bf36567f9de",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-jdbc-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-jdbc-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-security-config-6.5.6.jar",
+      "sha256": "a8d789c4658dc8511af585980fb236fde774c26dcde3d4ce5d225094ac9798a5",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-security-config-6.5.6.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-security-core-6.5.6.jar",
+      "sha256": "de6e1c73c13e06ece38264519d87f34fde5d4568ab765b9fd595dfe79108f5d2",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-security-core-6.5.6.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-security-crypto-6.5.6.jar",
+      "sha256": "66acbc7cecc52a9cfece602aa444b14a641205520446dbfd521d79af8ce5e7ec",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-security-crypto-6.5.6.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-security-web-6.5.6.jar",
+      "sha256": "6870ace2477eda87b6b92a0e8bab4eaffab40fe50b83d16e6980a2e203981a97",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/spring-security-web-6.5.6.jar/META-INF__LICENSE.txt",
+          "sha256": "7200000367e0e8b47822d563a5ddd2dd3a97cc05b32bd7dbcc7b4eeb92b76628"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-tx-6.2.12.jar",
+      "sha256": "cb4100d58122ab77b8d6a01ecb5852ade5d654a70887fd50a0e54d0071699295",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-tx-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-tx-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-web-6.2.12.jar",
+      "sha256": "caff724ebb7c423696e1d2c7690245fbbafe218695b3a4479faa668af0400e6d",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-web-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-web-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "spring-webmvc-6.2.12.jar",
+      "sha256": "530d3b2fd82c97ca4418bb4b200d7626f042cc2c78c705bdd5176dcc580c84e1",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/license.txt",
+          "path": "texts/spring-webmvc-6.2.12.jar/META-INF__license.txt",
+          "sha256": "6f71f3cb3a0127486ebd9b1a0f9ef6d31bc351e71c684908da42eb1d4266b78f"
+        },
+        {
+          "sourceEntry": "META-INF/notice.txt",
+          "path": "texts/spring-webmvc-6.2.12.jar/META-INF__notice.txt",
+          "sha256": "370060331f8dd15f9d167f19c681c7eef45b2fefa16cb76eff6464ffb98f276f"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "third-party-jackson-core-2.57.2.jar",
+      "sha256": "92fcac3058fc078f641ca7afb793318a885d6ae10e6b6e9a51323056b4c96106",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/third-party-jackson-core-2.57.2.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/third-party-jackson-core-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/third-party-jackson-core-2.57.2.jar/META-INF__NOTICE",
+          "sha256": "e6aef1c0f4cf5b0f802c16b31fce309b3c3737450b93c40d6291bf6540aae3d1"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/third-party-jackson-core-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "tomcat-embed-core-10.1.48.jar",
+      "sha256": "a9137d3526a05ce2f9359cfc7b108240bd3d01ff323b37986e5bd43208ff0f56",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/tomcat-embed-core-10.1.48.jar/META-INF__LICENSE",
+          "sha256": "b15780b4c93aef25618df419dcde6cc9646f497c29fc615c1b67b6fa3bb26a65"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/tomcat-embed-core-10.1.48.jar/META-INF__NOTICE",
+          "sha256": "ada380c3e7e0798b5fe07f2b4442f8bd000d349cfa455f7e786855e80b16efee"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "tomcat-embed-el-10.1.48.jar",
+      "sha256": "e7bd9eca5dd6b5e97bef17eb94266a4f87a58a9ebc5fc85800d017003c9b0f2f",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/tomcat-embed-el-10.1.48.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/tomcat-embed-el-10.1.48.jar/META-INF__NOTICE",
+          "sha256": "f30098739cbd10c7d579d875682cfab1184b65280a231091b36fd7df660605db"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "tomcat-embed-websocket-10.1.48.jar",
+      "sha256": "d445d0ba335bcf06e6d02257a07c68d1c3c471d10c68330360af51db9ee47faa",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE",
+          "path": "texts/tomcat-embed-websocket-10.1.48.jar/META-INF__LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE",
+          "path": "texts/tomcat-embed-websocket-10.1.48.jar/META-INF__NOTICE",
+          "sha256": "f30098739cbd10c7d579d875682cfab1184b65280a231091b36fd7df660605db"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "url-connection-client-2.57.2.jar",
+      "sha256": "e2da5c0cd817b76d6444689a477c87d859446552c69e4a30664eb912e18aa72d",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/url-connection-client-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/url-connection-client-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "utils-2.57.2.jar",
+      "sha256": "8b927a6598d46cfeded33320467debabd10ae31e86844f677beaaa8f18d5a566",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/utils-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/utils-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    },
+    {
+      "runtimeJar": "utils-lite-2.57.2.jar",
+      "sha256": "85fb497000fc4a0fd33e0ebfca997539be669e2f2d63327c86471363af4d98c8",
+      "embeddedLegalTexts": [
+        {
+          "sourceEntry": "META-INF/LICENSE.txt",
+          "path": "texts/utils-lite-2.57.2.jar/META-INF__LICENSE.txt",
+          "sha256": "14c6a5fbdbd6b87244abeb494712b9922d43f53afb658a42014c66da8e0c4403"
+        },
+        {
+          "sourceEntry": "META-INF/NOTICE.txt",
+          "path": "texts/utils-lite-2.57.2.jar/META-INF__NOTICE.txt",
+          "sha256": "21290a3b8fa10c01b1a68704cb824d6e0aaedaec4d4373ddeeaf6173c864e340"
+        }
+      ],
+      "textReviewPending": true
+    }
+  ],
+  "releaseApproval": false,
+  "securityReview": "M4 pending"
+}

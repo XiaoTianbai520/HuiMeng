@@ -41,11 +41,18 @@ public class GlobalExceptionHandler {
     org.springframework.web.bind.MethodArgumentNotValidException.class,
     org.springframework.http.converter.HttpMessageNotReadableException.class,
     org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
+    org.springframework.web.bind.MissingServletRequestParameterException.class,
+    org.springframework.web.bind.MissingRequestHeaderException.class,
     org.springframework.dao.DataIntegrityViolationException.class,
     IllegalArgumentException.class
   })
   ResponseEntity<ErrorRespDTO> invalid(Exception ex, HttpServletRequest request) {
     return ResponseEntity.badRequest().body(body(request, "INVALID_ARGUMENT", "请求参数无效"));
+  }
+
+  @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+  ResponseEntity<ErrorRespDTO> unsupportedMedia(Exception ex, HttpServletRequest request) {
+    return ResponseEntity.status(415).body(body(request, "UNSUPPORTED_MEDIA_TYPE", "请求媒体类型不受支持"));
   }
 
   @ExceptionHandler(Exception.class)

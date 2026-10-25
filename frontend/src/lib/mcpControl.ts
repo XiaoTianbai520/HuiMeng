@@ -58,8 +58,8 @@ export function useMcpControl() {
     for (const controller of calls.values()) controller.abort(new Error("工作区已切换，本次调用已停止"));
   }, { flush: "sync" });
 
-  watch(() => [sessionUser.value?.id, workspaceStore.project?.directory], (scope, _previous, onCleanup) => {
-    if (!scope[0] || !scope[1]) return;
+  watch(() => [sessionUser.value?.id, workspaceStore.project?.directory, router.currentRoute.value.path === "/workspace" && !!workspaceControl.value], (scope, _previous, onCleanup) => {
+    if (!scope[0] || !scope[1] || !scope[2]) return;
     const lifetime = new AbortController();
     let reconnect: ReturnType<typeof setTimeout> | undefined;
     onCleanup(() => {

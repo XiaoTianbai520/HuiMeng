@@ -1,0 +1,1 @@
+{"passed":true,"credentialValuesRecorded":false,"checks":["dedicatedPutAndHead","dedicatedGet","singleRange","immutableCreateCondition","bucketEnumerationDenied","outsidePrefixDenied","otherBucketDenied","anonymousReadDenied","exactProbeObjectRemoved"]}

@@ -39,3 +39,14 @@ python docs/validation/scripts/m0Market.py plugins --runtime <临时实例清单
 必须先准备固定提交的独立实例和 `huimeng-m0-market-*` 临时目录，清单包含 `runtime/data/project/port`，路径位于此临时根下。实例 settings 中配置测试市场 Key；catalog 阶段会临时切换一个官方技能的收藏，查询实际状态后恢复，再下载到临时目录；不自动重试收藏切换。plugins 阶段会安装、更新、配置和卸载合成工具，以及只在临时实例重装/导出/卸载选定官方文档技能。脚本拒绝未命名为临时实例的数据根，不能对业务实例使用。
 
 在线条目/版本会变化；脚本记录摘要比较，不将算法未明确的 fileHash 直接认定为 SHA-256。catalog 先于 plugins，下载条目保存在临时目录内。原已完成环境已清理，需重新准备，不能复用历史清单中的端口/PID。页面、分类扩展兼容和日常实例安装记录见 [M0-06 报告](../../archive/m0/M0_PLUGIN_MARKET.md)，不能把后端脚本当作所有页面测试的替代。
+
+## MinIO 正常应用联调
+
+仓库根执行 `python docs/validation/scripts/m2MinioDev.py`。需先按[后端脚本说明](../../../backend/scripts/README.md)准备受限开发配置、V4 和按表授权；脚本只起回环 18088 的自有进程，连接独立 huimeng_dev 和开发桶，以合成账号/项目验证并清理。普通文档检查和 Maven verify 不连接真实存储。结果及限制见[接入报告](../M2_MINIO.md)。
+
+
+## M2 最终浏览器夹具边界
+
+仓库根执行 `python docs/validation/scripts/m2AcceptanceBoundary.py` 前，须按[后端 README](../../../backend/README.md#m2-最终受控生成与重跑)显式开启独立 Spring/H2 浏览器夹具，完成真实页面上传和固定 Qwen 生成。脚本固定只访问回环 18086，以公开合成账号验证 32 项允许/拒绝，记录 PNG/摘要；末尾移除合成成员，便于浏览器检查清空状态。它不是正常 MySQL 应用测试，不得改端口/账号指向真实业务环境。
+
+模型会消耗本机 GPU，须先核对队列和现用模型；不启动 ComfyUI、不下载权重、不读取远程 Key。测试完主动 stop 夹具，由夹具删除自己在专用桶建立的对象并销毁 H2，停止临时 Vite。证据及实际范围见[M2 最终验收](../M2_ACCEPTANCE.md)。

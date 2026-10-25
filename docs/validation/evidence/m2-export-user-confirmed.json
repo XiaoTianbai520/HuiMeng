@@ -1,0 +1,60 @@
+{
+  "userConfirmedDownload": true,
+  "filename": "huimeng-configuration.json",
+  "sha256": "98dd21f19194541b96927d042408eb37e323013422bc7b067c9d872d0b51537d",
+  "safeSchemaVerified": true,
+  "content": {
+    "version": 1,
+    "exportedAt": "2026-10-25T07:58:23.096873900Z",
+    "providers": [
+      {
+        "providerId": "deepseek",
+        "configured": true,
+        "updatedAt": "2026-10-25T07:57:57.328520Z"
+      }
+    ],
+    "marketConfigured": false,
+    "models": [
+      {
+        "providerId": "deepseek",
+        "modelId": "deepseek-chat",
+        "enabled": false
+      },
+      {
+        "providerId": "h3Local3060",
+        "modelId": "h3Fl2v",
+        "enabled": false
+      },
+      {
+        "providerId": "h3Local3060",
+        "modelId": "h3I2v",
+        "enabled": false
+      },
+      {
+        "providerId": "h3Local3060",
+        "modelId": "h3L2v",
+        "enabled": false
+      },
+      {
+        "providerId": "h3Local3060",
+        "modelId": "h3R2v",
+        "enabled": false
+      },
+      {
+        "providerId": "h3Local3060",
+        "modelId": "h3T2v",
+        "enabled": false
+      },
+      {
+        "providerId": "qwenImage21Local",
+        "modelId": "qwenImage21Edit",
+        "enabled": false
+      },
+      {
+        "providerId": "qwenImage21Local",
+        "modelId": "qwenImage21Text",
+        "enabled": false
+      }
+    ]
+  }
+}

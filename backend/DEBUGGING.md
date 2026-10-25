@@ -103,6 +103,8 @@ bun run dev --port 5187 --strictPort
 
 ## 常用断点
 
+MinIO 媒体已接通当前工作机的 local 配置，原 main/工作目录/调试参数不变。可从 `ProjectMediaController` → `ProjectMediaServiceImpl` → `ProjectMediaMapper` / `S3ObjectStorage` 跟踪上传、授权、元数据、Range 和删除；请勿在日志或共享截图展开 S3Client、凭据 provider 或受限 Properties。原工作区文档的 Windows 503 与独立媒体 API 分别处理，详见[配置和接口](README.md#私有-minio-媒体存储2026-10-25-增补)。
+
 | 场景 | 推荐调用链 |
 | --- | --- |
 | 登录、会话轮换 | `IdentityController.login` → `SessionServiceImpl.login` → `UserServiceImpl.authenticate` → `UserMapper.findByUsername` |
@@ -125,3 +127,10 @@ $env:MAVEN_USER_HOME = Join-Path $PWD '.m2'
 ```
 
 `verify` 运行独立 H2 测试、检查分层约束、打包并检查格式；不启动长驻调试工具。需格式修正时单独执行 `spotless:apply`。编译器显式保留 source/lines/vars 和参数名，便于断点与局部变量查看。调试入口、H2 和合成身份均不进入生产 JAR。
+
+
+## 最小媒体生成断点
+
+正常 IDEA main/local 入口不变。项目文件页与 Qwen 1K/1:1 已接通，可从 `MediaGenerationController` → `MediaGenerationServiceImpl.generate` → `GenerationRunMapper.lockProject/countHeld/insert` 跟踪权限、幂等和五名额；后台 `execute` → `ComfyImageClient` → `ProjectMediaServiceImpl` 跟踪真实生成/落存储。使用源码实际方法定位断点，不展开密钥对象或打印请求提示词。模型批准和项目成员在入场及发布前均重新校验。
+
+ComfyUI 由用户手动启动，可选受限配置见[后端 README](README.md#m2-最终受控生成与重跑)。未启动会在占位前拒绝；未知状态 LOST 保留名额而不是误报完成，先核对上游运行状态。重跑工具和最新验证见[M2 最终验收](../docs/validation/M2_ACCEPTANCE.md)。

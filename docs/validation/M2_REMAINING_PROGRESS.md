@@ -1,5 +1,7 @@
 # M2 剩余项推进记录
 
+> 最新结论见[M2 最终验收](M2_ACCEPTANCE.md)：71 项后端、21 项前端、32 项真实接口检查及真实 Qwen/MinIO/文件页通过，独立 MySQL 五名额事务通过。M2 当前接通范围的开发/隔离验收完成；正式部署未更新，完整 M3/M4 和 1.0 未验收。以下保留前批次证据及采集时状态。
+
 2026-10-25。中文提交 [5f0fdeb](https://github.com/XiaoTianbai520/HuiMeng/commit/5f0fdeb1d0965d16ea2a36ae61eb5fe8343799c8) 已先推送 master，本轮从该基线继续 M2-03/04。用户选择本机 ComfyUI 并自行启动；项目保存 connect 策略，不自动启动、更新节点或下载权重。按 java-standards 沿用现有分层、JDBC、独立 DTO 和异常协议。
 
 ## 已实现及证据

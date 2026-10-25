@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-25",
+  "phase": "M2 media storage foundation",
+  "backendTests": {
+    "run": 55,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "frontendTests": {
+    "run": 21,
+    "assertions": 78,
+    "failures": 0
+  },
+  "frontendBuildPassed": true,
+  "frontendExistingLargeChunkWarning": true,
+  "openapi": {
+    "operations": 44,
+    "paths": 37,
+    "implemented": 32,
+    "all127SourceRoutesPublicDisabled": true
+  },
+  "minioBoundaryChecks": 9,
+  "normalApplicationChecksIncludingCleanup": 50,
+  "developmentMigrationVersions": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "productionMigrationVersions": [
+    "1",
+    "2",
+    "3"
+  ],
+  "readyTestMediaRemaining": 0,
+  "activeSyntheticAccountsRemaining": 0,
+  "activeSyntheticProjectsRemaining": 0,
+  "runtimeSchemaDDLGrants": 0,
+  "ownedValidationPortClosed": true,
+  "sourceAndOwnedLogCredentialExactMatchScanPassed": true,
+  "applicationJarSha256": "21cedc78c0912bc6843f05ea1303a0f10081b3e4c599fb3f66d88795e0bf4f5f",
+  "canonicalDeploymentChanged": false,
+  "fullM2BusinessAcceptance": false,
+  "m3CreativeBusinessAcceptance": false,
+  "credentialsIncluded": false
+}

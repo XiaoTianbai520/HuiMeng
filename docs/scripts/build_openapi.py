@@ -106,7 +106,11 @@ SCHEMAS = {
     'Snapshot': obj({'text': string(), 'encoding': string(enum=['utf-8', 'utf-8-bom', 'utf-16le', 'utf-16be']),
                       'revision': string(pattern='^[a-f0-9]{64}$')}, ['text', 'encoding', 'revision']),
 }
-for name in ['User', 'Project', 'Member', 'Client']:
+SCHEMAS['ProjectMedia'] = obj({'id': ID, 'projectId': ID,
+    'filename': string(minLength=1, maxLength=255), 'byteSize': {'type': 'integer', 'minimum': 0, 'maximum': 536870912},
+    'sha256': string(pattern='^[a-f0-9]{64}$'), 'createdAt': TIME},
+    ['id', 'projectId', 'filename', 'byteSize', 'sha256', 'createdAt'])
+for name in ['User', 'Project', 'Member', 'Client', 'ProjectMedia']:
     SCHEMAS[name + 'Page'] = obj({'items': arr(ref(name)), 'nextCursor': {'oneOf': [string(), NULL]}}, ['items', 'nextCursor'])
 for name in ['UpdateUser', 'ProjectUpdate']:
     SCHEMAS[name]['minProperties'] = 1
@@ -155,6 +159,25 @@ def main():
     admin = ['ADMIN']
     project = ['PROJECT_MEMBER']
     p = '/api/v1'
+    media_path = p + '/projects/{projectId}/media'
+    operation('get', media_path, 'listProjectMedia', '读取当前项目 READY 媒体列表', project,
+        ['A03', 'A06', 'A17'], response=ref('ProjectMediaPage'), pagination=True)
+    upload = operation('post', media_path, 'uploadProjectMedia', '流式上传媒体到私有对象桶', project,
+        ['A03', 'A06', 'A17'], response=ref('ProjectMedia'), status=201,
+        description='Content-Length 必填，0–512 MiB；禁止自动重试。仅显示文件名，不接收对象键/目录/URL。PENDING/FAILED 不出现在成员列表，DB/S3 不声称原子提交。')
+    upload['parameters'] += [param('filename', 'query', string(minLength=1, maxLength=255), True)]
+    upload['requestBody'] = {'required': True, 'content': {'application/octet-stream': {'schema': string(format='binary')}}}
+    upload['x-audit-required'] = True
+    download = operation('get', media_path + '/{mediaId}/content', 'downloadProjectMedia', '重新授权后下载媒体原字节', project,
+        ['A03', 'A06', 'A17'], description='不重定向到对象存储，不发预签名 URL；每次重新检查项目成员，单 Range。')
+    download['parameters'] += [param('Range', 'header', string())]
+    download['responses']['200']['content'] = {'application/octet-stream': {'schema': string(format='binary')}}
+    download['responses']['206'] = {'description': '单 Range，Content-Range 与 Content-Length 对应原对象',
+        'content': {'application/octet-stream': {'schema': string(format='binary')}}}
+    download['responses']['416'] = {'description': '无效范围，Content-Range: bytes */长度'}
+    delete = operation('delete', media_path + '/{mediaId}', 'deleteProjectMedia', '删除当前项目媒体', project,
+        ['A03', 'A06', 'A17'], status=204, description='失败保留 DELETING，可用相同 ID 重试；禁止覆盖原对象。归档项目禁止写入。')
+    delete['x-audit-required'] = True
     op = operation('get', p + '/auth/csrf', 'getCsrf', '取得预登录或当前会话 CSRF 令牌', ['ANONYMOUS'], ['A01'],
         response=obj({'token': string()}, ['token']), csrf=False,
         description='Cache-Control: no-store；建立预会话 Cookie。登录轮换会话及 CSRF，客户端登录成功后重新读取。')
@@ -230,6 +253,7 @@ def main():
     op = operation('post', creative + 'ai/media/generate', 'generateMedia', '媒体生成，JSON 前导空白保活', project,
         ['A08', 'A16', 'A18'], ref('MediaGenerate'), ref('MediaResult'),
         description='先占位再调用执行器。HTTP 200 仍须解析正文 code；仅 code=200 表示成功。X-Run-Id 标识运行。模型切换保留合法已选规格，缺省用模型推荐值；提交前显示有效规格，不强制将 2K 改成 1K。')
+    op['x-implementation-scope'] = 'Qwen qwenImage21Text / image / 1K / 1:1 only; other providers and specs pending M3'
     op['parameters'].append(param('Idempotency-Key', 'header', string(minLength=1, maxLength=128), True))
     op['responses']['200']['headers']['X-Run-Id'] = {'schema': ID, 'description': '运行 ID，用于查询及显式取消'}
     op['responses']['202'] = {'description': '同一幂等键的重试；只返回原运行，不重复执行或重放结果流',

@@ -1,6 +1,6 @@
 # 绘梦 1.0 接口与数据契约（CONTRACTS）
 
-> **状态：M1 冻结契约；M2 已实现 26 个平台操作，创作及安装业务尚未开放。** 本文区分“上游已核对行为”和“1.0 新约定”。M0 已按固定提交 [d2e94aca](https://github.com/HBAI-Ltd/Toonflow-app/commit/d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d) 完成源路由、主要成功流和基础请求取证。字段字典以 [OpenAPI](openapi.yaml) 与[冻结记录](M1_CONTRACT_REVIEW.md)为准；[127 条映射](route-map.json)中的 92 条兼容细项仍为 proposed，在对应 M3 批次继续细化。不能把契约或浏览器桩当作已实现的服务。
+> **状态：M1 冻结契约；当前 44 操作/37 路径中 35 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 92 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
 
 ## 1. 版本、域名与认证
 
@@ -49,6 +49,19 @@
 源码新增精确文件 read 实现及管理员 GET `/api/v1/admin/configuration/export`。后者返回 `ConfigurationExport`（版本、导出时间、供应商状态、市场配置布尔值、模型批准标识），写导出审计；不返回任意 options、密钥、密文、端点或目录。文件快照上限 8 MiB、原字节下载上限 512 MiB，单 Range/416；实际打开要求安全目录句柄，Windows 不支持时返回 503。完整 schema 由 OpenAPI 定义，当前 28/40 个操作有实现。源码实现与正式发布不同：本轮未更新正式部署，127 条源台账 publicEnabled 仍为 false。验证和剩余范围见[M2 推进记录](../validation/M2_REMAINING_PROGRESS.md)。
 
 ## 2. 新增平台 API
+
+### 2026-10-25 私有媒体对象 API 增补
+
+本批新增四个独立平台操作，精确字段见 OpenAPI `ProjectMedia/ProjectMediaPage`。不替换原 workspaces/files 的快照或修订契约，不改变原创作源路由发布开关。
+
+| 方法与路径 | 输入与成功响应 | 权限及限制 |
+| --- | --- | --- |
+| `POST /api/v1/projects/{projectId}/media?filename=...` | `application/octet-stream` 原字节；`201 ProjectMedia` | 成员、活动项目、CSRF/Origin；Content-Length 必填，0–512 MiB；禁止自动重试 |
+| `GET /api/v1/projects/{projectId}/media` | cursor/limit；`ProjectMediaPage` | 当前成员；只含 READY；每页 1–50 |
+| `GET /api/v1/projects/{projectId}/media/{mediaId}/content` | 原字节 attachment；单 Range 206/416 | 每次重新授权；媒体 ID 同时按项目查找；不重定向存储地址 |
+| `DELETE /api/v1/projects/{projectId}/media/{mediaId}` | `204` | 成员、活动项目、CSRF/Origin；DELETING 失败可重试；上传中 409 |
+
+ProjectMedia 仅含 id、projectId、filename、byteSize、sha256、createdAt；无桶、对象键、端点或凭据。文件名只用于显示，拒绝目录分隔、冒号、百分号、控制字符和点路径；不接收额外路径/URL/自报身份参数。缺少长度或无效输入 400、超限 413、存储失败 503，均使用既有错误码。失败记录不出现在成员列表；管理员受控核对残留状态，DB 与 S3 不声称原子提交。兼容页面接线仍属 M3。
 
 以下方法、字段是**1.0 设计**，以 M1 的 OpenAPI 为精确字段和响应依据。所有会话写接口（含登录）要求 `X-CSRF-Token` 并校验同源 Origin；由 `GET /api/v1/auth/csrf` 取得预登录/当前令牌，登录后轮换。会话 Cookie、分页、默认配置见[冻结记录](M1_CONTRACT_REVIEW.md#2-平台通用规则)。外部 Bearer 请求不使用浏览器会话 CSRF。
 
@@ -171,7 +184,7 @@
 
 ## 6. M2 实现状态
 
-[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：26 个账号、个人偏好、项目/成员、密钥/模型及外部凭证操作为 true，其余 13 个保持 false。这里只表示接口实现，不是关联 A 编号的全部业务验收；详细证据及待验收项见[M2 报告](../validation/M2_REPORT.md)。所有源创作路由 publicEnabled 仍为 false。
+[实现清单](../../backend/api-implementation.json)驱动 OpenAPI 的 x-implemented：当前 44 个操作中 35 个为 true（含安全导出、精确文件读取、四个媒体操作与三个生成/运行操作），其余 9 个保持 false。生成操作用 x-implementation-scope 标明仅 Qwen 文生图 1K/1:1；接口实现不代表关联 A 编号所有业务已验收，最新范围见[M2 验收](../validation/M2_ACCEPTANCE.md)。所有源创作路由 publicEnabled 仍为 false。
 
 MCP/A2A 的 M2 入口只执行凭证及能力拒绝，不运行 SDK 或上游；合法凭证的未迁移业务返回 503/EXECUTOR_UNAVAILABLE，可解析 JSON-RPC 保留 id，通知不伪造 id。此临时拒绝不是协议握手或业务实现，M3-06 再补原协议分派。登录成功严格使用 OpenAPI User DTO（含 status）；CONTRACTS §2.1 的精简示意不替代字段字典。
 
@@ -180,3 +193,12 @@ MCP/A2A 的 M2 入口只执行凭证及能力拒绝，不运行 SDK 或上游；
 新增 `GET /api/v1/admin/models`：ADMIN 会话只读，响应 `{items:Model[]}` 包含已登记但尚未批准的模型；不返回端点、密钥或目录。使用既有 approveModel 启停，成员 listModels 仍仅返回批准项。新增接口保持原 38 操作兼容，当前共 39 操作/33 路径，26 实现。新增读接口的 FR-09/A11、角色与 DTO 元数据已通过契约检查。
 
 既有 `GET/PUT /api/v1/preferences` 已实现，仅存当前会话账号的 ui/general/stores/documentExtensions。对象最多 32 KiB、深度最多 32；不接受跨账号 userId 或嵌套密钥/令牌/供应商管理字段。以上是实现约束，不放宽原业务安全边界。[验证证据](../validation/M2_UI_REPORT.md)。
+
+
+### 6.2 最小受控图片链
+
+POST `/api/v1/projects/{projectId}/creative/ai/media/generate` 要求成员会话、CSRF、已批准模型和 Idempotency-Key；只接受声明的提示词/模型/规格字段。当前接通 qwenImage21Local/qwenImage21Text、image、1K/1:1，其他规格拒绝 400，其他未接通模型拒绝 503；不接受客户端工作流、ComfyUI URL、文件路径或对象键。
+
+首次请求维持原 JSON 空白保活/业务终态协议，以 X-Run-Id 和 Location 标识运行；同一幂等键返回原 Run（202），不同请求摘要为 409。GET `/api/v1/projects/{projectId}/runs/{runId}`、POST 同路径加 `/cancel` 均要求仍有效的成员和原发起人，取消另需 CSRF。成功结果含受控媒体 ID 和虚拟相对路径，下载经项目授权；取消/LOST 等状态不伪装成功。完整字段继续以 OpenAPI 为准。
+
+`.huimeng-media/{mediaId}.png` 为项目 read 的虚拟对象引用，不支持 snapshot 文档语义。公开模型 options 只返回确认的 resolutions/defaultResolution，保留 2K 元数据；其他私有字段、端点与任意嵌套配置均不回显。批准或成员关系撤回后，旧客户端调用同样拒绝。

@@ -82,11 +82,23 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*",
                     "/api/v1/preferences",
                     "/api/v1/models",
+                    "/api/v1/projects/*/media",
+                    "/api/v1/projects/*/media/*/content",
+                    "/api/v1/projects/*/runs/*",
                     "/api/v1/projects/*/creative/workspaces/files/read")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/v1/preferences")
+                .authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/projects/*/media")
+                .authenticated()
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/projects/*/creative/ai/media/generate",
+                    "/api/v1/projects/*/runs/*/cancel")
+                .authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/projects/*/media/*")
                 .authenticated()
                 .requestMatchers(
                     HttpMethod.GET,

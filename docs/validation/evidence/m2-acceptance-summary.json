@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-25",
+  "scope": "M2 security foundation and connected development scope",
+  "passed": true,
+  "backendDefaultTests": 71,
+  "frontendTests": 21,
+  "frontendAssertions": 78,
+  "frontendBuildPassed": true,
+  "liveBoundaryChecks": 32,
+  "mysqlAdmission": {
+    "database": "huimeng_dev",
+    "isolation": "REPEATABLE-READ",
+    "admitted": 5,
+    "rejected": 1,
+    "realVendorCalls": false,
+    "capacityAfterCancellation": 0
+  },
+  "realModel": {
+    "provider": "qwenImage21Local",
+    "model": "qwenImage21Text",
+    "size": "1K",
+    "ratio": "1:1",
+    "state": "SUCCEEDED",
+    "resultSha256": "55b898f86f824e0067bf22ddbd5ee757fc1bd98e7f44831edcddb7ff02c06d02"
+  },
+  "userConfirmedConfigurationDownload": true,
+  "productionDeploymentChanged": false,
+  "fullM3Accepted": false,
+  "release1Accepted": false,
+  "cleanup": {
+    "browserHarnessExitedSuccessfully": true,
+    "ownedMinioObjectsDeletedByHarness": true,
+    "temporarySpringPortClosed": true,
+    "temporaryVitePortClosed": true,
+    "userComfyProcessManaged": false,
+    "comfy8188ListeningAtEnd": false,
+    "userIdeaProcessManaged": false,
+    "mysqlSyntheticAccountDisabled": true,
+    "mysqlSyntheticProjectArchived": true,
+    "mysqlModelApprovalRestored": true
+  },
+  "credentialsIncluded": false
+}
