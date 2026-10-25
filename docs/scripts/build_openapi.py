@@ -69,6 +69,10 @@ SCHEMAS = {
         'enabled': BOOL, 'options': {'type': 'object', 'description': '获批模型的公开规格；不得含端点、密钥或服务器目录。'}},
         ['providerId', 'modelId', 'label', 'capabilities', 'enabled', 'options']),
     'Approval': obj({'providerId': ID, 'modelId': NAME, 'enabled': BOOL}, ['providerId', 'modelId', 'enabled']),
+    'ExportedModel': obj({'providerId': ID, 'modelId': NAME, 'enabled': BOOL}, ['providerId', 'modelId', 'enabled']),
+    'ConfigurationExport': obj({'version': {'type': 'integer', 'const': 1}, 'exportedAt': TIME,
+        'providers': arr(ref('ProviderStatus')), 'marketConfigured': BOOL, 'models': arr(ref('ExportedModel'))},
+        ['version', 'exportedAt', 'providers', 'marketConfigured', 'models']),
     'ClientInput': obj({'name': NAME, 'projectId': ID, 'mcpTools': arr(NAME), 'a2aTeams': arr(NAME)},
                        ['name', 'projectId', 'mcpTools', 'a2aTeams']),
     'Client': obj({'id': ID, 'name': NAME, 'projectId': ID, 'mcpTools': arr(NAME), 'a2aTeams': arr(NAME),
@@ -174,8 +178,11 @@ def main():
     operation('delete', p + '/projects/{projectId}/members/{userId}', 'removeMember', '移除成员，阻断后续项目读取', admin, ['A02'], status=204)
     operation('get', p + '/models', 'listModels', '仅返回获批且启用的模型', member, ['A07', 'A08', 'A11'], response=obj({'items': arr(ref('Model'))}, ['items']))
     operation('get', p + '/admin/providers', 'listProviders', '供应商配置状态', admin, ['A11'], response=obj({'items': arr(ref('ProviderStatus'))}, ['items']))
+    op = operation('get', p + '/admin/configuration/export', 'exportConfiguration', '导出团队配置的安全元数据', admin, ['A11'], response=ref('ConfigurationExport'),
+        description='仅导出供应商配置状态、市场是否配置及模型批准标识；排除密钥、密文、端点、任意模型 options 和物理目录。记录导出审计。')
+    op['x-audit-required'] = True
     operation('get', p + '/admin/models', 'listAdminModels', '管理员读取已登记模型及批准状态', admin, ['A11'], response=obj({'items': arr(ref('Model'))}, ['items']), description='包含未批准模型的公开元数据，供管理员启停批准；不返回端点、密钥或物理目录。')
-    operation('put', p + '/admin/providers/{providerId}/secret', 'setProviderSecret', '写入公司供应商密钥', admin, ['A11'], ref('SecretInput'), status=204)
+    operation('put', p + '/admin/providers/{providerId}/secret', 'setProviderSecret', '写入团队供应商密钥', admin, ['A11'], ref('SecretInput'), status=204)
     operation('put', p + '/admin/models/approval', 'approveModel', '启停模型批准状态', admin, ['A11'], ref('Approval'), status=204)
     operation('post', p + '/admin/external-clients', 'issueClient', '签发单项目外部凭证，原文仅返回一次', admin, ['A13'], ref('ClientInput'), ref('ClientIssued'), 201)
     operation('get', p + '/admin/external-clients', 'listClients', '查看外部授权，不返回凭证原文', admin, ['A13'], response=ref('ClientPage'), pagination=True)

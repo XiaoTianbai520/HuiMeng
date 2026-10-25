@@ -1,4 +1,10 @@
-# M0 协议取证脚本
+# 验证脚本
+
+## M2 Linux 文件边界
+
+`m2FileBoundary.py` 只面向新建的独立 Spring/H2 验收实例，合成账号固定为测试夹具，不得指向团队/开发库或已有工作区。以 [backend LinuxFileAcceptanceHarness](../../../backend/README.md#m2-读取导出与模型验收) 启动和运行；脚本要求显式 base、fixture-root、report 与 isolated-h2-fixture 参数，检查真实原字节/快照/Range、授权及链接竞态，不管理服务或 MySQL。结果含检查名称，无 Cookie、CSRF 或密码。
+
+## M0 协议取证
 
 这些脚本针对重新准备的原版隔离实例，不针对绘梦尚未实现的公共 API，也不复用已清理的临时清单。重跑会调用实际模型或市场服务；文档交接检查仅需运行[文档检查器](../../scripts/README.md)。
 

@@ -27,4 +27,7 @@ public interface ConfigurationService {
 
   /** 管理员批准或停用模型。 */
   void approve(ModelApprovalReqDTO input, String requestId);
+
+  /** 管理员导出安全状态，不加载或序列化密钥与任意模型配置。 */
+  ConfigurationExportRespDTO exportConfiguration(String requestId);
 }

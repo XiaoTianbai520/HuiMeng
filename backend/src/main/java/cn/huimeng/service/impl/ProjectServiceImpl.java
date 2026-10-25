@@ -156,7 +156,8 @@ public class ProjectServiceImpl implements ProjectService {
     if (!key.matches("[A-Za-z0-9_-]{1,128}")) throw pathDenied();
     try {
       if (Files.isSymbolicLink(workspaceRoot)) throw pathDenied();
-      Path root = workspaceRoot.toRealPath();
+      // 保留受控根的词法路径，让实际打开还能拒绝根目录祖先被替换为符号链接。
+      Path root = workspaceRoot;
       Path base = root.resolve(key);
       if (Files.isSymbolicLink(base) || !Files.isDirectory(base, LinkOption.NOFOLLOW_LINKS))
         throw pathDenied();

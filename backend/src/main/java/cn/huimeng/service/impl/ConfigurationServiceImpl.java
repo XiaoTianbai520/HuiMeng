@@ -102,4 +102,23 @@ public class ConfigurationServiceImpl implements ConfigurationService {
       throw new ApiException(404, "NOT_FOUND", "模型不可用");
     audit.record(actor.id(), null, "MODEL_APPROVAL", input.providerId(), "SUCCESS", requestId);
   }
+
+  @Override
+  public ConfigurationExportRespDTO exportConfiguration(String requestId) {
+    Actor actor = RequestContext.admin();
+    var export =
+        new ConfigurationExportRespDTO(
+            1,
+            Instant.now(),
+            providers(),
+            marketConfigured(),
+            configurationMapper.models(true).stream()
+                .map(
+                    model ->
+                        new ExportedModelRespDTO(
+                            model.providerId(), model.modelId(), model.enabled()))
+                .toList());
+    audit.record(actor.id(), null, "CONFIGURATION_EXPORT", null, "SUCCESS", requestId);
+    return export;
+  }
 }

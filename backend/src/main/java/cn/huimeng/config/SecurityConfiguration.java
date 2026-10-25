@@ -81,7 +81,8 @@ public class SecurityConfiguration {
                     "/api/v1/projects",
                     "/api/v1/projects/*",
                     "/api/v1/preferences",
-                    "/api/v1/models")
+                    "/api/v1/models",
+                    "/api/v1/projects/*/creative/workspaces/files/read")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
@@ -94,6 +95,7 @@ public class SecurityConfiguration {
                     "/api/v1/admin/models",
                     "/api/v1/admin/external-clients",
                     "/api/v1/admin/plugin-market/status",
+                    "/api/v1/admin/configuration/export",
                     "/api/v1/projects/*/members")
                 .hasRole("ADMIN")
                 .requestMatchers(

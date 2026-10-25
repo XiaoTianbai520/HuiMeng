@@ -67,4 +67,10 @@ public class ConfigurationController {
   public void approve(@Valid @RequestBody ModelApprovalReqDTO input, HttpServletRequest request) {
     configuration.approve(input, RequestContext.requestId(request));
   }
+
+  /** 导出团队配置的显式安全视图，禁止将密文或只写输入模型原样导出。 */
+  @GetMapping("/api/v1/admin/configuration/export")
+  public ConfigurationExportRespDTO exportConfiguration(HttpServletRequest request) {
+    return configuration.exportConfiguration(RequestContext.requestId(request));
+  }
 }

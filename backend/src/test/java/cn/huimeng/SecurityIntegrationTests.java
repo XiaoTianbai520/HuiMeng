@@ -54,6 +54,7 @@ class SecurityIntegrationTests {
   @Autowired ExternalClientService clients;
   @Autowired SecretBox secrets;
   @Autowired InternalIdentityService internalIdentity;
+  @Autowired ModelAuthorizationService modelAuthorization;
   MockHttpSession admin;
   String adminId;
 
@@ -71,6 +72,7 @@ class SecurityIntegrationTests {
             "user_preferences",
             "users")) jdbc.update("DELETE FROM " + table);
     jdbc.update("UPDATE approved_models SET enabled=FALSE");
+    jdbc.update("UPDATE approved_models SET options_json='{}' WHERE provider_id='deepseek'");
     users.bootstrap("admin", PASSWORD);
     adminId = jdbc.queryForObject("SELECT id FROM users WHERE username='admin'", String.class);
     admin = login("admin", PASSWORD);
@@ -79,6 +81,151 @@ class SecurityIntegrationTests {
   @AfterEach
   void clear() {
     SecurityContextHolder.clearContext();
+  }
+
+  @Test
+  void configurationExportNeverIncludesWriteOnlySecretsOrArbitraryModelOptions() throws Exception {
+    String secret = "synthetic-export-provider-secret";
+    mvc.perform(
+            write(
+                put("/api/v1/admin/providers/export-check/secret"),
+                admin,
+                Map.of("apiKey", secret)))
+        .andExpect(status().isNoContent());
+    mvc.perform(write(put("/api/v1/admin/plugin-market/secret"), admin, Map.of("apiKey", secret)))
+        .andExpect(status().isNoContent());
+    jdbc.update(
+        "UPDATE approved_models SET options_json=? WHERE provider_id='deepseek'",
+        "{\"apiKey\":\"synthetic-forbidden-option\"}");
+    MvcResult result =
+        mvc.perform(get("/api/v1/admin/configuration/export").session(admin))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.version").value(1))
+            .andExpect(jsonPath("$.marketConfigured").value(true))
+            .andReturn();
+    String content = result.getResponse().getContentAsString();
+    assertThat(content)
+        .doesNotContain(
+            secret,
+            "synthetic-forbidden-option",
+            "encrypted_value",
+            "apiKey",
+            "workspace_key",
+            "master.key",
+            "options");
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM audit_events WHERE action='CONFIGURATION_EXPORT'",
+                Integer.class))
+        .isEqualTo(1);
+    createUser("export-member");
+    mvc.perform(get("/api/v1/admin/configuration/export").session(login("export-member", PASSWORD)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void modelExecutionGateRechecksMembershipApprovalAndArchivedState() throws Exception {
+    String project = createProject("model-execution-gate");
+    actAdmin();
+    assertThatThrownBy(
+            () ->
+                modelAuthorization.requireApproved(project, "qwenImage21Local", "qwenImage21Text"))
+        .isInstanceOf(ApiException.class);
+    SecurityContextHolder.clearContext();
+    member(project, adminId);
+    actAdmin();
+    assertThatThrownBy(
+            () ->
+                modelAuthorization.requireApproved(project, "qwenImage21Local", "qwenImage21Text"))
+        .isInstanceOf(ApiException.class);
+    jdbc.update(
+        "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'");
+    assertThat(
+            modelAuthorization
+                .requireApproved(project, "qwenImage21Local", "qwenImage21Text")
+                .modelId())
+        .isEqualTo("qwenImage21Text");
+    jdbc.update(
+        "UPDATE approved_models SET enabled=FALSE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'");
+    assertThatThrownBy(
+            () ->
+                modelAuthorization.requireApproved(project, "qwenImage21Local", "qwenImage21Text"))
+        .isInstanceOf(ApiException.class);
+    jdbc.update(
+        "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'");
+    jdbc.update("UPDATE projects SET status='ARCHIVED' WHERE id=?", project);
+    assertThatThrownBy(
+            () ->
+                modelAuthorization.requireApproved(project, "qwenImage21Local", "qwenImage21Text"))
+        .isInstanceOf(ApiException.class);
+    jdbc.update("UPDATE projects SET status='ACTIVE' WHERE id=?", project);
+    jdbc.update("DELETE FROM project_members WHERE project_id=?", project);
+    assertThatThrownBy(
+            () ->
+                modelAuthorization.requireApproved(project, "qwenImage21Local", "qwenImage21Text"))
+        .isInstanceOf(ApiException.class);
+  }
+
+  @Test
+  void realFileRouteEnforcesMembersBeforeReadingAndRejectsClaimedDirectories() throws Exception {
+    String own = createProject("files-own"), other = createProject("files-other");
+    createUser("file-member");
+    String memberId =
+        jdbc.queryForObject("SELECT id FROM users WHERE username='file-member'", String.class);
+    member(own, memberId);
+    MockHttpSession user = login("file-member", PASSWORD);
+    String route = "/api/v1/projects/" + own + "/creative/workspaces/files/read";
+    mvc.perform(get(route).param("path", "file.txt")).andExpect(status().isUnauthorized());
+    mvc.perform(get(route).param("path", "file.txt").session(admin))
+        .andExpect(status().isForbidden());
+    mvc.perform(
+            get("/api/v1/projects/" + other + "/creative/workspaces/files/read")
+                .param("path", "file.txt")
+                .session(user))
+        .andExpect(status().isForbidden());
+    for (String path :
+        List.of("../outside.txt", "/etc/passwd", "a/../../b", "C:/secret", "a\\b", "a%2fb"))
+      mvc.perform(get(route).param("path", path).session(user)).andExpect(status().isBadRequest());
+    mvc.perform(get(route).param("path", "file.txt").param("directory", "/outside").session(user))
+        .andExpect(status().isBadRequest());
+    mvc.perform(write(delete("/api/v1/projects/" + own + "/members/" + memberId), admin, Map.of()))
+        .andExpect(status().isNoContent());
+    mvc.perform(get(route).param("path", "file.txt").session(user))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void nativeFileReadsUseSecureHandlesOrFailClosedWithoutAWeakerFallback() throws Exception {
+    String project = createProject("native-file");
+    member(project, adminId);
+    String key =
+        jdbc.queryForObject("SELECT workspace_key FROM projects WHERE id=?", String.class, project);
+    Path root = Path.of("target/test-workspaces", key);
+    byte[] bytes = "验收\r\nfile".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    Files.write(root.resolve("测试.txt"), bytes);
+    String route = "/api/v1/projects/" + project + "/creative/workspaces/files/read";
+    boolean secure;
+    try (var stream =
+        Files.newDirectoryStream(
+            root.getRoot() == null ? root.toAbsolutePath().getRoot() : root.getRoot())) {
+      secure = stream instanceof java.nio.file.SecureDirectoryStream<?>;
+    }
+    if (!secure) {
+      mvc.perform(get(route).param("path", "测试.txt").session(admin))
+          .andExpect(status().isServiceUnavailable())
+          .andExpect(jsonPath("$.code").value("EXECUTOR_UNAVAILABLE"));
+      return;
+    }
+    mvc.perform(get(route).param("path", "测试.txt").session(admin))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes(bytes));
+    mvc.perform(get(route).param("path", "测试.txt").param("snapshot", "true").session(admin))
+        .andExpect(jsonPath("$.data.text").value("验收\r\nfile"));
+    mvc.perform(get(route).param("path", "测试.txt").header("Range", "bytes=0-2").session(admin))
+        .andExpect(status().isPartialContent())
+        .andExpect(content().bytes(java.util.Arrays.copyOf(bytes, 3)));
+    mvc.perform(get(route).param("path", "测试.txt").header("Range", "bytes=99999-").session(admin))
+        .andExpect(status().isRequestedRangeNotSatisfiable());
   }
 
   @Test

@@ -754,6 +754,10 @@
     },
     {
       "method": "GET",
+      "path": "/api/v1/admin/configuration/export"
+    },
+    {
+      "method": "GET",
       "path": "/api/v1/admin/models"
     },
     {

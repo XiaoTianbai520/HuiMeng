@@ -50,8 +50,19 @@ localhost Cookie 行为依据[浏览器文档](https://developer.mozilla.org/en-
 
 会话 Cookie 为 `__Host-huimeng-session`，Secure/HttpOnly/SameSite=Lax/Path=/；闲置 8 小时、最长 24 小时。所有浏览器写操作含登录要求同源 Origin 和会话 CSRF；登录更换会话与令牌。账号连续失败最多 10 次/15 分钟，来源 IP 最多 100 次/15 分钟；敏感写操作每账号 60 次/分钟。限速状态为单实例内存数据，重启清空；没有在当前 M2 设计中承诺多 Spring 实例会话共享。
 
-项目列表按成员过滤，管理员仅多出元数据管理；创作仍须成员关系。项目/路径服务拒绝绝对路径、父目录、反斜线、盘符/ADS、编码歧义及符号链接。当前没有文件读写控制器，M3 文件执行必须在隔离环境或保持目录句柄的原子 I/O 中使用该授权，不能把单次路径预检当作并发文件系统沙箱。
+项目列表按成员过滤，管理员仅多出元数据管理；创作仍须成员关系。项目/路径服务拒绝绝对路径、父目录、反斜线、盘符/ADS、编码歧义及符号链接。当前仅新增精确 GET 文件 read 控制器：快照与原字节/Range 下载经成员授权后以 SecureDirectoryStream 逐层无链接打开；Windows 默认文件系统不支持该能力时返回 503，禁止弱化为单次路径预检。写入、上传、修订冲突及完整创作执行留 M3。
 
 团队供应商与 TF-Router Key 使用 AES-256-GCM（标识及密钥版本作 AAD）、独立主密钥、随机 nonce；只写不回显。模型目录默认全部未批准，仅管理员可启停已登记模型；Qwen 保留 2K。外部凭证为 256 位随机数、SHA-256 存储、单项目及显式能力范围、逐请求重查并可撤销；团队成员会话不能代用。MCP/A2A 未接通时合法凭证也不会执行创作。
 
 审计仅记录操作者、项目、操作、目标标识、结果、请求 ID 和 UTC 时间；默认 180 天保留，每日清理过期元数据。日志不接受正文、原始路径、查询、认证头、密钥或异常内容，仅记录规范化 requestId、actorId、路由模板、状态与耗时。部署、MySQL 以及真实 HTTPS 验证结果见[M2 报告](../docs/validation/M2_REPORT.md)。
+
+## M2 读取、导出与模型验收
+
+管理员模型与密钥页的“导出安全配置”调用 GET `/api/v1/admin/configuration/export`，只含版本、导出时间、供应商配置状态、市场是否配置及模型批准标识，不含任意 options、密钥、密文、端点或路径；成员禁止访问，导出写审计。文件精确路径为 GET `/api/v1/projects/{projectId}/creative/workspaces/files/read`，只收 path/snapshot/maxBytes，快照最大 8 MiB，下载最大 512 MiB；无文件写入/上传或通配入口。
+
+以下均为**显式选择**的测试源码工具，不在普通 verify 中执行，不进入生产 JAR。工作目录 backend：
+
+- Linux 上要求 Python 3、回环 18087 空闲，执行 `HM_FILE_ACCEPTANCE=true MAVEN_USER_HOME="$PWD/.m2" sh ./mvnw -s .mvn/settings.xml -B -ntp '-Dtest=LinuxFileAcceptanceHarness' test`。只用新 H2 与随机 target/validation 目录；结果保存在该目录 result.json；不得改成团队数据库。完整源码仓库需保留 docs/validation/scripts。
+- 本机 ComfyUI 手动启动并确保队列空闲；先核对当前节点、模型与现用供应商哈希，将本轮 API 图复制到 target/m2-comfy-api.json。设置 `HM_COMFY_ACCEPTANCE=true` 后执行 `.\mvnw.cmd -s .mvn/settings.xml -B -ntp '-Dtest=ComfyUiAcceptanceHarness' test`。工具校验管理员非成员与模型未批准拒绝，再批准并执行一次本机模型，最后撤销测试批准；JSON 结果和 PNG 在 target/m2-comfy-*。图、实际参数和依赖见[本轮夹具](../docs/validation/fixtures/m2-acceptance/README.md)。这只验证测试用 Spring 服务授权与实际模型，不提供公共媒体执行器或五名额。
+
+实测边界与剩余验收见[M2 推进记录](../docs/validation/M2_REMAINING_PROGRESS.md)。本轮无新增 SQL 迁移，正式服务器版本未更新。

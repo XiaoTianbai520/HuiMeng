@@ -1704,6 +1704,100 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /api/v1/admin/configuration/export:
+    get:
+      operationId: exportConfiguration
+      summary: 导出团队配置的安全元数据
+      description: 仅导出供应商配置状态、市场是否配置及模型批准标识；排除密钥、密文、端点、任意模型 options 和物理目录。记录导出审计。
+      tags:
+      - admin
+      x-contract-status: frozen
+      x-roles: *id002
+      x-acceptance:
+      - A11
+      x-requirements:
+      - FR-09
+      x-audit-required: true
+      x-implemented: true
+      parameters:
+      - name: X-Request-Id
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+              description: 规范化关联 ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationExport'
+        '400':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: 见 ErrorCode 及 CONTRACTS；仅开始流前使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/admin/models:
     get:
       operationId: listAdminModels
@@ -1809,8 +1903,8 @@ paths:
   /api/v1/admin/providers/{providerId}/secret:
     put:
       operationId: setProviderSecret
-      summary: 写入公司供应商密钥
-      description: 写入公司供应商密钥
+      summary: 写入团队供应商密钥
+      description: 写入团队供应商密钥
       tags:
       - admin
       x-contract-status: frozen
@@ -3540,7 +3634,7 @@ paths:
       - FR-04
       - FR-05
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path
@@ -4578,6 +4672,40 @@ components:
       - providerId
       - modelId
       - enabled
+    ExportedModel:
+      type: object
+      additionalProperties: false
+      properties:
+        providerId: *id003
+        modelId: *id006
+        enabled: *id004
+      required:
+      - providerId
+      - modelId
+      - enabled
+    ConfigurationExport:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: integer
+          const: 1
+        exportedAt: *id008
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderStatus'
+        marketConfigured: *id004
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportedModel'
+      required:
+      - version
+      - exportedAt
+      - providers
+      - marketConfigured
+      - models
     ClientInput:
       type: object
       additionalProperties: false

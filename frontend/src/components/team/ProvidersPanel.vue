@@ -1,6 +1,6 @@
 <template>
   <section class="teamPanel" aria-label="模型与密钥管理">
-    <header class="panelHeading"><div><h2>模型与密钥</h2><p>团队统一配置。密钥保存后不再展示，成员仅能使用已批准模型。</p></div><el-button :loading="busy" @click="refresh">刷新配置</el-button></header>
+    <header class="panelHeading"><div><h2>模型与密钥</h2><p>团队统一配置。密钥保存后不再展示，成员仅能使用已批准模型。</p></div><div><el-button :disabled="busy" @click="exportConfiguration">导出安全配置</el-button><el-button :loading="busy" @click="refresh">刷新配置</el-button></div></header>
     <p v-if="error" role="alert" class="panelError">{{ error }}</p>
     <form class="inlineForm" aria-label="保存供应商密钥" @submit.prevent="saveSecret(false)">
       <div><label for="providerId">供应商标识</label><el-input id="providerId" v-model="providerId" placeholder="例如 deepseek" maxlength="128" :disabled="busy" /></div>
@@ -28,13 +28,27 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import client from "@huimeng/api/client";
-import type { Model, ProviderStatus } from "@huimeng/contracts/platform";
+import type { ConfigurationExport, Model, ProviderStatus } from "@huimeng/contracts/platform";
 import { adminError } from "@/lib/teamAdmin";
 import { loadSettings } from "@/stores/settings";
 const providers = ref<ProviderStatus[]>([]), models = ref<Model[]>([]);
 const providerId = ref("deepseek"), apiKey = ref(""), marketKey = ref(""), marketConfigured = ref(false), busy = ref(false), error = ref("");
 const validProvider = computed(() => /^[A-Za-z0-9_-]{1,128}$/.test(providerId.value.trim()));
 const controller = new AbortController();
+async function exportConfiguration() {
+  if (busy.value) return;
+  busy.value = true; error.value = "";
+  try {
+    const result = await client.get<ConfigurationExport>("/api/v1/admin/configuration/export", { signal: controller.signal });
+    const url = URL.createObjectURL(new Blob([JSON.stringify(result.data, null, 2)], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url; link.download = "huimeng-configuration.json";
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    ElMessage.success("已导出安全配置，文件不含密钥。");
+  } catch (ex) { if (!controller.signal.aborted) error.value = adminError(ex, "配置导出失败，请重试。"); }
+  finally { busy.value = false; }
+}
 async function refresh() {
   error.value = "";
   try {

@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-/** 项目元数据和成员管理；M2 不开放创作文件路由。 */
+/** 项目元数据和成员管理；文件访问由独立的精确路由控制器处理。 */
 @RestController
 @RequestMapping("/api/v1/projects")
 public class ProjectController {

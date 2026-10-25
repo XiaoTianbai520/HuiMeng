@@ -44,6 +44,10 @@
 
 流一旦建立，不再插入新的 HTTP JSON 错误体；按该路由实际协议传送错误，并把运行记录置为失败。上游 Agent 在模型未配置时返回 HTTP 200 与 NDJSON `error` 行；媒体生成在响应头已发出后可返回 HTTP 200、JSON 正文 `code:404`。Spring 适配层须同时检查正文与传输状态，不能仅按 HTTP 200 判成功。上游普通成功响应不强制包裹在这个错误结构里，避免破坏原 Web 代码。[M0 原始失败样例](../validation/evidence/upstream-protocol-limits.json)与[成功流补测](../archive/m0/M0_CLOSEOUT.md)已保存；目标平台仍须解析实际业务终态。
 
+### M2 本轮实现补充（2026-10-25）
+
+源码新增精确文件 read 实现及管理员 GET `/api/v1/admin/configuration/export`。后者返回 `ConfigurationExport`（版本、导出时间、供应商状态、市场配置布尔值、模型批准标识），写导出审计；不返回任意 options、密钥、密文、端点或目录。文件快照上限 8 MiB、原字节下载上限 512 MiB，单 Range/416；实际打开要求安全目录句柄，Windows 不支持时返回 503。完整 schema 由 OpenAPI 定义，当前 28/40 个操作有实现。源码实现与正式发布不同：本轮未更新正式部署，127 条源台账 publicEnabled 仍为 false。验证和剩余范围见[M2 推进记录](../validation/M2_REMAINING_PROGRESS.md)。
+
 ## 2. 新增平台 API
 
 以下方法、字段是**1.0 设计**，以 M1 的 OpenAPI 为精确字段和响应依据。所有会话写接口（含登录）要求 `X-CSRF-Token` 并校验同源 Origin；由 `GET /api/v1/auth/csrf` 取得预登录/当前令牌，登录后轮换。会话 Cookie、分页、默认配置见[冻结记录](M1_CONTRACT_REVIEW.md#2-平台通用规则)。外部 Bearer 请求不使用浏览器会话 CSRF。

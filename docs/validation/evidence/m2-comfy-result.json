@@ -1,0 +1,9 @@
+{
+  "providerId" : "qwenImage21Local",
+  "modelId" : "qwenImage21Text",
+  "passed" : true,
+  "elapsedSeconds" : 50,
+  "sha256" : "dc813567127f6e176f46e5de9f7380382e272295256ffe0ade8d884bd2d5fd5d",
+  "scope" : "test-only Spring member/approval gate plus real local ComfyUI; public media API pending M3",
+  "promptId" : "d9178560-ab58-4eed-89f3-f11656b2a863"
+}

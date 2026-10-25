@@ -26,8 +26,10 @@
     "getMarketStatus",
     "getPreferences",
     "setPreferences",
-    "listAdminModels"
+    "listAdminModels",
+    "readFile",
+    "exportConfiguration"
   ],
   "evidence": "docs/validation/M2_REPORT.md",
-  "businessAcceptance": "M2 identity/UI/deployment foundations verified; M2-03/04 full file/model acceptance remains for M3; device CA installation optional"
+  "businessAcceptance": "M2 file read/export and test-only approved ComfyUI invocation verified; full A03/A17 pages and public model chain remain pending; canonical deployment unchanged"
 }
