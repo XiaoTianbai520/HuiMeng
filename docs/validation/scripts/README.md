@@ -61,3 +61,10 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 仓库根运行 `python docs/validation/scripts/m3WorkspaceBoundary.py` 前，按[后端 README](../../../backend/README.md#m3-01-目录操作与文档浏览器验收)在 Linux 显式启动 WorkspaceBrowserAcceptanceHarness，并仅转发服务器回环 18091 到本机回环 18086。脚本固定该回环端口、Origin localhost:5187 及公开合成账号；不修改为正常应用或真实数据库。检查在本次 H2 另建项目中进行，涵盖复制/重命名/递归删除/根目录保护/撤权等 39 项，末尾撤权并归档自己的项目。不得将合成账号密码替换为团队凭据。
 
 浏览器从 localhost:5187 操作独立文档区域，文档新建/编辑/冲突另存与撤权证据见[本批报告](../M3_WORKSPACE.md)。实际删除由 HTTP 测试执行，浏览器只验证删除确认与取消。测试完主动停止夹具、转发和 Vite，不访问真实存储/模型；测试工具不进入运行 JAR。
+
+## M3-01 原页面浏览器验收
+
+按[后端 README](../../../backend/README.md#m3-01-原页面修订链接收)启动夹具（端口可配，默认 18091；本批用 18096），将服务器回环夹具端口转发到本机回环 18086，先在 frontend 完成 `bun run build`，再在仓库根运行 `node docs/validation/scripts/m3W03DevServer.mjs` 提供生产静态与 `/api/v1` 回环代理。该服务仅监听 127.0.0.1:5187、HTML no-store，不使用 Vite 优化器，不发布对外端口。
+
+另开进程设置 `HM_BROWSER_PROJECT` 为夹具 `target/workspace-browser.ready` 中的 projectId，运行 `node docs/validation/scripts/m3W03BrowserCheck.mjs`。依赖仓库根安装 `playwright-core`，或设置 `PLAYWRIGHT_CORE_PATH` 指向其所在 node_modules；浏览器默认取 Playwright 已安装 Chromium，可用 `PLAYWRIGHT_CHROMIUM_PATH` 指定。脚本用真实 Chromium 完成 19 项画布/文档连续保存、双会话冲突暂停/草稿保留/重读及素材相对引用，输出[结果](../evidence/m3-w03-browser.json)与截图；另一会话仅作 API 对照，不是第二浏览器窗口。结束在 Linux backend 创建 `target/workspace-browser.stop` 后停止代理与转发，不访问真实存储/模型或团队凭据。
+

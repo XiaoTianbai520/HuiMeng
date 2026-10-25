@@ -1,0 +1,112 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "A1 登录并进入工作区，自动创建画布1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B1 画布视口修改自动保存到服务端",
+      "ok": true,
+      "detail": "zoom=0.5"
+    },
+    {
+      "name": "B2 连续自动保存使用新修订号（无 409）",
+      "ok": true,
+      "detail": "zoom 0.5 -> 0.4166666666666667; revision 更新=true"
+    },
+    {
+      "name": "C1 内置纯文本编辑器读取原文",
+      "ok": true,
+      "detail": "# 绘梦验收剧本  这是隔离环境中的合成文档。  第二行：M3-W03 文档编辑"
+    },
+    {
+      "name": "C2 文档编辑自动保存带修订号",
+      "ok": true,
+      "detail": "revision=714d41b95480"
+    },
+    {
+      "name": "D1 文档冲突提示出现",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D2 冲突后草稿保留",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D3 冲突未覆盖另一会话内容",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D4 自动保存已暂停（未继续覆盖）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D5 载入磁盘版本后显示另一会话内容",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D6 冲突恢复后可继续保存",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E1 画布冲突弹窗出现",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E2 冲突未覆盖另一会话的画布",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E3 重新读取后视口为另一会话版本",
+      "ok": true,
+      "detail": "缩放百分比=50"
+    },
+    {
+      "name": "E4 冲突恢复后画布可继续自动保存",
+      "ok": true,
+      "detail": "zoom=0.6"
+    },
+    {
+      "name": "F1 assets 目录创建或已存在",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "F2 assets 相对路径文档创建或已存在",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "F3 assets 相对路径文档编辑保存",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "F4 assets 原字节下载可读",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "checkCount": 19,
+  "fixture": "explicit Linux/H2 workspace browser fixture via loopback SSH forwarding; static+proxy on localhost:5187; Playwright Chromium headless",
+  "productionDeploymentChanged": false,
+  "realStorageOrModelUsed": false,
+  "credentialsIncluded": false,
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "获取远端节点列表失败 AxiosError: Request failed with status code 403\n    at Li (http://localhost:5187/assets/client-B5pop1-w.js:4:11873)\n    at http://localhost:5187/assets/client-B5pop1-w.js:4:28160\n    at new",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+  ],
+  "browserErrors": []
+}
