@@ -1,0 +1,198 @@
+{
+  "createdAt": "2026-10-26T14:57:53+0800",
+  "checks": [
+    {
+      "name": "webCsrf",
+      "detail": "200"
+    },
+    {
+      "name": "webLogin cap-admin",
+      "detail": "200"
+    },
+    {
+      "name": "webCsrf",
+      "detail": "200"
+    },
+    {
+      "name": "webCsrf",
+      "detail": "200"
+    },
+    {
+      "name": "webLogin cap-member",
+      "detail": "200"
+    },
+    {
+      "name": "webCsrf",
+      "detail": "200"
+    },
+    {
+      "name": "两个 Web 会话独立登录",
+      "detail": ""
+    },
+    {
+      "name": "mcpInitialize",
+      "detail": "200"
+    },
+    {
+      "name": "mcp生成工具已授权",
+      "detail": "['listMedia', 'generateMedia', 'getRun', 'cancelRun', 'listTeams']"
+    },
+    {
+      "name": "执行器起点为空",
+      "detail": "{'submits': 0, 'completed': 0, 'cancelled': 0, 'active': ''}"
+    },
+    {
+      "name": "Web 生成准入 admin",
+      "detail": "200"
+    },
+    {
+      "name": "Web 返回运行 ID admin",
+      "detail": "8ff56cf1-e494-4e43-9df3-6b5330658cf9"
+    },
+    {
+      "name": "Web 生成准入 member",
+      "detail": "200"
+    },
+    {
+      "name": "Web 返回运行 ID member",
+      "detail": "8cea6aa8-76df-4144-8507-97c908a29afe"
+    },
+    {
+      "name": "Web 两路共占两个名额",
+      "detail": "['8ff56cf1-e494-4e43-9df3-6b5330658cf9', '8cea6aa8-76df-4144-8507-97c908a29afe']"
+    },
+    {
+      "name": "MCP 生成准入 1",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'content': [{'type': 'text', 'text': '{\"id\":\"12b65d86-edf8-4274-be91-7220abb9fb90\",\"projectId\":\"260ad258-597e-4426-8902-27f797272533\",\"kind\":\"image\",\"state\":\"RESERVED\",\"capacityHeld\":true,\"createdAt\":\"2026-10-26T06:57:27.507488Z\",\"endedAt\":null}'}], 'structuredContent': {'id': '12b65d86-edf8-4274-be91-7220abb9fb90', 'projectId': '260ad258-597e-4426-8902"
+    },
+    {
+      "name": "MCP 运行占位 1",
+      "detail": "{'id': '12b65d86-edf8-4274-be91-7220abb9fb90', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'RESERVED', 'capacityHeld': True, 'createdAt': '2026-10-26T06:57:27.507488Z', 'endedAt': None}"
+    },
+    {
+      "name": "MCP 生成准入 2",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'content': [{'type': 'text', 'text': '{\"id\":\"ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1\",\"projectId\":\"260ad258-597e-4426-8902-27f797272533\",\"kind\":\"image\",\"state\":\"RESERVED\",\"capacityHeld\":true,\"createdAt\":\"2026-10-26T06:57:27.542077Z\",\"endedAt\":null}'}], 'structuredContent': {'id': 'ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1', 'projectId': '260ad258-597e-4426-8902"
+    },
+    {
+      "name": "MCP 运行占位 2",
+      "detail": "{'id': 'ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'RESERVED', 'capacityHeld': True, 'createdAt': '2026-10-26T06:57:27.542077Z', 'endedAt': None}"
+    },
+    {
+      "name": "Web 与 MCP 已占满四个名额",
+      "detail": "{'submits': 4, 'completed': 0, 'cancelled': 0, 'active': '8cea6aa8-76df-4144-8507-97c908a29afe,8ff56cf1-e494-4e43-9df3-6b5330658cf9,12b65d86-edf8-4274-be91-7220abb9fb90,ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1'}"
+    },
+    {
+      "name": "A2A 任务提交",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'task': {'id': '8591ff15-8501-4098-bb1d-fe654b54c379', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'status': {'state': 'TASK_STATE_SUBMITTED', 'timestamp': '2026-10-26T06:57:27.867729Z'}, 'history': [{'messageId': '96c25ebe-8cd6-4b61-b654-a22c90545492', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'taskId': '8591ff15-8501-4098-bb1d-fe654b54c379"
+    },
+    {
+      "name": "A2A 任务已受理",
+      "detail": "{'id': '8591ff15-8501-4098-bb1d-fe654b54c379', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'status': {'state': 'TASK_STATE_SUBMITTED', 'timestamp': '2026-10-26T06:57:27.867729Z'}, 'history': [{'messageId': '96c25ebe-8cd6-4b61-b654-a22c90545492', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'taskId': '8591ff15-8501-4098-bb1d-fe654b54c379', 'role': 'ROLE_USER', 'parts': [{'text': '请生成一张用于容量"
+    },
+    {
+      "name": "A2A 内部生图占第五个名额",
+      "detail": "{'submits': 5, 'completed': 0, 'cancelled': 0, 'active': '8cea6aa8-76df-4144-8507-97c908a29afe,c49fd702-c4c3-4830-8320-ba50cdd55195,8ff56cf1-e494-4e43-9df3-6b5330658cf9,12b65d86-edf8-4274-be91-7220abb9fb90,ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1'}"
+    },
+    {
+      "name": "第六个并发被拒绝",
+      "detail": "429"
+    },
+    {
+      "name": "拒绝码为项目容量超限",
+      "detail": "{'jsonrpc': '2.0', 'id': 1, 'error': {'code': -32099, 'message': '当前项目已有五个活跃生成任务', 'data': {'code': 'PROJECT_CAPACITY_EXCEEDED'}}}"
+    },
+    {
+      "name": "拒绝未触达执行器",
+      "detail": "{'submits': 5, 'completed': 0, 'cancelled': 0, 'active': '8cea6aa8-76df-4144-8507-97c908a29afe,c49fd702-c4c3-4830-8320-ba50cdd55195,8ff56cf1-e494-4e43-9df3-6b5330658cf9,12b65d86-edf8-4274-be91-7220abb9fb90,ff5fc9e6-42b8-46da-9ad0-1bc7e4b31fd1'}"
+    },
+    {
+      "name": "取消 MCP 运行",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'content': [{'type': 'text', 'text': '{\"id\":\"12b65d86-edf8-4274-be91-7220abb9fb90\",\"projectId\":\"260ad258-597e-4426-8902-27f797272533\",\"kind\":\"image\",\"state\":\"CANCELLING\",\"capacityHeld\":true,\"createdAt\":\"2026-10-26T06:57:27.507488Z\",\"endedAt\":null}'}], 'structuredContent': {'id': '12b65d86-edf8-4274-be91-7220abb9fb90', 'projectId': '260ad258-597e-4426-89"
+    },
+    {
+      "name": "取消确认终态后释放名额",
+      "detail": "12b65d86-edf8-4274-be91-7220abb9fb90"
+    },
+    {
+      "name": "释放后重新准入",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'content': [{'type': 'text', 'text': '{\"id\":\"e7a44d20-4500-4a7e-a95a-6d9404b40cd9\",\"projectId\":\"260ad258-597e-4426-8902-27f797272533\",\"kind\":\"image\",\"state\":\"RESERVED\",\"capacityHeld\":true,\"createdAt\":\"2026-10-26T06:57:28.721165Z\",\"endedAt\":null}'}], 'structuredContent': {'id': 'e7a44d20-4500-4a7e-a95a-6d9404b40cd9', 'projectId': '260ad258-597e-4426-8902"
+    },
+    {
+      "name": "取消补位运行",
+      "detail": "200"
+    },
+    {
+      "name": "不同项目独立计数",
+      "detail": "(200, {'jsonrpc': '2.0', 'id': 1, 'result': {'content': [{'type': 'text', 'text': '{\"id\":\"73daf9bd-69c8-4cdb-beb4-b9f59e47a085\",\"projectId\":\"2b108ae3-4c99-4026-abba-2ece9ad4f2fd\",\"kind\":\"image\",\"state\":\"RESERVED\",\"capacityHeld\":true,\"createdAt\":\"2026-10-26T06:57:28.764727Z\",\"endedAt\":null}'}], 'structuredContent': {'id': '73daf9bd-69c8-4cdb-beb4-b9f59e47a085', 'projectId': '2b108ae3-4c99-4026-abba"
+    },
+    {
+      "name": "Web 运行可查询 admin",
+      "detail": "200"
+    },
+    {
+      "name": "Web 运行成功 admin",
+      "detail": "{'id': '8ff56cf1-e494-4e43-9df3-6b5330658cf9', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'SUCCEEDED', 'capacityHeld': False, 'createdAt': '2026-10-26T06:57:27.393881Z', 'endedAt': '2026-10-26T06:57:52.724750Z'}"
+    },
+    {
+      "name": "Web 成功后释放名额 admin",
+      "detail": "{'id': '8ff56cf1-e494-4e43-9df3-6b5330658cf9', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'SUCCEEDED', 'capacityHeld': False, 'createdAt': '2026-10-26T06:57:27.393881Z', 'endedAt': '2026-10-26T06:57:52.724750Z'}"
+    },
+    {
+      "name": "Web 运行可查询 member",
+      "detail": "200"
+    },
+    {
+      "name": "Web 运行成功 member",
+      "detail": "{'id': '8cea6aa8-76df-4144-8507-97c908a29afe', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'SUCCEEDED', 'capacityHeld': False, 'createdAt': '2026-10-26T06:57:27.395294Z', 'endedAt': '2026-10-26T06:57:52.695830Z'}"
+    },
+    {
+      "name": "Web 成功后释放名额 member",
+      "detail": "{'id': '8cea6aa8-76df-4144-8507-97c908a29afe', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'kind': 'image', 'state': 'SUCCEEDED', 'capacityHeld': False, 'createdAt': '2026-10-26T06:57:27.395294Z', 'endedAt': '2026-10-26T06:57:52.695830Z'}"
+    },
+    {
+      "name": "A2A 任务完成",
+      "detail": "{'id': '8591ff15-8501-4098-bb1d-fe654b54c379', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'status': {'state': 'TASK_STATE_COMPLETED', 'timestamp': '2026-10-26T06:57:53.240879Z', 'message': {'messageId': 'ff2ffb56-9e50-4301-bac3-6e30763cf399', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'taskId': '8591ff15-8501-4098-bb1d-fe654b54c379', 'role': 'ROLE_AGENT', 'parts': [{'text': '已生成图片并保存到项"
+    },
+    {
+      "name": "A2A 返回结果",
+      "detail": "{'id': '8591ff15-8501-4098-bb1d-fe654b54c379', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'status': {'state': 'TASK_STATE_COMPLETED', 'timestamp': '2026-10-26T06:57:53.240879Z', 'message': {'messageId': 'ff2ffb56-9e50-4301-bac3-6e30763cf399', 'contextId': '44312b0c713f48c1948b1ead7102eb91', 'taskId': '8591ff15-8501-4098-bb1d-fe654b54c379', 'role': 'ROLE_AGENT', 'parts': [{'text': '已生成图片并保存到项"
+    },
+    {
+      "name": "listMedia",
+      "detail": "200"
+    },
+    {
+      "name": "A2A 生图进入项目素材",
+      "detail": "[{'id': '820e29d8-5b0f-438e-8de5-92e78fbb50cb', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'filename': 'generated-8cea6aa8-76df-4144-8507-97c908a29afe.png', 'byteSize': 70, 'sha256': 'c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77', 'createdAt': '2026-10-26T06:57:52.682425Z'}, {'id': 'c96a82a4-742e-43fd-b871-892044fd0fd6', 'projectId': '260ad258-597e-4426-8902-27f797272"
+    },
+    {
+      "name": "素材为受控生成命名",
+      "detail": "[{'id': '820e29d8-5b0f-438e-8de5-92e78fbb50cb', 'projectId': '260ad258-597e-4426-8902-27f797272533', 'filename': 'generated-8cea6aa8-76df-4144-8507-97c908a29afe.png', 'byteSize': 70, 'sha256': 'c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77', 'createdAt': '2026-10-26T06:57:52.682425Z'}]"
+    },
+    {
+      "name": "执行器提交数与准入一致",
+      "detail": "{'submits': 7, 'completed': 4, 'cancelled': 3, 'active': ''}"
+    },
+    {
+      "name": "两 Web 与 MCP、A2A 各有真实产物",
+      "detail": "{'submits': 7, 'completed': 4, 'cancelled': 3, 'active': ''}"
+    },
+    {
+      "name": "三次取消都下发到执行器",
+      "detail": "{'submits': 7, 'completed': 4, 'cancelled': 3, 'active': ''}"
+    },
+    {
+      "name": "结束时没有遗留活跃任务",
+      "detail": "{'submits': 7, 'completed': 4, 'cancelled': 3, 'active': ''}"
+    }
+  ],
+  "skips": [],
+  "stats": {
+    "submits": 7,
+    "completed": 4,
+    "cancelled": 3,
+    "active": ""
+  },
+  "project": "260ad258-597e-4426-8902-27f797272533",
+  "otherProject": "2b108ae3-4c99-4026-abba-2ece9ad4f2fd"
+}

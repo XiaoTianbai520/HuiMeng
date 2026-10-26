@@ -338,6 +338,9 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     String id = admission.id();
     ComfyVideoClient.Spec spec = admission.videoSpec();
     Actor owner = admission.owner();
+    // 内部生图/生视频跑在 Agent 或 MCP 的线程上，结束时还原调用方身份，避免后续步骤丢失登录态。
+    var previousAuth = SecurityContextHolder.getContext().getAuthentication();
+    var previousExternal = cn.huimeng.security.ExternalCallContext.current();
     boolean remoteAttempted = false, confirmedTerminal = false;
     String promptId = null;
     try {
@@ -418,7 +421,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         sink.accept(new MediaResultRespDTO(503, List.of(), "生成失败，请稍后重试"));
       }
     } finally {
-      SecurityContextHolder.clearContext();
+      if (previousAuth == null) SecurityContextHolder.clearContext();
+      else SecurityContextHolder.getContext().setAuthentication(previousAuth);
+      if (previousExternal == null) cn.huimeng.security.ExternalCallContext.clear();
+      else cn.huimeng.security.ExternalCallContext.bind(previousExternal);
     }
   }
 
@@ -470,6 +476,8 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       String requestId,
       java.util.function.Consumer<Object> sink) {
     Actor owner = admission.owner();
+    var previousAuth = SecurityContextHolder.getContext().getAuthentication();
+    var previousExternal = cn.huimeng.security.ExternalCallContext.current();
     if ("EXTERNAL".equals(owner.role()))
       cn.huimeng.security.ExternalCallContext.bind(
           new cn.huimeng.security.ExternalActor(owner.id(), project));
@@ -555,7 +563,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       sink.accept(new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
       if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
     } finally {
-      SecurityContextHolder.clearContext();
+      if (previousAuth == null) SecurityContextHolder.clearContext();
+      else SecurityContextHolder.getContext().setAuthentication(previousAuth);
+      if (previousExternal == null) cn.huimeng.security.ExternalCallContext.clear();
+      else cn.huimeng.security.ExternalCallContext.bind(previousExternal);
     }
   }
 

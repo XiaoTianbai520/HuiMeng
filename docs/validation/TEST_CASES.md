@@ -19,7 +19,7 @@
 | A13 | Spring HTTPS MCP/A2A 凭证、项目隔离 | [MCP/A2A 外部协议](M3_EXTERNAL_PROTOCOLS.md)、[54 项结果](evidence/m3-m06-external.json)、[页面控制](evidence/m3-m06-browser.json) | Spring 1.0 通过（HTTP 层）：握手/会话/工具裁剪/服务端文件工具/路径穿越拒绝/卡片/版本头/任务提交查询取消/跨客户端与撤销共 54 项；团队 HTTPS 证书与浏览器信任沿用 M2 结论未复验 |
 | A14 | 只保留 Web 体验，页面无排除入口与 404 | [排除路由清理](M3_EXCLUDED_ROUTES.md)、[36 项审计](evidence/m3-m07-routes.json)、[页面遍历](evidence/m3-m07-pages.json) | 通过：25 条排除路由无前端/后端入口；12 次遍历 0 失败请求与 0 未捕获错误；桌面能力以浏览器剪贴板与下载替代；单 Agent/素材库等未实现路径保持不可达 |
 | A15 | 项目备份恢复和回滚 | [样例项目](fixtures/sample-project/) | 待 1.0 |
-| A16 | 每项目 5 并发，Web/MCP/A2A 混用 | [已跑通的本地模型与协议](../archive/m0/M0_CLOSEOUT.md) | M0 只有串行生成；五名额及混用仍待 1.0 |
+| A16 | 每项目 5 并发，Web/MCP/A2A 混用 | [跨入口名额](M3_CAPACITY.md)、[46 项证据](evidence/m3-m16-capacity.json)、[夹具](scripts/m3M16Capacity.py) | 通过：Web×2 + MCP×2 + A2A 内部生图×1 共用同一项目五名额；第六个 429 `PROJECT_CAPACITY_EXCEEDED` 且未调用执行器；取消确认终态后释放、异项目独立计数、Web 成功与 A2A 产物均核验。五人同时操作、断线/重启与资源曲线仍属 M4-02 |
 | A17 | 项目列表不泄漏服务器绝对路径 | [M3-01 文件验收](M3_PROJECT_FILES.md) | 通过：项目列表仅 `id/name/status`，文件列表 `path` 为相对路径，响应不含工作区目录或绝对路径 |
 | A18 | 断线/取消/重启任务归属与状态 | 无 | 待 1.0 |
 
