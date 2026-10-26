@@ -1096,7 +1096,7 @@ class SecurityIntegrationTests {
     mvc.perform(get("/api/v1/admin/models").session(employee)).andExpect(status().isForbidden());
     mvc.perform(get("/api/v1/admin/models").session(admin))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items.length()").value(8))
+        .andExpect(jsonPath("$.items.length()").value(11))
         .andExpect(jsonPath("$.items[0].enabled").value(false));
     mvc.perform(get("/api/v1/models").session(employee))
         .andExpect(jsonPath("$.items.length()").value(0));
@@ -1185,7 +1185,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(4);
+        .isEqualTo(5);
     assertThatThrownBy(
             () ->
                 jdbc.update(

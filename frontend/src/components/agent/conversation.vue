@@ -566,6 +566,14 @@ function stopSenderResize(event: PointerEvent) {
 }
 
 function stopMessage() {
+  // 除中断浏览器流外，同时通知服务端取消，避免仅停止显示而后端继续生成并占用会话锁。
+  if (directory && props.sessionFile) {
+    void apiFetch("/api/agent/cancel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-toonflow-workspace": "1" },
+      body: JSON.stringify({ directory, sessionFile: props.sessionFile }),
+    }).catch(() => {});
+  }
   controller?.abort();
 }
 

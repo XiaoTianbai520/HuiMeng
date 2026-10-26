@@ -42,6 +42,14 @@ public class ConfigurationMapper {
         > 0;
   }
 
+  /** 仅供服务端执行器读取密文；禁止进入控制器响应、日志或导出。 */
+  public String encryptedSecret(String providerId) {
+    return jdbc.query(
+        "SELECT encrypted_value FROM provider_secrets WHERE provider_id=?",
+        rs -> rs.next() ? rs.getString(1) : null,
+        providerId);
+  }
+
   /** 按批准过滤条件读取登记模型。 */
   public List<ModelDO> models(boolean includeDisabled) {
     return jdbc.query(

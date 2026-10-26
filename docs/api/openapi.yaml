@@ -5054,6 +5054,235 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TextGenerate'
+  /api/v1/projects/{projectId}/creative/agent/cancel:
+    post:
+      operationId: agentCancel
+      summary: 取消指定会话的当前生成
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A07
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/create:
+    post:
+      operationId: agentCreate
+      summary: 创建 Agent 会话
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/get:
+    get:
+      operationId: agentGet
+      summary: 读取 Agent 会话
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: sessionFile
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/list:
+    get:
+      operationId: agentList
+      summary: 会话历史列表
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/rename:
+    patch:
+      operationId: agentRename
+      summary: 重命名会话
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/message:
+    delete:
+      operationId: agentMessageDelete
+      summary: 删除会话消息
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/projects/{projectId}/creative/agent:
     post:
       operationId: agentGenerate
@@ -5073,7 +5302,8 @@ paths:
       - FR-08
       - FR-11
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
+      x-implementation-note: M3-02 文本问答与会话已接通；工具回调、画布控制与委派在 M3-04。
       parameters:
       - name: projectId
         in: path

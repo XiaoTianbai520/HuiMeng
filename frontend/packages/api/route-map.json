@@ -8,6 +8,13 @@
       "disposition": "项目创作适配"
     },
     {
+      "id": "R128",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent/cancel",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/cancel",
+      "disposition": "项目创作适配"
+    },
+    {
       "id": "R002",
       "sourceMethod": "POST",
       "sourcePath": "/api/agent/answer",
@@ -871,6 +878,30 @@
     {
       "method": "POST",
       "path": "/api/v1/projects/{projectId}/creative/ai/generate"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/agent/cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/agent/create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/creative/agent/get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{projectId}/creative/agent/list"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/projects/{projectId}/creative/agent/rename"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/projects/{projectId}/creative/agent/message"
     },
     {
       "method": "POST",

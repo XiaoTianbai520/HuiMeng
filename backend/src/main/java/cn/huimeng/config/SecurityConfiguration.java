@@ -86,7 +86,9 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/media/*/content",
                     "/api/v1/projects/*/runs/*",
                     "/api/v1/projects/*/creative/workspaces/files/read",
-                    "/api/v1/projects/*/creative/workspaces/files/list")
+                    "/api/v1/projects/*/creative/workspaces/files/list",
+                    "/api/v1/projects/*/creative/agent/get",
+                    "/api/v1/projects/*/creative/agent/list")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
@@ -104,12 +106,19 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/workspaces/files/rename")
                 .authenticated()
                 .requestMatchers(
-                    HttpMethod.DELETE, "/api/v1/projects/*/creative/workspaces/files/remove")
+                    HttpMethod.DELETE,
+                    "/api/v1/projects/*/creative/workspaces/files/remove",
+                    "/api/v1/projects/*/creative/agent/message")
                 .authenticated()
                 .requestMatchers(
                     HttpMethod.POST,
                     "/api/v1/projects/*/creative/ai/media/generate",
+                    "/api/v1/projects/*/creative/agent",
+                    "/api/v1/projects/*/creative/agent/create",
+                    "/api/v1/projects/*/creative/agent/cancel",
                     "/api/v1/projects/*/runs/*/cancel")
+                .authenticated()
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/projects/*/creative/agent/rename")
                 .authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/projects/*/media/*")
                 .authenticated()

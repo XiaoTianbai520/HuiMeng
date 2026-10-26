@@ -23,7 +23,10 @@ import org.springframework.test.context.DynamicPropertySource;
       "server.address=127.0.0.1",
       "huimeng.public-origin=http://localhost:5187",
       "huimeng.storage.enabled=false",
-      "huimeng.comfy.enabled=false"
+      "huimeng.comfy.enabled=false",
+      "huimeng.llm.enabled=${hm.llm.enabled:false}",
+      "huimeng.llm.deepseek-endpoint=${hm.llm.deepseek-endpoint:http://127.0.0.1:18100}",
+      "huimeng.llm.qwen-endpoint=${hm.llm.qwen-endpoint:http://127.0.0.1:18100}"
     })
 @ActiveProfiles("test")
 public class WorkspaceBrowserAcceptanceHarness {
@@ -31,6 +34,7 @@ public class WorkspaceBrowserAcceptanceHarness {
       Path.of("target/validation/workspace-browser-" + UUID.randomUUID()).toAbsolutePath();
   @Autowired UserService users;
   @Autowired ProjectService projects;
+  @Autowired ConfigurationService configuration;
 
   @DynamicPropertySource
   static void fixture(DynamicPropertyRegistry properties) throws Exception {
@@ -62,6 +66,10 @@ public class WorkspaceBrowserAcceptanceHarness {
     projects.create(new CreateProjectReqDTO("未授权项目"), "workspace-browser");
     projects.addMember(project.id(), admin.id(), "workspace-browser");
     projects.addMember(project.id(), member.id(), "workspace-browser");
+    // 仅夹具：合成密钥与获批文本模型，真实密钥不进入代码或证据。
+    configuration.setSecret("deepseek", "fixture-llm-key", "workspace-browser");
+    configuration.approve(
+        new ModelApprovalReqDTO("deepseek", "deepseek-chat", true), "workspace-browser");
     Path workspace = projects.workspaceRoot(project.id(), true);
     Files.writeString(workspace.resolve("欢迎.md"), "# 绘梦验收剧本\n\n这是隔离环境中的合成文档。\n");
     SecurityContextHolder.clearContext();

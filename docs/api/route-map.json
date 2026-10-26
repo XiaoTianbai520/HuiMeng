@@ -134,6 +134,27 @@
       "publicEnabled": false
     },
     {
+      "id": "R128",
+      "sourceMethod": "POST",
+      "sourcePath": "/api/agent/cancel",
+      "disposition": "项目创作适配",
+      "targetMethod": "POST",
+      "targetPath": "/api/v1/projects/{projectId}/creative/agent/cancel",
+      "roles": "项目成员；管理员须有相应项目授权",
+      "projectRule": "/api/v1/projects/{projectId}/creative/agent/cancel；仅取消本项目当前会话生成",
+      "csrf": true,
+      "idempotency": "required",
+      "acceptance": [
+        "A07",
+        "A09"
+      ],
+      "requirements": [
+        "FR-06"
+      ],
+      "contractStatus": "frozen",
+      "publicEnabled": false
+    },
+    {
       "id": "R002",
       "sourceMethod": "POST",
       "sourcePath": "/api/agent/answer",
