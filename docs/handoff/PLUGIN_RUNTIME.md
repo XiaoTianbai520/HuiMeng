@@ -4,7 +4,7 @@
 
 ## 1. 上游制品是什么格式
 
-不是 TypeScript 源码。真实市场目录（[上游目录样本](../validation/evidence/upstream-market-catalog.json)，13 个去重条目）的分布：
+不是 TypeScript 源码。真实市场目录（[M0 上游目录样本](../validation/evidence/upstream-market-catalog.json) 13 项；2026-10-26 真实凭据复查已增至 **21 项：15 技能 / 4 工具 / 2 节点**，见[真实市场复验](../validation/M3_MARKET_LIVE.md)）的分布：
 
 | 类型 | 扩展名 | 数量 | 形态 |
 | --- | --- | --- | --- |
@@ -61,7 +61,8 @@ export default {
 | 安全接口与文档编辑 | `backend/src/main/java/cn/huimeng/controller/PluginController.java` |
 | 能力目录与脚本分发 | `service/impl/CapabilityServiceImpl.java`、`controller/CapabilityController.java` |
 | 内置节点登记（启动幂等） | `service/impl/BuiltinNodeRegistrar.java`、`src/main/resources/capabilities/nodes/*.umd.js` |
-| 登记表 | `backend/src/main/resources/db/migration/V7__plugin_registry.sql`（plugins / plugin_documents / market_collections / app_documents） |
+| 登记表 | `db/migration/V7__plugin_registry.sql`（plugins / plugin_documents / market_collections / app_documents）、`V8__market_catalog.sql`（market_catalog：安装地址与获批摘要） |
+| 工具执行 | `service/impl/ToolRuntime.java`（GraalJS 隔离执行、`loadError` 归因） |
 | 节点加载 | `frontend/src/pages/workspace/panels/canvas/loadNodeComponent.ts` |
 | 工具界面加载 | `frontend/packages/toolScaffold/src/client.ts` |
 
@@ -77,7 +78,7 @@ export default {
 
 ## 5. 已知断点
 
-### 5.1 市场在线安装链路（已接通，待真实凭据复跑）
+### 5.1 市场在线安装链路（已接通，并已用真实凭据复验）
 
 原先四处独立断开，现按上游真实字段与「服务端查目录」的安全模型重做：
 
@@ -90,7 +91,7 @@ export default {
 
 - `identifier` → 安装名，中文 `name` → `displayName`，`supplier`/`desc` → `author`/`description`；目录响应同时兼容 `data.list` 与 `data.items`。
 - `fileHash` **不作**校验依据（实测与下载字节不一致）。首次成功下载时把字节 SHA-256 记为获批摘要，之后同一 `pluginId` 必须与之一致，否则 409 `CHECKSUM_MISMATCH`。
-- 真实市场凭据复跑与 M0-I12～I14 仍未做（需 TF-Router 子账号）。
+- 2026-10-26 已用团队真实 TF-Router Key 复验：目录 21 项、技能/工具/节点均能下载入库；技能是当前唯一「装了立刻生效」的类别（正文注入有 6000 字符截断）。**工具全部无法执行**——4 个市场工具都依赖 `toonflow:tool-zod`，其中两个还要 Node 内建 `fs`/`worker_threads`。另：下载地址是**有效期 1 小时**的预签名 URL，安装前必须刷新目录，不能把 `market_catalog` 行长期当缓存。详见[真实市场复验](../validation/M3_MARKET_LIVE.md)。M0-I12～I14 仍未做。
 
 ### 5.2 工具界面契约（已修复）
 
@@ -113,11 +114,13 @@ export default {
 
 已支持的形态：单文件、无模块引用的工具包（`export default { validateConfig, createTools }`，`execute(id, params)` 可为 async）。
 
-明确不支持、遇到即拒绝的形态：任何 `import ...` / `export ... from` / `require(...)`。真实市场上游的包会把 `zod` 外置成虚拟模块 `toonflow:tool-zod`，这类包目前会在加载期被跳过并在日志说明原因——补这一块需要在上下文里提供该虚拟模块（把 zod 打成单文件 ESM 注入），未做。
+明确不支持、遇到即拒绝的形态：任何 `import ...` / `export ... from` / `require(...)`（紧凑写法 `import{z}from"x"` 同样识别）。真实市场 4 个工具包**全部**依赖虚拟模块 `toonflow:tool-zod`，其中 `videoComposer` 还要 `fs`/`os`/`path`、`novelToTxt` 还要 `worker_threads`/`module`/`timers/promises`。这类包在加载期被跳过，`loadError` 会显示「工具包引用了外部模块，当前执行器只支持自包含工具包」。
+
+要真正让市场工具可用，需要同时做两件事，缺一不可：提供 zod 虚拟模块（zod 打成单文件 ESM 注入或源码重写），以及设计工具的文件访问边界（工作区路径白名单）——只补 zod 的话，带 `fs` 的工具仍然跑不了，而直接放开 `IOAccess` 会把整个工作区暴露给第三方代码。
 
 成本：GraalJS 让可执行 JAR 增加约 59 MB（`js-language` 25 MB、`icu4j` 16.9 MB、`truffle-api` 12.3 MB 等；试过排除 `icu4j` 但它是 `js-language` 的传递依赖，独立排除无效，故保留并关闭 `js.intl-402`）。首次加载上下文约百毫秒级，工具调用按次建上下文，不缓存。
 
-未做：MCP 工具清单仍硬编码，未接 `ToolRuntime`；工具包的 `configRules` 未做服务端校验，配置以原样 JSON 传入；带 `toonflow:tool-zod` 的真实市场包未验证。
+未做：MCP 工具清单仍硬编码，未接 `ToolRuntime`；工具包的 `configRules` 未做服务端校验，配置以原样 JSON 传入。真实市场工具已确认全部依赖 `toonflow:tool-zod`（见本节上文），执行能力待模块桥与文件访问边界设计。
 
 ### 5.4 内置节点的撤销（已修复）
 
@@ -129,15 +132,17 @@ export default {
 2. ~~**修 `renderers()`**~~ **已完成**：按包头 `components` 发布真实工具名，`tools/client` 下发内嵌界面（`code`+`css`），纯 Agent 工具不占渲染器名额；实现见 `ToolPackage` 与 `CapabilityServiceImpl`。
 3. ~~**技能注入**~~ **已完成**：`CapabilityService.skillPrompt()` 读取已启用技能的 `SKILL.md`（缺失时取第一个 `.md`），单条 6000、合计 20000 字符上限，由 `AgentServiceImpl.systemPrompt()` 追加到系统提示词；与 `mcp/skill` 共用同一登记，停用即消失，不向客户端暴露路径。
 4. ~~**工具执行器**~~ **已实现（GraalJS，自包含包）**：进程内隔离，无宿主访问/IO，语句与时间双限，详见 5.3。真实市场包依赖的 `toonflow:tool-zod` 虚拟模块与 MCP 工具清单接入仍未做。
-5. ~~**市场在线安装**~~ **已完成（待真实凭据复跑）**：字段映射、请求体、下载来源与获批制品清单见 5.1；`installable=false` 时给出原因，不为了能点而放行。`V8` 新增 `market_catalog`。
-6. **真实凭据复跑**：需要用户提供 TF-Router 子账号凭证，顺带复验 M0-I12～I14。
+5. ~~**市场在线安装**~~ **已完成并复验**：字段映射、请求体、下载来源与获批制品清单见 5.1；`installable=false` 时给出原因，不为了能点而放行。`V8` 新增 `market_catalog`。2026-10-26 已用真实 Key 跑通目录、技能/工具/节点安装，见[真实市场复验](../validation/M3_MARKET_LIVE.md)。
+6. ~~**真实凭据复跑**~~ **已完成**（M0-I12～I14 除外）。
+7. **市场工具执行**：`toonflow:tool-zod` 虚拟模块 + 工具文件访问边界，见 5.3；这是市场工具从「能装」到「能用」的唯一缺口。
 
 ## 7. 验证方式
 
-- 后端：`cd backend && ./mvnw.cmd -s .mvn/settings.xml -B -ntp verify`（当前 132 项，含 `BuiltinNodeTests` 6 项）
+- 后端：`cd backend && ./mvnw.cmd -s .mvn/settings.xml -B -ntp verify`（当前 144 项）
 - 前端：`cd frontend && bun run check`（26 项 + 内置节点包 vue-tsc）
 - 内置节点构建：`cd frontend && bun run build:nodes`（产物写入 `backend/src/main/resources/capabilities/nodes/`）
 - 能力目录夹具：`CapabilityHarness` + `docs/validation/scripts/m3M09NodeLoad.mjs`（合成节点）、`m3M09BuiltinNodes.mjs`（内置节点）
+- 真实市场复验：夹具默认把 `huimeng.market.endpoint` 指向死端口 `http://127.0.0.1:1`，只有显式给环境变量才会连上游：`$env:HM_MARKET_ENDPOINT="https://api.toonflow.net"`，再按[真实市场复验](../validation/M3_MARKET_LIVE.md)第 2 节写入密钥
 - 夹具需要 Linux（工作区安全原语），跑在容器 `maven:3.9.11-eclipse-temurin-21`，`network host`，挂载 `/tmp/huimeng-m306:/repo`；Windows 上 `workspaces/files/list|write` 恒 503（Windows JDK 的 `Files.newDirectoryStream` 返回 `sun.nio.fs.WindowsDirectoryStream`，不实现 `SecureDirectoryStream`），画布 `.json` 读写被挡住，因此只能验证到「画布取回并注册节点」，放置实例并渲染需在 Linux 复跑
 - 浏览器脚本需要 `PLAYWRIGHT_CORE_PATH` 与 `PLAYWRIGHT_CHROMIUM_PATH`
 - 前端 dev server 若被 safe-delete 垫片打断，用 `env -u NODE_OPTIONS -u CODEBUDDY_SAFE_DELETE_* bun run dev`

@@ -49,6 +49,14 @@ class ToolRuntimeTests {
           + "export default { validateConfig: c => c, createTools: () => [{ name: \"runawayTool\",\n"
           + "  parameters: { type: \"object\" }, execute() { while (true) {} } }] };\n";
 
+  /** 真实市场制品用紧凑写法（`import{z}from"toonflow:tool-zod"`），同样必须在加载期被挡住。 */
+  static final String IMPORTING_MINIFIED =
+      "/*! toonflowTool:{\"name\":\"minifiedPack\",\"version\":\"1.0.0\",\"displayName\":\"紧凑包\","
+          + "\"description\":\"验收用\",\"author\":\"fixture\",\"github\":\"\",\"components\":[],"
+          + "\"configRules\":[]} */\n"
+          + "import{z as e}from\"toonflow:tool-zod\";\n"
+          + "export default{validateConfig:c=>c,createTools:()=>[]};\n";
+
   @Autowired ToolRuntime runtime;
   @Autowired PluginMapper plugins;
   @Autowired JdbcTemplate jdbc;
@@ -82,6 +90,18 @@ class ToolRuntimeTests {
     install("importPack", IMPORTING);
     assertThat(runtime.definitions()).isEmpty();
     assertThat(runtime.owns("anything")).isFalse();
+  }
+
+  /** 「已安装」不等于「可用」：加载不了的工具必须能说出原因，不能静默当作正常。 */
+  @Test
+  void reportsWhyInstalledToolCannotLoad() {
+    install("echoPack", ECHO);
+    install("importPack", IMPORTING);
+    install("minifiedPack", IMPORTING_MINIFIED);
+
+    assertThat(runtime.loadError(plugins.find("tool", "echoPack"))).isNull();
+    assertThat(runtime.loadError(plugins.find("tool", "importPack"))).contains("外部模块");
+    assertThat(runtime.loadError(plugins.find("tool", "minifiedPack"))).contains("外部模块");
   }
 
   @Test

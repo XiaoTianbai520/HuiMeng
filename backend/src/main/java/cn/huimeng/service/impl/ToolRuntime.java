@@ -31,10 +31,15 @@ import org.springframework.stereotype.Component;
 public class ToolRuntime {
   private static final Logger LOG = LoggerFactory.getLogger(ToolRuntime.class);
   private static final Pattern IMPORT =
-      Pattern.compile("(?m)^\\s*(?:import\\s|export\\s+\\*\\s+from|.*\\brequire\\s*\\()");
+      Pattern.compile("(?m)^\\s*(?:import\\b|export\\s+[^;]*\\bfrom\\b|.*\\brequire\\s*\\()");
   private static final long STATEMENT_LIMIT = 20_000_000L;
   private static final Duration TIMEOUT = Duration.ofSeconds(20);
   private static final int MAX_RESULT_CHARS = 100_000;
+  private static final int MAX_ERROR_CHARS = 300;
+  private static final int MAX_ERROR_CACHE = 512;
+
+  /** 加载结果缓存：键为「插件 id + 摘要」，值为空串表示可加载，否则是失败原因。 */
+  private final Map<String, String> errors = new ConcurrentHashMap<>();
 
   /** 与 Agent 内置工具重名时以内置为准，市场工具跳过并记录。 */
   private static final Set<String> RESERVED =
@@ -132,6 +137,37 @@ public class ToolRuntime {
     } catch (Exception ex) {
       return json.getNodeFactory().textNode(result);
     }
+  }
+
+  /**
+   * 加载失败原因；{@code null} 表示可正常加载。按「插件 + 摘要」缓存，避免每次列表都重跑脚本。
+   *
+   * <p>没有这个反馈时，工具包损坏或依赖外部模块只会被静默跳过，管理员无法判断「已安装」为何不生效。
+   */
+  public String loadError(PluginDO plugin) {
+    if (!"tool".equals(plugin.type()) || !plugin.enabled()) return null;
+    String key = plugin.id() + "@" + plugin.sha256();
+    String cached = errors.get(key);
+    if (cached != null) return cached.isEmpty() ? null : cached;
+    String message = null;
+    try {
+      String source = source(plugin);
+      run(
+          plugin.name(),
+          context -> {
+            Value module = evaluate(context, source, plugin.name());
+            return context
+                .eval("js", DESCRIBE)
+                .execute(module, plugin.configJson() == null ? "{}" : plugin.configJson())
+                .toString();
+          });
+    } catch (RuntimeException ex) {
+      message = ex.getMessage() == null ? ex.toString() : ex.getMessage();
+      if (message.length() > MAX_ERROR_CHARS) message = message.substring(0, MAX_ERROR_CHARS) + "…";
+    }
+    if (errors.size() > MAX_ERROR_CACHE) errors.clear();
+    errors.put(key, message == null ? "" : message);
+    return message;
   }
 
   private List<Descriptor> describe(PluginDO plugin) {

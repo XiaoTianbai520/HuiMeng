@@ -98,3 +98,15 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 ## M3-05 H3 视频
 
 `m3M05H3Mock.py` 复刻 H3 用到的执行器端点并记录每次提交的模板、宽高、帧数与参考节点；`m3M05H3Check.py` 在 `MediaBrowserAcceptanceHarness`（已放行五个 H3 模型、`-Dhm.comfy.endpoint` 指向该 mock）上验证五模式、规格、产物下载、参数边界、名额与取消（81 项）。证据见[H3 记录](../M3_H3_VIDEO.md)。
+
+## M3-08 真实市场
+
+真实市场复验不依赖浏览器。夹具默认把 `huimeng.market.endpoint` 指向死端口 `http://127.0.0.1:1`，需要连上游时才显式覆盖（PowerShell 写法见[真实市场复验](../M3_MARKET_LIVE.md)第 2 节）。
+
+三个容易踩的点，写脚本时必须处理：
+
+1. 写入类请求要求 `Origin: http://localhost:5187`（`BoundaryFilter` 固定来源校验），缺了直接 403 `CSRF_INVALID`；
+2. 密钥写入字段是 `apiKey`（`ProviderSecretReqDTO`），不是 `key`；
+3. 应用下发 `Secure` Cookie，**curl / urllib 在 http 下不会回传**，必须自己管理 Cookie（Node 手工 jar 或等价实现），否则登录后仍是未认证状态。
+
+制品下载地址是有效期 1 小时的预签名 URL，装完即失效，重跑前需要重新查目录。

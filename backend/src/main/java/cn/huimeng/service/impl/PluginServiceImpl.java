@@ -67,6 +67,7 @@ public class PluginServiceImpl implements PluginService {
   private final SecretBox box;
   private final AuditService audit;
   private final ObjectMapper json;
+  private final ToolRuntime runtime;
   private final String marketEndpoint;
   private final Set<String> artifactHosts;
   private final HttpClient http =
@@ -83,6 +84,7 @@ public class PluginServiceImpl implements PluginService {
       SecretBox box,
       AuditService audit,
       ObjectMapper json,
+      ToolRuntime runtime,
       @Value("${huimeng.market.endpoint:https://api.toonflow.net}") String marketEndpoint,
       @Value("${huimeng.market.artifact-hosts:api.toonflow.net,toonflow.tos-cn-beijing.volces.com}")
           String artifactHosts) {
@@ -93,6 +95,7 @@ public class PluginServiceImpl implements PluginService {
     this.box = box;
     this.audit = audit;
     this.json = json;
+    this.runtime = runtime;
     this.marketEndpoint = marketEndpoint.replaceAll("/+$", "");
     this.artifactHosts =
         new HashSet<>(
@@ -549,7 +552,7 @@ public class PluginServiceImpl implements PluginService {
         manifest,
         config,
         List.copyOf(documents),
-        null);
+        "tool".equals(plugin.type()) ? runtime.loadError(plugin) : null);
   }
 
   private Map<String, Object> readMap(String raw) {

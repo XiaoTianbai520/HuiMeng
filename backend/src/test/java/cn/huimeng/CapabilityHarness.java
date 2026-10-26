@@ -34,7 +34,8 @@ import org.springframework.test.context.DynamicPropertySource;
       "huimeng.storage.enabled=false",
       "huimeng.comfy.enabled=false",
       "huimeng.llm.enabled=false",
-      "huimeng.market.endpoint=http://127.0.0.1:1"
+      // 默认指向不存在的端口，保证常规测试不打外网；只有显式给 HM_MARKET_ENDPOINT 时才连真实市场。
+      "huimeng.market.endpoint=${HM_MARKET_ENDPOINT:http://127.0.0.1:1}"
     })
 @ActiveProfiles("test")
 public class CapabilityHarness {
