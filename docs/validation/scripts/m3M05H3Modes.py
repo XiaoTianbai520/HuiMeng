@@ -86,15 +86,19 @@ def upload(name, data):
 def run(mode):
     graph = json.loads((TEMPLATE / f"h3-{mode}.json").read_text(encoding="utf-8"))
     stamp = uuid.uuid4().hex[:8]
-    if mode in ("i2v", "fl2v"):
+    if mode in ("i2v", "fl2v", "r2v"):
         first = upload(f"m3-{mode}-first-{stamp}.png", png(64, 64, (196, 42, 38)))
         graph["15"]["inputs"]["image"] = first
         if mode == "fl2v":
             last = upload(f"m3-{mode}-last-{stamp}.png", png(64, 64, (36, 84, 196)))
             graph["16"]["inputs"]["image"] = last
-    graph["5"]["inputs"].update(
-        {"width": 608, "height": 352, "length": 124, "prompt": PROMPTS[mode]}
-    )
+    if mode == "l2v":
+        graph["16"]["inputs"]["image"] = upload(f"m3-l2v-last-{stamp}.png", png(64, 64, (36, 84, 196)))
+    size = {"width": 608, "height": 352, "length": 124}
+    # L2V/R2V 用模板自带的参考说明，避免把首帧语义写进末帧或多图模式。
+    if mode in PROMPTS:
+        size["prompt"] = PROMPTS[mode]
+    graph["5"]["inputs"].update(size)
     graph["8"]["inputs"]["noise_seed"] = SEED
     graph["14"]["inputs"]["filename_prefix"] = f"HuiMeng/m3-{mode}/" + stamp
     started = time.time()
@@ -153,6 +157,6 @@ def run(mode):
 
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "both"
-    modes = ["i2v", "fl2v"] if which == "both" else [which]
+    modes = ["i2v", "fl2v", "l2v", "r2v"] if which == "both" else [which]
     reports = [run(mode) for mode in modes]
     print(json.dumps({"reports": reports}, ensure_ascii=False), flush=True)
