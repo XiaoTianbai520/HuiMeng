@@ -12,7 +12,9 @@ import com.fasterxml.jackson.databind.*;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.security.MessageDigest;
 import java.util.*;
+import java.util.HexFormat;
 import java.util.zip.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -298,6 +300,67 @@ class PluginMarketTests {
                     "url", "https://evil.example/node.umd.js",
                     "sha256", "0".repeat(64))))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void installsExtensionBuiltWithBacktickExport() throws Exception {
+    // M0-I14：上游本地构建产物用反引号写 `toonflowExts[`ext-txt`]`，原安装器只认单双引号而 400。
+    // 本平台不解析这行导出、只按包头取元数据，因此反引号写法应当正常安装。
+    String backtick =
+        "// @version 1.2.0\nwindow.toonflowExts = window.toonflowExts || {};\n"
+            + "window.toonflowExts[`ext-txt`] = { mount: function () { return null; } };\n";
+    mvc.perform(
+            write(
+                post("/api/v1/admin/ext/install"),
+                admin,
+                Map.of("fileName", "ext-txt.umd.js", "source", backtick)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.name").value("ext-txt"));
+    mvc.perform(get("/api/v1/admin/plugins").session(admin).secure(true))
+        .andExpect(jsonPath("$.items[0].type").value("ext"))
+        .andExpect(jsonPath("$.items[0].version").value("1.2.0"));
+  }
+
+  @Test
+  void recordsByteDigestIndependentlyOfDeclaredVersion() throws Exception {
+    // M0-I12：版本来自包头声明，摘要只能是下载字节的 SHA-256；两者分开存，互不推断。
+    String source = "// @version 3.1.0\nconsole.log('digest probe');\n";
+    mvc.perform(
+            write(
+                post("/api/v1/admin/nodes/install"),
+                admin,
+                Map.of("fileName", "digestNode.umd.js", "source", source)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.name").value("digestNode"));
+    String recorded =
+        jdbc.queryForObject("SELECT sha256 FROM plugins WHERE id='node:digestNode'", String.class);
+    String expected =
+        HexFormat.of()
+            .formatHex(
+                MessageDigest.getInstance("SHA-256")
+                    .digest(source.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+    assertThat(recorded).isEqualTo(expected);
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT version FROM plugins WHERE id='node:digestNode'", String.class))
+        .isEqualTo("3.1.0");
+  }
+
+  @Test
+  void nodeManagementRequiresAdministrator() throws Exception {
+    // M0-I13：原版对「声明非本地客户端」的合成节点启停缺少守卫；本平台任何启停/卸载都必须管理员。
+    asAdmin();
+    users.create(new CreateUserReqDTO("member", PASSWORD, "USER"), "test");
+    SecurityContextHolder.clearContext();
+    MockHttpSession member = login("member", PASSWORD);
+    mvc.perform(
+            write(
+                put("/api/v1/admin/nodes/setEnabled"),
+                member,
+                Map.of("name", "demoNode", "enabled", false)))
+        .andExpect(status().isForbidden());
+    mvc.perform(write(delete("/api/v1/admin/nodes/uninstall"), member, Map.of("name", "demoNode")))
+        .andExpect(status().isForbidden());
   }
 
   @Test
