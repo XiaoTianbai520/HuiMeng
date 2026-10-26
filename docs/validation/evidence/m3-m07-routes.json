@@ -1,0 +1,224 @@
+{
+ "excludedRoutes": 25,
+ "routeMapSources": 99,
+ "platformEntries": 58,
+ "backendHits": [],
+ "frontendHits": [],
+ "pendingTargets": [
+  "/api/v1/admin/agents/install",
+  "/api/v1/admin/agents/setEnabled",
+  "/api/v1/admin/agents/uninstall",
+  "/api/v1/admin/ai/media/balance",
+  "/api/v1/admin/ai/media/balanceEvents",
+  "/api/v1/admin/ext/install",
+  "/api/v1/admin/ext/save",
+  "/api/v1/admin/ext/setEnabled",
+  "/api/v1/admin/ext/uninstall",
+  "/api/v1/admin/ffmpeg/cancel",
+  "/api/v1/admin/ffmpeg/download",
+  "/api/v1/admin/ffmpeg/progress",
+  "/api/v1/admin/nodes/install",
+  "/api/v1/admin/nodes/save",
+  "/api/v1/admin/nodes/setEnabled",
+  "/api/v1/admin/nodes/uninstall",
+  "/api/v1/admin/providers/media/validate",
+  "/api/v1/admin/providers/models",
+  "/api/v1/admin/settings/systemPrompt",
+  "/api/v1/admin/skills/get",
+  "/api/v1/admin/skills/install",
+  "/api/v1/admin/skills/uninstall",
+  "/api/v1/admin/tools/install",
+  "/api/v1/admin/tools/save",
+  "/api/v1/admin/tools/setEnabled",
+  "/api/v1/admin/tools/uninstall",
+  "/api/v1/capabilities/agents/get",
+  "/api/v1/capabilities/ext/list",
+  "/api/v1/capabilities/ext/read",
+  "/api/v1/capabilities/ffmpeg/events",
+  "/api/v1/capabilities/nodes/files",
+  "/api/v1/capabilities/tools/client"
+ ],
+ "checks": [
+  {
+   "name": "R033 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/browser/input"
+  },
+  {
+   "name": "R034 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/browser/stream"
+  },
+  {
+   "name": "R035 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/clipboard/read"
+  },
+  {
+   "name": "R036 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/clipboard/write"
+  },
+  {
+   "name": "R037 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/devtools"
+  },
+  {
+   "name": "R038 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/openUrl"
+  },
+  {
+   "name": "R039 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/plugins/install"
+  },
+  {
+   "name": "R040 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/providerFile/read"
+  },
+  {
+   "name": "R041 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/providerFile/select"
+  },
+  {
+   "name": "R042 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/ready"
+  },
+  {
+   "name": "R043 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/saveFile"
+  },
+  {
+   "name": "R044 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/selectDirectory"
+  },
+  {
+   "name": "R045 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/selectSaveFile"
+  },
+  {
+   "name": "R046 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/update/apply"
+  },
+  {
+   "name": "R047 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/update/check"
+  },
+  {
+   "name": "R048 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/update/download"
+  },
+  {
+   "name": "R049 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/desktop/update"
+  },
+  {
+   "name": "R067 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/config"
+  },
+  {
+   "name": "R068 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/heartbeat"
+  },
+  {
+   "name": "R069 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/pair"
+  },
+  {
+   "name": "R070 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/pairing"
+  },
+  {
+   "name": "R071 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/revoke"
+  },
+  {
+   "name": "R072 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/mobileLink/status"
+  },
+  {
+   "name": "R124 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/workspaces/files/reveal"
+  },
+  {
+   "name": "R127 不在前端路由白名单",
+   "ok": true,
+   "detail": "/api/workspaces/selectDirectory"
+  },
+  {
+   "name": "排除前缀未出现在目标路径",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "后端无排除路由映射",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "后端无 /api/desktop 前缀",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "后端无 /api/mobileLink 前缀",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "后端无 /api/browser 前缀",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "前端无排除路由调用",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "前端无 /api/desktop/ 引用",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "前端无 /api/mobileLink/ 引用",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "前端无 /api/browser/ 引用",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "页面遍历未触发未实现的契约路径",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "平台白名单覆盖协议入口",
+   "ok": true,
+   "detail": "['/api/v1/admin/configuration/export', '/api/v1/admin/external-clients', '/api/v1/admin/external-clients/{clientId}/revoke']"
+  }
+ ],
+ "createdAt": "2026-10-26T13:59:29.683180+08:00"
+}

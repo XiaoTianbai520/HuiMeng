@@ -1,0 +1,93 @@
+{
+ "sweeps": 12,
+ "checks": [
+  {
+   "name": "首页项目列表 打开",
+   "ok": true,
+   "detail": "/home"
+  },
+  {
+   "name": "团队管理页 打开",
+   "ok": true,
+   "detail": "/team"
+  },
+  {
+   "name": "项目文件页 打开",
+   "ok": true,
+   "detail": "/projects/004ea5f1-c2a3-4e2c-b016-b5d7f2780d8e/files"
+  },
+  {
+   "name": "画布工作区 打开",
+   "ok": true,
+   "detail": "/workspace"
+  },
+  {
+   "name": "设置面板不少于 7 个",
+   "ok": true,
+   "detail": "界面设置 | 常规配置 | 团队管理 | 插件市场 | 外部客户端 | 个性化 | 隐私 | 关于"
+  },
+  {
+   "name": "设置面板「界面设置」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「常规配置」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「团队管理」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「插件市场」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「外部客户端」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「个性化」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「隐私」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "设置面板「关于」打开",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "页面未命中任何排除路由",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "页面无失败请求",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "页面无未捕获错误",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "failures": [],
+ "excludedHits": [],
+ "consoleErrors": [
+  "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+  "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+ ],
+ "pageErrors": [],
+ "createdAt": "2026-10-26T05:53:07.619Z"
+}
