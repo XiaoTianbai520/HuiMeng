@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-10-26T03:40:22Z",
+  "project": "eee76c71-3a8e-48f3-8fd2-62545dbce7c9",
+  "sourceBytes": 569517,
+  "outputBytes": 1105777,
+  "seconds": 1.0,
+  "events": [
+    "progress",
+    "done"
+  ],
+  "percentSamples": [
+    47
+  ],
+  "cancel": "cancelled",
+  "checks": [
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "login",
+      "detail": "200"
+    },
+    {
+      "name": "nodesCatalogEmpty",
+      "detail": "200"
+    },
+    {
+      "name": "toolRenderersEmpty",
+      "detail": "200"
+    },
+    {
+      "name": "ffmpegAvailable",
+      "detail": "{'available': True, 'version': 'ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers', 'running': 0, 'presets': ['mp3-192k', 'mp4-1080p', 'mp4-720p', 'webm-720p']}"
+    },
+    {
+      "name": "presetsPublished",
+      "detail": "['mp3-192k', 'mp4-1080p', 'mp4-720p', 'webm-720p']"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "uploadSource",
+      "detail": "201"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "executeStarted",
+      "detail": "200"
+    },
+    {
+      "name": "executeStreams",
+      "detail": "text/event-stream"
+    },
+    {
+      "name": "progressReported",
+      "detail": "['progress', 'done']"
+    },
+    {
+      "name": "doneLast",
+      "detail": "['progress', 'done']"
+    },
+    {
+      "name": "presetEchoed",
+      "detail": "{'preset': 'mp4-720p', 'mediaType': 'video', 'mimeType': 'video/mp4', 'path': '.huimeng-media/a0a9459a-49da-4b1f-8c3a-70e088b2a8a4.mp4'}"
+    },
+    {
+      "name": "percentComputed",
+      "detail": "[47]"
+    },
+    {
+      "name": "transcodedDownloadable",
+      "detail": "200 1105777"
+    },
+    {
+      "name": "outputIsMp4",
+      "detail": "b'isom'"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "uploadLongSource",
+      "detail": "201"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "cancelRunStillRunning",
+      "detail": ""
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "200"
+    },
+    {
+      "name": "cancelRunFinished",
+      "detail": ""
+    },
+    {
+      "name": "cancelEndsStream",
+      "detail": "{'event': 'error', 'args': [{'message': '转码已取消'}]}"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "foreignPathRejected",
+      "detail": "400"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "unknownPresetRejected",
+      "detail": "400"
+    }
+  ]
+}
