@@ -42,6 +42,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
   private final UserService users;
   private final ObjectStorage storage;
   private final ComfyImageClient comfy;
+  private final ComfyVideoClient videos;
   private final ObjectMapper json;
   private final AuditService audit;
   private final TransactionTemplate transactions;
@@ -66,6 +67,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       UserService users,
       ObjectStorage storage,
       ComfyImageClient comfy,
+      ComfyVideoClient videos,
       ObjectMapper json,
       AuditService audit,
       PlatformTransactionManager manager) {
@@ -76,6 +78,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     this.users = users;
     this.storage = storage;
     this.comfy = comfy;
+    this.videos = videos;
     this.json = json;
     this.audit = audit;
     transactions = new TransactionTemplate(manager);
@@ -121,9 +124,16 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       Actor owner,
       ComfyImageClient.Spec spec,
       String reference,
+      ComfyVideoClient.Spec videoSpec,
+      List<String> videoReferences,
       boolean replay) {}
 
-  private String hash(GenerateImageReqDTO input, ComfyImageClient.Spec spec, String reference) {
+  private String hash(
+      GenerateImageReqDTO input,
+      String size,
+      String ratio,
+      List<String> references,
+      Integer duration) {
     try {
       return HexFormat.of()
           .formatHex(
@@ -133,38 +143,86 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                           new GenerateImageReqDTO(
                               input.providerId(),
                               input.modelId(),
-                              "image",
+                              input.mediaType(),
                               input.prompt(),
-                              spec.size(),
-                              spec.ratio(),
-                              reference.isEmpty()
+                              size,
+                              ratio,
+                              references.isEmpty()
                                   ? null
-                                  : List.of(
-                                      new GenerateImageMediaDTO(
-                                          ".huimeng-media/" + reference + ".png", "image/png"))))));
+                                  : references.stream().map(this::mediaRef).toList(),
+                              duration))));
     } catch (Exception ex) {
       throw new IllegalStateException("Request hashing unavailable");
     }
+  }
+
+  private GenerateImageMediaDTO mediaRef(String id) {
+    return new GenerateImageMediaDTO(".huimeng-media/" + id + ".png", "image/png");
+  }
+
+  /** 视频参考图按模式决定数量与顺序：i2v/l2v 一张，fl2v 首帧+尾帧，r2v 1–9 张。 */
+  private List<String> videoReferenceIds(GenerateImageReqDTO input, String mode) {
+    var images = input.images() == null ? List.<GenerateImageMediaDTO>of() : input.images();
+    int expectedMin = switch (mode) {
+      case "t2v" -> 0;
+      case "i2v", "l2v" -> 1;
+      case "fl2v" -> 2;
+      default -> 1;
+    };
+    int expectedMax = mode.equals("r2v") ? 9 : expectedMin;
+    if (images.size() < expectedMin || images.size() > expectedMax)
+      throw new ApiException(400, "INVALID_ARGUMENT", "该模式参考图数量不符");
+    var ids = new ArrayList<String>();
+    for (var image : images) {
+      if (image == null
+          || !"image/png".equals(image.mimeType())
+          || image.path() == null
+          || !MEDIA_PATH.matcher(image.path()).matches())
+        throw new ApiException(400, "INVALID_ARGUMENT", "参考图必须是项目内的 PNG 素材");
+      ids.add(MEDIA_PATH.matcher(image.path()).replaceAll("$1"));
+    }
+    return List.copyOf(ids);
   }
 
   /** 校验、幂等与名额占位；不触达执行器，第 6 个与无效请求都停在供应商之前。 */
   private Admission admit(String project, GenerateImageReqDTO input, String key, String requestId) {
     authorization.requireApproved(project, input.providerId(), input.modelId());
     if (key == null || key.isBlank() || key.length() > 128) throw ApiException.invalid();
-    if (!"image".equals(input.mediaType()) || !PROVIDER.equals(input.providerId()))
-      throw ComfyImageClient.unfamiliarModel();
-    ComfyImageClient.Spec spec = spec(input);
-    boolean edit = ComfyImageClient.EDIT_MODEL.equals(input.modelId());
-    String reference = referenceId(input, edit);
-    // 参考图归属与大小在占位前校验，避免无效请求占用名额或触达执行器。
-    if (!reference.isEmpty()) media.requireReference(project, reference);
+    boolean video = "video".equals(input.mediaType());
+    ComfyImageClient.Spec spec = null;
+    ComfyVideoClient.Spec videoSpec = null;
+    String reference = "";
+    List<String> videoReferences = List.of();
+    if (video) {
+      if (!ComfyVideoClient.PROVIDER.equals(input.providerId()) || !videos.supports(input.modelId()))
+        throw ComfyVideoClient.unfamiliarModel();
+      videoSpec =
+          ComfyVideoClient.resolve(
+              input.modelId(), input.duration(), input.size(), input.ratio());
+      videoReferences = videoReferenceIds(input, videoSpec.mode());
+      for (String id : videoReferences) media.requireReference(project, id);
+    } else {
+      if (!"image".equals(input.mediaType()) || !PROVIDER.equals(input.providerId()))
+        throw ComfyImageClient.unfamiliarModel();
+      spec = spec(input);
+      boolean edit = ComfyImageClient.EDIT_MODEL.equals(input.modelId());
+      reference = referenceId(input, edit);
+      // 参考图归属与大小在占位前校验，避免无效请求占用名额或触达执行器。
+      if (!reference.isEmpty()) media.requireReference(project, reference);
+    }
     Actor owner = RequestContext.actor();
-    String hash = hash(input, spec, reference);
+    String hash =
+        hash(
+            input,
+            video ? videoSpec.resolution() : spec.size(),
+            video ? videoSpec.ratio() : spec.ratio(),
+            video ? videoReferences : (reference.isEmpty() ? List.of() : List.of(reference)),
+            video ? videoSpec.duration() : null);
     var known = runs.idempotent(project, owner.id(), key);
     if (known != null) {
       if (!known.requestHash().equals(hash))
         throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该幂等键已用于不同请求");
-      return new Admission(known.id(), known, owner, spec, reference, true);
+      return new Admission(known.id(), known, owner, spec, reference, videoSpec, videoReferences, true);
     }
     String id = UUID.randomUUID().toString();
     GenerationRunDO run =
@@ -183,15 +241,17 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               audit.record(owner.id(), project, "MEDIA_GENERATE", id, "ADMITTED", requestId);
               return runs.find(project, id);
             });
-    return new Admission(run.id(), run, owner, spec, reference, !run.id().equals(id));
+    return new Admission(run.id(), run, owner, spec, reference, videoSpec, videoReferences, !run.id().equals(id));
   }
 
   /** 名额已在库中占用后才探测执行器；不可达立即释放，不留下待核查占位。 */
-  private void requireExecutor(String project, String id) {
+  private void requireExecutor(String project, String id, boolean video) {
     try {
-      comfy.requireAvailable();
+      if (video) videos.requireAvailable();
+      else comfy.requireAvailable();
       storage.requireAvailable();
-      comfy.checkReady();
+      if (video) videos.checkReady();
+      else comfy.checkReady();
     } catch (RuntimeException ex) {
       var current = runs.find(project, id);
       if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
@@ -205,7 +265,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     Admission admission = admit(project, input, key, requestId);
     if (admission.replay()) return new GenerationSubmission(response(admission.run()), true, null);
     String id = admission.id();
-    requireExecutor(project, id);
+    requireExecutor(project, id, admission.videoSpec() != null);
     var stream = new ResponseBodyEmitter(16 * 60 * 1000L);
     try {
       workers.execute(
@@ -233,7 +293,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       String project, GenerateImageReqDTO input, String key, String requestId) {
     Admission admission = admit(project, input, key, requestId);
     if (admission.replay()) throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该工具调用已执行过，请勿重复提交");
-    requireExecutor(project, admission.id());
+    requireExecutor(project, admission.id(), admission.videoSpec() != null);
     var collected = new java.util.concurrent.atomic.AtomicReference<MediaResultRespDTO>();
     execute(
         project,
@@ -248,6 +308,105 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       throw new ApiException(
           503, "GENERATION_FAILED", result == null ? "生成未完成，请稍后重试" : result.message());
     return result.data().get(0);
+  }
+
+
+  /** 视频执行：提交、轮询、下载、入库；取消与超时都走同一套终态收敛。 */
+  private void executeVideo(
+      String project,
+      Admission admission,
+      GenerateImageReqDTO input,
+      String requestId,
+      java.util.function.Consumer<Object> sink) {
+    String id = admission.id();
+    ComfyVideoClient.Spec spec = admission.videoSpec();
+    Actor owner = admission.owner();
+    boolean remoteAttempted = false, confirmedTerminal = false;
+    String promptId = null;
+    try {
+      bind(owner);
+      authorization.requireApproved(project, input.providerId(), input.modelId());
+      if (runs.running(project, id) != 1) {
+        runs.finish(project, id, "CANCELLED", false);
+        throw ApiException.forbidden();
+      }
+      var references = new ArrayList<byte[]>();
+      for (String referenceId : admission.videoReferences())
+        references.add(reference(project, referenceId));
+      runs.reference(project, id, id);
+      remoteAttempted = true;
+      promptId = videos.submit(project, id, spec, input.prompt(), references);
+      runs.reference(project, id, promptId);
+      Instant deadline = Instant.now().plusSeconds(DEADLINE_SECONDS);
+      com.fasterxml.jackson.databind.JsonNode record = null;
+      while (Instant.now().isBefore(deadline)) {
+        sink.accept(" ");
+        record = videos.history(promptId);
+        if (record != null && record.path("status").path("completed").asBoolean(false)) {
+          confirmedTerminal = true;
+          break;
+        }
+        if (record != null && "error".equals(record.path("status").path("status_str").asText()))
+          throw ComfyVideoClient.unavailable();
+        if (runs.find(project, id).state().equals("CANCELLING")) {
+          videos.cancel(promptId);
+          confirmedTerminal = true;
+          runs.finish(project, id, "CANCELLED", false);
+          throw ApiException.forbidden();
+        }
+        Thread.sleep(2000);
+      }
+      if (!confirmedTerminal) {
+        videos.cancel(promptId);
+        throw ComfyVideoClient.unavailable();
+      }
+      if (runs.find(project, id).state().equals("CANCELLING")) {
+        runs.finish(project, id, "CANCELLED", false);
+        throw ApiException.forbidden();
+      }
+      bind(owner);
+      authorization.requireApproved(project, input.providerId(), input.modelId());
+      byte[] bytes = videos.output(promptId, record);
+      var result =
+          media.upload(
+              project,
+              "generated-" + id + ".mp4",
+              bytes.length,
+              new ByteArrayInputStream(bytes),
+              requestId);
+      if (runs.succeed(project, id) != 1) {
+        media.discardGenerated(project, result.id(), owner.id(), requestId);
+        runs.finish(project, id, "CANCELLED", false);
+        throw ApiException.forbidden();
+      }
+      sink.accept(
+          new MediaResultRespDTO(
+              200,
+              List.of(
+                  new GeneratedMediaRespDTO(
+                      ".huimeng-media/" + result.id() + ".mp4",
+                      "video/mp4",
+                      "video",
+                      spec.display())),
+              "success"));
+    } catch (Exception ex) {
+      cancelQuietly(promptId);
+      var current = runs.find(project, id);
+      boolean held = current != null && current.capacityHeld();
+      if (remoteAttempted && !confirmedTerminal) {
+        runs.finish(project, id, "LOST", held);
+        sink.accept(new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
+      } else if (held) {
+        runs.finish(project, id, "FAILED", false);
+        sink.accept(new MediaResultRespDTO(503, List.of(), "生成失败，请稍后重试"));
+      }
+    } finally {
+      SecurityContextHolder.clearContext();
+    }
+  }
+
+  private void cancelQuietly(String promptId) {
+    if (promptId != null) videos.cancel(promptId);
   }
 
   private void send(ResponseBodyEmitter stream, Object value) {
@@ -287,6 +446,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       GenerateImageReqDTO input,
       String requestId,
       java.util.function.Consumer<Object> sink) {
+    if (admission.videoSpec() != null) {
+      executeVideo(project, admission, input, requestId, sink);
+      return;
+    }
     String id = admission.id(), referenceId = admission.reference();
     Actor owner = admission.owner();
     ComfyImageClient.Spec spec = admission.spec();

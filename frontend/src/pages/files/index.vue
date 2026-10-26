@@ -9,16 +9,18 @@
         <div><label for="projectUpload">选择文件（最大 512 MiB）</label><input id="projectUpload" ref="uploadInput" type="file" :disabled="busy || !authorized" @change="selectFile" /></div>
         <el-button native-type="submit" type="primary" :loading="busy" :disabled="!selected || !authorized">上传文件</el-button>
       </form>
-      <form aria-label="受控图片生成" class="inlineForm" @submit.prevent="generate">
-        <div><label for="imageModel">获批图片模型</label><select id="imageModel" v-model="selectedModel" :disabled="busy || !authorized"><option value="">请选择模型</option><option v-for="model in models" :key="model.modelId" :value="model.modelId">{{ model.label }}</option></select></div>
-        <div><label for="imageSize">尺寸</label><select id="imageSize" v-model="selectedSize" :disabled="busy || !authorized"><option v-for="size in imageSizes" :key="size" :value="size">{{ size }}</option></select></div>
-        <div><label for="imageRatio">画幅</label><select id="imageRatio" v-model="selectedRatio" :disabled="busy || !authorized"><option v-for="ratio in imageRatios" :key="ratio" :value="ratio">{{ ratio }}</option></select></div>
-        <div v-if="isEditModel"><label for="imageReference">参考图（项目内 PNG）</label><select id="imageReference" v-model="referenceId" :disabled="busy || !authorized"><option value="">请选择参考图</option><option v-for="item in referenceCandidates" :key="item.id" :value="String(item.id)">{{ item.filename }}</option></select></div>
-        <div><label for="imagePrompt">{{ isEditModel ? '编辑指令' : '图片描述' }}</label><el-input id="imagePrompt" v-model="prompt" type="textarea" maxlength="8000" :disabled="busy || !authorized" /></div>
-        <el-button native-type="submit" type="primary" :disabled="busy || !authorized || !selectedModel || !prompt.trim() || (isEditModel && !referenceId)">生成图片</el-button>
+      <form aria-label="受控媒体生成" class="inlineForm" @submit.prevent="generate">
+        <div><label for="imageModel">获批模型</label><select id="imageModel" v-model="selectedModel" :disabled="busy || !authorized"><option value="">请选择模型</option><option v-for="model in models" :key="model.modelId" :value="model.modelId">{{ model.label }}</option></select></div>
+        <div v-if="isVideoModel"><label for="videoDuration">时长</label><select id="videoDuration" v-model="videoDuration" :disabled="busy || !authorized"><option v-for="value in videoDurations" :key="value" :value="value">{{ value }} 秒</option></select></div>
+        <div><label for="imageSize">{{ isVideoModel ? '分辨率' : '尺寸' }}</label><select id="imageSize" v-model="selectedSize" :disabled="busy || !authorized"><option v-for="size in sizeOptions" :key="size" :value="size">{{ size }}</option></select></div>
+        <div><label for="imageRatio">画幅</label><select id="imageRatio" v-model="selectedRatio" :disabled="busy || !authorized"><option v-for="ratio in ratioOptions" :key="ratio" :value="ratio">{{ ratio }}</option></select></div>
+        <div v-if="needsReference"><label for="imageReference">{{ referenceLabel }}</label><select id="imageReference" v-model="referenceId" :disabled="busy || !authorized"><option value="">请选择参考图</option><option v-for="item in referenceCandidates" :key="item.id" :value="String(item.id)">{{ item.filename }}</option></select></div>
+        <div v-if="needsSecondFrame"><label for="imageReferenceLast">尾帧（项目内 PNG）</label><select id="imageReferenceLast" v-model="referenceIdLast" :disabled="busy || !authorized"><option value="">请选择尾帧</option><option v-for="item in referenceCandidates" :key="item.id" :value="String(item.id)">{{ item.filename }}</option></select></div>
+        <div><label for="imagePrompt">{{ promptLabel }}</label><el-input id="imagePrompt" v-model="prompt" type="textarea" maxlength="8000" :disabled="busy || !authorized" /></div>
+        <el-button native-type="submit" type="primary" :disabled="busy || !authorized || !selectedModel || !prompt.trim() || (needsReference && !referenceId) || (needsSecondFrame && !referenceIdLast)">{{ isVideoModel ? '生成视频' : '生成图片' }}</el-button>
         <el-button v-if="running" :disabled="cancelling" @click="cancelGeneration">{{ cancelling ? '正在确认取消' : '取消生成' }}</el-button>
       </form>
-      <p class="muted">当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。</p>
+      <p class="muted">{{ hint }}</p>
       <p v-if="generationStatus" role="status">{{ generationStatus }}</p>
       <el-table :data="items" empty-text="当前项目还没有文件">
         <el-table-column prop="filename" label="文件名" min-width="180" />
@@ -46,8 +48,31 @@ const selected = ref<File>(), uploadInput = ref<HTMLInputElement>(), previewItem
 const models = ref<Model[]>([]), selectedModel = ref(""), prompt = ref(""), running = ref(""), cancelling = ref(false), generationStatus = ref("");
 // 规格与参考图始终显式上送；服务端再按模型校验，省略时才回落到 1K、1:1。
 const imageSizes = ["1K", "0.5MP", "2K"], imageRatios = ["1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", "21:9"];
-const selectedSize = ref("1K"), selectedRatio = ref("1:1"), referenceId = ref("");
+// H3 五模式：分辨率、比例与时长由服务端固定校验，页面只提供合法枚举。
+const videoSizes = ["352p", "480p", "544p"], videoRatios = ["16:9", "9:16", "1:1", "4:3", "3:4"], videoDurations = [5, 8, 10, 15];
+const videoModels = new Set(["h3T2v", "h3I2v", "h3Fl2v", "h3L2v", "h3R2v"]);
+const videoModes: Record<string, string> = { h3T2v: "t2v", h3I2v: "i2v", h3Fl2v: "fl2v", h3L2v: "l2v", h3R2v: "r2v" };
+const selectedSize = ref("1K"), selectedRatio = ref("1:1"), referenceId = ref(""), referenceIdLast = ref(""), videoDuration = ref(5);
 const isEditModel = computed(() => selectedModel.value === "qwenImage21Edit");
+const isVideoModel = computed(() => videoModels.has(selectedModel.value));
+const videoMode = computed(() => videoModes[selectedModel.value] ?? "");
+const sizeOptions = computed(() => (isVideoModel.value ? videoSizes : imageSizes));
+const ratioOptions = computed(() => (isVideoModel.value ? videoRatios : imageRatios));
+const needsReference = computed(() => isEditModel.value || ["i2v", "l2v", "fl2v", "r2v"].includes(videoMode.value));
+const needsSecondFrame = computed(() => videoMode.value === "fl2v");
+const referenceLabel = computed(() => (isVideoModel.value ? (videoMode.value === "l2v" ? "尾帧（项目内 PNG）" : videoMode.value === "r2v" ? "参考图（项目内 PNG）" : "首帧（项目内 PNG）") : "参考图（项目内 PNG）"));
+const promptLabel = computed(() => (isEditModel.value ? "编辑指令" : isVideoModel.value ? "视频描述" : "图片描述"));
+const hint = computed(() => isVideoModel.value
+  ? "当前选中本地 MiniMax H3：352p、480p、544p 与 5/8/10/15 秒，五种模式按所选模型决定参考图数量；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。"
+  : "当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。");
+
+// 切换模型时把规格拉回该模型支持的默认值，避免带着图片规格去请求视频。
+watch(selectedModel, () => {
+  if (isVideoModel.value) { selectedSize.value = "352p"; selectedRatio.value = "16:9"; }
+  else { selectedSize.value = "1K"; selectedRatio.value = "1:1"; }
+  referenceId.value = "";
+  referenceIdLast.value = "";
+});
 const referenceCandidates = computed(() => items.value.filter(item => item.filename.toLowerCase().endsWith(".png")));
 let lifetime = new AbortController();
 const projectId = () => String(route.params.projectId ?? "");
@@ -57,16 +82,29 @@ function formatBytes(size: number) { return size < 1024 ? `${size} B` : size < 1
 async function refresh() {
   closePreview(); error.value = ""; authorized.value = false; items.value = [];
   const signal = lifetime.signal;
-  try { const rows = await readAll<ProjectMedia>(base(), signal); const result = await client.get<{ items: Model[] }>("/api/v1/models", { signal }); signal.throwIfAborted(); items.value = rows; models.value = result.data.items.filter(model => model.providerId === "qwenImage21Local" && (model.modelId === "qwenImage21Text" || model.modelId === "qwenImage21Edit")); if (!models.value.some(model => model.modelId === selectedModel.value)) selectedModel.value = models.value[0]?.modelId ?? ""; authorized.value = true; }
+  try { const rows = await readAll<ProjectMedia>(base(), signal); const result = await client.get<{ items: Model[] }>("/api/v1/models", { signal }); signal.throwIfAborted(); items.value = rows; models.value = result.data.items.filter(model => (model.providerId === "qwenImage21Local" && (model.modelId === "qwenImage21Text" || model.modelId === "qwenImage21Edit")) || (model.providerId === "h3Local3060" && videoModels.has(model.modelId))); if (!models.value.some(model => model.modelId === selectedModel.value)) selectedModel.value = models.value[0]?.modelId ?? ""; authorized.value = true; }
   catch (ex) { if (!signal.aborted) error.value = adminError(ex, "文件列表加载失败，请重试。"); }
 }
 async function generate() {
   if (busy.value || !selectedModel.value || !prompt.value.trim()) return;
   const edit = isEditModel.value;
-  if (edit && !referenceId.value) { error.value = "单图编辑必须选择一张项目内的 PNG 参考图。"; return; }
+  if ((edit || needsReference.value) && !referenceId.value) { error.value = "该模型必须选择项目内的 PNG 参考图。"; return; }
+  if (needsSecondFrame.value && !referenceIdLast.value) { error.value = "首尾帧模式必须选择尾帧。"; return; }
   const signal = lifetime.signal, id = projectId(); busy.value = true; error.value = ""; cancelling.value = false;
-  const body = { providerId: "qwenImage21Local", modelId: selectedModel.value, mediaType: "image", prompt: prompt.value.trim(), size: selectedSize.value, ratio: selectedRatio.value, images: edit ? [{ path: `.huimeng-media/${referenceId.value}.png`, mimeType: "image/png" }] : undefined };
-  generationStatus.value = `正在提交生成请求（${selectedSize.value} · ${selectedRatio.value}）…`;
+  const frames = !isVideoModel.value ? undefined
+    : needsSecondFrame.value ? [referenceId.value, referenceIdLast.value]
+    : needsReference.value ? [referenceId.value] : [];
+  const body = {
+    providerId: isVideoModel.value ? "h3Local3060" : "qwenImage21Local",
+    modelId: selectedModel.value,
+    mediaType: isVideoModel.value ? "video" : "image",
+    prompt: prompt.value.trim(),
+    size: selectedSize.value,
+    ratio: selectedRatio.value,
+    images: frames?.length ? frames.map(value => ({ path: `.huimeng-media/${value}.png`, mimeType: "image/png" })) : undefined,
+    duration: isVideoModel.value ? videoDuration.value : undefined,
+  };
+  generationStatus.value = `正在提交${isVideoModel.value ? "视频" : "图片"}生成请求（${isVideoModel.value ? `${videoDuration.value} 秒 · ` : ""}${selectedSize.value} · ${selectedRatio.value}）…`;
   try {
     const response = await apiFetch(`/api/v1/projects/${encodeURIComponent(id)}/creative/ai/media/generate`, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(body), signal });
     if (!response.ok) { const result = await response.json() as { message?: string }; throw new Error(result.message ?? "生成请求未获授权"); }
@@ -78,7 +116,7 @@ async function generate() {
       throw new Error(state === "LOST" ? "执行状态待核查，未确认结束前保留名额。" : "生成未完成，请检查模型状态后重试。");
     }
     const spec = (result as { code: 200; data: { spec?: string }[] }).data?.[0]?.spec;
-    await refresh(); if (!signal.aborted) generationStatus.value = spec ? `图片已生成并保存到当前项目（实际规格 ${spec}）。` : "图片已生成并保存到当前项目。";
+    await refresh(); if (!signal.aborted) generationStatus.value = spec ? `${isVideoModel.value ? "视频" : "图片"}已生成并保存到当前项目（实际规格 ${spec}）。` : "生成结果已保存到当前项目。";
   } catch (ex) { if (!signal.aborted) { error.value = ex instanceof Error ? ex.message : "生成失败，请检查权限和模型状态。"; generationStatus.value = ""; } }
   finally { if (!signal.aborted) { busy.value = false; running.value = ""; cancelling.value = false; } }
 }
@@ -128,7 +166,7 @@ async function download(id: string) {
 }
 watch(() => route.params.projectId, async () => {
   lifetime.abort(); lifetime = new AbortController(); const signal = lifetime.signal;
-  items.value = []; projectName.value = ""; authorized.value = false; closePreview(); error.value = ""; busy.value = false; selected.value = undefined; models.value = []; selectedModel.value = ""; prompt.value = ""; running.value = ""; cancelling.value = false; generationStatus.value = ""; selectedSize.value = "1K"; selectedRatio.value = "1:1"; referenceId.value = "";
+  items.value = []; projectName.value = ""; authorized.value = false; closePreview(); error.value = ""; busy.value = false; selected.value = undefined; models.value = []; selectedModel.value = ""; prompt.value = ""; running.value = ""; cancelling.value = false; generationStatus.value = ""; selectedSize.value = "1K"; selectedRatio.value = "1:1"; referenceId.value = ""; referenceIdLast.value = ""; videoDuration.value = 5;
   try { await workspace.openProject(projectId(), projectId(), signal); signal.throwIfAborted(); projectName.value = workspace.project?.name ?? ""; await refresh(); }
   catch (ex) { if (!signal.aborted) error.value = adminError(ex, "无法打开项目文件，请重新选择授权项目。"); }
 }, { immediate: true });

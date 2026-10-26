@@ -670,6 +670,7 @@ class SecurityIntegrationTests {
                                 "synthetic",
                                 "1K",
                                 "1:1",
+                                null,
                                 null),
                             key,
                             "concurrency")

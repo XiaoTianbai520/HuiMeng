@@ -145,6 +145,7 @@ class MySqlAdmissionHarness {
                                 "synthetic",
                                 "1K",
                                 "1:1",
+                                null,
                                 null),
                             key,
                             "mysql-admission")

@@ -133,6 +133,8 @@ public class MediaBrowserAcceptanceHarness {
         new ModelApprovalReqDTO("qwenImage21Local", "qwenImage21Text", true), "media-browser");
     configuration.approve(
         new ModelApprovalReqDTO("qwenImage21Local", "qwenImage21Edit", true), "media-browser");
+    for (String model : List.of("h3T2v", "h3I2v", "h3Fl2v", "h3L2v", "h3R2v"))
+      configuration.approve(new ModelApprovalReqDTO("h3Local3060", model, true), "media-browser");
     projects.workspaceRoot(project.id(), true);
     SecurityContextHolder.clearContext();
     Path stop = Path.of("target/media-browser.stop");

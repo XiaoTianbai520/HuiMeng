@@ -429,7 +429,8 @@ public class AgentServiceImpl implements AgentService {
         prompt,
         args.path("size").asText(null),
         args.path("ratio").asText(null),
-        images);
+        images,
+        null);
   }
 
   /** 发出需要页面参与的事件并等待回传；超时、取消、页面断开都按失败处理。 */

@@ -237,3 +237,7 @@ R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excl
 ### 6.9 M3-05 能力目录与受控转码（2026-10-26）
 
 `GET /capabilities/nodes/get`、`/capabilities/tools/get`、`/capabilities/tools/renderers`、`/capabilities/ffmpeg/status` 与 `GET /projects/{projectId}/creative/agent/skills` 为成员只读目录：没有随镜像分发的内容返回空列表，不返回 404。`POST /projects/{projectId}/creative/ffmpeg/execute` 只接受 `prepare`/`cancel`/`transcode`/`concat`/`extractAudio`；素材必须是 `.huimeng-media/<uuid>.<受支持扩展名>`，预设固定为 mp4-720p、mp4-1080p、webm-720p、mp3-192k，命令由服务端拼装。`prepare`/`cancel` 返回 JSON，其余返回 `text/event-stream`，事件为 `{event:"progress",args:[{outTimeMs,percent}]}`、`{event:"done",args:[{path,mimeType,mediaType,preset}]}` 或 `{event:"error",args:[{message}]}`；开流前的参数错误仍按 JSON 400 返回。R010/R059/R061/R073/R074/R109/R110/R112 本批冻结并标记实现。证据见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。
+
+### 6.10 M3-05 H3 视频生成（2026-10-26）
+
+`generateMedia` 在 `mediaType=video` 时只接受 `providerId=h3Local3060` 与 `h3T2v/h3I2v/h3Fl2v/h3L2v/h3R2v`：`size` 取 352p/480p/544p（缺省 352p），`ratio` 取 16:9/9:16/1:1/4:3/3:4（缺省 16:9），`duration` 取 5/8/10/15（缺省 5），`images` 按模式要求（t2v 0 张、i2v/l2v 1 张、fl2v 首尾 2 张、r2v 1–9 张）。`data[].spec` 回显形如 `5s 352p 16:9 608×352`；产物为 `.huimeng-media/<uuid>.mp4`（`video/mp4`）。非法时长/分辨率/比例/参考数量一律 400，不静默降级；名额、幂等与取消语义与图片完全一致。证据见[H3 记录](../validation/M3_H3_VIDEO.md)。

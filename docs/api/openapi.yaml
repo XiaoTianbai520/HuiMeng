@@ -6656,12 +6656,19 @@ components:
             type: string
             enum:
             - image
+            - video
           ratio:
             type: string
+            maxLength: 8
           size:
             type: string
             minLength: 1
             maxLength: 64
+          duration:
+            type: integer
+            minimum: 1
+            maximum: 60
+            description: 视频时长（秒）；图片模型忽略，H3 仅接受 5、8、10、15。
         required:
         - providerId
         - modelId
