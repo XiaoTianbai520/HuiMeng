@@ -115,9 +115,40 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     return MEDIA_PATH.matcher(image.path()).replaceAll("$1");
   }
 
-  @Override
-  public GenerationSubmission generate(
-      String project, GenerateImageReqDTO input, String key, String requestId) {
+  private record Admission(
+      String id,
+      GenerationRunDO run,
+      Actor owner,
+      ComfyImageClient.Spec spec,
+      String reference,
+      boolean replay) {}
+
+  private String hash(GenerateImageReqDTO input, ComfyImageClient.Spec spec, String reference) {
+    try {
+      return HexFormat.of()
+          .formatHex(
+              java.security.MessageDigest.getInstance("SHA-256")
+                  .digest(
+                      json.writeValueAsBytes(
+                          new GenerateImageReqDTO(
+                              input.providerId(),
+                              input.modelId(),
+                              "image",
+                              input.prompt(),
+                              spec.size(),
+                              spec.ratio(),
+                              reference.isEmpty()
+                                  ? null
+                                  : List.of(
+                                      new GenerateImageMediaDTO(
+                                          ".huimeng-media/" + reference + ".png", "image/png"))))));
+    } catch (Exception ex) {
+      throw new IllegalStateException("Request hashing unavailable");
+    }
+  }
+
+  /** 校验、幂等与名额占位；不触达执行器，第 6 个与无效请求都停在供应商之前。 */
+  private Admission admit(String project, GenerateImageReqDTO input, String key, String requestId) {
     authorization.requireApproved(project, input.providerId(), input.modelId());
     if (key == null || key.isBlank() || key.length() > 128) throw ApiException.invalid();
     if (!"image".equals(input.mediaType()) || !PROVIDER.equals(input.providerId()))
@@ -128,35 +159,12 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     // 参考图归属与大小在占位前校验，避免无效请求占用名额或触达执行器。
     if (!reference.isEmpty()) media.requireReference(project, reference);
     Actor owner = RequestContext.actor();
-    String hash;
-    try {
-      hash =
-          HexFormat.of()
-              .formatHex(
-                  java.security.MessageDigest.getInstance("SHA-256")
-                      .digest(
-                          json.writeValueAsBytes(
-                              new GenerateImageReqDTO(
-                                  input.providerId(),
-                                  input.modelId(),
-                                  "image",
-                                  input.prompt(),
-                                  spec.size(),
-                                  spec.ratio(),
-                                  reference.isEmpty()
-                                      ? null
-                                      : List.of(
-                                          new GenerateImageMediaDTO(
-                                              ".huimeng-media/" + reference + ".png",
-                                              "image/png"))))));
-    } catch (Exception ex) {
-      throw new IllegalStateException("Request hashing unavailable");
-    }
+    String hash = hash(input, spec, reference);
     var known = runs.idempotent(project, owner.id(), key);
     if (known != null) {
       if (!known.requestHash().equals(hash))
         throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该幂等键已用于不同请求");
-      return new GenerationSubmission(response(known), true, null);
+      return new Admission(known.id(), known, owner, spec, reference, true);
     }
     String id = UUID.randomUUID().toString();
     GenerationRunDO run =
@@ -175,9 +183,12 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               audit.record(owner.id(), project, "MEDIA_GENERATE", id, "ADMITTED", requestId);
               return runs.find(project, id);
             });
-    if (!run.id().equals(id)) return new GenerationSubmission(response(run), true, null);
+    return new Admission(run.id(), run, owner, spec, reference, !run.id().equals(id));
+  }
+
+  /** 名额已在库中占用后才探测执行器；不可达立即释放，不留下待核查占位。 */
+  private void requireExecutor(String project, String id) {
     try {
-      // 名额先由数据库原子占用；执行器不可达时立刻释放，第 6 个请求不会到达供应商。
       comfy.requireAvailable();
       storage.requireAvailable();
       comfy.checkReady();
@@ -186,14 +197,57 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
       throw ex;
     }
+  }
+
+  @Override
+  public GenerationSubmission generate(
+      String project, GenerateImageReqDTO input, String key, String requestId) {
+    Admission admission = admit(project, input, key, requestId);
+    if (admission.replay()) return new GenerationSubmission(response(admission.run()), true, null);
+    String id = admission.id();
+    requireExecutor(project, id);
     var stream = new ResponseBodyEmitter(16 * 60 * 1000L);
     try {
-      workers.execute(() -> execute(project, id, owner, input, spec, reference, requestId, stream));
+      workers.execute(
+          () -> {
+            try {
+              execute(project, admission, input, requestId, value -> send(stream, value));
+            } finally {
+              try {
+                stream.complete();
+              } catch (RuntimeException ignored) {
+              }
+            }
+          });
     } catch (RejectedExecutionException ex) {
-      runs.finish(project, id, "FAILED", false);
+      var current = runs.find(project, id);
+      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
       throw ComfyImageClient.unavailable();
     }
-    return new GenerationSubmission(response(run), false, stream);
+    return new GenerationSubmission(response(admission.run()), false, stream);
+  }
+
+  /** Agent 内部生图：同一名额语义、同步返回结果；文本会话本身不占名额，因此不会重复计数。 */
+  @Override
+  public GeneratedMediaRespDTO generateInternal(
+      String project, GenerateImageReqDTO input, String key, String requestId) {
+    Admission admission = admit(project, input, key, requestId);
+    if (admission.replay()) throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该工具调用已执行过，请勿重复提交");
+    requireExecutor(project, admission.id());
+    var collected = new java.util.concurrent.atomic.AtomicReference<MediaResultRespDTO>();
+    execute(
+        project,
+        admission,
+        input,
+        requestId,
+        value -> {
+          if (value instanceof MediaResultRespDTO result) collected.set(result);
+        });
+    var result = collected.get();
+    if (result == null || result.code() != 200 || result.data().isEmpty())
+      throw new ApiException(
+          503, "GENERATION_FAILED", result == null ? "生成未完成，请稍后重试" : result.message());
+    return result.data().get(0);
   }
 
   private void send(ResponseBodyEmitter stream, Object value) {
@@ -229,13 +283,13 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
 
   private void execute(
       String project,
-      String id,
-      Actor owner,
+      Admission admission,
       GenerateImageReqDTO input,
-      ComfyImageClient.Spec spec,
-      String referenceId,
       String requestId,
-      ResponseBodyEmitter stream) {
+      java.util.function.Consumer<Object> sink) {
+    String id = admission.id(), referenceId = admission.reference();
+    Actor owner = admission.owner();
+    ComfyImageClient.Spec spec = admission.spec();
     boolean remoteAttempted = false, confirmedTerminal = false;
     try {
       bind(owner);
@@ -253,7 +307,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       Instant deadline = Instant.now().plusSeconds(DEADLINE_SECONDS);
       com.fasterxml.jackson.databind.JsonNode record = null;
       while (Instant.now().isBefore(deadline)) {
-        send(stream, " ");
+        sink.accept(" ");
         record = comfy.history(promptId);
         if (terminal(record)) {
           confirmedTerminal = true;
@@ -291,8 +345,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         runs.finish(project, id, "CANCELLED", false);
         throw ApiException.forbidden();
       }
-      send(
-          stream,
+      sink.accept(
           new MediaResultRespDTO(
               200,
               List.of(
@@ -310,14 +363,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
             id,
             remoteAttempted && !confirmedTerminal ? "LOST" : "FAILED",
             remoteAttempted && !confirmedTerminal);
-      send(stream, new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
+      sink.accept(new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
       if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
     } finally {
       SecurityContextHolder.clearContext();
-      try {
-        stream.complete();
-      } catch (RuntimeException ignored) {
-      }
     }
   }
 

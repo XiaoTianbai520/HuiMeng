@@ -12,4 +12,12 @@ public interface MediaGenerationService {
   RunRespDTO get(String projectId, String runId);
 
   RunRespDTO cancel(String projectId, String runId);
+
+  /**
+   * Agent 内部生图：与 HTTP 入口共用名额、幂等与结果归属，同步返回生成件。
+   *
+   * <p>文本会话本身不占名额，因此内部生成只计一次；无 HTTP 路由。
+   */
+  cn.huimeng.dto.resp.GeneratedMediaRespDTO generateInternal(
+      String projectId, cn.huimeng.dto.req.GenerateImageReqDTO input, String key, String requestId);
 }

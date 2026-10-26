@@ -116,6 +116,8 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/agent",
                     "/api/v1/projects/*/creative/agent/create",
                     "/api/v1/projects/*/creative/agent/cancel",
+                    "/api/v1/projects/*/creative/agent/answer",
+                    "/api/v1/projects/*/creative/agent/canvasResult",
                     "/api/v1/projects/*/runs/*/cancel")
                 .authenticated()
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/projects/*/creative/agent/rename")

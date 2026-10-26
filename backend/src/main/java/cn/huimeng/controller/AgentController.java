@@ -42,6 +42,28 @@ public class AgentController {
     return ApiRespDTO.ok(null);
   }
 
+  @PostMapping("/answer")
+  public ApiRespDTO<Void> answer(
+      @PathVariable String projectId,
+      @RequestBody AgentAnswerReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    requireSameProject(projectId, input.directory());
+    agents.answer(projectId, input);
+    return ApiRespDTO.ok(null);
+  }
+
+  @PostMapping("/canvasResult")
+  public ApiRespDTO<Void> canvasResult(
+      @PathVariable String projectId,
+      @RequestBody AgentCanvasResultReqDTO input,
+      HttpServletRequest request) {
+    noQuery(request);
+    requireSameProject(projectId, input.directory());
+    agents.canvasResult(projectId, input);
+    return ApiRespDTO.ok(null);
+  }
+
   @PostMapping("/create")
   public ApiRespDTO<AgentConversationRespDTO> create(
       @PathVariable String projectId,

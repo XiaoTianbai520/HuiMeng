@@ -71,3 +71,7 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 ## M3-03 媒体生成
 
 `m3M03ComfyMock.py` 是只复刻本批协议端点的合成执行器，`/prompt`、`/upload/image`、`/api/jobs/*/cancel` 计数在 `/_stats`；`m3M03CapacityCheck.py` 在其上验证名额、幂等、规格拒绝与取消释放；`m3M03MediaCheck.mjs` 用 Playwright 驱动真实浏览器完成两模型生成、规格回显与取消。夹具为 `MediaBrowserAcceptanceHarness`（真实 Spring 入口 + 内存对象存储）。真实模型回归用 `QwenRealImageHarness`，仅连接受控的本地 ComfyUI，不写团队存储。证据见[M3-03 记录](../M3_MEDIA_GENERATION.md)。
+
+## M3-04 Agent 工具
+
+`m3M04LlmMock.py` 首轮返回 `getCanvas` 工具调用、次轮回显工具结果；`m3M04AgentToolsCheck.mjs` 用 Playwright 进入画布工作区发起提问，断言工具卡片、真实画布字段回填、供应商请求次数，并通过接口核对 `.jsonl` 会话中的工具调用与结果。夹具为 `WorkspaceBrowserAcceptanceHarness`（`-Dhm.llm.enabled=true` 指向合成供应商）。证据见[M3-04 记录](../M3_AGENT_TOOLS.md)。

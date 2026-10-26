@@ -12,6 +12,7 @@ import cn.huimeng.dto.resp.*;
 import cn.huimeng.security.SecretBox;
 import cn.huimeng.service.*;
 import cn.huimeng.service.impl.AgentServiceImpl;
+import cn.huimeng.service.impl.AgentToolCatalog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 import java.io.*;
@@ -26,6 +27,9 @@ class AgentServiceImplTests {
   private HttpServer server;
   private AgentServiceImpl agents;
   private MemoryFiles files;
+  private MediaGenerationService media;
+  private final java.util.concurrent.atomic.AtomicInteger rounds =
+      new java.util.concurrent.atomic.AtomicInteger();
 
   @BeforeEach
   void setUp() throws IOException {
@@ -40,7 +44,10 @@ class AgentServiceImplTests {
     ProjectService projects = mock(ProjectService.class);
     ModelAuthorizationService models = mock(ModelAuthorizationService.class);
     files = new MemoryFiles();
-    agents = new AgentServiceImpl(projects, files, models, llm, json);
+    media = mock(MediaGenerationService.class);
+    var catalog = new AgentToolCatalog(json);
+    catalog.load();
+    agents = new AgentServiceImpl(projects, files, models, llm, media, catalog, json);
   }
 
   @AfterEach
@@ -52,7 +59,7 @@ class AgentServiceImplTests {
   void conversationCrudUsesWorkspaceFiles() {
     var created = agents.create("p1", "r1");
     assertEquals("新对话", created.name());
-    assertTrue(created.file().endsWith(".json"));
+    assertTrue(created.file().endsWith(".jsonl"), created.file());
     assertEquals(0, agents.get("p1", created.file()).messages().size());
     var renamed = agents.rename("p1", created.file(), "剧本讨论", "r2");
     assertEquals("剧本讨论", renamed.name());
@@ -170,6 +177,63 @@ class AgentServiceImplTests {
     first.join(10000);
   }
 
+  private void respondSequence(String... bodies) {
+    rounds.set(0);
+    server.createContext(
+        "/chat/completions",
+        exchange -> {
+          int index = Math.min(rounds.getAndIncrement(), bodies.length - 1);
+          byte[] bytes = bodies[index].getBytes(StandardCharsets.UTF_8);
+          exchange.getResponseHeaders().add("Content-Type", "text/event-stream");
+          exchange.sendResponseHeaders(200, bytes.length);
+          exchange.getResponseBody().write(bytes);
+          exchange.close();
+        });
+  }
+
+  private String toolCallSse(String id, String name, String arguments) {
+    String payload =
+        "{\"choices\":[{\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\""
+            + id
+            + "\",\"function\":{\"name\":\""
+            + name
+            + "\",\"arguments\":"
+            + json.valueToTree(arguments).toString()
+            + "}}]}}]}\n\n";
+    return "data: "
+        + payload
+        + "data: {\"choices\":[{\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\n"
+        + "data: [DONE]\n\n";
+  }
+
+  private String textSse(String text) {
+    return "data: {\"choices\":[{\"delta\":{\"content\":"
+        + json.valueToTree(text).toString()
+        + "}}]}\n\n"
+        + "data: [DONE]\n\n";
+  }
+
+  private void waitFor(ByteArrayOutputStream output, String needle, long millis) throws Exception {
+    long deadline = System.currentTimeMillis() + millis;
+    while (System.currentTimeMillis() < deadline) {
+      if (output.toString(StandardCharsets.UTF_8).contains(needle)) return;
+      Thread.sleep(50);
+    }
+    fail("未出现 " + needle + "：" + output.toString(StandardCharsets.UTF_8));
+  }
+
+  private com.fasterxml.jackson.databind.JsonNode lastEvent(
+      ByteArrayOutputStream output, String type) throws IOException {
+    com.fasterxml.jackson.databind.JsonNode found = null;
+    for (String line : output.toString(StandardCharsets.UTF_8).split("\n")) {
+      if (line.isBlank()) continue;
+      var event = json.readTree(line);
+      if (event.path("type").asText().equals(type)) found = event;
+    }
+    assertNotNull(found, "缺少事件 " + type);
+    return found;
+  }
+
   private void respondSse(String body) {
     server.createContext(
         "/chat/completions",
@@ -189,6 +253,188 @@ class AgentServiceImplTests {
       if (event.path("type").asText().equals("session")) return event.path("file").asText();
     }
     throw new AssertionError("缺少 session 事件");
+  }
+
+  @Test
+  void canvasToolCallIsExecutedByPageAndResultReturnedToModel() throws Exception {
+    respondSequence(toolCallSse("call-canvas", "getCanvas", "{}"), textSse("画布里有 3 个节点"));
+    var output = new ByteArrayOutputStream();
+    var worker =
+        new Thread(
+            () ->
+                agents.generate(
+                    "p1",
+                    new AgentGenerateReqDTO(
+                        "p1",
+                        "看看画布",
+                        "deepseek",
+                        "deepseek-chat",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        json.createObjectNode().put("id", "画布1.json")),
+                    output,
+                    "r1"));
+    worker.start();
+    waitFor(output, "\"type\":\"canvasCall\"", 5000);
+    String callId = lastEvent(output, "canvasCall").path("callId").asText();
+    agents.canvasResult(
+        "p1", new AgentCanvasResultReqDTO("p1", callId, json.readTree("{\"nodeCount\":3}"), null));
+    worker.join(15000);
+    String ndjson = output.toString(StandardCharsets.UTF_8);
+    assertTrue(ndjson.contains("\"type\":\"tool\""), ndjson);
+    assertTrue(ndjson.contains("\"status\":\"success\""), ndjson);
+    assertTrue(ndjson.contains("\"type\":\"done\""), ndjson);
+    assertTrue(ndjson.contains("画布里有 3 个节点"), ndjson);
+    String file = ndjsonFile(ndjson);
+    String stored = files.texts.get(".agent/sessions/" + file);
+    assertTrue(stored.contains("\"type\":\"session\""), stored);
+    assertTrue(stored.contains("\"type\":\"tool\""), stored);
+    var conversation = agents.get("p1", file);
+    assertEquals(2, conversation.messages().size());
+  }
+
+  @Test
+  void canvasCallUnknownToProjectIsRejected() throws Exception {
+    respondSequence(toolCallSse("call-x", "getCanvas", "{}"), textSse("完成"));
+    var output = new ByteArrayOutputStream();
+    var worker =
+        new Thread(
+            () ->
+                agents.generate(
+                    "p1",
+                    new AgentGenerateReqDTO(
+                        "p1",
+                        "看看画布",
+                        "deepseek",
+                        "deepseek-chat",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        json.createObjectNode().put("id", "画布1.json")),
+                    output,
+                    "r1"));
+    worker.start();
+    waitFor(output, "\"type\":\"canvasCall\"", 5000);
+    String callId = lastEvent(output, "canvasCall").path("callId").asText();
+    var error =
+        assertThrows(
+            ApiException.class,
+            () ->
+                agents.canvasResult(
+                    "other-project",
+                    new AgentCanvasResultReqDTO(
+                        "other-project", callId, json.createObjectNode(), null)));
+    assertEquals(404, error.status);
+    agents.canvasResult(
+        "p1", new AgentCanvasResultReqDTO("p1", callId, json.createObjectNode(), null));
+    worker.join(15000);
+  }
+
+  @Test
+  void questionWaitsForAnswerAndPassesItBackAsToolResult() throws Exception {
+    respondSequence(
+        toolCallSse(
+            "call-ask",
+            "askQuestion",
+            "{\"title\":\"配色\",\"question\":\"杯子要什么颜色？\",\"options\":[\"红色\",\"蓝色\"]}"),
+        textSse("已按蓝色继续"));
+    var output = new ByteArrayOutputStream();
+    var worker =
+        new Thread(
+            () ->
+                agents.generate(
+                    "p1",
+                    new AgentGenerateReqDTO(
+                        "p1",
+                        "画个杯子",
+                        "deepseek",
+                        "deepseek-chat",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null),
+                    output,
+                    "r1"));
+    worker.start();
+    waitFor(output, "\"type\":\"question\"", 5000);
+    var question = lastEvent(output, "question");
+    assertEquals("配色", question.path("title").asText());
+    assertEquals("call-ask", question.path("toolCallId").asText());
+    agents.answer(
+        "p1",
+        new AgentAnswerReqDTO("p1", question.path("callId").asText(), false, false, "蓝色", null));
+    worker.join(15000);
+    String ndjson = output.toString(StandardCharsets.UTF_8);
+    assertTrue(ndjson.contains("已按蓝色继续"), ndjson);
+    assertTrue(ndjson.contains("\"type\":\"done\""), ndjson);
+  }
+
+  @Test
+  void internalImageGenerationUsesOneToolCallWithoutExtraCapacity() throws Exception {
+    when(media.generateInternal(
+            anyString(), any(GenerateImageReqDTO.class), anyString(), anyString()))
+        .thenReturn(
+            new GeneratedMediaRespDTO(
+                ".huimeng-media/abc.png", "image/png", "image", "1K 1:1 1024×1024"));
+    respondSequence(
+        toolCallSse("call-image", "generateImage", "{\"prompt\":\"白色茶杯\"}"),
+        textSse("已生成 .huimeng-media/abc.png"));
+    var output = new ByteArrayOutputStream();
+    agents.generate(
+        "p1",
+        new AgentGenerateReqDTO(
+            "p1", "生成一张图", "deepseek", "deepseek-chat", null, null, null, null, null, null),
+        output,
+        "r1");
+    String ndjson = output.toString(StandardCharsets.UTF_8);
+    assertTrue(ndjson.contains("\"status\":\"success\""), ndjson);
+    verify(media, times(1))
+        .generateInternal(
+            eq("p1"),
+            any(GenerateImageReqDTO.class),
+            eq("agent-call-image"),
+            eq("agent-call-image"));
+    verify(media, never())
+        .generate(anyString(), any(GenerateImageReqDTO.class), anyString(), anyString());
+  }
+
+  @Test
+  void cancelWakesPendingCanvasCallAndStopsStream() throws Exception {
+    respondSequence(toolCallSse("call-slow", "getCanvas", "{}"), textSse("不应到达"));
+    var output = new ByteArrayOutputStream();
+    String file = agents.create("p1", "r0").file();
+    var worker =
+        new Thread(
+            () ->
+                agents.generate(
+                    "p1",
+                    new AgentGenerateReqDTO(
+                        "p1",
+                        "看看画布",
+                        "deepseek",
+                        "deepseek-chat",
+                        null,
+                        file,
+                        null,
+                        null,
+                        null,
+                        json.createObjectNode().put("id", "画布1.json")),
+                    output,
+                    "r1"));
+    worker.start();
+    waitFor(output, "\"type\":\"canvasCall\"", 5000);
+    agents.cancel("p1", file);
+    worker.join(15000);
+    String ndjson = output.toString(StandardCharsets.UTF_8);
+    assertTrue(ndjson.contains("已停止生成"), ndjson);
+    assertFalse(ndjson.contains("不应到达"), ndjson);
   }
 
   /** 仅模拟会话所需的安全文件操作。 */

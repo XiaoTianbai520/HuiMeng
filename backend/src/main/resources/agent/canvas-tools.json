@@ -1,0 +1,693 @@
+{
+  "canvas": [
+    {
+      "name": "getCanvas",
+      "label": "画布概览",
+      "description": "读取激活画布的 ID、节点数、连线数、选中数量和视口；include 可加 canvases 或 nodeTypes 分页列表。不返回全部节点，已知 ID 时直接读取节点。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "canvases",
+                "nodeTypes"
+              ]
+            },
+            "maxItems": 2
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    {
+      "name": "findCanvasNodes",
+      "label": "查找画布节点",
+      "description": "按 query（节点 ID 或完整名称）、types、selectedOnly 筛选节点并分页返回摘要，不含正文。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 20
+          },
+          "selectedOnly": {
+            "type": "boolean"
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    {
+      "name": "getCanvasNodes",
+      "label": "读取节点详情",
+      "description": "按已知且不重复的 nodeIds 读取最多 20 个节点，fields 默认 label/type/position；path 读取嵌套投影值并按偏移分页。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "label",
+                "type",
+                "position",
+                "ports",
+                "data",
+                "outputs"
+              ]
+            },
+            "maxItems": 6
+          },
+          "dataKeys": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 20
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "maxItems": 64
+          },
+          "valueOffset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "valueLimit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "textOffset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "textLimit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4000
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "nodeIds"
+        ]
+      }
+    },
+    {
+      "name": "getCanvasEdges",
+      "label": "读取画布连线",
+      "description": "分页读取 nodeIds 相关连线，direction 取 incoming/outgoing/both；省略 nodeIds 时遍历全图。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "incoming",
+              "outgoing",
+              "both"
+            ]
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        }
+      }
+    },
+    {
+      "name": "getNodeTools",
+      "label": "查询节点函数",
+      "description": "按最多 20 个不重复 nodeIds 查询节点实际注册的函数与参数 schema；调用前必须先查询。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 20
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "required": [
+          "nodeIds"
+        ]
+      }
+    },
+    {
+      "name": "addCanvas",
+      "label": "新增画布",
+      "description": "在当前工作区创建空白画布并切换过去；name 不含 .json，省略时使用未占用的画布N。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    {
+      "name": "switchCanvas",
+      "label": "切换画布",
+      "description": "先分页获取 canvasId 再切换激活画布，返回新画布概览。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "canvasId"
+        ]
+      }
+    },
+    {
+      "name": "renameCanvas",
+      "label": "重命名画布",
+      "description": "重命名画布并同步文件名，不覆盖已有文件；省略 canvasId 时重命名激活画布。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "canvasId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    {
+      "name": "addNode",
+      "label": "新增节点",
+      "description": "在激活画布的画布坐标新增节点，type 必须来自 getCanvas 的 availableNodeTypes。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "type",
+          "position"
+        ]
+      }
+    },
+    {
+      "name": "deleteNodes",
+      "label": "删除节点",
+      "description": "批量删除节点及其连线，任一校验失败整体不执行。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 64
+          }
+        },
+        "required": [
+          "nodeIds"
+        ]
+      }
+    },
+    {
+      "name": "moveNodes",
+      "label": "移动节点",
+      "description": "批量移动节点到各自画布坐标，任一校验失败整体不执行。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "moves": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "properties": {
+                "nodeId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "position": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "nodeId",
+                "position"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "moves"
+        ]
+      }
+    },
+    {
+      "name": "renameNodes",
+      "label": "重命名节点",
+      "description": "批量修改节点显示名称。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "renames": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "properties": {
+                "nodeId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              },
+              "required": [
+                "nodeId",
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "renames"
+        ]
+      }
+    },
+    {
+      "name": "connectNodes",
+      "label": "连接节点",
+      "description": "批量连接输出端口与输入端口；先用 getCanvasNodes 的 ports 确认端口。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "connections": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "sourceHandle": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "targetHandle": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "source",
+                "sourceHandle",
+                "target",
+                "targetHandle"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "connections"
+        ]
+      }
+    },
+    {
+      "name": "deleteEdges",
+      "label": "删除连线",
+      "description": "批量删除指定 edgeIds 的连线。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "edgeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 64
+          }
+        },
+        "required": [
+          "edgeIds"
+        ]
+      }
+    },
+    {
+      "name": "selectNodes",
+      "label": "选择节点",
+      "description": "选择指定节点；传空数组取消选择。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        },
+        "required": [
+          "nodeIds"
+        ]
+      }
+    },
+    {
+      "name": "arrangeCanvas",
+      "label": "整理画布",
+      "description": "按连线把顶层节点从左到右排列并适应视图，不触发生成。",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "fitCanvas",
+      "label": "适应画布",
+      "description": "调整视口展示指定节点；省略则展示全部。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "nodeTools",
+      "label": "调用节点函数",
+      "description": "调用节点已注册函数 node:functionName；先 getNodeTools 取完整参数 schema 再填 args。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^node:[a-z][a-zA-Z0-9]{0,63}$"
+          },
+          "args": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "nodeId",
+          "name",
+          "args"
+        ]
+      }
+    }
+  ],
+  "extra": [
+    {
+      "name": "askQuestion",
+      "label": "向用户提问",
+      "description": "当缺少必要信息且无法从项目文件推断时，向用户提出一个结构化问题；可给出选项或表单字段。回答会作为工具结果返回。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "options": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            }
+          },
+          "fields": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "title",
+          "question"
+        ]
+      }
+    },
+    {
+      "name": "generateImage",
+      "label": "生成图片",
+      "description": "用项目已获批的 Qwen 图片模型生成一张图并保存到项目素材；model 取 text（文生图）或 edit（单图编辑，需 referencePath）。单次调用占用且仅占用一个生成名额。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000
+          },
+          "model": {
+            "type": "string",
+            "enum": [
+              "text",
+              "edit"
+            ]
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "1K",
+              "0.5MP",
+              "2K"
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "1:1",
+              "2:3",
+              "3:2",
+              "3:4",
+              "4:3",
+              "9:16",
+              "16:9",
+              "21:9"
+            ]
+          },
+          "referencePath": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      }
+    }
+  ]
+}

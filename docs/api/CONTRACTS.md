@@ -229,3 +229,7 @@ R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excl
 ### 6.7 M3-03 图片生成规格与取消（2026-10-26）
 
 `generateMedia` 的图片分支接通现用 Qwen 两模型：`qwenImage21Text` 只接受提示词，`qwenImage21Edit` 必须且只能带一项 `images`，其 `path` 须为 `.huimeng-media/<uuid>.png`、`mimeType` 为 `image/png`。`size` 取 1K/0.5MP/2K、`ratio` 取 8 种画幅，省略时服务端按 1K、1:1 提交；非法组合 400，不做静默降级，`data[].spec` 回显实际提交的规格与像素尺寸。名额由数据库事务先占，之后才探测执行器，因此第 6 个请求 429 且不触达供应商；幂等重放仍为 202 原运行。执行器返回的 `prompt_id` 取代本地运行 ID 作为查询/取消参照。视频与音频分支保持原契约但本批未实现，A08 图片部分证据见[M3-03 记录](../validation/M3_MEDIA_GENERATION.md)。
+
+### 6.8 M3-04 Agent 工具循环与画布回执（2026-10-26）
+
+`POST /creative/agent` 请求可带 `canvas: {id}`；服务端据此下发 18 个画布工具（与 `@toonflow/tool-canvas` 同名同参数）和 `askQuestion`、`generateImage`。模型调用画布工具时服务端只发 `canvasCall`，由页面校验并执行后经 `POST /creative/agent/canvasResult` 回传（`result` 或 `error`，120 秒超时）；提问经 `POST /creative/agent/answer` 回传（`answer`/`values`/`cancelled`/`skipped`，300 秒超时）。两个回执端点要求 `callId` 属于本项目正在等待的调用，否则 404 `TOOL_CALL_NOT_FOUND`；`R002`/`R003` 本批冻结并标记实现。`generateImage` 在服务端同步执行，复用同一名额与幂等语义，文本会话本身不占名额。会话文件为 `.jsonl`（`session` 头 + 逐条 `message`），旧 `.json` 仍可读取。证据见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。

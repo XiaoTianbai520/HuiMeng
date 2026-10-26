@@ -885,6 +885,14 @@
     },
     {
       "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/agent/answer"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects/{projectId}/creative/agent/canvasResult"
+    },
+    {
+      "method": "POST",
       "path": "/api/v1/projects/{projectId}/creative/agent/create"
     },
     {

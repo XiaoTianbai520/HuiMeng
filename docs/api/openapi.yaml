@@ -5101,6 +5101,97 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/answer:
+    post:
+      operationId: agentAnswer
+      summary: 页面回答 Agent 提问
+      description: callId 必须属于本项目正在等待的工具调用；取消或跳过也要回传，避免生成线程一直等待。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentAnswer'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: 该工具调用已结束或不属于此项目
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/canvasResult:
+    post:
+      operationId: agentCanvasResult
+      summary: 页面回传画布操作结果
+      description: 画布操作始终由页面校验并执行；结果或错误回传后模型继续生成。
+      tags:
+      - projects
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A09
+      - A16
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      - name: X-CSRF-Token
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentCanvasResult'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: 该工具调用已结束或不属于此项目
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/projects/{projectId}/creative/agent/create:
     post:
       operationId: agentCreate
@@ -6531,6 +6622,48 @@ components:
       - code
       - data
       - message
+    AgentAnswer:
+      type: object
+      additionalProperties: false
+      properties:
+        directory:
+          type: string
+          maxLength: 128
+        callId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        cancelled:
+          type: boolean
+        skipped:
+          type: boolean
+        answer:
+          type: string
+          maxLength: 8000
+        values:
+          type: object
+          additionalProperties: true
+      required:
+      - callId
+    AgentCanvasResult:
+      type: object
+      additionalProperties: false
+      properties:
+        directory:
+          type: string
+          maxLength: 128
+        callId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        result:
+          type: object
+          additionalProperties: true
+        error:
+          type: string
+          maxLength: 8000
+      required:
+      - callId
     GeneratedMedia:
       type: object
       additionalProperties: false
