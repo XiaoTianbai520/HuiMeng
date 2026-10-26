@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-10-26T02:17:21Z",
+  "project": "ac4e2cba-8392-4571-9357-2f4a60a35b97",
+  "checks": [
+    {
+      "name": "admitSlot0",
+      "detail": "status=200"
+    },
+    {
+      "name": "admitSlot1",
+      "detail": "status=200"
+    },
+    {
+      "name": "admitSlot2",
+      "detail": "status=200"
+    },
+    {
+      "name": "admitSlot3",
+      "detail": "status=200"
+    },
+    {
+      "name": "admitSlot4",
+      "detail": "status=200"
+    },
+    {
+      "name": "fiveDistinctRuns",
+      "detail": ""
+    },
+    {
+      "name": "vendorCalledFiveTimes",
+      "detail": "5"
+    },
+    {
+      "name": "sixthRejected429",
+      "detail": "status=429"
+    },
+    {
+      "name": "sixthNeverReachedVendor",
+      "detail": ""
+    },
+    {
+      "name": "idempotentReplayAccepted202",
+      "detail": "status=202"
+    },
+    {
+      "name": "idempotentReplayReturnsSameRun",
+      "detail": ""
+    },
+    {
+      "name": "replayNeverReachedVendor",
+      "detail": ""
+    },
+    {
+      "name": "unknownRatio400",
+      "detail": "status=400"
+    },
+    {
+      "name": "editWithoutReference400",
+      "detail": "status=400"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "status=202"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "status=202"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "status=202"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "status=202"
+    },
+    {
+      "name": "cancelAccepted",
+      "detail": "status=202"
+    },
+    {
+      "name": "allCancelledAndReleased",
+      "detail": "5"
+    },
+    {
+      "name": "vendorCancelConfirmed",
+      "detail": ""
+    },
+    {
+      "name": "cancelNeverResubmitted",
+      "detail": ""
+    },
+    {
+      "name": "slotReusableAfterCancel",
+      "detail": "status=200"
+    }
+  ],
+  "stats": {
+    "before": {
+      "promptCount": 0,
+      "uploadCount": 0,
+      "cancelCount": 0,
+      "jobs": {}
+    },
+    "afterAdmit": {
+      "promptCount": 5,
+      "uploadCount": 0,
+      "cancelCount": 0,
+      "jobs": {
+        "a23c0b0c-b80a-4899-af19-1e6fe2e3f789": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/545866e3-40dd-4dd4-a78c-bd9835d8c243",
+          "state": "in_progress",
+          "hasReference": false
+        },
+        "48351870-26a0-42a8-9b18-a606b1c5ca6c": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/625dce62-065d-4969-9ed7-f3f2939ba3bc",
+          "state": "in_progress",
+          "hasReference": false
+        },
+        "aea34d5c-d4db-478b-a77a-9a6ca3309f98": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/85e31c29-212b-44dc-92ac-de37065c74d1",
+          "state": "in_progress",
+          "hasReference": false
+        },
+        "0f1760e3-a696-49ae-b50c-39599b083485": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/ac416627-a154-4180-9709-20344d10cc1c",
+          "state": "in_progress",
+          "hasReference": false
+        },
+        "959953c1-5e98-4d14-88b8-8398ba53e836": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/de947244-3da2-48f1-b4ab-a2fb4699f300",
+          "state": "in_progress",
+          "hasReference": false
+        }
+      }
+    },
+    "afterCancel": {
+      "promptCount": 5,
+      "uploadCount": 0,
+      "cancelCount": 5,
+      "jobs": {
+        "a23c0b0c-b80a-4899-af19-1e6fe2e3f789": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/545866e3-40dd-4dd4-a78c-bd9835d8c243",
+          "state": "cancelled",
+          "hasReference": false
+        },
+        "48351870-26a0-42a8-9b18-a606b1c5ca6c": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/625dce62-065d-4969-9ed7-f3f2939ba3bc",
+          "state": "cancelled",
+          "hasReference": false
+        },
+        "aea34d5c-d4db-478b-a77a-9a6ca3309f98": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/85e31c29-212b-44dc-92ac-de37065c74d1",
+          "state": "cancelled",
+          "hasReference": false
+        },
+        "0f1760e3-a696-49ae-b50c-39599b083485": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/ac416627-a154-4180-9709-20344d10cc1c",
+          "state": "cancelled",
+          "hasReference": false
+        },
+        "959953c1-5e98-4d14-88b8-8398ba53e836": {
+          "prefix": "HuiMeng/ac4e2cba-8392-4571-9357-2f4a60a35b97/de947244-3da2-48f1-b4ab-a2fb4699f300",
+          "state": "cancelled",
+          "hasReference": false
+        }
+      }
+    }
+  }
+}

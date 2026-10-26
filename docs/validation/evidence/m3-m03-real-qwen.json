@@ -1,0 +1,25 @@
+{
+  "endpoint" : "http://127.0.0.1:18188",
+  "startedAt" : "2026-10-26T02:18:51.973639756Z",
+  "textToImage" : {
+    "run" : "9862d2de-f3dc-4668-b17a-5e8cef382ffb",
+    "promptId" : "9862d2de-f3dc-4668-b17a-5e8cef382ffb",
+    "spec" : "1K 1:1 1024×1024",
+    "width" : 1024,
+    "height" : 1024,
+    "bytes" : 951255,
+    "seconds" : 234,
+    "sha256" : "b606d9abc774616401ced450d4ab41df9781c350c96209ba74275778b9b22d0e"
+  },
+  "imageToImage" : {
+    "run" : "b9ba44a0-560f-4c79-a819-339809bc76a7",
+    "promptId" : "b9ba44a0-560f-4c79-a819-339809bc76a7",
+    "spec" : "0.5MP 16:9 992×544",
+    "width" : 992,
+    "height" : 544,
+    "bytes" : 569401,
+    "seconds" : 294,
+    "sha256" : "c35d560966f0d77f5a9cf5812f26631cfc3f456e4cdc6d1372a7731d366aa9e1"
+  },
+  "finishedAt" : "2026-10-26T02:27:40.930628645Z"
+}

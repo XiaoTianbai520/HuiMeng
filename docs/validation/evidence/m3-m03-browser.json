@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-10-26T02:18:07.254Z",
+  "origin": "http://localhost:5187",
+  "project": "ac4e2cba-8392-4571-9357-2f4a60a35b97",
+  "results": [
+    {
+      "name": "A1 成员登录成功",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "A2 两种 Qwen 模型可选",
+      "ok": true,
+      "detail": ",qwenImage21Edit,qwenImage21Text"
+    },
+    {
+      "name": "A3 规格选项完整",
+      "ok": true,
+      "detail": "1K/0.5MP/2K 8"
+    },
+    {
+      "name": "B1 文生图完成并回显 1K 1:1 规格",
+      "ok": true,
+      "detail": "图片已生成并保存到当前项目（实际规格 1K 1:1 1024×1024）。"
+    },
+    {
+      "name": "B2 结果进入项目素材列表",
+      "ok": true,
+      "detail": "rows=1"
+    },
+    {
+      "name": "C1 单图编辑列出项目内 PNG 参考图",
+      "ok": true,
+      "detail": ",79068ac7-0aa1-468e-84bf-026129086b6c"
+    },
+    {
+      "name": "C2 单图编辑完成并回显 0.5MP 16:9",
+      "ok": true,
+      "detail": "图片已生成并保存到当前项目（实际规格 0.5MP 16:9 992×544）。"
+    },
+    {
+      "name": "C3 宽画幅按 32 对齐且更宽",
+      "ok": true,
+      "detail": "0.5MP 16:9 992×544"
+    },
+    {
+      "name": "D1 取消经执行器确认后释放名额",
+      "ok": true,
+      "detail": "已确认取消，名额已释放。"
+    },
+    {
+      "name": "E1 页面说明默认规格策略",
+      "ok": true,
+      "detail": "当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实"
+    },
+    {
+      "name": "E2 全部检查通过",
+      "ok": true,
+      "detail": "10"
+    }
+  ]
+}

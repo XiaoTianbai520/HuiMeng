@@ -68,3 +68,6 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 
 另开进程设置 `HM_BROWSER_PROJECT` 为夹具 `target/workspace-browser.ready` 中的 projectId，运行 `node docs/validation/scripts/m3W03BrowserCheck.mjs`。依赖仓库根安装 `playwright-core`，或设置 `PLAYWRIGHT_CORE_PATH` 指向其所在 node_modules；浏览器默认取 Playwright 已安装 Chromium，可用 `PLAYWRIGHT_CHROMIUM_PATH` 指定。脚本用真实 Chromium 完成 19 项画布/文档连续保存、双会话冲突暂停/草稿保留/重读及素材相对引用，输出[结果](../evidence/m3-w03-browser.json)与截图；另一会话仅作 API 对照，不是第二浏览器窗口。结束在 Linux backend 创建 `target/workspace-browser.stop` 后停止代理与转发，不访问真实存储/模型或团队凭据。
 
+## M3-03 媒体生成
+
+`m3M03ComfyMock.py` 是只复刻本批协议端点的合成执行器，`/prompt`、`/upload/image`、`/api/jobs/*/cancel` 计数在 `/_stats`；`m3M03CapacityCheck.py` 在其上验证名额、幂等、规格拒绝与取消释放；`m3M03MediaCheck.mjs` 用 Playwright 驱动真实浏览器完成两模型生成、规格回显与取消。夹具为 `MediaBrowserAcceptanceHarness`（真实 Spring 入口 + 内存对象存储）。真实模型回归用 `QwenRealImageHarness`，仅连接受控的本地 ComfyUI，不写团队存储。证据见[M3-03 记录](../M3_MEDIA_GENERATION.md)。
