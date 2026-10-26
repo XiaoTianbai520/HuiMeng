@@ -1,8 +1,8 @@
 # 绘梦 1.0 交接入口
 
-> 文档基线：2026-10-26，代码 `c39f226`。M0、M1、**M2 安全基座**及 M3 的 01～08 主体均已完成：安全保存/目录/原文件树与修订链（M3-01，57 项 HTTP）、模型与文本生成（M3-02）、Qwen 图片生成与名额/取消（M3-03）、Agent 工具循环与画布控制（M3-04）、FFmpeg 与能力目录（M3-05）、MCP/A2A 外部协议（M3-06，54 项 A13 + 11 项浏览器）、排除路由清理（M3-07，36 项审计）、插件市场管理面与能力运行期分发（M3-08），A16 跨入口五名额 46 项通过。H3 五模式（T2V/I2V/FL2V/L2V/R2V）已全部真实出片。内置节点包已入库 textNode/imageNode 两个并由页面真实取回、执行、注册。后端 132 项、前端 26 项通过。
+> 文档基线：2026-10-26，代码 `c39f226`。M0、M1、**M2 安全基座**及 M3 的 01～08 主体均已完成：安全保存/目录/原文件树与修订链（M3-01，57 项 HTTP）、模型与文本生成（M3-02）、Qwen 图片生成与名额/取消（M3-03）、Agent 工具循环与画布控制（M3-04）、FFmpeg 与能力目录（M3-05）、MCP/A2A 外部协议（M3-06，54 项 A13 + 11 项浏览器）、排除路由清理（M3-07，36 项审计）、插件市场管理面与能力运行期分发（M3-08），A16 跨入口五名额 46 项通过。H3 五模式（T2V/I2V/FL2V/L2V/R2V）已全部真实出片。内置节点包已入库 textNode/imageNode 两个并由页面真实取回、执行、注册；工具界面契约、技能注入、市场在线安装与进程内工具执行器均已接通。后端 143 项、前端 26 项通过。
 >
-> **M3 尚未收口**：内置节点包已入库 textNode/imageNode 两个（其余 6 个上游节点未做，画布内渲染待在 Linux 夹具复跑）、工具 `.tool.js` 无执行器（Agent 取不到市场工具）、技能正文未注入 Web Agent、市场在线安装链路断（详见[插件运行期交接](PLUGIN_RUNTIME.md)）、自定义媒体供应商未开放、M3-S01 素材/导出物与 M3-03 音频入口未做、真实市场凭据与 M0-I12～I14 未复验。**M4 与 1.0 未开始、未验收，最新源码未部署。** 正式 API/Web/Bun 未更新，设备 CA 安装可选；历史记录中的端口、PID、版本须只读核实。
+> **M3 尚未收口**：内置节点已入库 textNode/imageNode（其余 6 个未做、画布内渲染待在 Linux 夹具复跑）、真实市场凭据与 M0-I12～I14 未复跑、`toonflow:tool-zod` 虚拟模块未提供（真实市场工具包加载期被跳过）、MCP 工具清单仍硬编码、自定义媒体供应商未开放、M3-S01 素材/导出物未做、音频只保留「显式拒绝」语义、A2A 流式与推送未做。插件其余断点（工具界面契约、技能注入、市场在线安装、工具执行器、内置节点下线清理）已在[收口记录](../validation/M3_PLUGIN_RUNTIME_CLOSEOUT.md)中关闭。**M4 与 1.0 未开始、未验收，最新源码未部署。** 正式 API/Web/Bun 未更新，设备 CA 安装可选；历史记录中的端口、PID、版本须只读核实。
 
 ## 1. 先读哪些文档
 
@@ -75,13 +75,15 @@ M1 已完成独立安装/构建、统一客户端、非 Web 入口清理、市�
 **当前交接重点：把插件「加载与使用」收口。** 制品格式、加载协议、当前实现与四处市场断点见[插件运行期交接](PLUGIN_RUNTIME.md)。建议顺序：
 
 1. ~~内置节点包入库~~ **已完成（textNode/imageNode 两个）**：产物入 `backend/src/main/resources/capabilities/nodes/`，启动按摘要幂等登记为 `builtin`，管理员停用与配置跨重启保留；`bun run build:nodes` 可字节级重建；后端 132 项、前端 26 项、浏览器 17 项与 QA 独立 43 项通过，见[内置节点记录](../validation/M3_BUILTIN_NODES.md)。仍待：其余 6 个上游节点、画布内渲染的 Linux 复跑（Windows 上 `workspaces/files/*` 恒 503，见该记录 §4）。
-2. `CapabilityServiceImpl.renderers()` 改按包头 `components` 解析，不再用插件名顶替工具名 —— M3-08
-3. 技能正文注入 Web Agent，与 `mcp/skill` 共用登记 —— M3-08
-4. `.tool.js` 的 `createTools` 执行器与执行隔离（Node sidecar 或 GraalJS，需先定选型）—— M3-08 / A12
-5. 市场在线安装：修 `identifier/supplier/desc` 映射、请求体契约、`*.volces.com` 下载来源，并建立服务端「获批制品清单」；`fileHash` 不可当 SHA-256 用
+2. ~~`CapabilityServiceImpl.renderers()` 按包头 `components` 解析~~ **已完成**：真实工具名来自 `components`，`tools/client` 下发第二行内嵌 `code`+`css`；纯 Agent 工具与缺界面的包不发布渲染器。
+3. ~~技能正文注入 Web Agent~~ **已完成**：`CapabilityService.skillPrompt()` 注入已启用技能的 `SKILL.md`，单条 6000／合计 20000 字符上限。
+4. ~~`.tool.js` 的 `createTools` 执行器与执行隔离~~ **已完成（GraalJS）**：进程内上下文，无宿主访问与 IO，语句与时间双限；只支持自包含包，带 `import` 的包加载期跳过。JAR 增加约 59 MB。真实市场依赖的 `toonflow:tool-zod` 虚拟模块仍未提供。
+5. ~~市场在线安装~~ **已完成（待真实凭据复跑）**：字段映射、`{pluginId,force}` 契约、服务端目录回查、逐跳来源校验与获批摘要；`fileHash` 不作校验依据。
 6. 真实市场凭据复跑与 M0-I12～I14（需用户提供 TF-Router 子账号凭证）
 
-**其余 M3 尾巴**：M3-S01 原素材页/导出物、M3-03 独立音频入口、自定义媒体供应商文件、A2A 流式事件与服务端推送。
+以上改动、验证与剩余项见[插件运行期收口记录](../validation/M3_PLUGIN_RUNTIME_CLOSEOUT.md)。
+
+**其余 M3 尾巴**：M3-S01 原素材页/导出物与 FFmpeg 暂存、自定义媒体供应商文件（需同一套 JS 执行加媒体桥接）、A2A 流式事件与服务端推送、其余 6 个上游节点、画布内渲染的 Linux 复跑。音频入口只保留「409 显式拒绝」语义。
 
 **能力目录已改为运行期分发。** `capabilities/nodes/get|files`、`tools/get|renderers|client`、`mcp/skill` 与项目 `agent/skills` 读取已安装能力登记：节点脚本按安装摘要下发并由页面执行注册，工具界面按摘要版本取回，停用/越界/版本不符返回 404，秘密配置不下发。后端 5 项新测试（全量 126）与真实浏览器 10 项通过，见[记录](../validation/M3_CAPABILITY_LOADING.md)。随部署内置节点包、Agent 取用市场工具、自定义媒体供应商仍未做。
 

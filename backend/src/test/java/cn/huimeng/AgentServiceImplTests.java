@@ -28,6 +28,7 @@ class AgentServiceImplTests {
   private AgentServiceImpl agents;
   private MemoryFiles files;
   private MediaGenerationService media;
+  private cn.huimeng.service.impl.ToolRuntime toolRuntime;
   private final java.util.concurrent.atomic.AtomicInteger rounds =
       new java.util.concurrent.atomic.AtomicInteger();
 
@@ -53,6 +54,7 @@ class AgentServiceImplTests {
     var toolRuntime = mock(cn.huimeng.service.impl.ToolRuntime.class);
     when(toolRuntime.definitions()).thenReturn(java.util.List.of());
     when(toolRuntime.owns(anyString())).thenReturn(false);
+    this.toolRuntime = toolRuntime;
     agents =
         new AgentServiceImpl(
             projects, files, models, llm, media, catalog, capabilities, toolRuntime, json);
@@ -261,6 +263,57 @@ class AgentServiceImplTests {
       if (event.path("type").asText().equals("session")) return event.path("file").asText();
     }
     throw new AssertionError("缺少 session 事件");
+  }
+
+  /** 已安装工具包的工具由服务端执行，结果写回会话并交给模型继续。 */
+  @Test
+  void installedToolCallIsExecutedByServerRuntime() throws Exception {
+    when(toolRuntime.owns("echoTool")).thenReturn(true);
+    when(toolRuntime.definitions())
+        .thenReturn(
+            List.of(
+                Map.of(
+                    "type",
+                    "function",
+                    "function",
+                    Map.of(
+                        "name",
+                        "echoTool",
+                        "description",
+                        "回显",
+                        "parameters",
+                        Map.of("type", "object")))));
+    when(toolRuntime.execute(eq("echoTool"), anyString(), any()))
+        .thenReturn(json.readTree("{\"content\":[{\"type\":\"text\",\"text\":\"echo:hi\"}]}"));
+    respondSequence(toolCallSse("call-echo", "echoTool", "{\"text\":\"hi\"}"), textSse("回显完成"));
+
+    var output = new ByteArrayOutputStream();
+    var worker =
+        new Thread(
+            () ->
+                agents.generate(
+                    "p1",
+                    new AgentGenerateReqDTO(
+                        "p1",
+                        "调用回显工具",
+                        "deepseek",
+                        "deepseek-chat",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null),
+                    output,
+                    "r-echo"));
+    worker.start();
+    worker.join(15000);
+
+    String ndjson = output.toString(StandardCharsets.UTF_8);
+    assertTrue(ndjson.contains("\"type\":\"tool\""), ndjson);
+    assertTrue(ndjson.contains("\"status\":\"success\""), ndjson);
+    assertTrue(ndjson.contains("回显完成"), ndjson);
+    verify(toolRuntime).execute(eq("echoTool"), eq("call-echo"), any());
   }
 
   @Test
