@@ -79,3 +79,7 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 ## M3-05 转码与能力目录
 
 `m3M05FfmpegCheck.py` 在装了 ffmpeg 的 `MediaBrowserAcceptanceHarness` 容器上验证能力目录、转码 SSE 进度、结果下载、定向取消与参数边界（29 项）；样例视频由容器内 `ffmpeg -f lavfi -i testsrc2` 生成。证据见[M3-05 记录](../M3_CAPABILITIES_FFMPEG.md)。
+
+## M3-05 H3 视频
+
+`m3M05H3Mock.py` 复刻 H3 用到的执行器端点并记录每次提交的模板、宽高、帧数与参考节点；`m3M05H3Check.py` 在 `MediaBrowserAcceptanceHarness`（已放行五个 H3 模型、`-Dhm.comfy.endpoint` 指向该 mock）上验证五模式、规格、产物下载、参数边界、名额与取消（81 项）。证据见[H3 记录](../M3_H3_VIDEO.md)。

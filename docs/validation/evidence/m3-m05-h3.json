@@ -1,0 +1,352 @@
+{
+  "generatedAt": "2026-10-26T04:01:11Z",
+  "project": "45d58240-8ae5-4668-bc1c-81fd63473c74",
+  "specs": {
+    "h3T2v": "5s 352p 16:9 608×352",
+    "h3I2v": "8s 480p 16:9 864×480",
+    "h3Fl2v": "5s 352p 9:16 352×608",
+    "h3L2v": "10s 544p 1:1 544×544",
+    "h3R2v": "5s 352p 16:9 608×352"
+  },
+  "stats": {
+    "prompts": 11,
+    "uploads": 5,
+    "cancels": 10,
+    "last": {
+      "classType": "MiniMaxH3ImageToVideo",
+      "width": 608,
+      "height": 352,
+      "length": 124,
+      "references": [],
+      "nodes": 18,
+      "hasFirstFrame": false,
+      "hasLastFrame": false
+    }
+  },
+  "checks": [
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "login",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "uploadFrame",
+      "detail": "201"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "h3T2vCalled",
+      "detail": "200"
+    },
+    {
+      "name": "h3T2vResult",
+      "detail": "success"
+    },
+    {
+      "name": "h3T2vVideoEcho",
+      "detail": "{'path': '.huimeng-media/74010733-30c8-4117-8be8-a4096a35637b.mp4', 'mimeType': 'video/mp4', 'mediaType': 'video', 'spec': '5s 352p 16:9 608×352'}"
+    },
+    {
+      "name": "h3T2vPath",
+      "detail": ".huimeng-media/74010733-30c8-4117-8be8-a4096a35637b.mp4"
+    },
+    {
+      "name": "h3T2vSpec",
+      "detail": "5s 352p 16:9 608×352"
+    },
+    {
+      "name": "h3T2vPixels",
+      "detail": "5s 352p 16:9 608×352"
+    },
+    {
+      "name": "h3T2vReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "h3T2vTemplate",
+      "detail": "MiniMaxH3ImageToVideo"
+    },
+    {
+      "name": "h3T2vPixelsSubmitted",
+      "detail": "608×352"
+    },
+    {
+      "name": "h3T2vDownloadable",
+      "detail": "200 280"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "h3I2vCalled",
+      "detail": "200"
+    },
+    {
+      "name": "h3I2vResult",
+      "detail": "success"
+    },
+    {
+      "name": "h3I2vVideoEcho",
+      "detail": "{'path': '.huimeng-media/b82f552b-6116-4ac4-936c-580413d37e19.mp4', 'mimeType': 'video/mp4', 'mediaType': 'video', 'spec': '8s 480p 16:9 864×480'}"
+    },
+    {
+      "name": "h3I2vPath",
+      "detail": ".huimeng-media/b82f552b-6116-4ac4-936c-580413d37e19.mp4"
+    },
+    {
+      "name": "h3I2vSpec",
+      "detail": "8s 480p 16:9 864×480"
+    },
+    {
+      "name": "h3I2vReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "h3I2vTemplate",
+      "detail": "MiniMaxH3ImageToVideo"
+    },
+    {
+      "name": "h3I2vPixelsSubmitted",
+      "detail": "864×480"
+    },
+    {
+      "name": "h3I2vDownloadable",
+      "detail": "200 280"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "h3Fl2vCalled",
+      "detail": "200"
+    },
+    {
+      "name": "h3Fl2vResult",
+      "detail": "success"
+    },
+    {
+      "name": "h3Fl2vVideoEcho",
+      "detail": "{'path': '.huimeng-media/88dec769-eee1-496d-a045-f52ad60b32e2.mp4', 'mimeType': 'video/mp4', 'mediaType': 'video', 'spec': '5s 352p 9:16 352×608'}"
+    },
+    {
+      "name": "h3Fl2vPath",
+      "detail": ".huimeng-media/88dec769-eee1-496d-a045-f52ad60b32e2.mp4"
+    },
+    {
+      "name": "h3Fl2vSpec",
+      "detail": "5s 352p 9:16 352×608"
+    },
+    {
+      "name": "h3Fl2vReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "h3Fl2vTemplate",
+      "detail": "MiniMaxH3ImageToVideo"
+    },
+    {
+      "name": "h3Fl2vPixelsSubmitted",
+      "detail": "352×608"
+    },
+    {
+      "name": "fl2vTwoFrames",
+      "detail": ""
+    },
+    {
+      "name": "h3Fl2vDownloadable",
+      "detail": "200 280"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "h3L2vCalled",
+      "detail": "200"
+    },
+    {
+      "name": "h3L2vResult",
+      "detail": "success"
+    },
+    {
+      "name": "h3L2vVideoEcho",
+      "detail": "{'path': '.huimeng-media/44755735-110d-4cd7-acfb-292281e73615.mp4', 'mimeType': 'video/mp4', 'mediaType': 'video', 'spec': '10s 544p 1:1 544×544'}"
+    },
+    {
+      "name": "h3L2vPath",
+      "detail": ".huimeng-media/44755735-110d-4cd7-acfb-292281e73615.mp4"
+    },
+    {
+      "name": "h3L2vSpec",
+      "detail": "10s 544p 1:1 544×544"
+    },
+    {
+      "name": "h3L2vReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "h3L2vTemplate",
+      "detail": "MiniMaxH3ImageToVideo"
+    },
+    {
+      "name": "h3L2vPixelsSubmitted",
+      "detail": "544×544"
+    },
+    {
+      "name": "h3L2vDownloadable",
+      "detail": "200 280"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "h3R2vCalled",
+      "detail": "200"
+    },
+    {
+      "name": "h3R2vResult",
+      "detail": "success"
+    },
+    {
+      "name": "h3R2vVideoEcho",
+      "detail": "{'path': '.huimeng-media/bd339606-f4a9-4ca0-a8ff-ff1361c32744.mp4', 'mimeType': 'video/mp4', 'mediaType': 'video', 'spec': '5s 352p 16:9 608×352'}"
+    },
+    {
+      "name": "h3R2vPath",
+      "detail": ".huimeng-media/bd339606-f4a9-4ca0-a8ff-ff1361c32744.mp4"
+    },
+    {
+      "name": "h3R2vSpec",
+      "detail": "5s 352p 16:9 608×352"
+    },
+    {
+      "name": "h3R2vReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "h3R2vTemplate",
+      "detail": "MiniMaxH3ReferenceToVideo"
+    },
+    {
+      "name": "h3R2vPixelsSubmitted",
+      "detail": "608×352"
+    },
+    {
+      "name": "r2vReferenceNodes",
+      "detail": "['ref_images.ref_image_0', 'ref_images.ref_image_1']"
+    },
+    {
+      "name": "h3R2vDownloadable",
+      "detail": "200 280"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "badDuration",
+      "detail": "400"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "badResolution",
+      "detail": "400"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "badRatio",
+      "detail": "400"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "missingFrame",
+      "detail": "400"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "unexpectedFrame",
+      "detail": "400"
+    },
+    {
+      "name": "invalidNeverReachedExecutor",
+      "detail": ""
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "sixthVideoRejected",
+      "detail": "429"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "csrf",
+      "detail": "200"
+    },
+    {
+      "name": "videoSlotsReleased",
+      "detail": "5"
+    }
+  ]
+}
