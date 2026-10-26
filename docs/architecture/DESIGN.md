@@ -185,3 +185,7 @@ M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队�
 ### 13.7 Agent 工具循环与页面执行边界（2026-10-26）
 
 工具定义固定在服务端资源 `agent/canvas-tools.json`，浏览器不能注入函数签名；画布未激活时不下发画布工具。`LlmClient.converse` 在一次流式响应内累积 `tool_calls` 片段，返回 `Turn(text, calls)`；服务端把工具结果以 `tool_call_id` 消息回填后续轮（最多 6 轮）。画布操作与提问都以 `callId` 挂起，`/cancel` 完成全部等待项，等待循环每 200 ms 检查取消标志。内部生图走 `MediaGenerationService.generateInternal`，与 HTTP 入口共用 `admit`（校验/幂等/五名额）与 `execute`，只是结果消费方式不同，因此 Agent 内部调用不会重复占位。会话改为 `.jsonl` 保存，工具调用与结果写在 `parts[].tool` 中，旧 `.json` 继续可读。证据见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。
+
+### 13.8 服务端转码与能力目录（2026-10-26）
+
+上游 FFmpeg 由浏览器侧 SDK 驱动；本平台改为服务端固定预设转码：素材只从项目媒体读取、输出写回项目媒体、命令由服务端拼装，浏览器不能传命令、滤镜或任意参数。进度用 `-progress pipe:1` 解析 `out_time_ms`，时长由 ffprobe 提供（缺失时只有时间没有百分比）；取消按 `requestId` 定向结束进程。资源上限为单/总素材 2 GiB、8 个素材、2 线程、15 分钟。SSE 帧序列化下沉到服务层，控制器只声明 `ResponseEntity<StreamingResponseBody>`，以满足「控制器只依赖服务接口」的架构约束。能力目录（节点/工具/工具界面/技能/转码状态）由服务端诚实返回空列表，页面据此降级而不是报加载失败。证据见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。

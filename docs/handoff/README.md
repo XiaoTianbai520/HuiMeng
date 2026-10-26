@@ -1,6 +1,6 @@
 # 绘梦 1.0 交接入口
 
-> 文档基线：2026-10-26。M0、M1 和 **M2 安全基座及当前接通范围的开发/隔离验收完成**，见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。M3-01 的安全保存、目录操作、独立文档区域及原文件树/文档面板/画布修订链已验证，M3-02 模型列表/设置与文本生成、M3-03 现用 Qwen 两模型图片生成与名额/取消、M3-04 Agent 工具循环与画布控制已验证，见[M3-W03](../validation/M3_W03_PAGES.md)、[M3-02](../validation/M3_TEXT_GENERATION.md)、[M3-03](../validation/M3_MEDIA_GENERATION.md)与[M3-04](../validation/M3_AGENT_TOOLS.md)记录；M3-01 完整 A04/A05/A06/A17、M3-03 视频与跨入口容量未验收，完整 M3、M4 和 1.0 未验收。本批未更新正式 API/Web/Bun 或正式库；设备 CA 安装可选。历史记录中的端口、PID、版本和服务状态接手时须只读核实。
+> 文档基线：2026-10-26。M0、M1 和 **M2 安全基座及当前接通范围的开发/隔离验收完成**，见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。M3-01 的安全保存、目录操作、独立文档区域及原文件树/文档面板/画布修订链已验证，M3-02 模型列表/设置与文本生成、M3-03 现用 Qwen 两模型图片生成与名额/取消、M3-04 Agent 工具循环与画布控制、M3-05 转码与能力目录已验证，见[M3-W03](../validation/M3_W03_PAGES.md)、[M3-02](../validation/M3_TEXT_GENERATION.md)、[M3-03](../validation/M3_MEDIA_GENERATION.md)、[M3-04](../validation/M3_AGENT_TOOLS.md)与[M3-05](../validation/M3_CAPABILITIES_FFMPEG.md)记录；M3-01 完整 A04/A05/A06/A17、M3-03 视频与跨入口容量未验收，完整 M3、M4 和 1.0 未验收。本批未更新正式 API/Web/Bun 或正式库；设备 CA 安装可选。历史记录中的端口、PID、版本和服务状态接手时须只读核实。
 
 ## 1. 先读哪些文档
 
@@ -69,6 +69,8 @@ M1 已完成独立安装/构建、统一客户端、非 Web 入口清理、市�
 独立前端安装、检查、构建与启动命令见[frontend/README](../../frontend/README.md)，工作目录为 `frontend/`。本机验证使用 Node 24.11.1、Bun 1.4.2、Python 3.11.9；执行器仍以 Bun 1.3.14 为上游基线。后端构建/测试/启动及机密注入见[后端 README](../../backend/README.md)。M1 合成 UI 检查只在回环地址临时运行，没有部署或连接真实供应商。
 
 ## 5. 下一步具体做什么
+
+**M3-05 转码与能力目录已完成。** 服务端 FFmpeg 受控转码（transcode/concat/extractAudio、4 个固定预设、SSE 进度百分比、按 requestId 定向取消、结果写入项目媒体、2 GiB/15 分钟/2 线程限制）与成员只读能力目录（nodes/tools/renderers/skills/ffmpeg status）已接通，页面不再出现「工具界面加载失败」与 403/404 提示。108 项后端、29 项 HTTP+真实转码、11 项浏览器回归通过，见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。下一步补 H3 五模式视频与内置节点包分发，再进入 M3-06。
 
 **M3-04 已完成。** 工具循环接通 18 个画布操作（服务端只下发、页面校验并执行，结果经 `/canvasResult` 回填）、`askQuestion` 与 `/answer`、取消唤醒等待项、内部生图单次占位，会话改为 `.jsonl` 并兼容旧 `.json`。104 项默认后端、26 项前端/102 断言、9 项真实浏览器检查通过，见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。下一步推进 M3-05（FFmpeg 与内置节点/工具/技能，含 H3 视频）或 M3-06（MCP/A2A 与跨入口容量）；单 Agent 委派暂随 M3-06。
 
