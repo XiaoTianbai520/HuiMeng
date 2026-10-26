@@ -1292,7 +1292,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(6);
+        .isEqualTo(7);
     assertThatThrownBy(
             () ->
                 jdbc.update(
@@ -1664,7 +1664,7 @@ class SecurityIntegrationTests {
         List.of(
             "/api/v1/projects/" + project + "/creative/file/read",
             "/api/v1/projects/" + project + "/creative/ai/image",
-            "/api/v1/admin/plugin-market/search"))
+            "/api/v1/admin/plugins/unknown/execute"))
       mvc.perform(write(post(path), admin, Map.of())).andExpect(status().isForbidden());
   }
 

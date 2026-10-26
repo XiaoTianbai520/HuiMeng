@@ -143,6 +143,14 @@ public class SecurityConfiguration {
                     "/api/v1/admin/external-clients",
                     "/api/v1/admin/plugin-market/status",
                     "/api/v1/admin/configuration/export",
+                    "/api/v1/admin/plugins",
+                    "/api/v1/admin/plugins/export",
+                    "/api/v1/admin/skills/list",
+                    "/api/v1/admin/skills/read",
+                    "/api/v1/admin/agents/read",
+                    "/api/v1/admin/agents/get",
+                    "/api/v1/admin/agents/a2a/get",
+                    "/api/v1/admin/providers/media/list",
                     "/api/v1/projects/*/members")
                 .hasRole("ADMIN")
                 .requestMatchers(
@@ -151,7 +159,19 @@ public class SecurityConfiguration {
                     "/api/v1/projects",
                     "/api/v1/projects/*/members",
                     "/api/v1/admin/external-clients",
-                    "/api/v1/admin/external-clients/*/revoke")
+                    "/api/v1/admin/external-clients/*/revoke",
+                    "/api/v1/admin/*/install",
+                    "/api/v1/admin/plugins/*/*/config",
+                    "/api/v1/admin/plugin-market/search",
+                    "/api/v1/admin/plugin-market/collections/toggle",
+                    "/api/v1/admin/plugin-market/install",
+                    "/api/v1/admin/skills/create",
+                    "/api/v1/admin/skills/setEnabled",
+                    "/api/v1/admin/agents/connect",
+                    "/api/v1/admin/providers/media/add",
+                    "/api/v1/admin/providers/media/save",
+                    "/api/v1/admin/providers/media/delete",
+                    "/api/v1/admin/providers/media/models")
                 .hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/users/*", "/api/v1/projects/*")
                 .hasRole("ADMIN")
@@ -159,9 +179,22 @@ public class SecurityConfiguration {
                     HttpMethod.PUT,
                     "/api/v1/admin/providers/*/secret",
                     "/api/v1/admin/models/approval",
-                    "/api/v1/admin/plugin-market/secret")
+                    "/api/v1/admin/plugin-market/secret",
+                    "/api/v1/admin/*/setEnabled",
+                    "/api/v1/admin/skills/save",
+                    "/api/v1/admin/skills/move",
+                    "/api/v1/admin/skills/order",
+                    "/api/v1/admin/agents/save",
+                    "/api/v1/admin/agents/a2a/save")
                 .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/preferences/personalization")
+                .authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/preferences/personalization")
+                .authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/projects/*/members/*")
+                .hasRole("ADMIN")
+                .requestMatchers(
+                    HttpMethod.DELETE, "/api/v1/admin/plugins/*/*", "/api/v1/admin/*/uninstall")
                 .hasRole("ADMIN")
                 .anyRequest()
                 .denyAll());

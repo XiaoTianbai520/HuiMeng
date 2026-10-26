@@ -15,7 +15,7 @@
 | A09 | Agent 会话、画布工具、取消/恢复、NDJSON | [历史会话/取消/继续](../archive/m0/DEEPSEEK_BASELINE.md)、[页面画布工具](evidence/upstream-ui-text-agent-closeout.json) | M0 核心基线已取证；1.0 待验收 |
 | A10 | FFmpeg 合成/转码、进度、取消、下载 | [实际转码/进度/取消/输出下载](evidence/upstream-ffmpeg-closeout.json) | 原版转码基线已通过；目标 Linux 发布环境和完整处理场景待 1.0 |
 | A11 | 管理员统一 Key，成员只见获批模型 | 无，上游设置不能替代新权限 | 待 1.0 |
-| A12 | 插件市场发现/搜索/收藏、管理员在线及文件安装更新/配置/启停/导出/卸载、成员越权拒绝、凭据保护、离线已安装可用；Agent 实际加载工具 | [路由清单](../api/route-inventory.md)、[节点菜单](evidence/upstream-canvas-node-menu.png)、[新增范围](../product/PLUGIN_MARKET.md) | M0-06 在线/管理/页面/断网及 Agent 工具已取证，见[市场报告](../archive/m0/M0_PLUGIN_MARKET.md)；版本/摘要、节点授权、原构建扩展缺陷待修复；1.0 待验收 |
+| A12 | 插件市场发现/搜索/收藏、管理员在线及文件安装更新/配置/启停/导出/卸载、成员越权拒绝、凭据保护、离线已安装可用；Agent 实际加载工具 | [市场与插件管理](M3_PLUGIN_MARKET.md)、[M0 市场报告](../archive/m0/M0_PLUGIN_MARKET.md) | 管理面通过：登记/安装（摘要、版本冲突、归档越界、来源清单）/秘密掩码/启停/导出/允许的卸载、成员访问管理端 403、断网时 503 且已装能力可用；未通过部分：插件运行期加载（工具/节点/市场工具实际执行）、自定义媒体供应商文件、真实市场凭据复跑 |
 | A13 | Spring HTTPS MCP/A2A 凭证、项目隔离 | [MCP/A2A 外部协议](M3_EXTERNAL_PROTOCOLS.md)、[54 项结果](evidence/m3-m06-external.json)、[页面控制](evidence/m3-m06-browser.json) | Spring 1.0 通过（HTTP 层）：握手/会话/工具裁剪/服务端文件工具/路径穿越拒绝/卡片/版本头/任务提交查询取消/跨客户端与撤销共 54 项；团队 HTTPS 证书与浏览器信任沿用 M2 结论未复验 |
 | A14 | 只保留 Web 体验，页面无排除入口与 404 | [原版引导](evidence/upstream-first-page.png)、[路由清单](../api/route-inventory.md) | 待 1.0 清理 |
 | A15 | 项目备份恢复和回滚 | [样例项目](fixtures/sample-project/) | 待 1.0 |
