@@ -25,4 +25,11 @@ public interface CapabilityService {
 
   /** 项目内可见的技能包目录；先校验项目成员身份。 */
   List<CapabilityDTOs.SkillItem> agentSkills(String projectId);
+
+  /**
+   * 已启用技能正文，供服务端组装 Agent 提示词使用。
+   *
+   * <p>与 {@code mcp/skill} 共用同一登记，不向客户端暴露文件系统路径；无技能时返回空串。
+   */
+  String skillPrompt();
 }

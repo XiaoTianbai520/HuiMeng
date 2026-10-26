@@ -62,6 +62,7 @@ class CapabilityCatalogTests {
   @Autowired JdbcTemplate jdbc;
   @Autowired UserService users;
   @Autowired ProjectService projects;
+  @Autowired cn.huimeng.service.CapabilityService capabilities;
   MockHttpSession admin;
   String adminId, memberId;
 
@@ -248,6 +249,29 @@ class CapabilityCatalogTests {
                 .param("version", sha256(pure))
                 .session(admin))
         .andExpect(status().isNotFound());
+  }
+
+  /** 技能正文注入只读已启用登记，停用后立即消失。 */
+  @Test
+  void injectsEnabledSkillBodiesForAgentPrompt() throws Exception {
+    mvc.perform(
+            write(
+                post("/api/v1/admin/skills/install"),
+                admin,
+                Map.of("fileName", "demoSkill.md", "source", "# 演示技能\n\n先读分镜再写台词。\n")))
+        .andExpect(status().isOk());
+
+    assertThat(capabilities.skillPrompt())
+        .contains("## 技能：demoSkill（demoSkill 1.0.0）")
+        .contains("先读分镜再写台词");
+
+    mvc.perform(
+            write(
+                put("/api/v1/admin/skills/setEnabled"),
+                admin,
+                Map.of("name", "demoSkill", "enabled", false)))
+        .andExpect(status().isOk());
+    assertThat(capabilities.skillPrompt()).isEmpty();
   }
 
   @Test

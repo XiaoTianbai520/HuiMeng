@@ -47,7 +47,10 @@ class AgentServiceImplTests {
     media = mock(MediaGenerationService.class);
     var catalog = new AgentToolCatalog(json);
     catalog.load();
-    agents = new AgentServiceImpl(projects, files, models, llm, media, catalog, json);
+    // 技能正文由能力登记提供；本类只验证工具循环，按无技能处理。
+    var capabilities = mock(CapabilityService.class);
+    when(capabilities.skillPrompt()).thenReturn("");
+    agents = new AgentServiceImpl(projects, files, models, llm, media, catalog, capabilities, json);
   }
 
   @AfterEach

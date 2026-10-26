@@ -73,7 +73,7 @@ export default {
 | --- | --- | --- | --- |
 | 节点 | 可用 | 可用（`nodes/get` + `nodes/files` + 浏览器执行） | 内置 `textNode`/`imageNode` 已真实加载（浏览器 16 项）；画布内渲染待在 Linux 夹具复跑；生成链路仍未接通 |
 | 工具 | 可用 | 可用（`renderers` 按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`） | **无执行器**，Agent/MCP 工具清单硬编码，不读插件 |
-| 技能 | 可用 | 可用（文档入库 + `mcp/skill` 下发） | Web Agent 未注入正文，仅外部 MCP 客户端可取 |
+| 技能 | 可用 | 可用（文档入库 + `mcp/skill` 下发目录 + `CapabilityService.skillPrompt()` 注入 Web Agent 提示词） | Web Agent 已注入正文（单条 6000/合计 20000 字符上限）；references 不注入 |
 
 ## 5. 已知断点
 
@@ -113,7 +113,7 @@ export default {
 
 1. ~~**内置节点包入库**（M3-05 / M3-I08）~~ **已完成（textNode/imageNode 两个节点）**：产物入 `backend/src/main/resources/capabilities/nodes/`，启动按摘要幂等登记为 `builtin`；`nodes/files` 可分发，管理员停用状态跨重启保留。构建与来源见 [节点包引入记录](../upstream/NODE_PACKAGES_INTAKE.md)。仍未做：其余上游节点、画布内渲染的 Linux 复跑。
 2. ~~**修 `renderers()`**~~ **已完成**：按包头 `components` 发布真实工具名，`tools/client` 下发内嵌界面（`code`+`css`），纯 Agent 工具不占渲染器名额；实现见 `ToolPackage` 与 `CapabilityServiceImpl`。
-3. **技能注入**：Web Agent 组装提示词时读取已启用技能的正文，与 `mcp/skill` 共用登记。
+3. ~~**技能注入**~~ **已完成**：`CapabilityService.skillPrompt()` 读取已启用技能的 `SKILL.md`（缺失时取第一个 `.md`），单条 6000、合计 20000 字符上限，由 `AgentServiceImpl.systemPrompt()` 追加到系统提示词；与 `mcp/skill` 共用同一登记，停用即消失，不向客户端暴露路径。
 4. **工具执行器**（唯一有方案分叉）：
    - Node sidecar：与原版一致，兼容性最好，但多一个运行时；
    - GraalJS：留在 JVM 内，需要 ESM 适配与 `fs`/`fetch` 受控注入。

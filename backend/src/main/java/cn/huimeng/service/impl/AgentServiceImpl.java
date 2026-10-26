@@ -35,6 +35,7 @@ public class AgentServiceImpl implements AgentService {
   private final LlmClient llm;
   private final MediaGenerationService media;
   private final AgentToolCatalog catalog;
+  private final CapabilityService capabilities;
   private final ObjectMapper json;
   private final Set<String> running = ConcurrentHashMap.newKeySet();
   private final Set<String> cancelRequested = ConcurrentHashMap.newKeySet();
@@ -47,6 +48,7 @@ public class AgentServiceImpl implements AgentService {
       LlmClient llm,
       MediaGenerationService media,
       AgentToolCatalog catalog,
+      CapabilityService capabilities,
       ObjectMapper json) {
     this.projects = projects;
     this.files = files;
@@ -54,6 +56,7 @@ public class AgentServiceImpl implements AgentService {
     this.llm = llm;
     this.media = media;
     this.catalog = catalog;
+    this.capabilities = capabilities;
     this.json = json;
   }
 
@@ -528,9 +531,13 @@ public class AgentServiceImpl implements AgentService {
   }
 
   private String systemPrompt() {
-    return "你是绘梦创作助手，使用简体中文回答。只有在确实需要画布状态或执行画布操作时才调用画布工具，"
-        + "修改画布后先用 getCanvas 确认结果。缺少关键信息时用 askQuestion 询问用户，不要自行编造设定。"
-        + "需要图片时调用 generateImage，成功后在回复中给出保存到项目素材的路径。";
+    String base =
+        "你是绘梦创作助手，使用简体中文回答。只有在确实需要画布状态或执行画布操作时才调用画布工具，"
+            + "修改画布后先用 getCanvas 确认结果。缺少关键信息时用 askQuestion 询问用户，不要自行编造设定。"
+            + "需要图片时调用 generateImage，成功后在回复中给出保存到项目素材的路径。";
+    // 已启用技能的正文由服务端注入，页面不需要额外读取；技能只提供方法，不改变工具权限。
+    String skills = capabilities.skillPrompt();
+    return skills.isBlank() ? base : base + "\n\n可用技能（按需遵循其中的步骤、模板与产出要求）：\n" + skills;
   }
 
   private Map<String, Object> assistantToolCalls(String content, List<LlmClient.ToolCall> calls) {

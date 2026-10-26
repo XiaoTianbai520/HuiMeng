@@ -23,6 +23,11 @@ public class CapabilityServiceImpl implements CapabilityService {
   private static final Pattern SCRIPT_NAME = Pattern.compile("[a-z][a-zA-Z0-9]*");
   private static final Pattern SECRET_KEY =
       Pattern.compile("(?i).*(key|secret|token|password|credential).*");
+
+  /** 单条技能正文与全部技能正文的上限，避免提示词被技能包撑爆。 */
+  private static final int MAX_SKILL_CHARS = 6000;
+
+  private static final int MAX_SKILL_TOTAL = 20000;
   private final PluginMapper plugins;
   private final ProjectService projects;
   private final ObjectMapper json;
@@ -119,6 +124,50 @@ public class CapabilityServiceImpl implements CapabilityService {
   public List<CapabilityDTOs.SkillItem> agentSkills(String projectId) {
     projects.requireMember(projectId, false);
     return skills();
+  }
+
+  /**
+   * 技能正文拼接：每个技能取 {@code SKILL.md}，单条与总量都有上限，避免把提示词撑爆。
+   *
+   * <p>这是服务端内部调用（Agent 组装提示词），不做角色校验，也不返回 references；相对路径与正文里的指令由模型自行遵守。
+   */
+  @Override
+  public String skillPrompt() {
+    var blocks = new ArrayList<String>();
+    int total = 0;
+    for (PluginDO plugin : plugins.list()) {
+      if (!"skill".equals(plugin.type()) || !plugin.enabled()) continue;
+      String body = skillBody(plugin);
+      if (body.isBlank()) continue;
+      String block =
+          "## 技能："
+              + plugin.displayName()
+              + "（"
+              + plugin.name()
+              + " "
+              + plugin.version()
+              + "）\n"
+              + truncate(body, MAX_SKILL_CHARS);
+      if (total + block.length() > MAX_SKILL_TOTAL) break;
+      blocks.add(block);
+      total += block.length();
+    }
+    return String.join("\n\n", blocks);
+  }
+
+  private String skillBody(PluginDO plugin) {
+    var documents = plugins.documents(plugin.id());
+    String body = documents.get("SKILL.md");
+    if (body != null) return body;
+    return documents.entrySet().stream()
+        .filter(entry -> entry.getKey().toLowerCase(Locale.ROOT).endsWith(".md"))
+        .map(Map.Entry::getValue)
+        .findFirst()
+        .orElse("");
+  }
+
+  private static String truncate(String text, int max) {
+    return text.length() <= max ? text : text.substring(0, max) + "\n…（正文已截断）";
   }
 
   /** 脚本只在类型、启用状态与摘要都匹配时下发；任何不符都按“能力未安装或已停用”处理。 */
