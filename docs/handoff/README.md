@@ -1,6 +1,8 @@
 # 绘梦 1.0 交接入口
 
-> 文档基线：2026-10-26。M0、M1 和 **M2 安全基座及当前接通范围的开发/隔离验收完成**，见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。M3-01 的安全保存、目录操作、独立文档区域及原文件树/文档面板/画布修订链已验证，M3-02 模型列表/设置与文本生成、M3-03 现用 Qwen 两模型图片生成与名额/取消、M3-04 Agent 工具循环与画布控制、M3-05 转码与能力目录已验证，见[M3-W03](../validation/M3_W03_PAGES.md)、[M3-02](../validation/M3_TEXT_GENERATION.md)、[M3-03](../validation/M3_MEDIA_GENERATION.md)、[M3-04](../validation/M3_AGENT_TOOLS.md)与[M3-05](../validation/M3_CAPABILITIES_FFMPEG.md)记录；M3-01 完整 A04/A05/A06/A17、M3-03 视频与跨入口容量未验收，完整 M3、M4 和 1.0 未验收。本批未更新正式 API/Web/Bun 或正式库；设备 CA 安装可选。历史记录中的端口、PID、版本和服务状态接手时须只读核实。
+> 文档基线：2026-10-26，代码 `c39f226`。M0、M1、**M2 安全基座**及 M3 的 01～08 主体均已完成：安全保存/目录/原文件树与修订链（M3-01，57 项 HTTP）、模型与文本生成（M3-02）、Qwen 图片生成与名额/取消（M3-03）、Agent 工具循环与画布控制（M3-04）、FFmpeg 与能力目录（M3-05）、MCP/A2A 外部协议（M3-06，54 项 A13 + 11 项浏览器）、排除路由清理（M3-07，36 项审计）、插件市场管理面与能力运行期分发（M3-08），A16 跨入口五名额 46 项通过。H3 五模式（T2V/I2V/FL2V/L2V/R2V）已全部真实出片。后端 126 项、前端 26 项通过。
+>
+> **M3 尚未收口**：内置节点包未入库、工具 `.tool.js` 无执行器（Agent 取不到市场工具）、技能正文未注入 Web Agent、市场在线安装链路断（详见[插件运行期交接](PLUGIN_RUNTIME.md)）、自定义媒体供应商未开放、M3-S01 素材/导出物与 M3-03 音频入口未做、真实市场凭据与 M0-I12～I14 未复验。**M4 与 1.0 未开始、未验收，最新源码未部署。** 正式 API/Web/Bun 未更新，设备 CA 安装可选；历史记录中的端口、PID、版本须只读核实。
 
 ## 1. 先读哪些文档
 
@@ -70,6 +72,17 @@ M1 已完成独立安装/构建、统一客户端、非 Web 入口清理、市�
 
 ## 5. 下一步具体做什么
 
+**当前交接重点：把插件「加载与使用」收口。** 制品格式、加载协议、当前实现与四处市场断点见[插件运行期交接](PLUGIN_RUNTIME.md)。建议顺序：
+
+1. 内置节点包入库（`source=builtin`，启动幂等登记），用真实 `.umd.js` 做浏览器加载验证 —— M3-05 / M3-I08
+2. `CapabilityServiceImpl.renderers()` 改按包头 `components` 解析，不再用插件名顶替工具名 —— M3-08
+3. 技能正文注入 Web Agent，与 `mcp/skill` 共用登记 —— M3-08
+4. `.tool.js` 的 `createTools` 执行器与执行隔离（Node sidecar 或 GraalJS，需先定选型）—— M3-08 / A12
+5. 市场在线安装：修 `identifier/supplier/desc` 映射、请求体契约、`*.volces.com` 下载来源，并建立服务端「获批制品清单」；`fileHash` 不可当 SHA-256 用
+6. 真实市场凭据复跑与 M0-I12～I14（需用户提供 TF-Router 子账号凭证）
+
+**其余 M3 尾巴**：M3-S01 原素材页/导出物、M3-03 独立音频入口、自定义媒体供应商文件、A2A 流式事件与服务端推送。
+
 **能力目录已改为运行期分发。** `capabilities/nodes/get|files`、`tools/get|renderers|client`、`mcp/skill` 与项目 `agent/skills` 读取已安装能力登记：节点脚本按安装摘要下发并由页面执行注册，工具界面按摘要版本取回，停用/越界/版本不符返回 404，秘密配置不下发。后端 5 项新测试（全量 126）与真实浏览器 10 项通过，见[记录](../validation/M3_CAPABILITY_LOADING.md)。随部署内置节点包、Agent 取用市场工具、自定义媒体供应商仍未做。
 
 **A16 跨入口名额已通过。** 新增 `CapacityHarness`（真实 Spring + 内嵌合成 ComfyUI/文本供应商 + 内存存储）与 `m3M16Capacity.py`：Web 两个账号、MCP 两个外部客户端、A2A 团队任务（Agent 内部生图）共用同一项目的五个名额，第六个返回 429 `PROJECT_CAPACITY_EXCEEDED` 且执行器提交数不变；取消确认终态后释放并可补位，另一项目独立计数，Web 运行与 A2A 产物均核验，46 项通过，见[容量记录](../validation/M3_CAPACITY.md)。同轮修复了内部生图结束时清空 Agent 线程登录态、导致 A2A 会话保存失败的问题，后端 121 项与 Spotless 仍通过。
@@ -117,15 +130,31 @@ git status --short
 ## 7. 可直接发给接手 AI 的说明
 
 ```text
-请接手“绘梦 1.0 Toonflow 安全迁移版”。先读仓库 AGENTS.md、
-docs/handoff/README.md，再按顺序读 PRD、DESIGN、CONTRACTS、TASKS。
-M0、M1、M2 安全基座和当前接通范围的开发/隔离验收完成，内部 CA 安装可选。
-M3-01 的安全保存、目录操作、独立文档区域及原文件树/文档面板/画布修订链已验证；
-M3-W01/02/03 完成，M3-01 完整 A04/A05/A06/A17 未验收。M3-03 仍为 M2 最小依赖。
-完整 M3/M4 和 1.0 未验收，最新源码未部署。
-后续范围以用户授权和 TASKS 为准，不自动扩展工作。
-以这些现行文档和固定提交源码为依据，不把 archive、原始证据或 .m0-work
-当成新需求，不重新恢复旧供应商，不将 M0 通过当成 1.0 已实现。
-先检查实际文件和 Git 状态；按任务依赖完成可评审成果、验证并更新文档。
-如本次给你的是其他具体任务，以用户本次授权范围为准。
+请接手「绘梦 1.0 / Toonflow Web 安全迁移版」，仓库：C://Users//c1338//Desktop//绘梦。
+
+第一步只读：
+1) AGENTS.md
+2) docs/handoff/README.md（当前状态、环境、剩余项）
+3) docs/handoff/PLUGIN_RUNTIME.md（插件加载与使用的交接重点）
+再按需读 docs/product/PRD.md、docs/architecture/DESIGN.md、docs/api/CONTRACTS.md、docs/plan/TASKS.md。
+
+当前事实：
+- M0/M1/M2 完成；M3-01～M3-08 主体完成，后端 126 项、前端 26 项通过，最新提交 c39f226。
+- H3 五模式已有真实出片；A16 跨入口五名额 46 项通过。
+- M3 未收口，M4 与 1.0 未开始。未部署，正式库/API 未更新。
+
+首要任务（按顺序）：
+1. 内置节点包入库并做真实 .umd.js 浏览器加载验证（M3-05/M3-I08）
+2. renderers() 按包头 components 解析（M3-08）
+3. 技能正文注入 Web Agent（M3-08）
+4. .tool.js 的 createTools 执行器与执行隔离（M3-08/A12，先定 Node sidecar 或 GraalJS）
+5. 市场在线安装链路修复（映射、请求体、*.volces.com 来源、获批制品清单）
+6. 真实市场凭据复跑（需用户提供 TF-Router 子账号凭证）
+
+工作约定：
+- 每完成一个小任务用中文提交一次，提交说明写清改动与验证；推送 origin 远程名为 orgin，分支 master，网络慢时用 http://127.0.0.1:7890。
+- 不使用 .m0-work/.m1-work/.m2-work 作为源码或交接依据；不恢复 archive 里的旧供应商。
+- git status 常有大量 stat 假阳性，真实改动看 git diff --numstat。
+- 不能把「单元测试过」等同于「页面能用」；插件相关改动必须走真实浏览器或真实夹具验证。
+- 未经用户确认不扩大范围；遇到接口契约与真实上游不一致，先以实际响应为准修正文档，再改代码。
 ```
