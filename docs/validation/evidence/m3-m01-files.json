@@ -1,0 +1,299 @@
+{
+ "project": "81b5b20c-0d50-4a1f-a62e-2e28b943c02c",
+ "checks": [
+  {
+   "name": "csrf",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "login ext-admin",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "csrf",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 新建目录",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 新建画布",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 画布修订号 64 位",
+   "ok": true,
+   "detail": "55f0b3b9ba08bb15dbcad8be8dd9f162e17cd393b1324e47fd54908349cd7c6c"
+  },
+  {
+   "name": "snapshot 素材/画布1.json",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 重开画布内容一致",
+   "ok": true,
+   "detail": "{\"version\": \"1.0\", \"nodes\": [{\"id\": \"n1\", \"type\": \"text\", \"d"
+  },
+  {
+   "name": "A04 画布默认编码",
+   "ok": true,
+   "detail": "utf-8"
+  },
+  {
+   "name": "A04 写入 BOM 文档",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 BOM 原样保留",
+   "ok": true,
+   "detail": "b'\\xef\\xbb\\xbf'"
+  },
+  {
+   "name": "snapshot 剧本.md",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 BOM 编码回显",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A04 写入 UTF-16LE",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 UTF-16LE BOM",
+   "ok": true,
+   "detail": "b'\\xff\\xfe'"
+  },
+  {
+   "name": "A04 UTF-16LE 内容",
+   "ok": true,
+   "detail": "b'#\\x00 \\x00,{\\x8cNU^\\n\\x00'"
+  },
+  {
+   "name": "snapshot 剧本16.md",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 UTF-16LE 编码回显",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A04 保存画布",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 修订号变化",
+   "ok": true,
+   "detail": "40c0028325d4"
+  },
+  {
+   "name": "snapshot 素材/画布1.json",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A04 重开已保存内容",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A05 当前修订可继续保存",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A05 旧修订冲突 409",
+   "ok": true,
+   "detail": "409"
+  },
+  {
+   "name": "A05 冲突码",
+   "ok": true,
+   "detail": "{'code': 'REVISION_CONFLICT', 'message': '文件已变化，请重新读取后处理；本次内容未保存', 'requestId': '16000178-d5cd-4f8b-a30a-b5085df68111', 'details': {'currentRevision': '40c0028325d40fd70e2ec5d52d58b9449924f1d7926e9ce6e3f7c6bcab6c97b0'}}"
+  },
+  {
+   "name": "A05 返回当前修订号",
+   "ok": true,
+   "detail": "{'code': 'REVISION_CONFLICT', 'message': '文件已变化，请重新读取后处理；本次内容未保存', 'requestId': '16000178-d5cd-4f8b-a30a-b5085df68111', 'details': {'currentRevision': '40c0028325d40fd70e2ec5d52d58b9449924f1d7926e9ce6e3f7c6bcab6c97b0'}}"
+  },
+  {
+   "name": "A06 复制文件",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "snapshot 剧本-副本.md",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A06 副本可读",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A06 重命名",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A06 列表出现重命名结果",
+   "ok": true,
+   "detail": "['docs', '素材', '剧本-终稿.md', '剧本.md', '剧本16.md', '欢迎.md']"
+  },
+  {
+   "name": "A06 删除文件",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A06 删除后不可见",
+   "ok": true,
+   "detail": "['docs', '素材', '剧本.md', '剧本16.md', '欢迎.md']"
+  },
+  {
+   "name": "A06 写入 8 MiB",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A06 分段读取 206",
+   "ok": true,
+   "detail": "206"
+  },
+  {
+   "name": "A06 分段长度",
+   "ok": true,
+   "detail": "1024"
+  },
+  {
+   "name": "A06 Content-Range",
+   "ok": true,
+   "detail": "bytes 0-1023/8388608"
+  },
+  {
+   "name": "A06 分段摘要",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A17 项目列表可读",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "A17 不含 /data/",
+   "ok": true,
+   "detail": "/data/"
+  },
+  {
+   "name": "A17 不含 /tmp/",
+   "ok": true,
+   "detail": "/tmp/"
+  },
+  {
+   "name": "A17 不含 /repo/",
+   "ok": true,
+   "detail": "/repo/"
+  },
+  {
+   "name": "A17 不含 C:\\\\",
+   "ok": true,
+   "detail": "C:\\\\"
+  },
+  {
+   "name": "A17 不含 workspace-root",
+   "ok": true,
+   "detail": "workspace-root"
+  },
+  {
+   "name": "A17 不含 absolutePath",
+   "ok": true,
+   "detail": "absolutePath"
+  },
+  {
+   "name": "A17 不含 directory",
+   "ok": true,
+   "detail": "directory"
+  },
+  {
+   "name": "A17 项目字段收敛",
+   "ok": true,
+   "detail": "['id', 'name', 'status']"
+  },
+  {
+   "name": "A17 项目名无路径 外部协议验收",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A17 项目名无路径 外部协议隔离",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A17 文件列表不含绝对路径",
+   "ok": true,
+   "detail": "[{'name': 'docs', 'path': 'docs', 'type': 'directory'}, {'name': '素材', 'path': '素材', 'type': 'directory'}, {'name': '剧本.md', 'path': '剧本.md', 'type': 'file'}]"
+  },
+  {
+   "name": "A17 文件列表无 absolutePath",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A03 新建非成员账号",
+   "ok": true,
+   "detail": "201"
+  },
+  {
+   "name": "csrf",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "login m301-outsider",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "csrf",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "A03 非成员读取拒绝",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "name": "A03 非成员项目列表为空",
+   "ok": true,
+   "detail": "0"
+  }
+ ],
+ "skips": [
+  {
+   "name": "A06 媒体上传/下载",
+   "reason": "夹具未启用对象存储（huimeng.storage.enabled=false）",
+   "fallback": "M2-A01 真实 MinIO 上传/预览/下载证据（M2_ACCEPTANCE.md）"
+  }
+ ],
+ "passed": 57,
+ "createdAt": "2026-10-26T14:20:03.920591+08:00"
+}
