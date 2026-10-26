@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-10-26T02:47:18.734Z",
+  "project": "2b00c094-3cb6-46a2-9d26-c7b4e833a151",
+  "checks": [
+    {
+      "name": "A1 登录并进入含画布的工作区",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B1 模型返回文本且引用了页面回传结果",
+      "ok": true,
+      "detail": "ectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"hasMore\":false,\"nextCursor\":null}﻿输入消息，@ 提及节点输出或全局素材…DeepSeek Chat · 默认"
+    },
+    {
+      "name": "B2 回填内容含真实画布字段",
+      "ok": true,
+      "detail": "1.json\",\"nodeCount\":0,\"edgeCount\":0,\"selectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"hasMore\":false,\"nextCursor\":null}﻿输入消息，@ 提及节点输出或全局素材…DeepSeek Chat · 默认"
+    },
+    {
+      "name": "B3 工具卡片已渲染",
+      "ok": true,
+      "detail": "1.json\",\"nodeCount\":0,\"edgeCount\":0,\"selectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"hasMore\":false,\"nextCursor\":null}﻿输入消息，@ 提及节点输出或全局素材…DeepSeek Chat · 默认"
+    },
+    {
+      "name": "C1 供应商收到两次请求与一次工具结果",
+      "ok": true,
+      "detail": "{\"requests\":4,\"toolCalls\":2,\"toolResults\":2}"
+    },
+    {
+      "name": "D1 会话列表包含本次对话",
+      "ok": true,
+      "detail": "[{\"file\":\"f8fe923c-2389-41c8-b428-20eb5a790150.jsonl\",\"name\":\"新对话\",\"modified\":\"2026-10-26T02:47:17.324355534Z\",\"messageCount\":2}]"
+    },
+    {
+      "name": "D2 助手消息持久化工具调用与结果",
+      "ok": true,
+      "detail": "{\"id\":\"61619304-9a50-45a5-93c1-12014edd9c77\",\"type\":\"tool\",\"tool\":{\"id\":\"call-canvas-1\",\"name\":\"getCanvas\",\"status\":\"success\",\"args\":{},\"result\":\"{\\\"canvasId\\\":"
+    },
+    {
+      "name": "D3 工具结果为真实画布数据",
+      "ok": true,
+      "detail": "{\"canvasId\":\"画布1.json\",\"id\":\"画布1.json\",\"nodeCount\":0,\"edgeCount\":0,\"selectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\""
+    },
+    {
+      "name": "E1 页面无未捕获错误",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "pageErrors": []
+}
