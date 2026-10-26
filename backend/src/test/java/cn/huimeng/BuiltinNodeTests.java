@@ -230,6 +230,26 @@ class BuiltinNodeTests {
   }
 
   @Test
+  void prunesRemovedArtifactButKeepsRowsWhenNothingIsScanned(@TempDir Path dir) throws Exception {
+    Files.write(dir.resolve("goodNode.umd.js"), artifact("goodNode", "1.0.0", "ok"));
+    Files.write(dir.resolve("goneNode.umd.js"), artifact("goneNode", "1.0.0", "ok"));
+    BuiltinNodeRegistrar local = new BuiltinNodeRegistrar(mapper, json, dir.toUri() + "*.umd.js");
+    local.sync();
+    assertThat(builtinNames()).containsExactly("goneNode", "goodNode");
+
+    // 产物下线后重扫：只删下线条目，管理员配置一并移除。
+    Files.delete(dir.resolve("goneNode.umd.js"));
+    local.sync();
+    assertThat(builtinNames()).containsExactly("goodNode");
+
+    // 一个产物都扫不到（资源读取失败或目录为空）时不清理，避免误删全部内置节点。
+    BuiltinNodeRegistrar empty =
+        new BuiltinNodeRegistrar(mapper, json, dir.resolve("nothing").toUri() + "*.umd.js");
+    assertThat(empty.sync()).isEmpty();
+    assertThat(builtinNames()).containsExactly("goodNode");
+  }
+
+  @Test
   void rejectsUninstallingBuiltinNode() throws Exception {
     registrar.sync();
 

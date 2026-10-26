@@ -48,9 +48,12 @@ public class CapabilityHarness {
           + "  window.__hmDemoNodeLoaded = true;\n"
           + "})();\n";
   static final String TOOL_SOURCE =
-      "// @version 1.0.0\n"
-          + "window.toonflowToolViews = window.toonflowToolViews || {};\n"
-          + "window.toonflowToolViews.mediaGeneration = {};\n";
+      "/*! toonflowTool:{\"name\":\"mediaGeneration\",\"version\":\"1.0.0\",\"displayName\":\"媒体生成\","
+          + "\"description\":\"夹具工具包\",\"author\":\"fixture\",\"github\":\"\","
+          + "\"components\":[\"mediaGeneration\"],\"configRules\":[]} */\n"
+          + "/*! toonflowToolClient:{\"code\":\"window.toonflowToolViews = window.toonflowToolViews"
+          + " || {};\",\"css\":\"\"} */\n"
+          + "export default { validateConfig() { return {}; }, createTools() { return []; } };\n";
   @Autowired UserService users;
   @Autowired ProjectService projects;
   @Autowired PluginService plugins;

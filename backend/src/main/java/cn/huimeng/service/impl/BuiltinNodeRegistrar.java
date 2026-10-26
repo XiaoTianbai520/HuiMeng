@@ -99,6 +99,7 @@ public class BuiltinNodeRegistrar implements ApplicationRunner {
     List<Resource> ordered = new ArrayList<>(List.of(found));
     ordered.sort(Comparator.comparing(BuiltinNodeRegistrar::fileNameOf));
     List<Outcome> outcomes = new ArrayList<>();
+    Set<String> present = new LinkedHashSet<>();
     for (Resource resource : ordered) {
       String fileName = fileNameOf(resource);
       if (!fileName.toLowerCase(Locale.ROOT).endsWith(SUFFIX)) continue;
@@ -109,6 +110,8 @@ public class BuiltinNodeRegistrar implements ApplicationRunner {
         LOG.warn("内置节点文件名不合法，已跳过：{}（{}）", fileName, ex.toString());
         continue;
       }
+      // 产物存在即视为在册，即使本次登记失败也不能因为坏包把管理员的数据删掉。
+      present.add(name);
       try {
         outcomes.add(new Outcome(name, save(fileName, resource.getInputStream().readAllBytes())));
       } catch (IOException | RuntimeException ex) {
@@ -117,7 +120,20 @@ public class BuiltinNodeRegistrar implements ApplicationRunner {
         outcomes.add(new Outcome(name, Change.SKIPPED));
       }
     }
+    // 只有确实扫描到产物才清理下线条目：资源整体读取失败时保持原样，避免误删。
+    if (!present.isEmpty()) prune(present);
     return List.copyOf(outcomes);
+  }
+
+  /** 移除已下线的内置节点：只删 {@code source=builtin} 且本轮扫描不到的条目。 */
+  private void prune(Set<String> present) {
+    for (PluginDO plugin : plugins.list()) {
+      if (!TYPE.equals(plugin.type())
+          || !SOURCE.equals(plugin.source())
+          || present.contains(plugin.name())) continue;
+      plugins.delete(plugin.id());
+      LOG.info("内置节点 {} 的产物已下线，登记与配置一并移除", plugin.name());
+    }
   }
 
   /**

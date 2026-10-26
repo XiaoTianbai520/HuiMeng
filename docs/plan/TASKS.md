@@ -141,6 +141,8 @@ M2 完成门槛：所有对外路径默认拒绝，只有已登记权限和项�
 
 2026-10-25 最终结果见[M2 验收](../validation/M2_ACCEPTANCE.md)。当前 35/44 个 OpenAPI 操作有代码，公开生成仅固定 Qwen 文生图 1K/1:1；71 项后端、21 项前端、32 项真实边界检查、真实 MySQL 名额事务通过。正式部署及源路由发布开关未更新；完整 M3-03、跨入口 A16/A18 和 1.0 仍待验。
 
+2026-10-26 工具界面契约与内置节点撤销：`renderers()` 改为按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`（固定 style 元素 id），纯 Agent 工具与缺界面的包不再发布渲染器，元数据损坏的包在目录里显示「工具元数据无效」；`BuiltinNodeRegistrar` 增加下线清理（只删 `builtin` 且本轮扫描不到的条目，扫不到任何产物时不清理）。后端 `BuiltinNodeTests` 7 项与 `CapabilityCatalogTests` 6 项通过。
+
 2026-10-26 内置节点包入库（M3-05 / M3-I08）：从固定提交 `d2e94ac` 导出并迁入 `nodeShared`、`textNode`、`imageNode`，构建出 413453/520959 字节两个 `.umd.js` 放入后端 classpath，`BuiltinNodeRegistrar` 启动按字节 SHA-256 幂等登记为 `builtin`（保留管理员启停与配置、坏包跳过不阻断启动）。后端 132 项（新增 6 项）、前端 26 项、浏览器 17 项与 QA 独立 43 项通过，`bun run build:nodes` 字节级可复现。画布内渲染仍无法在 Windows 验证：`workspaces/files/*` 因 JDK 未实现 `SecureDirectoryStream` 恒 503（既有平台限制，非本批引入），需 Linux 夹具复跑。另记录风险：内置登记无 prune，移除产物后旧行会残留分发。见[内置节点记录](../validation/M3_BUILTIN_NODES.md)。
 
 2026-10-26 能力目录运行期加载：`capabilities/nodes/get|files`、`tools/get|renderers|client`、`mcp/skill`、`agent/skills` 改为读取已安装能力登记并分发脚本（ETag=安装摘要、停用/越界/版本不符 404、秘密配置不下发）。后端 5 项新测试（全量 126 项）通过；真实浏览器 10 项确认安装的节点脚本在画布中执行并注册。见[记录](../validation/M3_CAPABILITY_LOADING.md)。随部署内置节点包、Agent 取用市场工具与自定义供应商仍未做。

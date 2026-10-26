@@ -72,7 +72,7 @@ export default {
 | 类型 | 安装 | 运行期加载 | 真正使用 |
 | --- | --- | --- | --- |
 | 节点 | 可用 | 可用（`nodes/get` + `nodes/files` + 浏览器执行） | 内置 `textNode`/`imageNode` 已真实加载（浏览器 16 项）；画布内渲染待在 Linux 夹具复跑；生成链路仍未接通 |
-| 工具 | 可用 | 部分（`renderers` 映射错误，见 5.2） | **无执行器**，Agent/MCP 工具清单硬编码，不读插件 |
+| 工具 | 可用 | 可用（`renderers` 按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`） | **无执行器**，Agent/MCP 工具清单硬编码，不读插件 |
 | 技能 | 可用 | 可用（文档入库 + `mcp/skill` 下发） | Web Agent 未注入正文，仅外部 MCP 客户端可取 |
 
 ## 5. 已知断点
@@ -92,22 +92,27 @@ export default {
 - `fileHash` 算法未声明，且**不等于**下载字节的 SHA-256（`4157b9…` vs `6674e5…`），直接当 `sha256` 用会 409。
 - `installMarket` 信任请求体给的 url/sha256，没有实现 CONTRACTS 要求的「后端重新查目录 + 获批制品清单」。
 
-### 5.2 工具渲染器映射错误
+### 5.2 工具界面契约（已修复）
 
-`CapabilityServiceImpl.renderers()` 把插件名同时当成工具名和渲染器名（`List.of(plugin.name())`）。真实工具包的工具名来自 `createTools`，界面名来自 `components`，都与包名不同，需要解析包头 `toonflowTool` 元数据。
+早先 `renderers()` 把插件名同时当成工具名和渲染器名，`tools/client` 又原样下发承载 `createTools` 的 ESM 正文，浏览器加载必然失败。现按上游源码对齐：
+
+- 第一行 `/*! toonflowTool:{...} */` 提供元数据，`components` 是**真实工具名**列表（`^[a-z][a-zA-Z0-9_]*$`，最多 100、不重复）；为空表示纯 Agent 工具，不发布界面。
+- 第二行 `/*! toonflowToolClient:{"code","css"} */` 才是浏览器界面。`tools/client` 下发 `code` + 一次性样式注入（固定 `style` 元素 id `toonflowToolStyle:<name>`），不再下发 ESM 正文。
+- `renderers` 只发布「已启用 + `components` 非空 + 有界面」的包，`tools` 为 `components` 原样；版本仍是安装摘要。
+- 元数据损坏的包不出现在 `renderers`，但在 `tools/get` 里保留并显示「工具元数据无效，无法加载」。
 
 ### 5.3 工具无执行器
 
 `createTools` 只在原版 Node/Bun 里跑。当前 Web Agent 与 MCP 的工具清单都是硬编码（画布 18 项等），不读 `PluginService`。
 
-### 5.4 内置节点没有撤销（prune）
+### 5.4 内置节点的撤销（已修复）
 
-`BuiltinNodeRegistrar` 只做 insert/update：产物从 classpath 移除后，DB 里的 `builtin` 行不会被清掉，`nodes/get` 仍会发布它、`nodes/files` 仍会下发旧字节，而 `PluginServiceImpl.uninstall` 对 `builtin` 恒 403，管理员无法自行清理。当前两个产物都在，不构成现网问题；下一批要么在登记时按「classpath 现有产物集合」删除多余行（需要先确认停用/审计语义），要么给出显式的内置能力同步入口。
+`BuiltinNodeRegistrar` 现在会在登记后清理「已下线的内置产物」：只删 `type=node` 且 `source=builtin`、本轮扫描不到的条目。为避免资源整体读取失败时误删，**只有至少扫描到一个产物才执行清理**；产物存在但本次登记失败（坏包）的节点仍在册，不会被删。管理员此前对某内置节点做的启停与配置随该行一并移除，因为产物已经不存在。
 
 ## 6. 修复方案（按依赖顺序）
 
 1. ~~**内置节点包入库**（M3-05 / M3-I08）~~ **已完成（textNode/imageNode 两个节点）**：产物入 `backend/src/main/resources/capabilities/nodes/`，启动按摘要幂等登记为 `builtin`；`nodes/files` 可分发，管理员停用状态跨重启保留。构建与来源见 [节点包引入记录](../upstream/NODE_PACKAGES_INTAKE.md)。仍未做：其余上游节点、画布内渲染的 Linux 复跑。
-2. **修 `renderers()`**：解析包头元数据，返回真实 `components` 映射与工具名。
+2. ~~**修 `renderers()`**~~ **已完成**：按包头 `components` 发布真实工具名，`tools/client` 下发内嵌界面（`code`+`css`），纯 Agent 工具不占渲染器名额；实现见 `ToolPackage` 与 `CapabilityServiceImpl`。
 3. **技能注入**：Web Agent 组装提示词时读取已启用技能的正文，与 `mcp/skill` 共用登记。
 4. **工具执行器**（唯一有方案分叉）：
    - Node sidecar：与原版一致，兼容性最好，但多一个运行时；

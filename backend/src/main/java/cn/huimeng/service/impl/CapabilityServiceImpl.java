@@ -66,10 +66,11 @@ public class CapabilityServiceImpl implements CapabilityService {
       if ("tool".equals(plugin.type()))
         items.add(
             new CapabilityDTOs.ToolItem(
-                plugin.name(), plugin.displayName(), description(plugin), plugin.enabled()));
+                plugin.name(), plugin.displayName(), toolDescription(plugin), plugin.enabled()));
     return new CapabilityDTOs.ToolCatalog(List.copyOf(items), false);
   }
 
+  /** 界面按包头 {@code components}（真实工具名）发布；纯 Agent 工具与缺界面的包不发布。 */
   @Override
   public List<CapabilityDTOs.RendererItem> renderers() {
     RequestContext.actor();
@@ -78,10 +79,12 @@ public class CapabilityServiceImpl implements CapabilityService {
       if (!"tool".equals(plugin.type())
           || !plugin.enabled()
           || !SCRIPT_NAME.matcher(plugin.name()).matches()) continue;
+      ToolPackage tool = toolPackage(plugin);
+      if (tool == null || tool.components().isEmpty() || tool.client() == null) continue;
       result.add(
           new CapabilityDTOs.RendererItem(
               plugin.name(),
-              List.of(plugin.name()),
+              tool.components(),
               scriptUrl("tools/client", plugin.name(), plugin.sha256())));
     }
     result.sort(Comparator.comparing(CapabilityDTOs.RendererItem::name));
@@ -91,7 +94,13 @@ public class CapabilityServiceImpl implements CapabilityService {
   @Override
   public CapabilityDTOs.Script toolClient(String name, String version) {
     RequestContext.actor();
-    return script("tool", name, version);
+    if (name == null || !SCRIPT_NAME.matcher(name).matches()) throw notFound();
+    PluginDO plugin = plugins.find("tool", name);
+    if (plugin == null || !plugin.enabled()) throw notFound();
+    if (version != null && !version.equals(plugin.sha256())) throw notFound();
+    ToolPackage tool = toolPackage(plugin);
+    if (tool == null || tool.components().isEmpty() || tool.client() == null) throw notFound();
+    return new CapabilityDTOs.Script(clientScript(plugin.name(), tool.client()), plugin.sha256());
   }
 
   @Override
@@ -161,14 +170,41 @@ public class CapabilityServiceImpl implements CapabilityService {
     return value;
   }
 
-  private String description(PluginDO plugin) {
+  /** 与上游一致：界面脚本后追加一次性样式注入，样式元素 id 固定，重复加载复用同一个 style。 */
+  private byte[] clientScript(String name, ToolPackage.Client client) {
+    String style =
+        "\n;(() => { const id = "
+            + quote("toonflowToolStyle:" + name)
+            + "; let style = document.getElementById(id); if (!style) { style ="
+            + " document.createElement(\"style\"); style.id = id; document.head.append(style); }"
+            + " style.textContent = "
+            + quote(client.css())
+            + "; })();\n";
+    return (client.code() + style).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+  }
+
+  private String quote(String value) {
     try {
-      JsonNode manifest = json.readTree(plugin.manifestJson());
-      String text = manifest.path("description").asText("");
-      return text.length() > 200 ? text.substring(0, 200) : text;
+      return json.writeValueAsString(value);
     } catch (Exception ex) {
-      return "";
+      throw new IllegalStateException("无法序列化工具界面样式", ex);
     }
+  }
+
+  private ToolPackage toolPackage(PluginDO plugin) {
+    try {
+      return ToolPackage.parse(plugins.content(plugin.id()), plugin.name(), json);
+    } catch (RuntimeException ex) {
+      return null;
+    }
+  }
+
+  /** 元数据无效时把原因放到说明里，页面据此显示「无法加载」而不是静默消失。 */
+  private String toolDescription(PluginDO plugin) {
+    ToolPackage tool = toolPackage(plugin);
+    if (tool == null) return "工具元数据无效，无法加载";
+    String text = tool.metadata().path("description").asText("");
+    return text.length() > 200 ? text.substring(0, 200) : text;
   }
 
   private static ApiException notFound() {

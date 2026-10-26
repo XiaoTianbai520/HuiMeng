@@ -51,8 +51,12 @@ class CapabilityCatalogTests {
           "// @version 1.2.3\nwindow.toonflowNodes = window.toonflowNodes || {};\n"
               + "window.toonflowNodes.demoNode = { render: function () { return null; } };\n",
       TOOL_SOURCE =
-          "// @version 2.0.0\nwindow.toonflowToolViews = window.toonflowToolViews || {};\n"
-              + "window.toonflowToolViews.mediaGeneration = {};\n";
+          "/*! toonflowTool:{\"name\":\"mediaGeneration\",\"version\":\"2.0.0\",\"displayName\":\"媒体生成\","
+              + "\"description\":\"验收用工具包\",\"author\":\"fixture\",\"github\":\"\","
+              + "\"components\":[\"imageGenerate\",\"videoGenerate\"],\"configRules\":[]} */\n"
+              + "/*! toonflowToolClient:{\"code\":\"window.toonflowToolViews ="
+              + " window.toonflowToolViews || {};\",\"css\":\".mg{color:#fff}\"} */\n"
+              + "export default { validateConfig() { return {}; }, createTools() { return []; } };\n";
   @Autowired MockMvc mvc;
   @Autowired ObjectMapper json;
   @Autowired JdbcTemplate jdbc;
@@ -158,7 +162,10 @@ class CapabilityCatalogTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.length()").value(1))
         .andExpect(jsonPath("$.data[0].name").value("mediaGeneration"))
-        .andExpect(jsonPath("$.data[0].tools[0]").value("mediaGeneration"))
+        // 界面名来自包头 components（真实工具名），不是包名。
+        .andExpect(jsonPath("$.data[0].tools.length()").value(2))
+        .andExpect(jsonPath("$.data[0].tools[0]").value("imageGenerate"))
+        .andExpect(jsonPath("$.data[0].tools[1]").value("videoGenerate"))
         .andExpect(
             jsonPath("$.data[0].url")
                 .value(
@@ -171,7 +178,20 @@ class CapabilityCatalogTests {
                 .session(admin))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith("text/javascript"))
-        .andExpect(content().bytes(TOOL_SOURCE.getBytes(StandardCharsets.UTF_8)));
+        .andExpect(
+            content().string(org.hamcrest.Matchers.containsString("window.toonflowToolViews")))
+        .andExpect(
+            content()
+                .string(
+                    org.hamcrest.Matchers.containsString(
+                        "const id = \"toonflowToolStyle:mediaGeneration\"")))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString(".mg{color:#fff}")))
+        // 下发的是内嵌界面脚本，不是承载 createTools 的 ESM 正文。
+        .andExpect(
+            content()
+                .string(
+                    org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("export default"))));
     mvc.perform(
             get("/api/v1/capabilities/tools/client")
                 .param("name", "mediaGeneration")
@@ -188,6 +208,46 @@ class CapabilityCatalogTests {
     mvc.perform(get("/api/v1/capabilities/tools/renderers").session(admin))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.length()").value(0));
+  }
+
+  /** components 为空表示纯 Agent 工具：目录可见，但没有界面，也不该占渲染器名额。 */
+  @Test
+  void keepsUiLessToolOutOfRenderersAndReportsBrokenMetadata() throws Exception {
+    String pure =
+        "/*! toonflowTool:{\"name\":\"pureAgent\",\"version\":\"1.0.0\",\"displayName\":\"纯工具\","
+            + "\"description\":\"无界面\",\"author\":\"fixture\",\"github\":\"\",\"components\":[],"
+            + "\"configRules\":[]} */\n"
+            + "export default { validateConfig() { return {}; }, createTools() { return []; } };\n";
+    mvc.perform(
+            write(
+                post("/api/v1/admin/tools/install"),
+                admin,
+                Map.of("fileName", "pureAgent.tool.js", "source", pure)))
+        .andExpect(status().isOk());
+    mvc.perform(
+            write(
+                post("/api/v1/admin/tools/install"),
+                admin,
+                Map.of("fileName", "brokenTool.tool.js", "source", "// 缺少包头\n")))
+        .andExpect(status().isOk());
+
+    mvc.perform(get("/api/v1/capabilities/tools/renderers").session(admin))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.length()").value(0));
+
+    mvc.perform(get("/api/v1/capabilities/tools/get").session(admin))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.tools[1].name").value("brokenTool"))
+        .andExpect(jsonPath("$.data.tools[1].description").value("工具元数据无效，无法加载"))
+        .andExpect(jsonPath("$.data.tools[2].name").value("pureAgent"))
+        .andExpect(jsonPath("$.data.tools[2].description").value("无界面"));
+
+    mvc.perform(
+            get("/api/v1/capabilities/tools/client")
+                .param("name", "pureAgent")
+                .param("version", sha256(pure))
+                .session(admin))
+        .andExpect(status().isNotFound());
   }
 
   @Test
