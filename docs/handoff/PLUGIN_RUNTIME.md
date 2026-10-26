@@ -143,7 +143,9 @@ export default {
 - 内置节点构建：`cd frontend && bun run build:nodes`（产物写入 `backend/src/main/resources/capabilities/nodes/`）
 - 能力目录夹具：`CapabilityHarness` + `docs/validation/scripts/m3M09NodeLoad.mjs`（合成节点）、`m3M09BuiltinNodes.mjs`（内置节点）
 - 真实市场复验：夹具默认把 `huimeng.market.endpoint` 指向死端口 `http://127.0.0.1:1`，只有显式给环境变量才会连上游：`$env:HM_MARKET_ENDPOINT="https://api.toonflow.net"`，再按[真实市场复验](../validation/M3_MARKET_LIVE.md)第 2 节写入密钥
-- 夹具需要 Linux（工作区安全原语），跑在容器 `maven:3.9.11-eclipse-temurin-21`，`network host`，挂载 `/tmp/huimeng-m306:/repo`；Windows 上 `workspaces/files/list|write` 恒 503（Windows JDK 的 `Files.newDirectoryStream` 返回 `sun.nio.fs.WindowsDirectoryStream`，不实现 `SecureDirectoryStream`），画布 `.json` 读写被挡住，因此只能验证到「画布取回并注册节点」，放置实例并渲染需在 Linux 复跑
+- 画布内渲染必须用 Linux 夹具（工作区安全原语）：容器 `maven:3.9.11-eclipse-temurin-21`，`--network host`，仓库挂载在 `/tmp/huimeng-*`；用环境变量 `HM_BIND_ADDRESS=<局域网地址>` 让夹具绑到可达地址，前端（Windows）用 `HUIMENG_API_TARGET=http://<该地址>:18097` 代理过去即可。Windows 上 `workspaces/files/list|write` 恒 503（JDK 的 `sun.nio.fs.WindowsDirectoryStream` 不实现 `SecureDirectoryStream`），画布 `.json` 读写被挡住
+- 画布渲染脚本：`docs/validation/scripts/m3M09CanvasRender.mjs`（10 项断言，文本/图片两种节点用 `HM_NODE_LABEL` 切换）。2026-10-26 已在 Linux 后端复跑通过：画布可创建、节点可放入并渲染、画布文件落盘可回读，见[M3 内置节点记录](../validation/M3_BUILTIN_NODES.md)第 4.1 节
+- 迁移进来的节点包对「文件已存在」只认 `EEXIST`，而本平台返回 `FILE_ALREADY_EXISTS`；已在 `textNode/src/index.vue` 与 `nodeScaffold/src/workspaceFiles.ts` 同时接受两种码
 - 浏览器脚本需要 `PLAYWRIGHT_CORE_PATH` 与 `PLAYWRIGHT_CHROMIUM_PATH`
 - 前端 dev server 若被 safe-delete 垫片打断，用 `env -u NODE_OPTIONS -u CODEBUDDY_SAFE_DELETE_* bun run dev`
 

@@ -44,8 +44,9 @@ bun run check           # 边界/格式 + vue-tsc + 三个节点包 vue-tsc + 26
 3. **版本按已安装版本固定**，不沿用上游 `^` 范围：Vue 3.5.42、`@vue-flow/core` 1.48.2、element-plus 2.14.5、tiptap 3.31.3、three 0.184.0、marked 18.0.13、dompurify 3.4.16、vite 8.2.2、vue-tsc 3.3.11、TypeScript 6.0.3。新增的第三方依赖只有 `vue-draggable-plus` 0.6.1（`referenceItem` 的拖拽排序），已随 `bun.lock` 更新。
 4. **`nodeShared` 的 `exports` 收窄**到已迁入的 5 个子路径；`@toonflow/node-image` 的 `exports` 字段整体移除：上游用它给 `imageGenerationNode` 等未迁入的包提供子路径，本仓库没有这类引用，保留会形成无人使用、无人验证的公开面。
 5. **行尾统一为 LF**，只改行尾，不改代码。
+6. **「文件已存在」错误码兼容（对上游的主动偏离）**：上游跑在 Bun 上，`mkdir`/独占写入撞已有文件时抛 `EEXIST`；本平台的 Spring 后端返回 `FILE_ALREADY_EXISTS`（`packages/contracts/platform.ts` 的 `ErrorCode` 里本来就列了这个码）。迁移进来的 `textNode/src/index.vue`（2 处）与 `nodeScaffold/src/workspaceFiles.ts`（1 处）原本只判 `EEXIST`，导致画布重挂载时节点二次创建 `assets/<nodeId>/content.md` 收到 409，卡片内弹出红色「目标已存在，请换一个名称」。已改为同时接受两种码；改动后重建产物（textNode 413564B、imageNode 520996B）。**这是唯一一处对上游逻辑的修改**，其余为依赖/导出面/行尾调整。
 
-边界：节点只做到「加载可用」。文本节点挂载时会读写项目工作区文件，图片节点的生成/编辑入口调用 `/api/ai/*` 与媒体生成，后端仍未实现，点击生成会返回能力缺失而不是产物。画布需要工作区文件 API 才能创建，Windows 上该 API 返回 503，因此真实浏览器验证只覆盖「脚本取回 + 执行 + 组件导出」，画布内渲染需在 Linux 夹具复跑，见[插件运行期交接](../handoff/PLUGIN_RUNTIME.md)。
+边界：节点只做到「加载可用」。文本节点挂载时会读写项目工作区文件，图片节点的生成/编辑入口调用 `/api/ai/*` 与媒体生成，后端仍未实现，点击生成会返回能力缺失而不是产物。画布需要工作区文件 API 才能创建，Windows 上该 API 返回 503；2026-10-26 已在 Linux 后端复跑通过「放实例并渲染」（`m3M09CanvasRender.mjs`，文本与图片两种节点各 10 项），见[M3 内置节点记录](../validation/M3_BUILTIN_NODES.md)第 4.1 节与[插件运行期交接](../handoff/PLUGIN_RUNTIME.md)。
 
 ## 4. 许可证
 

@@ -26,7 +26,7 @@ export async function uploadNodeFile(files: WorkspaceFiles, nodeId: string, file
   const directory = getNodeDirectory(nodeId);
   for (const path of ["assets", directory]) {
     await files.mkdir(path).catch((error: { response?: { data?: { data?: { code?: string } } } }) => {
-      if (error.response?.data?.data?.code !== "EEXIST") throw error;
+      if (!["EEXIST", "FILE_ALREADY_EXISTS"].includes(error.response?.data?.data?.code ?? "")) throw error;
     });
   }
   const extension = file.name.match(/\.[a-zA-Z0-9]{1,10}$/)?.[0].toLowerCase() ?? "";

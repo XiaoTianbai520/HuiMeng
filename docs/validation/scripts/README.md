@@ -110,3 +110,21 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 3. 应用下发 `Secure` Cookie，**curl / urllib 在 http 下不会回传**，必须自己管理 Cookie（Node 手工 jar 或等价实现），否则登录后仍是未认证状态。
 
 制品下载地址是有效期 1 小时的预签名 URL，装完即失效，重跑前需要重新查目录。
+
+## M3-05 画布内渲染（必须 Linux 后端）
+
+`m3M09CanvasRender.mjs` 验证「内置节点在 VueFlow 画布内以实例形式渲染」。Windows 上 `workspaces/files/*` 恒 503，画布 `.json` 无法创建，所以后端要跑在 Linux：容器 `maven:3.9.11-eclipse-temurin-21` + `--network host`，用 `HM_BIND_ADDRESS=<局域网地址>` 让夹具绑到可达地址；前端仍在开发机上 `HUIMENG_API_TARGET=http://<该地址>:18097 bun run dev`，浏览器用本机 Chromium 即可。
+
+```bash
+# Linux 侧（root 或具备 docker 权限的账号）
+docker run -d --name hm-cap-can --network host \
+  -e HM_CAPABILITY=true -e HM_BIND_ADDRESS=192.168.1.102 -e HM_MARKET_ENDPOINT=http://127.0.0.1:1 \
+  -e MAVEN_OPTS=-Xmx1024m -v /tmp/huimeng-m305can:/repo -w /repo/backend \
+  maven:3.9.11-eclipse-temurin-21 \
+  mvn -s .mvn/settings.xml -B -ntp -Dmaven.repo.local=/repo/backend/.m2 \
+  -DargLine=-Xmx1536m -Dtest=CapabilityHarness test
+```
+
+要点：镜像内用 `mvn`，不要用 `./mvnw`（发行包 SHA-256 校验会失败）；`/tmp` 是 tmpfs，占用计入内存，构建前先确认 `free -m` 有余量。
+
+脚本默认放「文本」节点，用 `HM_NODE_LABEL=图片` 换另一个；`HM_EVIDENCE` / `HM_EVIDENCE_SHOT` 可指定不同的证据文件名。

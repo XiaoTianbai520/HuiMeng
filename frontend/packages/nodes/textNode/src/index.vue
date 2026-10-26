@@ -150,11 +150,11 @@ async function loadText(fromDisk = false) {
     if (!data.value.textPath && !fromDisk) {
       for (const directory of ["assets", `assets/${node.id}`]) {
         await textFiles.mkdir(directory).catch((error: { response?: { data?: { data?: { code?: string } } } }) => {
-          if (error.response?.data?.data?.code !== "EEXIST") throw error;
+          if (!["EEXIST", "FILE_ALREADY_EXISTS"].includes(error.response?.data?.data?.code ?? "")) throw error;
         });
       }
       await textFiles.write(textPath, value, true).catch((error: { response?: { data?: { data?: { code?: string } } } }) => {
-        if (error.response?.data?.data?.code !== "EEXIST") throw error;
+        if (!["EEXIST", "FILE_ALREADY_EXISTS"].includes(error.response?.data?.data?.code ?? "")) throw error;
       });
       textSnapshot = await textFiles.readTextSnapshot(textPath);
       if (textSnapshot.text !== value) throw new Error("文本文件已被其他编辑器修改，请重新加载节点");

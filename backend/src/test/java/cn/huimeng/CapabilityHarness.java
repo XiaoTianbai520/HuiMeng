@@ -29,7 +29,8 @@ import org.springframework.test.context.DynamicPropertySource;
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     properties = {
       "server.port=${hm.capability.port:18097}",
-      "server.address=127.0.0.1",
+      // 默认只绑回环；跨机验证（前端在另一台机器）时用 HM_BIND_ADDRESS 指定可达地址。
+      "server.address=${HM_BIND_ADDRESS:127.0.0.1}",
       "huimeng.public-origin=http://localhost:5187",
       "huimeng.storage.enabled=false",
       "huimeng.comfy.enabled=false",
