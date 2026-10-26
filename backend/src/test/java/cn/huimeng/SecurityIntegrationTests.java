@@ -91,6 +91,8 @@ class SecurityIntegrationTests {
         .thenReturn(json.readTree("{\"status\":{\"status_str\":\"success\",\"completed\":true}}"));
     when(comfy.output(anyString(), anyString(), any()))
         .thenReturn(new byte[] {(byte) 137, 80, 78, 71, 13, 10, 26, 10, 1});
+    when(comfy.submit(anyString(), anyString(), anyString(), any(), anyString(), any()))
+        .thenAnswer(call -> call.getArgument(1));
     when(comfy.cancel(anyString())).thenReturn(true);
     when(comfy.active(anyString())).thenReturn(false);
     mediaObjects.clear();
@@ -156,6 +158,29 @@ class SecurityIntegrationTests {
   void approveImage() {
     jdbc.update(
         "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Text'");
+  }
+
+  void approveEdit() {
+    jdbc.update(
+        "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Edit'");
+  }
+
+  /** 直接登记一条 READY 媒体并写入合成对象，供图生图参考图使用。 */
+  String seedMedia(String project) {
+    String id = UUID.randomUUID().toString();
+    byte[] bytes = {(byte) 137, 80, 78, 71, 13, 10, 26, 10, 2, 3, 4};
+    mediaObjects.put("projects/" + project + "/media/" + id, bytes);
+    jdbc.update(
+        "INSERT INTO project_media(id,project_id,object_key,filename,byte_size,sha256,state,created_by,created_at) VALUES (?,?,?,?,?,?,'READY',?,?)",
+        id,
+        project,
+        "projects/" + project + "/media/" + id,
+        "reference.png",
+        bytes.length,
+        "synthetic-hash",
+        adminId,
+        java.sql.Timestamp.from(Instant.now()));
+    return id;
   }
 
   String imagePath(String project) {
@@ -362,12 +387,12 @@ class SecurityIntegrationTests {
     mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, input))
         .andExpect(status().isBadRequest());
     input = new HashMap<>(imageInput());
-    input.put("size", "2K");
+    input.put("size", "4K");
     mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "guard"), admin, input))
         .andExpect(status().isBadRequest());
     mvc.perform(write(post(imagePath(project)), admin, imageInput()))
         .andExpect(status().isBadRequest());
-    verify(comfy, never()).submit(anyString(), anyString(), anyString());
+    verify(comfy, never()).submit(anyString(), anyString(), anyString(), any(), anyString(), any());
     assertThat(generationRuns.held(project)).isZero();
   }
 
@@ -382,7 +407,7 @@ class SecurityIntegrationTests {
                 post(imagePath(project)).header("Idempotency-Key", "offline"), admin, imageInput()))
         .andExpect(status().isServiceUnavailable());
     assertThat(generationRuns.held(project)).isZero();
-    verify(comfy, never()).submit(anyString(), anyString(), anyString());
+    verify(comfy, never()).submit(anyString(), anyString(), anyString(), any(), anyString(), any());
   }
 
   @Test
@@ -405,6 +430,7 @@ class SecurityIntegrationTests {
     String text = result.getResponse().getContentAsString();
     JsonNode response = json.readTree(text);
     assertThat(response.path("code").asInt()).isEqualTo(200);
+    assertThat(response.path("data").get(0).path("spec").asText()).isEqualTo("1K 1:1 1024×1024");
     String path = response.path("data").get(0).path("path").asText();
     mvc.perform(
             get("/api/v1/projects/" + project + "/creative/workspaces/files/read")
@@ -423,7 +449,84 @@ class SecurityIntegrationTests {
     changed.put("prompt", "different");
     mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "same"), admin, changed))
         .andExpect(status().isConflict());
-    verify(comfy, times(1)).submit(eq(project), eq(run), anyString());
+    verify(comfy, times(1)).submit(eq(project), eq(run), anyString(), any(), anyString(), any());
+  }
+
+  @Test
+  void editModelUsesProjectReferenceAndEchoesRequestedTwoKiloWideSpec() throws Exception {
+    String project = createProject("generate-edit");
+    member(project, adminId);
+    approveEdit();
+    String mediaId = seedMedia(project);
+    when(comfy.submit(
+            eq(project), anyString(), eq("qwenImage21Edit"), any(), anyString(), any(byte[].class)))
+        .thenReturn("3f0d4c1e-1f2a-4b3c-8d9e-0a1b2c3d4e5f");
+    var input = new HashMap<>(imageInput());
+    input.put("modelId", "qwenImage21Edit");
+    input.put("size", "2K");
+    input.put("ratio", "16:9");
+    input.put(
+        "images",
+        List.of(Map.of("path", ".huimeng-media/" + mediaId + ".png", "mimeType", "image/png")));
+    var initial =
+        mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "edit"), admin, input))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    var result = mvc.perform(asyncDispatch(initial)).andExpect(status().isOk()).andReturn();
+    JsonNode response = json.readTree(result.getResponse().getContentAsString());
+    assertThat(response.path("code").asInt()).isEqualTo(200);
+    String spec = response.path("data").get(0).path("spec").asText();
+    assertThat(spec).startsWith("2K 16:9 ");
+    String[] size = spec.substring(spec.indexOf(' ') + 1).split("[ ×]");
+    assertThat(Integer.parseInt(size[1]) % 32).isZero();
+    assertThat(Integer.parseInt(size[1])).isGreaterThan(Integer.parseInt(size[2]));
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    assertThat(generationRuns.find(project, run).upstreamRef())
+        .isEqualTo("3f0d4c1e-1f2a-4b3c-8d9e-0a1b2c3d4e5f");
+  }
+
+  @Test
+  void editModelRejectsMissingForeignReferenceAndUnknownSpecBeforeAnyExecutorCall()
+      throws Exception {
+    String project = createProject("generate-edit-guard"),
+        other = createProject("generate-edit-other");
+    member(project, adminId);
+    approveImage();
+    approveEdit();
+    String foreign = seedMedia(other);
+    var missing = new HashMap<>(imageInput());
+    missing.put("modelId", "qwenImage21Edit");
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "a"), admin, missing))
+        .andExpect(status().isBadRequest());
+    var foreignInput = new HashMap<>(missing);
+    foreignInput.put(
+        "images",
+        List.of(Map.of("path", ".huimeng-media/" + foreign + ".png", "mimeType", "image/png")));
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "b"), admin, foreignInput))
+        .andExpect(status().isNotFound());
+    var legacyPath = new HashMap<>(missing);
+    legacyPath.put(
+        "images", List.of(Map.of("path", "assets/reference.png", "mimeType", "image/png")));
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "e"), admin, legacyPath))
+        .andExpect(status().isBadRequest());
+    var badSpec = new HashMap<>(imageInput());
+    badSpec.put("size", "2K");
+    badSpec.put("ratio", "5:4");
+    mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "c"), admin, badSpec))
+        .andExpect(status().isBadRequest());
+    var textWithReference = new HashMap<>(imageInput());
+    textWithReference.put(
+        "images",
+        List.of(Map.of("path", ".huimeng-media/" + foreign + ".png", "mimeType", "image/png")));
+    mvc.perform(
+            write(
+                post(imagePath(project)).header("Idempotency-Key", "d"), admin, textWithReference))
+        .andExpect(status().isBadRequest());
+    assertThat(generationRuns.held(project)).isZero();
+    verify(comfy, never()).submit(anyString(), anyString(), anyString(), any(), anyString(), any());
+    verify(comfy, never()).checkReady();
   }
 
   @Test
@@ -438,7 +541,9 @@ class SecurityIntegrationTests {
     mvc.perform(
             write(post(imagePath(full)).header("Idempotency-Key", "sixth"), admin, imageInput()))
         .andExpect(status().isTooManyRequests());
-    verify(comfy, never()).submit(eq(full), anyString(), anyString());
+    verify(comfy, never()).submit(eq(full), anyString(), anyString(), any(), anyString(), any());
+    // 第 6 个请求在名额检查处拒绝，连执行器就绪探测都不发起。
+    verify(comfy, never()).checkReady();
     var request =
         mvc.perform(
                 write(
@@ -492,7 +597,7 @@ class SecurityIntegrationTests {
     when(comfy.history(anyString())).thenReturn(null);
     doThrow(cn.huimeng.common.io.ComfyImageClient.unavailable())
         .when(comfy)
-        .submit(anyString(), anyString(), anyString());
+        .submit(anyString(), anyString(), anyString(), any(), anyString(), any());
     var initial =
         mvc.perform(
                 write(
@@ -564,7 +669,8 @@ class SecurityIntegrationTests {
                                 "image",
                                 "synthetic",
                                 "1K",
-                                "1:1"),
+                                "1:1",
+                                null),
                             key,
                             "concurrency")
                         .run()

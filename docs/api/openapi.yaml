@@ -3940,7 +3940,7 @@ paths:
       operationId: generateMedia
       summary: 媒体生成，JSON 前导空白保活
       description: 先占位再调用执行器。HTTP 200 仍须解析正文 code；仅 code=200 表示成功。X-Run-Id 标识运行。模型切换保留合法已选规格，缺省用模型推荐值；提交前显示有效规格，不强制将 2K 改成
-        1K。
+        1K。省略 size/ratio 时服务端按 1K、1:1 提交，并在 data[].spec 回显实际宽度高度。
       tags:
       - projects
       x-contract-status: frozen
@@ -4075,7 +4075,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MediaGenerate'
-      x-implementation-scope: Qwen qwenImage21Text / image / 1K / 1:1 only; other providers and specs pending M3
+      x-implementation-scope: Qwen qwenImage21Text（文生图）与 qwenImage21Edit（单图指令编辑）/ image /
+        1K、0.5MP、2K / 8 种画幅；省略时按 1K、1:1，响应 spec 回显实际规格。H3 视频与音频生成待 M3-05
   /api/v1/projects/{projectId}/creative/workspaces/files/read:
     get:
       operationId: readFile
@@ -6544,6 +6545,10 @@ components:
           - image
           - video
           - audio
+        spec:
+          type: string
+          description: 服务端实际提交并执行的规格；省略请求规格时回显模型默认值
+          maxLength: 64
       required:
       - path
       - mimeType

@@ -5,6 +5,7 @@ import cn.huimeng.common.io.*;
 import cn.huimeng.common.storage.ObjectStorage;
 import cn.huimeng.dao.entity.GenerationRunDO;
 import cn.huimeng.dao.mapper.GenerationRunMapper;
+import cn.huimeng.dto.req.GenerateImageMediaDTO;
 import cn.huimeng.dto.req.GenerateImageReqDTO;
 import cn.huimeng.dto.resp.*;
 import cn.huimeng.security.*;
@@ -26,9 +27,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
-/** 每项目原子五名额、持久幂等与本人运行；本批只接现用 Qwen 1K/1:1 文生图。 */
+/** 每项目原子五名额、持久幂等与本人运行；接通现用 Qwen 文生图与单图编辑两模型。 */
 @Service
 public class MediaGenerationServiceImpl implements MediaGenerationService {
+  private static final String PROVIDER = "qwenImage21Local";
+  private static final long REFERENCE_LIMIT = 16L * 1024 * 1024;
+  private static final long DEADLINE_SECONDS = 1800;
+  private static final java.util.regex.Pattern MEDIA_PATH =
+      java.util.regex.Pattern.compile("^\\.huimeng-media/([a-f0-9-]{36})\\.png$");
   private final GenerationRunMapper runs;
   private final ProjectService projects;
   private final ModelAuthorizationService authorization;
@@ -86,17 +92,41 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         run.endedAt());
   }
 
+  /** 服务端实际提交的规格；省略 size/ratio 等价于 1K、1:1，绝不静默沿用页面遗留值。 */
+  private ComfyImageClient.Spec spec(GenerateImageReqDTO input) {
+    return ComfyImageClient.resolve(input.modelId(), input.size(), input.ratio());
+  }
+
+  /** 参考图只认真实项目媒体；文生图不得夹带参考图，图生图必须恰好一张。 */
+  private String referenceId(GenerateImageReqDTO input, boolean edit) {
+    var images = input.images();
+    int count = images == null ? 0 : images.size();
+    if (!edit) {
+      if (count != 0) throw new ApiException(400, "INVALID_ARGUMENT", "文生图不接受参考图，请改用单图编辑模型");
+      return "";
+    }
+    if (count != 1) throw new ApiException(400, "INVALID_ARGUMENT", "单图编辑必须选择一张项目图片");
+    var image = images.get(0);
+    if (image == null
+        || !"image/png".equals(image.mimeType())
+        || image.path() == null
+        || !MEDIA_PATH.matcher(image.path()).matches())
+      throw new ApiException(400, "INVALID_ARGUMENT", "参考图必须是项目内的 PNG 素材");
+    return MEDIA_PATH.matcher(image.path()).replaceAll("$1");
+  }
+
   @Override
   public GenerationSubmission generate(
       String project, GenerateImageReqDTO input, String key, String requestId) {
     authorization.requireApproved(project, input.providerId(), input.modelId());
     if (key == null || key.isBlank() || key.length() > 128) throw ApiException.invalid();
-    if (!input.mediaType().equals("image")
-        || !input.providerId().equals("qwenImage21Local")
-        || !input.modelId().equals("qwenImage21Text")) throw ComfyImageClient.unavailable();
-    if (input.size() != null && !input.size().equals("1K")
-        || input.ratio() != null && !input.ratio().equals("1:1"))
-      throw new ApiException(400, "INVALID_ARGUMENT", "当前批次仅接通 1K、1:1；其他规格尚未迁移");
+    if (!"image".equals(input.mediaType()) || !PROVIDER.equals(input.providerId()))
+      throw ComfyImageClient.unfamiliarModel();
+    ComfyImageClient.Spec spec = spec(input);
+    boolean edit = ComfyImageClient.EDIT_MODEL.equals(input.modelId());
+    String reference = referenceId(input, edit);
+    // 参考图归属与大小在占位前校验，避免无效请求占用名额或触达执行器。
+    if (!reference.isEmpty()) media.requireReference(project, reference);
     Actor owner = RequestContext.actor();
     String hash;
     try {
@@ -109,10 +139,16 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                               new GenerateImageReqDTO(
                                   input.providerId(),
                                   input.modelId(),
-                                  input.mediaType(),
+                                  "image",
                                   input.prompt(),
-                                  "1K",
-                                  "1:1"))));
+                                  spec.size(),
+                                  spec.ratio(),
+                                  reference.isEmpty()
+                                      ? null
+                                      : List.of(
+                                          new GenerateImageMediaDTO(
+                                              ".huimeng-media/" + reference + ".png",
+                                              "image/png"))))));
     } catch (Exception ex) {
       throw new IllegalStateException("Request hashing unavailable");
     }
@@ -122,9 +158,6 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该幂等键已用于不同请求");
       return new GenerationSubmission(response(known), true, null);
     }
-    comfy.requireAvailable();
-    storage.requireAvailable();
-    comfy.checkReady();
     String id = UUID.randomUUID().toString();
     GenerationRunDO run =
         transactions.execute(
@@ -143,9 +176,19 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               return runs.find(project, id);
             });
     if (!run.id().equals(id)) return new GenerationSubmission(response(run), true, null);
+    try {
+      // 名额先由数据库原子占用；执行器不可达时立刻释放，第 6 个请求不会到达供应商。
+      comfy.requireAvailable();
+      storage.requireAvailable();
+      comfy.checkReady();
+    } catch (RuntimeException ex) {
+      var current = runs.find(project, id);
+      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
+      throw ex;
+    }
     var stream = new ResponseBodyEmitter(16 * 60 * 1000L);
     try {
-      workers.execute(() -> execute(project, id, owner, input, requestId, stream));
+      workers.execute(() -> execute(project, id, owner, input, spec, reference, requestId, stream));
     } catch (RejectedExecutionException ex) {
       runs.finish(project, id, "FAILED", false);
       throw ComfyImageClient.unavailable();
@@ -169,11 +212,28 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         .setAuthentication(new UsernamePasswordAuthenticationToken(current, null, List.of()));
   }
 
+  /** 参考图只从本项目媒体读取；不存在、越权或过大都按业务错误处理。 */
+  private byte[] reference(String project, String mediaId) {
+    var download = media.download(project, mediaId, null);
+    if (download.status() != 200 || download.length() <= 0 || download.length() > REFERENCE_LIMIT)
+      throw new ApiException(400, "INVALID_ARGUMENT", "参考图不可用或超过 16 MiB");
+    try (var input = download.content()) {
+      byte[] bytes = input.readNBytes((int) REFERENCE_LIMIT + 1);
+      if (bytes.length > REFERENCE_LIMIT)
+        throw new ApiException(400, "INVALID_ARGUMENT", "参考图超过 16 MiB");
+      return bytes;
+    } catch (IOException ex) {
+      throw new ApiException(400, "INVALID_ARGUMENT", "参考图读取失败");
+    }
+  }
+
   private void execute(
       String project,
       String id,
       Actor owner,
       GenerateImageReqDTO input,
+      ComfyImageClient.Spec spec,
+      String referenceId,
       String requestId,
       ResponseBodyEmitter stream) {
     boolean remoteAttempted = false, confirmedTerminal = false;
@@ -184,21 +244,24 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         runs.finish(project, id, "CANCELLED", false);
         throw ApiException.forbidden();
       }
+      byte[] reference = referenceId.isEmpty() ? null : reference(project, referenceId);
+      // 先写入本运行 ID 作为临时引用，提交失败进入 LOST 时仍有可核查参照；成功后再换成执行器任务 ID。
       runs.reference(project, id, id);
       remoteAttempted = true;
-      comfy.submit(project, id, input.prompt());
-      Instant deadline = Instant.now().plusSeconds(900);
+      String promptId = comfy.submit(project, id, input.modelId(), spec, input.prompt(), reference);
+      runs.reference(project, id, promptId);
+      Instant deadline = Instant.now().plusSeconds(DEADLINE_SECONDS);
       com.fasterxml.jackson.databind.JsonNode record = null;
       while (Instant.now().isBefore(deadline)) {
         send(stream, " ");
-        record = comfy.history(id);
+        record = comfy.history(promptId);
         if (terminal(record)) {
           confirmedTerminal = true;
           break;
         }
         if (runs.find(project, id).state().equals("CANCELLING")) {
-          boolean dispatched = comfy.cancel(id);
-          if (dispatched && !comfy.active(id)) {
+          boolean dispatched = comfy.cancel(promptId);
+          if (dispatched && !comfy.active(promptId)) {
             confirmedTerminal = true;
             runs.finish(project, id, "CANCELLED", false);
             throw ApiException.forbidden();
@@ -234,7 +297,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               200,
               List.of(
                   new GeneratedMediaRespDTO(
-                      ".huimeng-media/" + result.id() + ".png", "image/png", "image")),
+                      ".huimeng-media/" + result.id() + ".png",
+                      "image/png",
+                      "image",
+                      spec.display())),
               "success"));
     } catch (Exception ex) {
       var current = runs.find(project, id);

@@ -144,7 +144,8 @@ class MySqlAdmissionHarness {
                                 "image",
                                 "synthetic",
                                 "1K",
-                                "1:1"),
+                                "1:1",
+                                null),
                             key,
                             "mysql-admission")
                         .run()
@@ -162,7 +163,8 @@ class MySqlAdmissionHarness {
       for (var future : futures) values.add(future.get(20, TimeUnit.SECONDS));
       assertThat(values.stream().filter("REJECTED"::equals).count()).isEqualTo(1);
       assertThat(runs.held(project)).isEqualTo(5);
-      verify(comfy, timeout(5000).times(5)).submit(eq(project), anyString(), anyString());
+      verify(comfy, timeout(5000).times(5))
+          .submit(eq(project), anyString(), anyString(), any(), anyString(), any());
       bind(owner);
       for (String id : values) if (!id.equals("REJECTED")) generation.cancel(project, id);
       for (int i = 0; i < 100 && runs.held(project) != 0; i++) Thread.sleep(100);

@@ -181,6 +181,16 @@ public class ProjectMediaServiceImpl implements ProjectMediaService {
   }
 
   @Override
+  public void requireReference(String project, String id) {
+    projects.requireMember(project, false);
+    ProjectMediaDO value = media.find(project, id);
+    if (value == null || !value.state().equals("READY"))
+      throw new ApiException(404, "NOT_FOUND", "参考图不可用");
+    if (value.byteSize() <= 0 || value.byteSize() > 16L * 1024 * 1024)
+      throw new ApiException(400, "INVALID_ARGUMENT", "参考图必须在 16 MiB 以内");
+  }
+
+  @Override
   public void discardGenerated(String project, String id, String creator, String requestId) {
     var value = media.find(project, id);
     if (value == null || !value.createdBy().equals(creator)) throw ApiException.forbidden();

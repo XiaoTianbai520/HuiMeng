@@ -10,12 +10,15 @@
         <el-button native-type="submit" type="primary" :loading="busy" :disabled="!selected || !authorized">上传文件</el-button>
       </form>
       <form aria-label="受控图片生成" class="inlineForm" @submit.prevent="generate">
-        <div><label for="imageModel">获批文生图模型</label><select id="imageModel" v-model="selectedModel" :disabled="busy || !authorized"><option value="">请选择模型</option><option v-for="model in models" :key="model.modelId" :value="model.modelId">{{ model.label }}</option></select></div>
-        <div><label for="imagePrompt">图片描述</label><el-input id="imagePrompt" v-model="prompt" type="textarea" maxlength="8000" :disabled="busy || !authorized" /></div>
-        <el-button native-type="submit" type="primary" :disabled="busy || !authorized || !selectedModel || !prompt.trim()">生成图片</el-button>
+        <div><label for="imageModel">获批图片模型</label><select id="imageModel" v-model="selectedModel" :disabled="busy || !authorized"><option value="">请选择模型</option><option v-for="model in models" :key="model.modelId" :value="model.modelId">{{ model.label }}</option></select></div>
+        <div><label for="imageSize">尺寸</label><select id="imageSize" v-model="selectedSize" :disabled="busy || !authorized"><option v-for="size in imageSizes" :key="size" :value="size">{{ size }}</option></select></div>
+        <div><label for="imageRatio">画幅</label><select id="imageRatio" v-model="selectedRatio" :disabled="busy || !authorized"><option v-for="ratio in imageRatios" :key="ratio" :value="ratio">{{ ratio }}</option></select></div>
+        <div v-if="isEditModel"><label for="imageReference">参考图（项目内 PNG）</label><select id="imageReference" v-model="referenceId" :disabled="busy || !authorized"><option value="">请选择参考图</option><option v-for="item in referenceCandidates" :key="item.id" :value="String(item.id)">{{ item.filename }}</option></select></div>
+        <div><label for="imagePrompt">{{ isEditModel ? '编辑指令' : '图片描述' }}</label><el-input id="imagePrompt" v-model="prompt" type="textarea" maxlength="8000" :disabled="busy || !authorized" /></div>
+        <el-button native-type="submit" type="primary" :disabled="busy || !authorized || !selectedModel || !prompt.trim() || (isEditModel && !referenceId)">生成图片</el-button>
         <el-button v-if="running" :disabled="cancelling" @click="cancelGeneration">{{ cancelling ? '正在确认取消' : '取消生成' }}</el-button>
       </form>
-      <p class="muted">当前接通 Qwen 文生图 1K、1:1。生成结果自动归入本项目；未获批模型无法调用。</p>
+      <p class="muted">当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。</p>
       <p v-if="generationStatus" role="status">{{ generationStatus }}</p>
       <el-table :data="items" empty-text="当前项目还没有文件">
         <el-table-column prop="filename" label="文件名" min-width="180" />
@@ -28,7 +31,7 @@
   </main>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import client, { apiFetch, cancelRun } from "@huimeng/api/client";
@@ -41,6 +44,11 @@ const route = useRoute(), workspace = useWorkspaceStore();
 const projectName = ref(""), items = ref<ProjectMedia[]>([]), busy = ref(false), error = ref(""), authorized = ref(false);
 const selected = ref<File>(), uploadInput = ref<HTMLInputElement>(), previewItem = ref<ProjectMedia>(), previewUrl = ref("");
 const models = ref<Model[]>([]), selectedModel = ref(""), prompt = ref(""), running = ref(""), cancelling = ref(false), generationStatus = ref("");
+// 规格与参考图始终显式上送；服务端再按模型校验，省略时才回落到 1K、1:1。
+const imageSizes = ["1K", "0.5MP", "2K"], imageRatios = ["1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", "21:9"];
+const selectedSize = ref("1K"), selectedRatio = ref("1:1"), referenceId = ref("");
+const isEditModel = computed(() => selectedModel.value === "qwenImage21Edit");
+const referenceCandidates = computed(() => items.value.filter(item => item.filename.toLowerCase().endsWith(".png")));
 let lifetime = new AbortController();
 const projectId = () => String(route.params.projectId ?? "");
 const base = () => `/api/v1/projects/${encodeURIComponent(projectId())}/media`;
@@ -49,14 +57,18 @@ function formatBytes(size: number) { return size < 1024 ? `${size} B` : size < 1
 async function refresh() {
   closePreview(); error.value = ""; authorized.value = false; items.value = [];
   const signal = lifetime.signal;
-  try { const rows = await readAll<ProjectMedia>(base(), signal); const result = await client.get<{ items: Model[] }>("/api/v1/models", { signal }); signal.throwIfAborted(); items.value = rows; models.value = result.data.items.filter(model => model.providerId === "qwenImage21Local" && model.modelId === "qwenImage21Text"); if (!models.value.some(model => model.modelId === selectedModel.value)) selectedModel.value = models.value[0]?.modelId ?? ""; authorized.value = true; }
+  try { const rows = await readAll<ProjectMedia>(base(), signal); const result = await client.get<{ items: Model[] }>("/api/v1/models", { signal }); signal.throwIfAborted(); items.value = rows; models.value = result.data.items.filter(model => model.providerId === "qwenImage21Local" && (model.modelId === "qwenImage21Text" || model.modelId === "qwenImage21Edit")); if (!models.value.some(model => model.modelId === selectedModel.value)) selectedModel.value = models.value[0]?.modelId ?? ""; authorized.value = true; }
   catch (ex) { if (!signal.aborted) error.value = adminError(ex, "文件列表加载失败，请重试。"); }
 }
 async function generate() {
   if (busy.value || !selectedModel.value || !prompt.value.trim()) return;
-  const signal = lifetime.signal, id = projectId(); busy.value = true; error.value = ""; cancelling.value = false; generationStatus.value = "正在提交生成请求…";
+  const edit = isEditModel.value;
+  if (edit && !referenceId.value) { error.value = "单图编辑必须选择一张项目内的 PNG 参考图。"; return; }
+  const signal = lifetime.signal, id = projectId(); busy.value = true; error.value = ""; cancelling.value = false;
+  const body = { providerId: "qwenImage21Local", modelId: selectedModel.value, mediaType: "image", prompt: prompt.value.trim(), size: selectedSize.value, ratio: selectedRatio.value, images: edit ? [{ path: `.huimeng-media/${referenceId.value}.png`, mimeType: "image/png" }] : undefined };
+  generationStatus.value = `正在提交生成请求（${selectedSize.value} · ${selectedRatio.value}）…`;
   try {
-    const response = await apiFetch(`/api/v1/projects/${encodeURIComponent(id)}/creative/ai/media/generate`, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ providerId: "qwenImage21Local", modelId: selectedModel.value, mediaType: "image", prompt: prompt.value.trim(), size: "1K", ratio: "1:1" }), signal });
+    const response = await apiFetch(`/api/v1/projects/${encodeURIComponent(id)}/creative/ai/media/generate`, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(body), signal });
     if (!response.ok) { const result = await response.json() as { message?: string }; throw new Error(result.message ?? "生成请求未获授权"); }
     running.value = response.headers.get("X-Run-Id") ?? ""; generationStatus.value = "模型正在生成，结果将保存到当前项目…";
     const result = await response.json() as MediaResult; signal.throwIfAborted();
@@ -65,7 +77,8 @@ async function generate() {
       if (state === "CANCELLED") { generationStatus.value = "已确认取消，名额已释放。"; return; }
       throw new Error(state === "LOST" ? "执行状态待核查，未确认结束前保留名额。" : "生成未完成，请检查模型状态后重试。");
     }
-    await refresh(); if (!signal.aborted) generationStatus.value = "图片已生成并保存到当前项目。";
+    const spec = (result as { code: 200; data: { spec?: string }[] }).data?.[0]?.spec;
+    await refresh(); if (!signal.aborted) generationStatus.value = spec ? `图片已生成并保存到当前项目（实际规格 ${spec}）。` : "图片已生成并保存到当前项目。";
   } catch (ex) { if (!signal.aborted) { error.value = ex instanceof Error ? ex.message : "生成失败，请检查权限和模型状态。"; generationStatus.value = ""; } }
   finally { if (!signal.aborted) { busy.value = false; running.value = ""; cancelling.value = false; } }
 }
@@ -115,7 +128,7 @@ async function download(id: string) {
 }
 watch(() => route.params.projectId, async () => {
   lifetime.abort(); lifetime = new AbortController(); const signal = lifetime.signal;
-  items.value = []; projectName.value = ""; authorized.value = false; closePreview(); error.value = ""; busy.value = false; selected.value = undefined; models.value = []; selectedModel.value = ""; prompt.value = ""; running.value = ""; cancelling.value = false; generationStatus.value = "";
+  items.value = []; projectName.value = ""; authorized.value = false; closePreview(); error.value = ""; busy.value = false; selected.value = undefined; models.value = []; selectedModel.value = ""; prompt.value = ""; running.value = ""; cancelling.value = false; generationStatus.value = ""; selectedSize.value = "1K"; selectedRatio.value = "1:1"; referenceId.value = "";
   try { await workspace.openProject(projectId(), projectId(), signal); signal.throwIfAborted(); projectName.value = workspace.project?.name ?? ""; await refresh(); }
   catch (ex) { if (!signal.aborted) error.value = adminError(ex, "无法打开项目文件，请重新选择授权项目。"); }
 }, { immediate: true });
