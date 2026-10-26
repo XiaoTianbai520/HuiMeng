@@ -221,3 +221,7 @@ R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excl
 原文件树/文档面板/画布已复用同一精确文件 API 完成读取修订与覆盖保存：画布打开/新建记录随各画布对象的快照，自动保存、节点正文与画布写回、复制临时项覆盖均携带 `expectedRevision`；成功后更新为新返回修订号，快照按画布 ID 定位。409/`REVISION_CONFLICT` 时前端暂停该画布自动覆盖并保留内存修改，可强制重读恢复；文档会话冲突后同样暂停自动覆盖、保留草稿。`write` 的 exclusive 已存在与覆盖修订不符在本实现中均为 409/`REVISION_CONFLICT`，前端已据此统一识别；mkdir 已存在为 409/`FILE_ALREADY_EXISTS`，删除/读取缺失为 404/`NOT_FOUND`。
 
 `ext-plaintext` 为内置最小文本编辑器，仅在远程扩展清单未接通或无可用扩展时回退，支持常见文本后缀与 canvasNode 正文；它不是新的公开 API，也不代表扩展体系已完成。19 项真实浏览器检查覆盖连续保存、文档/画布冲突保留与重读、素材相对引用，见[M3-W03 记录](../validation/M3_W03_PAGES.md)。
+
+### 6.6 M3-02 模型列表与文本生成（2026-10-26）
+
+`POST /creative/agent` 输出 `session/userMessage/text/done/error` NDJSON；会话存于项目 `.agent/sessions`，支持 `create/get/list/rename/message/cancel`；同会话生成互斥（409 `AGENT_RUNNING`），`cancel` 在下一增量前生效并关闭上游流。`LlmClient` 支持 OpenAI 兼容 `deepseek`/`qwen`，端点来自服务端配置；密钥仅内存使用，执行前重新校验项目成员与数据库批准状态。`R128` 注册取消兼容路由。工具回调、画布控制与 `.jsonl` 原格式兼容在 M3-04；A07/A11 证据见[M3-02 记录](../validation/M3_TEXT_GENERATION.md)。

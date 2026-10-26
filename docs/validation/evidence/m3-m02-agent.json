@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "A1 登录并进入工作区",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "B1 已选择获批 DeepSeek Chat 模型",
+      "ok": true,
+      "detail": "DeepSeek Chat · 默认"
+    },
+    {
+      "name": "B2 模型选择器可用",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C1 收到流式文本回复",
+      "ok": true,
+      "detail": "eepSeek Chat · 默认你好你好，﻿输入消息，@ 提及节点输出或全局素材…DeepSeek Chat · 默认"
+    },
+    {
+      "name": "D1 历史对话出现本次会话",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "D2 重开后消息完整",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "E1 停止生成并提示",
+      "ok": true,
+      "detail": "好\n\n你好，这是合成的流式回复。\n\n请慢一点回答\n\n第一段\n\n已停止生成\n\n﻿\n\n\n输入消息，@ 提及节点输出或全局素材…\nDeepSeek Chat\n·\n默认"
+    },
+    {
+      "name": "F1 供应商错误以安全消息提示",
+      "ok": true,
+      "detail": "这是合成的流式回复。\n\n请慢一点回答\n\n第一段\n\n已停止生成\n触发错误\n模型服务请求失败，请稍后重试或联系管理员\n\n﻿\n\n\n输入消息，@ 提及节点输出或全局素材…\nDeepSeek Chat\n·\n默认"
+    }
+  ],
+  "checkCount": 8,
+  "fixture": "synthetic OpenAI-compatible LLM on Linux 18100 + isolated Spring/H2 fixture; Playwright Chromium",
+  "productionDeploymentChanged": false,
+  "realStorageOrModelUsed": false,
+  "credentialsIncluded": false,
+  "browserErrors": []
+}

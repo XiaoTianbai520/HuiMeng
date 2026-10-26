@@ -173,3 +173,7 @@ M3-W02 使用 JNA 5.17.0 补充 Linux x86_64 的 mkdirat 和 renameat2(RENAME_NO
 ### 13.4 原页面修订链与内置文本回退（2026-10-26）
 
 M3-W03 将原文件树/文档面板/画布接入既有精确文件 API：画布按各对象保存读取快照，自动保存、节点正文/画布写回及复制临时项覆盖均带 `expectedRevision`，成功后推进修订号；409 时暂停自动覆盖、保留内存修改并允许强制重读。文档会话同时识别 `REVISION_CONFLICT` 与旧 `ESTALE`，冲突后暂停自动覆盖、保留草稿。`ext-plaintext` 作为最小内置纯文本编辑器，仅在扩展清单未接通或无候选时回退，富文本与扩展体系仍属 M3-05。修订快照按画布 ID 读写，切换目标或节点写回不串号。19 项真实浏览器证据见[M3-W03 记录](../validation/M3_W03_PAGES.md)。
+
+### 13.5 文本生成与 Agent 会话（2026-10-26）
+
+M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队密文解密后在内存使用；端点由服务端配置，不跟随重定向。Agent 会话保存在项目 `.agent/sessions`，复用工作区安全文件 API 与修订号；`POST /creative/agent` 以 NDJSON 输出 `session/userMessage/text/done/error`，同会话生成互斥，`cancel` 在下一增量前生效并关闭上游流，保证停止后释放锁。工具回调、画布控制与上游 `.jsonl` 会话格式兼容在 M3-04 处理。92 项后端与 8/8 真实浏览器证据见[M3-02 记录](../validation/M3_TEXT_GENERATION.md)。
