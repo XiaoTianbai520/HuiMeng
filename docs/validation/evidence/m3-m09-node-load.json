@@ -1,0 +1,72 @@
+{
+  "createdAt": "2026-10-26T07:10:42.904Z",
+  "checks": [
+    {
+      "name": "登录并进入首页",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "打开画布工作区",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "节点脚本执行并注册 demoNode",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "注册的节点带有渲染入口",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "节点目录返回 200",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "节点脚本返回 200",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "工具界面目录未报错",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无未捕获页面错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无控制台错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "页面无失败请求",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "failures": [],
+  "responses": [
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/get"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+    }
+  ]
+}

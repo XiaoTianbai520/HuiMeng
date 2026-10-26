@@ -94,8 +94,10 @@ public class SecurityConfiguration {
                     "/api/v1/capabilities/mcp/status",
                     "/api/v1/capabilities/mcp/skill",
                     "/api/v1/capabilities/nodes/get",
+                    "/api/v1/capabilities/nodes/files",
                     "/api/v1/capabilities/tools/get",
                     "/api/v1/capabilities/tools/renderers",
+                    "/api/v1/capabilities/tools/client",
                     "/api/v1/capabilities/ffmpeg/status")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")

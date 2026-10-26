@@ -155,6 +155,8 @@ class PluginMarketProxyTests {
             "app_documents",
             "audit_events",
             "provider_secrets",
+            "project_members",
+            "projects",
             "users")) jdbc.update("DELETE FROM " + table);
     users.bootstrap("admin", PASSWORD);
     adminId = jdbc.queryForObject("SELECT id FROM users WHERE username='admin'", String.class);

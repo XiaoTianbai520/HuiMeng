@@ -70,6 +70,8 @@ M1 已完成独立安装/构建、统一客户端、非 Web 入口清理、市�
 
 ## 5. 下一步具体做什么
 
+**能力目录已改为运行期分发。** `capabilities/nodes/get|files`、`tools/get|renderers|client`、`mcp/skill` 与项目 `agent/skills` 读取已安装能力登记：节点脚本按安装摘要下发并由页面执行注册，工具界面按摘要版本取回，停用/越界/版本不符返回 404，秘密配置不下发。后端 5 项新测试（全量 126）与真实浏览器 10 项通过，见[记录](../validation/M3_CAPABILITY_LOADING.md)。随部署内置节点包、Agent 取用市场工具、自定义媒体供应商仍未做。
+
 **A16 跨入口名额已通过。** 新增 `CapacityHarness`（真实 Spring + 内嵌合成 ComfyUI/文本供应商 + 内存存储）与 `m3M16Capacity.py`：Web 两个账号、MCP 两个外部客户端、A2A 团队任务（Agent 内部生图）共用同一项目的五个名额，第六个返回 429 `PROJECT_CAPACITY_EXCEEDED` 且执行器提交数不变；取消确认终态后释放并可补位，另一项目独立计数，Web 运行与 A2A 产物均核验，46 项通过，见[容量记录](../validation/M3_CAPACITY.md)。同轮修复了内部生图结束时清空 Agent 线程登录态、导致 A2A 会话保存失败的问题，后端 121 项与 Spotless 仍通过。
 
 **M3-01 已完成。** 57 项 HTTP 验收覆盖 A04（画布/剧本 UTF-8、BOM、UTF-16LE 原格式写入与重开）、A05（旧修订 409 并回当前修订号）、A06（复制/重命名/删除、8 MiB Range 分段读取）、A17（项目与文件列表不含绝对路径）与 A03（非成员 403），见[M3-01 记录](../validation/M3_PROJECT_FILES.md)。媒体上传由 M2-A01 真实 MinIO 证据承担。剩余：插件运行期加载、H3 其余四模式真实出片、M4 与 A16 跨入口容量。
