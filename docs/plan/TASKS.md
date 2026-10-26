@@ -141,6 +141,10 @@ M2 完成门槛：所有对外路径默认拒绝，只有已登记权限和项�
 
 2026-10-25 最终结果见[M2 验收](../validation/M2_ACCEPTANCE.md)。当前 35/44 个 OpenAPI 操作有代码，公开生成仅固定 Qwen 文生图 1K/1:1；71 项后端、21 项前端、32 项真实边界检查、真实 MySQL 名额事务通过。正式部署及源路由发布开关未更新；完整 M3-03、跨入口 A16/A18 和 1.0 仍待验。
 
+2026-10-26 工具执行器：选型定为 JVM 内 GraalJS（不引入 Node/Bun sidecar），`ToolRuntime` 为每次调用新建上下文，禁止宿主访问、文件与网络 IO、创建线程与读环境变量，语句上限 2000 万、墙钟 20 秒、结果 10 万字符；`createTools` 与 `execute` 经 JS glue 调用，异步结果按 Promise 收敛。Web Agent 工具清单追加已装工具包并按其分派。自包含包可执行，带 `import`/`require` 的包在加载期跳过并说明原因（真实市场的 `toonflow:tool-zod` 尚未提供）。JAR 因引擎增加约 59 MB（`icu4j` 属 `js-language` 传递依赖，独立排除无效，改为关闭 `js.intl-402`）。`ToolRuntimeTests` 3 项通过，全量 142 项。
+
+2026-10-26 音频入口语义：`mediaType=audio` 在占名额前显式返回 409 `MEDIA_AUDIO_UNSUPPORTED`，不再被当作图片处理；1.0 无音频供应商，按 PRD 只保留语义、不做成功流。`SecurityIntegrationTests` 新增 1 项，61 项通过。
+
 2026-10-26 市场在线安装接通：目录按真实字段映射（`identifier`→安装名、中文 `name`→显示名、`supplier`/`desc`→作者/说明，兼容 `data.list` 与 `data.items`），搜索结果落 `V8 market_catalog`；安装只接受 `{pluginId,force?}`，地址与摘要由登记表回查，逐跳校验下载来源（默认含 `toonflow.tos-cn-beijing.volces.com`，最多 5 跳），首次下载记录获批 SHA-256、之后不一致即 409，`fileHash` 不作校验依据；前端按 `installable` 与 `reason` 展示。`PluginMarketProxyTests` 5 项、`PluginMarketTests` 6 项通过。真实市场凭据与 M0-I12～I14 未复跑。
 
 2026-10-26 技能正文注入 Web Agent：`CapabilityService.skillPrompt()` 按已启用登记读取 `SKILL.md`（缺失回退第一个 `.md`，单条 6000、合计 20000 字符上限），`AgentServiceImpl` 组装系统提示词时追加「可用技能」段；停用技能立即消失，与 `mcp/skill` 共用登记且不暴露路径。`CapabilityCatalogTests` 7 项与 `AgentServiceImplTests` 9 项通过。

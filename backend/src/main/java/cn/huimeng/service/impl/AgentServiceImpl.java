@@ -36,6 +36,7 @@ public class AgentServiceImpl implements AgentService {
   private final MediaGenerationService media;
   private final AgentToolCatalog catalog;
   private final CapabilityService capabilities;
+  private final ToolRuntime toolRuntime;
   private final ObjectMapper json;
   private final Set<String> running = ConcurrentHashMap.newKeySet();
   private final Set<String> cancelRequested = ConcurrentHashMap.newKeySet();
@@ -49,6 +50,7 @@ public class AgentServiceImpl implements AgentService {
       MediaGenerationService media,
       AgentToolCatalog catalog,
       CapabilityService capabilities,
+      ToolRuntime toolRuntime,
       ObjectMapper json) {
     this.projects = projects;
     this.files = files;
@@ -57,6 +59,7 @@ public class AgentServiceImpl implements AgentService {
     this.media = media;
     this.catalog = catalog;
     this.capabilities = capabilities;
+    this.toolRuntime = toolRuntime;
     this.json = json;
   }
 
@@ -222,6 +225,8 @@ public class AgentServiceImpl implements AgentService {
       boolean withCanvas =
           input.canvas() != null && !input.canvas().path("id").asText("").isBlank();
       var tools = catalog.definitions(withCanvas);
+      // 已安装工具包提供的工具与服务端执行器一起进入本轮工具清单。
+      tools.addAll(toolRuntime.definitions());
       var conversation = chatMessages(messages);
       var parts = json.createArrayNode();
       var answerText = new StringBuilder();
@@ -410,6 +415,11 @@ public class AgentServiceImpl implements AgentService {
       result.put("mimeType", generated.mimeType());
       result.put("spec", generated.spec());
       return result;
+    }
+    if (toolRuntime.owns(call.name())) {
+      // 市场工具在服务端隔离上下文里执行，结果原样回给模型。
+      JsonNode result = toolRuntime.execute(call.name(), call.id(), args);
+      return result == null ? json.createObjectNode() : result;
     }
     throw new ApiException(400, "TOOL_UNKNOWN", "未接通该工具：" + call.name());
   }

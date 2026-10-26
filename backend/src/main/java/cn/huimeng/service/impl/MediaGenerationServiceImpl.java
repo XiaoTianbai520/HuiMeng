@@ -189,6 +189,9 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
   private Admission admit(String project, GenerateImageReqDTO input, String key, String requestId) {
     authorization.requireApproved(project, input.providerId(), input.modelId());
     if (key == null || key.isBlank() || key.length() > 128) throw ApiException.invalid();
+    // 1.0 没有音频供应商：明确拒绝，不把它当图片处理，也不占用名额或触达执行器。
+    if ("audio".equals(input.mediaType()))
+      throw new ApiException(409, "MEDIA_AUDIO_UNSUPPORTED", "音频生成尚未配置供应商，1.0 不提供独立音频成功流");
     boolean video = "video".equals(input.mediaType());
     ComfyImageClient.Spec spec = null;
     ComfyVideoClient.Spec videoSpec = null;

@@ -642,6 +642,40 @@ class SecurityIntegrationTests {
     assertThat(mediaObjects).isEmpty();
   }
 
+  /** 音频入口只保留语义：明确拒绝、不占名额、不触达执行器。 */
+  @Test
+  void audioEntryIsRejectedBeforeCapacityWithoutTouchingExecutor() throws Exception {
+    String project = createProject("audio-entry");
+    member(project, adminId);
+    approveImage();
+    actAdmin();
+
+    assertThatThrownBy(
+            () ->
+                generation.generate(
+                    project,
+                    new cn.huimeng.dto.req.GenerateImageReqDTO(
+                        "qwenImage21Local",
+                        "qwenImage21Text",
+                        "audio",
+                        "synthetic",
+                        null,
+                        null,
+                        null,
+                        null),
+                    "audio-1",
+                    "audio"))
+        .isInstanceOf(ApiException.class)
+        .satisfies(
+            error -> {
+              var api = (ApiException) error;
+              assertThat(api.status).isEqualTo(409);
+              assertThat(api.code).isEqualTo("MEDIA_AUDIO_UNSUPPORTED");
+            });
+    assertThat(generationRuns.held(project)).isZero();
+    verifyNoInteractions(comfy);
+  }
+
   @Test
   void sixConcurrentRequestsAtomicallyAdmitOnlyFiveAndCancellationReleasesThem() throws Exception {
     String project = createProject("generate-concurrent");

@@ -72,7 +72,7 @@ export default {
 | 类型 | 安装 | 运行期加载 | 真正使用 |
 | --- | --- | --- | --- |
 | 节点 | 可用 | 可用（`nodes/get` + `nodes/files` + 浏览器执行） | 内置 `textNode`/`imageNode` 已真实加载（浏览器 16 项）；画布内渲染待在 Linux 夹具复跑；生成链路仍未接通 |
-| 工具 | 可用 | 可用（`renderers` 按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`） | **无执行器**，Agent/MCP 工具清单硬编码，不读插件 |
+| 工具 | 可用 | 可用（`renderers` 按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`） | Web Agent 可执行**自包含**工具包（进程内 JS 隔离）；带 `import`/`require` 的包被明确拒绝；MCP 工具清单仍未接入 |
 | 技能 | 可用 | 可用（文档入库 + `mcp/skill` 下发目录 + `CapabilityService.skillPrompt()` 注入 Web Agent 提示词） | Web Agent 已注入正文（单条 6000/合计 20000 字符上限）；references 不注入 |
 
 ## 5. 已知断点
@@ -101,9 +101,23 @@ export default {
 - `renderers` 只发布「已启用 + `components` 非空 + 有界面」的包，`tools` 为 `components` 原样；版本仍是安装摘要。
 - 元数据损坏的包不出现在 `renderers`，但在 `tools/get` 里保留并显示「工具元数据无效，无法加载」。
 
-### 5.3 工具无执行器
+### 5.3 工具执行器（已实现，能力边界明确）
 
-`createTools` 只在原版 Node/Bun 里跑。当前 Web Agent 与 MCP 的工具清单都是硬编码（画布 18 项等），不读 `PluginService`。
+选型定为 **JVM 内 GraalJS**（`org.graalvm.polyglot:polyglot` + `js-community` 24.1.2），不引入 Node/Bun sidecar：部署镜像仍是单个 JRE 进程，不需要新运行时、端口或系统级沙箱。
+
+隔离与限额（`ToolRuntime`）：
+
+- `HostAccess.NONE`、`IOAccess.NONE`、`allowHostClassLookup` 全 false、禁止创建线程与原生访问、禁止读环境变量；
+- 语句上限 2000 万条，墙钟超时 20 秒（超时强关上下文），单次结果上限 10 万字符；
+- 每次调用新建上下文，用完即销毁；`createTools` 返回的数组与参数都通过 JS 侧 glue 传递，参数以 JSON 字符串进入、结果以 JSON 文本回到宿主。
+
+已支持的形态：单文件、无模块引用的工具包（`export default { validateConfig, createTools }`，`execute(id, params)` 可为 async）。
+
+明确不支持、遇到即拒绝的形态：任何 `import ...` / `export ... from` / `require(...)`。真实市场上游的包会把 `zod` 外置成虚拟模块 `toonflow:tool-zod`，这类包目前会在加载期被跳过并在日志说明原因——补这一块需要在上下文里提供该虚拟模块（把 zod 打成单文件 ESM 注入），未做。
+
+成本：GraalJS 让可执行 JAR 增加约 59 MB（`js-language` 25 MB、`icu4j` 16.9 MB、`truffle-api` 12.3 MB 等；试过排除 `icu4j` 但它是 `js-language` 的传递依赖，独立排除无效，故保留并关闭 `js.intl-402`）。首次加载上下文约百毫秒级，工具调用按次建上下文，不缓存。
+
+未做：MCP 工具清单仍硬编码，未接 `ToolRuntime`；工具包的 `configRules` 未做服务端校验，配置以原样 JSON 传入；带 `toonflow:tool-zod` 的真实市场包未验证。
 
 ### 5.4 内置节点的撤销（已修复）
 
@@ -114,10 +128,7 @@ export default {
 1. ~~**内置节点包入库**（M3-05 / M3-I08）~~ **已完成（textNode/imageNode 两个节点）**：产物入 `backend/src/main/resources/capabilities/nodes/`，启动按摘要幂等登记为 `builtin`；`nodes/files` 可分发，管理员停用状态跨重启保留。构建与来源见 [节点包引入记录](../upstream/NODE_PACKAGES_INTAKE.md)。仍未做：其余上游节点、画布内渲染的 Linux 复跑。
 2. ~~**修 `renderers()`**~~ **已完成**：按包头 `components` 发布真实工具名，`tools/client` 下发内嵌界面（`code`+`css`），纯 Agent 工具不占渲染器名额；实现见 `ToolPackage` 与 `CapabilityServiceImpl`。
 3. ~~**技能注入**~~ **已完成**：`CapabilityService.skillPrompt()` 读取已启用技能的 `SKILL.md`（缺失时取第一个 `.md`），单条 6000、合计 20000 字符上限，由 `AgentServiceImpl.systemPrompt()` 追加到系统提示词；与 `mcp/skill` 共用同一登记，停用即消失，不向客户端暴露路径。
-4. **工具执行器**（唯一有方案分叉）：
-   - Node sidecar：与原版一致，兼容性最好，但多一个运行时；
-   - GraalJS：留在 JVM 内，需要 ESM 适配与 `fs`/`fetch` 受控注入。
-   两项都必须满足 M3-08 的「执行隔离」验收，不能只做「能跑」。
+4. ~~**工具执行器**~~ **已实现（GraalJS，自包含包）**：进程内隔离，无宿主访问/IO，语句与时间双限，详见 5.3。真实市场包依赖的 `toonflow:tool-zod` 虚拟模块与 MCP 工具清单接入仍未做。
 5. ~~**市场在线安装**~~ **已完成（待真实凭据复跑）**：字段映射、请求体、下载来源与获批制品清单见 5.1；`installable=false` 时给出原因，不为了能点而放行。`V8` 新增 `market_catalog`。
 6. **真实凭据复跑**：需要用户提供 TF-Router 子账号凭证，顺带复验 M0-I12～I14。
 
