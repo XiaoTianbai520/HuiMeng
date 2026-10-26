@@ -15,9 +15,7 @@ import org.junit.jupiter.api.*;
 
 /** 合成 ComfyUI：验证五模式的规格、参考图挂载、产物解析与参数拒绝。 */
 class ComfyVideoClientTests {
-  private static final byte[] PNG = {
-    (byte) 0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10, 0, 0, 0, 0
-  };
+  private static final byte[] PNG = {(byte) 0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10, 0, 0, 0, 0};
   private final ObjectMapper json = new ObjectMapper();
   private HttpServer server;
   private ComfyVideoClient client;
@@ -38,7 +36,8 @@ class ComfyVideoClientTests {
     server.createContext(
         "/prompt",
         exchange -> {
-          submitted.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+          submitted.set(
+              new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
           respond(exchange, "{\"prompt_id\":\"3f0d4c1e-1f2a-4b3c-8d9e-0a1b2c3d4e5f\"}");
         });
     server.createContext(
@@ -59,8 +58,7 @@ class ComfyVideoClientTests {
           respond(exchange, body);
         });
     server.start();
-    client =
-        new ComfyVideoClient(json, true, "http://127.0.0.1:" + server.getAddress().getPort());
+    client = new ComfyVideoClient(json, true, "http://127.0.0.1:" + server.getAddress().getPort());
   }
 
   @AfterEach
@@ -106,18 +104,15 @@ class ComfyVideoClientTests {
   void rejectsUnknownDurationResolutionAndRatio() {
     var duration =
         assertThrows(
-            ApiException.class,
-            () -> ComfyVideoClient.resolve("h3T2v", 7, "352p", "16:9"));
+            ApiException.class, () -> ComfyVideoClient.resolve("h3T2v", 7, "352p", "16:9"));
     assertEquals("INVALID_ARGUMENT", duration.code);
     var resolution =
         assertThrows(
-            ApiException.class,
-            () -> ComfyVideoClient.resolve("h3T2v", 5, "1080p", "16:9"));
+            ApiException.class, () -> ComfyVideoClient.resolve("h3T2v", 5, "1080p", "16:9"));
     assertEquals("INVALID_ARGUMENT", resolution.code);
     var ratio =
         assertThrows(
-            ApiException.class,
-            () -> ComfyVideoClient.resolve("h3T2v", 5, "352p", "21:9"));
+            ApiException.class, () -> ComfyVideoClient.resolve("h3T2v", 5, "352p", "21:9"));
     assertEquals("INVALID_ARGUMENT", ratio.code);
     assertThrows(ApiException.class, () -> ComfyVideoClient.resolve("h3Unknown", 5, null, null));
   }

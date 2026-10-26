@@ -61,21 +61,23 @@ public class A2aServiceImpl implements A2aService {
 
   @Override
   public Reply rpc(String team, JsonNode body, String version, String requestId) {
-    if (!"1.0".equals(version))
-      return new Reply(400, error(null, -32600, "VERSION_NOT_SUPPORTED", "A2A-Version"));
     if (body == null
         || !body.isObject()
         || !"2.0".equals(body.path("jsonrpc").asText(""))
         || body.path("method").asText("").isBlank())
       return new Reply(400, error(null, -32600, "Invalid Request", null));
     JsonNode id = body.get("id");
+    // 版本头缺失按 0.3 处理；能解析的请求保留关联 id，便于客户端对账。
+    if (!"1.0".equals(version))
+      return new Reply(400, error(id, -32600, "A2A-Version 必须为 1.0", "VERSION_NOT_SUPPORTED"));
     if (id == null || id.isMissingNode()) return new Reply(202, "");
     String method = body.path("method").asText();
     JsonNode params = body.path("params");
     try {
       JsonNode result =
           switch (method) {
-            case "SendMessage" -> send(team, params, requestId);
+            case "SendMessage" -> json.createObjectNode()
+                .set("task", send(team, params, requestId));
             case "GetTask" -> get(team, taskId(params));
             case "CancelTask" -> cancel(team, taskId(params));
             default -> null;

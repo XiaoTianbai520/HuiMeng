@@ -20,15 +20,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ComfyVideoClient {
   public static final String PROVIDER = "h3Local3060";
-  private static final Set<String> MODELS =
-      Set.of("h3T2v", "h3I2v", "h3Fl2v", "h3L2v", "h3R2v");
+  private static final Set<String> MODELS = Set.of("h3T2v", "h3I2v", "h3Fl2v", "h3L2v", "h3R2v");
   private static final Map<String, String> MODE_BY_MODEL =
       Map.of("h3T2v", "t2v", "h3I2v", "i2v", "h3Fl2v", "fl2v", "h3L2v", "l2v", "h3R2v", "r2v");
   private static final Map<String, int[]> SIZES =
-      Map.of("352p", new int[] {608, 352}, "480p", new int[] {864, 480}, "544p", new int[] {960, 544});
+      Map.of(
+          "352p", new int[] {608, 352}, "480p", new int[] {864, 480}, "544p", new int[] {960, 544});
   private static final Set<Integer> DURATIONS = Set.of(5, 8, 10, 15);
-  private static final Set<String> RATIOS =
-      Set.of("16:9", "9:16", "1:1", "4:3", "3:4");
+  private static final Set<String> RATIOS = Set.of("16:9", "9:16", "1:1", "4:3", "3:4");
   private static final int FPS = 24;
   private static final String TEMPLATE = "/comfy/h3-";
 
@@ -91,10 +90,18 @@ public class ComfyVideoClient {
       throw new ApiException(400, "INVALID_ARGUMENT", "比例支持 16:9、9:16、1:1、4:3、3:4");
     int[] ratioPair = Arrays.stream(aspect.split(":")).mapToInt(Integer::parseInt).toArray();
     int rw = ratioPair[0], rh = ratioPair[1], shortSide = base[1];
-    int width = aspect.equals("16:9") ? base[0] : aspect.equals("9:16") ? base[1]
-        : Math.round((rw >= rh ? shortSide * rw / (float) rh : shortSide) / 32) * 32;
-    int height = aspect.equals("16:9") ? base[1] : aspect.equals("9:16") ? base[0]
-        : Math.round((rh >= rw ? shortSide * rh / (float) rw : shortSide) / 32) * 32;
+    int width =
+        aspect.equals("16:9")
+            ? base[0]
+            : aspect.equals("9:16")
+                ? base[1]
+                : Math.round((rw >= rh ? shortSide * rw / (float) rh : shortSide) / 32) * 32;
+    int height =
+        aspect.equals("16:9")
+            ? base[1]
+            : aspect.equals("9:16")
+                ? base[0]
+                : Math.round((rh >= rw ? shortSide * rh / (float) rw : shortSide) / 32) * 32;
     int count = Math.round(seconds * (float) FPS);
     int frames = count + (5 - count % 17 + 17) % 17;
     String display = seconds + "s " + size + " " + aspect + " " + width + "×" + height;
@@ -119,9 +126,7 @@ public class ComfyVideoClient {
     if (!root.has("system")) throw unavailable();
   }
 
-  /**
-   * 提交一次生成。参考图按模式顺序给出：i2v/l2v 一张；fl2v 首帧、尾帧；r2v 为参考图列表。
-   */
+  /** 提交一次生成。参考图按模式顺序给出：i2v/l2v 一张；fl2v 首帧、尾帧；r2v 为参考图列表。 */
   public String submit(
       String project, String run, Spec spec, String prompt, List<byte[]> references) {
     requireAvailable();
@@ -131,8 +136,10 @@ public class ComfyVideoClient {
     condition.put("height", spec.height());
     condition.put("length", spec.frames());
     condition.put("prompt", formatPrompt(spec.mode(), prompt, spec.frames(), references.size()));
-    ((ObjectNode) graph.path("8").path("inputs")).put("noise_seed", new SplittableRandom().nextInt(1, Integer.MAX_VALUE));
-    ((ObjectNode) graph.path("14").path("inputs")).put("filename_prefix", "HuiMeng/" + project + "/" + run);
+    ((ObjectNode) graph.path("8").path("inputs"))
+        .put("noise_seed", new SplittableRandom().nextInt(1, Integer.MAX_VALUE));
+    ((ObjectNode) graph.path("14").path("inputs"))
+        .put("filename_prefix", "HuiMeng/" + project + "/" + run);
     if (spec.mode().equals("r2v")) {
       graph.remove("15");
       condition.remove("ref_images.ref_image_0");
@@ -145,9 +152,11 @@ public class ComfyVideoClient {
       }
     } else {
       if (!references.isEmpty() && graph.has("15"))
-        ((ObjectNode) graph.path("15").path("inputs")).put("image", upload(project, run, 0, references.get(0)));
+        ((ObjectNode) graph.path("15").path("inputs"))
+            .put("image", upload(project, run, 0, references.get(0)));
       if (references.size() > 1 && graph.has("16"))
-        ((ObjectNode) graph.path("16").path("inputs")).put("image", upload(project, run, 1, references.get(1)));
+        ((ObjectNode) graph.path("16").path("inputs"))
+            .put("image", upload(project, run, 1, references.get(1)));
     }
     var body = json.createObjectNode();
     body.set("prompt", graph);
@@ -177,24 +186,33 @@ public class ComfyVideoClient {
         var sources = new ArrayList<String>();
         for (int index = 0; index < referenceCount; index++)
           sources.add("<Picture " + (index + 1) + "> is reference image " + (index + 1));
-        return "subject_definitions: " + String.join("; ", sources) + ".\n\n"
-            + "summary: Generate a " + duration + "-second video following the description and references.\n\n"
+        return "subject_definitions: "
+            + String.join("; ", sources)
+            + ".\n\n"
+            + "summary: Generate a "
+            + duration
+            + "-second video following the description and references.\n\n"
             + "retention_analysis: Preserve the appearance of reference subjects.\n\n"
-            + "detailed_description: [Shot 1] " + text + "\n\n"
+            + "detailed_description: [Shot 1] "
+            + text
+            + "\n\n"
             + "overall_soundscape: Natural synchronized sounds appropriate to the described scene.\n\n"
             + "non_diegetic_music: N/A";
       }
       return text;
     }
     if (!body.toString().contains("integrated_multimodal_description:"))
-      return "integrated_multimodal_description: [Shot 1] " + text + "\n\n"
+      return "integrated_multimodal_description: [Shot 1] "
+          + text
+          + "\n\n"
           + "overall_soundscape: Natural synchronized sounds appropriate to the described scene.\n\n"
           + "non_diegetic_music: N/A";
     return text;
   }
 
   private String upload(String project, String run, int index, byte[] bytes) {
-    if (bytes == null || bytes.length == 0) throw new ApiException(400, "INVALID_ARGUMENT", "参考图为空");
+    if (bytes == null || bytes.length == 0)
+      throw new ApiException(400, "INVALID_ARGUMENT", "参考图为空");
     String boundary = "huimeng" + UUID.randomUUID().toString().replace("-", "");
     String filename = run + "-" + index + ".png";
     var head =
@@ -212,7 +230,8 @@ public class ComfyVideoClient {
     } catch (IOException ex) {
       throw new IllegalStateException(ex);
     }
-    var response = send("/upload/image", out.toByteArray(), "multipart/form-data; boundary=" + boundary);
+    var response =
+        send("/upload/image", out.toByteArray(), "multipart/form-data; boundary=" + boundary);
     String name = response.path("name").asText("");
     if (name.isBlank()) throw unavailable();
     return name;
@@ -239,8 +258,7 @@ public class ComfyVideoClient {
       if (name != null) break;
     }
     if (name == null) throw new ApiException(503, "EXECUTOR_FAILED", "执行器未返回视频文件");
-    String query =
-        "/view?filename=" + url(name) + "&subfolder=" + url(folder) + "&type=output";
+    String query = "/view?filename=" + url(name) + "&subfolder=" + url(folder) + "&type=output";
     byte[] bytes = download(query);
     if (bytes.length < 12 || !new String(bytes, 4, 4, StandardCharsets.US_ASCII).equals("ftyp"))
       throw new ApiException(503, "EXECUTOR_FAILED", "执行器返回的视频不可用");
@@ -299,7 +317,8 @@ public class ComfyVideoClient {
             : HttpRequest.BodyPublishers.ofByteArray(payload));
     try {
       var response = http.send(builder.build(), HttpResponse.BodyHandlers.ofByteArray());
-      if (response.statusCode() == 404 && path.startsWith("/history/")) return json.createObjectNode();
+      if (response.statusCode() == 404 && path.startsWith("/history/"))
+        return json.createObjectNode();
       if (response.statusCode() / 100 != 2) throw unavailable();
       return json.readTree(response.body());
     } catch (IOException ex) {

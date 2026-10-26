@@ -1,0 +1,61 @@
+{
+ "checks": [
+  {
+   "name": "A1 页面打开绑定项目并显示默认画布",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 MCP 读到页面已连接",
+   "ok": true,
+   "detail": "{\"projectId\":\"ace359e7-4e43-4ef6-9f0b-af8b1790885c\",\"pageConnected\":true,\"page\":{\"canvasId\":\"画布1.json\",\"panel\":\"canvas\",\"tools\":[],\"projectId\":\"ace359e7-4e43-4ef6-9f0b-af8b1790885c\",\"projectList\":[{\"i"
+  },
+  {
+   "name": "B2 页面状态含画布与项目",
+   "ok": true,
+   "detail": "{\"canvasId\":\"画布1.json\",\"panel\":\"canvas\",\"tools\":[],\"projectId\":\"ace359e7-4e43-4ef6-9f0b-af8b1790885c\",\"projectList\":[{\"id\":\"ace359e7-4e43-4ef6-9f0b-af8b1790885c\",\"name\":\"外部协议验收\"},{\"id\":\"2bdf6dda-8d9c-"
+  },
+  {
+   "name": "C1 外部调用在页面执行 getCanvas",
+   "ok": true,
+   "detail": "{\"canvasId\":\"画布1.json\",\"id\":\"画布1.json\",\"nodeCount\":0,\"edgeCount\":0,\"selectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"hasMore\":false,\"nextCursor\":null}"
+  },
+  {
+   "name": "C2 返回真实节点与连线计数",
+   "ok": true,
+   "detail": "{\"canvasId\":\"画布1.json\",\"id\":\"画布1.json\",\"nodeCount\":0,\"edgeCount\":0,\"selectedCount\":0,\"viewport\":{\"x\":0,\"y\":0,\"zoom\":1},\"hasMore\":false,\"nextCursor\":null}"
+  },
+  {
+   "name": "D1 外部创建画布并切换",
+   "ok": true,
+   "detail": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"canvasId\\\":\\\"MCP验收.json\\\",\\\"id\\\":\\\"MCP验收.json\\\",\\\"nodeCount\\\":0,\\\"edgeCount\\\":0,\\\"selectedCount\\\":0,\\\"viewport\\\":{\\\"x\\\":0,\\\"y\\\":0,\\\"zoom\\\":1},\\\"hasMore\\\":false,\\\"nextCursor\\\":null}\"}],\"structuredContent\":{\"canvasId\":\"MCP验收.json\","
+  },
+  {
+   "name": "D2 页面确实切到新画布",
+   "ok": true,
+   "detail": "MCP验收.json"
+  },
+  {
+   "name": "D3 画布菜单出现新画布",
+   "ok": true,
+   "detail": "提及节点输出或全局素材…DeepSeek Chat · 默认你好，我是 Toonflow 助手从一个想法开始聊聊你的故事、画面或镜头，让我们一起把想法落到画布上。搭建创作画布把创意串成清晰的节点流程梳理故事分镜拆解故事，安排画面与镜头生成图片素材为角色和场景寻找视觉方向点击填入提示，也可以直接输入，或添加图片、视频和文档。﻿输入消息，@ 提及节点输出或全局素材…DeepSeek Chat · 默认"
+  },
+  {
+   "name": "E1 外部切回原画布",
+   "ok": true,
+   "detail": "{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"canvasId\\\":\\\"画布1.json\\\",\\\"id\\\":\\\"画布1.json\\\",\\\"nodeCount\\\":0,\\\"edgeCount\\\":0,\\\"selectedCount\\\":0,\\\"viewport\\\":{\\\"x\\\":0,\\\"y\\"
+  },
+  {
+   "name": "E2 页面状态与外部结果一致",
+   "ok": true,
+   "detail": "画布1.json"
+  },
+  {
+   "name": "F1 页面无未捕获错误",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "pageErrors": [],
+ "createdAt": "2026-10-26T05:25:04.057Z"
+}

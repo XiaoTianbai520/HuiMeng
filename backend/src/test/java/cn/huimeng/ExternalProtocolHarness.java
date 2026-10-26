@@ -43,9 +43,9 @@ public class ExternalProtocolHarness {
 
   @DynamicPropertySource
   static void fixture(DynamicPropertyRegistry properties) throws Exception {
-    if (!"true".equals(System.getenv("HM_EXTERNAL_PROTOCOL"))
-        || !System.getProperty("os.name").equals("Linux"))
-      throw new IllegalStateException("Explicit Linux external protocol opt-in required");
+    // 夹具只用 H2、target 临时目录与随机密钥，不依赖平台特性；但仍需显式开关，避免误连真实库。
+    if (!"true".equals(System.getenv("HM_EXTERNAL_PROTOCOL")))
+      throw new IllegalStateException("Explicit external protocol opt-in required");
     Path config = Files.createDirectories(ROOT.resolve("config"));
     for (String name : List.of("master.key", "internal.key")) {
       byte[] key = new byte[32];
@@ -85,6 +85,8 @@ public class ExternalProtocolHarness {
                 List.of(
                     "getAppState",
                     "getCanvas",
+                    "addCanvas",
+                    "switchCanvas",
                     "listWorkspaceFiles",
                     "readWorkspaceFile",
                     "saveWorkspaceFile",
@@ -99,7 +101,8 @@ public class ExternalProtocolHarness {
                 "beta-client",
                 beta.id(),
                 List.of("getAppState", "readWorkspaceFile", "listTeams"),
-                List.of("betaTeam")),
+                // 同名团队在另一项目也授权，用于验证任务归属本身不会被 ID 猜测越过。
+                List.of("betaTeam", "alphaTeam")),
             "external");
     SecurityContextHolder.clearContext();
     Path stop = Path.of("target/external-protocol.stop");

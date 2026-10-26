@@ -42,7 +42,9 @@ public class FfmpegController {
     if (method.equals("prepare") || method.equals("cancel")) {
       ffmpeg.execute(projectId, input, requestId, OutputStream.nullOutputStream());
       StreamingResponseBody jsonBody =
-          output -> output.write("{\"code\":200,\"data\":null,\"message\":null}".getBytes(StandardCharsets.UTF_8));
+          output ->
+              output.write(
+                  "{\"code\":200,\"data\":null,\"message\":null}".getBytes(StandardCharsets.UTF_8));
       return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonBody);
     }
     ffmpeg.validate(projectId, input);

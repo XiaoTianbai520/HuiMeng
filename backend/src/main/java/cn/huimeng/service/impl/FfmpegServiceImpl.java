@@ -12,7 +12,6 @@ import java.nio.file.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class FfmpegServiceImpl implements FfmpegService {
   private static final Pattern SOURCE =
-      Pattern.compile("^\\.huimeng-media/([a-f0-9-]{36})\\.(mp4|mov|webm|mkv|mp3|wav|m4a|png|jpg|jpeg)$");
+      Pattern.compile(
+          "^\\.huimeng-media/([a-f0-9-]{36})\\.(mp4|mov|webm|mkv|mp3|wav|m4a|png|jpg|jpeg)$");
   private static final long MAX_TIMEOUT_SECONDS = 900;
   private static final long MAX_SOURCE_BYTES = 2L * 1024 * 1024 * 1024;
   private static final int MAX_SOURCES = 8;
@@ -53,8 +53,20 @@ public class FfmpegServiceImpl implements FfmpegService {
               "video/mp4",
               "video",
               List.of(
-                  "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-vf", "scale=-2:720",
-                  "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart")),
+                  "-c:v",
+                  "libx264",
+                  "-preset",
+                  "veryfast",
+                  "-crf",
+                  "23",
+                  "-vf",
+                  "scale=-2:720",
+                  "-c:a",
+                  "aac",
+                  "-b:a",
+                  "128k",
+                  "-movflags",
+                  "+faststart")),
           "mp4-1080p",
           new Preset(
               "mp4-1080p",
@@ -62,8 +74,20 @@ public class FfmpegServiceImpl implements FfmpegService {
               "video/mp4",
               "video",
               List.of(
-                  "-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-vf", "scale=-2:1080",
-                  "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart")),
+                  "-c:v",
+                  "libx264",
+                  "-preset",
+                  "veryfast",
+                  "-crf",
+                  "22",
+                  "-vf",
+                  "scale=-2:1080",
+                  "-c:a",
+                  "aac",
+                  "-b:a",
+                  "160k",
+                  "-movflags",
+                  "+faststart")),
           "webm-720p",
           new Preset(
               "webm-720p",
@@ -71,8 +95,18 @@ public class FfmpegServiceImpl implements FfmpegService {
               "video/webm",
               "video",
               List.of(
-                  "-c:v", "libvpx-vp9", "-crf", "32", "-b:v", "0", "-vf", "scale=-2:720",
-                  "-c:a", "libopus", "-b:a", "96k")),
+                  "-c:v",
+                  "libvpx-vp9",
+                  "-crf",
+                  "32",
+                  "-b:v",
+                  "0",
+                  "-vf",
+                  "scale=-2:720",
+                  "-c:a",
+                  "libopus",
+                  "-b:a",
+                  "96k")),
           "mp3-192k",
           new Preset(
               "mp3-192k",
@@ -112,11 +146,11 @@ public class FfmpegServiceImpl implements FfmpegService {
     if (!enabled) return null;
     if (version != null && Instant.now().isBefore(probedAt.plusSeconds(60))) return version;
     try {
-      Process process =
-          new ProcessBuilder(binary, "-version").redirectErrorStream(true).start();
+      Process process = new ProcessBuilder(binary, "-version").redirectErrorStream(true).start();
       String first;
       try (var reader =
-          new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+          new BufferedReader(
+              new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
         first = reader.readLine();
       }
       if (!process.waitFor(10, TimeUnit.SECONDS) || process.exitValue() != 0 || first == null) {
@@ -147,10 +181,7 @@ public class FfmpegServiceImpl implements FfmpegService {
 
   @Override
   public GeneratedMediaRespDTO execute(
-      String projectId,
-      FfmpegExecuteReqDTO input,
-      String requestId,
-      OutputStream output) {
+      String projectId, FfmpegExecuteReqDTO input, String requestId, OutputStream output) {
     projects.requireMember(projectId, "cancel".equals(input.operation().method()));
     String method = input.operation().method();
     if (method.equals("prepare")) {
@@ -176,10 +207,13 @@ public class FfmpegServiceImpl implements FfmpegService {
       for (String source : sources) {
         String mediaId = mediaId(source);
         var download = media.download(projectId, mediaId, null);
-        if (download.status() != 200 || download.length() <= 0 || download.length() > MAX_SOURCE_BYTES)
+        if (download.status() != 200
+            || download.length() <= 0
+            || download.length() > MAX_SOURCE_BYTES)
           throw new ApiException(400, "INVALID_ARGUMENT", "素材不可用或超过 2 GiB");
         total += download.length();
-        if (total > MAX_SOURCE_BYTES) throw new ApiException(413, "SOURCE_TOO_LARGE", "素材总大小超过 2 GiB");
+        if (total > MAX_SOURCE_BYTES)
+          throw new ApiException(413, "SOURCE_TOO_LARGE", "素材总大小超过 2 GiB");
         Path target = work.resolve("in-" + inputs.size() + extension(source));
         try (var stream = download.content()) {
           Files.copy(stream, target, StandardCopyOption.REPLACE_EXISTING);
@@ -249,9 +283,10 @@ public class FfmpegServiceImpl implements FfmpegService {
   }
 
   private Preset preset(FfmpegExecuteReqDTO input, String method) {
-    JsonNode args = input.operation().args() == null || input.operation().args().isEmpty()
-        ? null
-        : input.operation().args().get(0);
+    JsonNode args =
+        input.operation().args() == null || input.operation().args().isEmpty()
+            ? null
+            : input.operation().args().get(0);
     String fallback = "extractAudio".equals(method) ? "mp3-192k" : "mp4-720p";
     String id = args == null ? fallback : args.path("preset").asText(fallback);
     Preset preset = PRESETS.get(id);
@@ -260,9 +295,10 @@ public class FfmpegServiceImpl implements FfmpegService {
   }
 
   private List<String> sources(FfmpegExecuteReqDTO input, String method) {
-    JsonNode args = input.operation().args() == null || input.operation().args().isEmpty()
-        ? null
-        : input.operation().args().get(0);
+    JsonNode args =
+        input.operation().args() == null || input.operation().args().isEmpty()
+            ? null
+            : input.operation().args().get(0);
     if (args == null) throw new ApiException(400, "FFMPEG_ARGUMENT_INVALID", "缺少素材参数");
     var list = new ArrayList<String>();
     if ("concat".equals(method)) {
@@ -293,19 +329,27 @@ public class FfmpegServiceImpl implements FfmpegService {
 
   /** 用 ffprobe 读取时长；缺失时进度只报时间不报百分比。 */
   private long durationMs(Path input) {
-    String probe = binary.endsWith("ffmpeg")
-        ? binary.substring(0, binary.length() - "ffmpeg".length()) + "ffprobe"
-        : "ffprobe";
+    String probe =
+        binary.endsWith("ffmpeg")
+            ? binary.substring(0, binary.length() - "ffmpeg".length()) + "ffprobe"
+            : "ffprobe";
     try {
       Process process =
           new ProcessBuilder(
-                  probe, "-v", "error", "-show_entries", "format=duration",
-                  "-of", "default=noprint_wrappers=1:nokey=1", input.toString())
+                  probe,
+                  "-v",
+                  "error",
+                  "-show_entries",
+                  "format=duration",
+                  "-of",
+                  "default=noprint_wrappers=1:nokey=1",
+                  input.toString())
               .redirectErrorStream(true)
               .start();
       String line;
       try (var reader =
-          new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+          new BufferedReader(
+              new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
         line = reader.readLine();
       }
       if (!process.waitFor(10, TimeUnit.SECONDS) || line == null || line.isBlank()) return 0;
@@ -319,8 +363,7 @@ public class FfmpegServiceImpl implements FfmpegService {
   }
 
   /** 执行并流式上报进度；取消或超时只结束该请求的进程。 */
-  private void run(
-      String key, List<String> command, long durationMs, OutputStream output) {
+  private void run(String key, List<String> command, long durationMs, OutputStream output) {
     Process process = null;
     try {
       process = new ProcessBuilder(command).redirectError(ProcessBuilder.Redirect.DISCARD).start();
@@ -368,8 +411,7 @@ public class FfmpegServiceImpl implements FfmpegService {
       }
     } catch (IOException ex) {
       // 取消会关闭子进程输出流，这里按取消处理，不冒充执行器故障。
-      if (cancelled.contains(key))
-        throw new ApiException(499, "FFMPEG_CANCELLED", "转码已取消");
+      if (cancelled.contains(key)) throw new ApiException(499, "FFMPEG_CANCELLED", "转码已取消");
       throw new ApiException(503, "FFMPEG_UNAVAILABLE", "转码服务不可用");
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
@@ -384,7 +426,8 @@ public class FfmpegServiceImpl implements FfmpegService {
   /** 只写事件帧；序列化留在服务层，控制器不接触 JSON 细节。 */
   private void send(OutputStream output, Map<String, Object> event) {
     try {
-      output.write(("data: " + json.writeValueAsString(event) + "\n\n").getBytes(StandardCharsets.UTF_8));
+      output.write(
+          ("data: " + json.writeValueAsString(event) + "\n\n").getBytes(StandardCharsets.UTF_8));
       output.flush();
     } catch (IOException ignored) {
       // 页面断开后不再写事件；进程由取消或超时逻辑终止。

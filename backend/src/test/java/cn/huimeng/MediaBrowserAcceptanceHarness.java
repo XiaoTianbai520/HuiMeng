@@ -94,7 +94,8 @@ public class MediaBrowserAcceptanceHarness {
         }
 
         private RuntimeException unavailable() {
-          return new cn.huimeng.common.exception.ApiException(503, "STORAGE_UNAVAILABLE", "对象存储不可用");
+          return new cn.huimeng.common.exception.ApiException(
+              503, "STORAGE_UNAVAILABLE", "对象存储不可用");
         }
       };
     }
@@ -123,8 +124,7 @@ public class MediaBrowserAcceptanceHarness {
     Actor admin = users.authenticate("ui-admin", password);
     SecurityContextHolder.getContext()
         .setAuthentication(new UsernamePasswordAuthenticationToken(admin, null, List.of()));
-    var member =
-        users.create(new CreateUserReqDTO("ui-member", password, "USER"), "media-browser");
+    var member = users.create(new CreateUserReqDTO("ui-member", password, "USER"), "media-browser");
     users.create(new CreateUserReqDTO("ui-outsider", password, "USER"), "media-browser");
     var project = projects.create(new CreateProjectReqDTO("媒体生成验收"), "media-browser");
     projects.addMember(project.id(), admin.id(), "media-browser");

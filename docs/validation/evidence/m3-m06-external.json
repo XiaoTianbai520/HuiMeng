@@ -1,0 +1,224 @@
+{
+ "checks": [
+  {
+   "name": "mcpUnauthorized",
+   "detail": "401"
+  },
+  {
+   "name": "mcpWwwAuthenticate",
+   "detail": "{'X-Request-Id': '71072819-f807-4662-a9fd-f704e4665461', 'Cache-Control': 'no-store', 'WWW-Authenticate': 'Bearer', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'application/json;charset=UTF-8', 'Content-Length': '212', 'Date': 'Mon, 26 Oct 2026 05:24:18 GMT'}"
+  },
+  {
+   "name": "mcpInvalidToken",
+   "detail": "401"
+  },
+  {
+   "name": "mcpInitialize",
+   "detail": "200"
+  },
+  {
+   "name": "mcpInitializeSse",
+   "detail": "{'X-Request-Id': '501a288d-3887-4923-af60-10a988d9a08a', 'Cache-Control': 'no-store', 'Mcp-Session-Id': '5c3f1fb6-e8c2-479c-83e3-15b9237b1563', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'text/event-stream;charset=UTF-8', 'Content-Length': '528', 'Date': 'Mon, 26 Oct 2026 05:24:18 GMT'}"
+  },
+  {
+   "name": "mcpSessionHeader",
+   "detail": "{'X-Request-Id': '501a288d-3887-4923-af60-10a988d9a08a', 'Cache-Control': 'no-store', 'Mcp-Session-Id': '5c3f1fb6-e8c2-479c-83e3-15b9237b1563', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0', 'X-Frame-Options': 'DENY', 'Content-Type': 'text/event-stream;charset=UTF-8', 'Content-Length': '528', 'Date': 'Mon, 26 Oct 2026 05:24:18 GMT'}"
+  },
+  {
+   "name": "mcpServerInfo",
+   "detail": "{'jsonrpc': '2.0', 'id': 'e2479dd2-ba73-45be-a873-f910a265aec8', 'result': {'protocolVersion': '2025-06-18', 'capabilities': {'tools': {'listChanged': False}, 'resources': {'subscribe': False, 'listChanged': False}}, 'serverInfo': {'name': 'huimeng', 'version': '1.0.0'}, 'instructions': '工具限定在凭证绑定的单个项目内。先用 getAppState 读取页面连接与画布；画布与文档操作由同项目页面执行，页面未连接时明确失败。生成类工具返回运行 ID，用 getRun 查询、cancelRun 取消。'}}"
+  },
+  {
+   "name": "mcpCapabilities",
+   "detail": "{'jsonrpc': '2.0', 'id': 'e2479dd2-ba73-45be-a873-f910a265aec8', 'result': {'protocolVersion': '2025-06-18', 'capabilities': {'tools': {'listChanged': False}, 'resources': {'subscribe': False, 'listChanged': False}}, 'serverInfo': {'name': 'huimeng', 'version': '1.0.0'}, 'instructions': '工具限定在凭证绑定的单个项目内。先用 getAppState 读取页面连接与画布；画布与文档操作由同项目页面执行，页面未连接时明确失败。生成类工具返回运行 ID，用 getRun 查询、cancelRun 取消。'}}"
+  },
+  {
+   "name": "mcpToolsList",
+   "detail": "200"
+  },
+  {
+   "name": "mcpToolGranted:getAppState",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolGranted:readWorkspaceFile",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolGranted:saveWorkspaceFile",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolGranted:listTeams",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolGranted:getCanvas",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolFiltered:cancelRun",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolFiltered:generateMedia",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpToolFiltered:writeDocument",
+   "detail": "['getAppState', 'getCanvas', 'addCanvas', 'switchCanvas', 'listWorkspaceFiles', 'readWorkspaceFile', 'saveWorkspaceFile', 'listMedia', 'getRun', 'listTeams']"
+  },
+  {
+   "name": "mcpAppState",
+   "detail": "{'jsonrpc': '2.0', 'id': 'f0cc698b-d92e-4200-95a0-598ccf700ca3', 'result': {'content': [{'type': 'text', 'text': '{\"projectId\":\"ace359e7-4e43-4ef6-9f0b-af8b1790885c\",\"pageConnected\":false,\"hint\":\"在项目工作区打开页面后可读取画布、文档与节点工具\"}'}], 'structuredContent': {'projectId': 'ace359e7-4e43-4ef6-9f0b-af8b1790885c', 'pageConnected': False, 'hint': '在项目工作区打开页面后可读取画布、文档与节点工具'}, 'isError': False}}"
+  },
+  {
+   "name": "mcpAppStateProject",
+   "detail": "{'projectId': 'ace359e7-4e43-4ef6-9f0b-af8b1790885c', 'pageConnected': False, 'hint': '在项目工作区打开页面后可读取画布、文档与节点工具'}"
+  },
+  {
+   "name": "mcpAppStateNoPage",
+   "detail": "{'projectId': 'ace359e7-4e43-4ef6-9f0b-af8b1790885c', 'pageConnected': False, 'hint': '在项目工作区打开页面后可读取画布、文档与节点工具'}"
+  },
+  {
+   "name": "mcpFileList",
+   "detail": "['欢迎.md']"
+  },
+  {
+   "name": "mcpFileRead",
+   "detail": "1d8c01a1bf76b58e46d79abf8b792d559be40da0cb1bb1e3e903941475983eea"
+  },
+  {
+   "name": "mcpFileCreate",
+   "detail": "3af8b74598ba456f74b1ca972681a67e88b3b240e3dbce0a47b020b779ee38a9"
+  },
+  {
+   "name": "mcpFileReadBack",
+   "detail": "{'jsonrpc': '2.0', 'id': 'e151fe2a-6ca5-4ab1-a653-132fcfea6fd4', 'result': {'content': [{'type': 'text', 'text': '{\"code\":200,\"data\":{\"text\":\"M3-06 由外部客户端写入\\\\n\",\"encoding\":\"utf-8\",\"revision\":\"3af8b74598ba456f74b1ca972681a67e88b3b240e3dbce0a47b020b779ee38a9\"},\"message\":\"success\"}'}], 'structuredContent': {'code': 200, 'data': {'text': 'M3-06 由外部客户端写入\\n', 'encoding': 'utf-8', 'revision': '3af8b74598"
+  },
+  {
+   "name": "mcpFileRevisionRequired",
+   "detail": "{'jsonrpc': '2.0', 'id': '0d172dc6-cec1-417a-8701-df3abcd86443', 'result': {'content': [{'type': 'text', 'text': '请求参数无效'}], 'isError': True}}"
+  },
+  {
+   "name": "mcpPathTraversalRejected",
+   "detail": "{'jsonrpc': '2.0', 'id': 'be8e7644-bfc9-41bb-bcd8-d25d673df52a', 'result': {'content': [{'type': 'text', 'text': '文件路径不被允许'}], 'isError': True}}"
+  },
+  {
+   "name": "mcpToolNotGranted",
+   "detail": "403"
+  },
+  {
+   "name": "mcpToolNotGrantedCode",
+   "detail": "{'jsonrpc': '2.0', 'id': '02efd949-d720-4882-bd91-22f28b408e20', 'error': {'data': {'code': 'CAPABILITY_FORBIDDEN', 'requestId': '293011a8-a1cf-4192-ba6c-2c907ee7d1ff'}, 'code': -32099, 'message': '该客户端无权调用此能力'}}"
+  },
+  {
+   "name": "mcpCanvasRequiresPage",
+   "detail": "{'jsonrpc': '2.0', 'id': '612c1b64-c466-4a73-a502-ee51767434b2', 'result': {'content': [{'type': 'text', 'text': '该项目没有已连接的页面，请先在工作区打开项目并保持页面在线'}], 'isError': True}}"
+  },
+  {
+   "name": "mcpCanvasMessage",
+   "detail": "{'jsonrpc': '2.0', 'id': '612c1b64-c466-4a73-a502-ee51767434b2', 'result': {'content': [{'type': 'text', 'text': '该项目没有已连接的页面，请先在工作区打开项目并保持页面在线'}], 'isError': True}}"
+  },
+  {
+   "name": "a2aCard",
+   "detail": "alphaTeam"
+  },
+  {
+   "name": "a2aCardUrl",
+   "detail": "http://127.0.0.1:18086/a2a/alphaTeam"
+  },
+  {
+   "name": "a2aCardVersion",
+   "detail": "{'url': 'http://127.0.0.1:18086/a2a/alphaTeam', 'protocolBinding': 'JSONRPC', 'protocolVersion': '1.0'}"
+  },
+  {
+   "name": "a2aCardSecurity",
+   "detail": "{'bearer': {'httpAuthSecurityScheme': {'scheme': 'bearer'}}}"
+  },
+  {
+   "name": "a2aVersionRequired",
+   "detail": "400"
+  },
+  {
+   "name": "a2aVersionCode",
+   "detail": "{'jsonrpc': '2.0', 'id': '4199127d-3eb9-4066-a910-39b90c932099', 'error': {'code': -32600, 'message': 'A2A-Version 必须为 1.0', 'data': {'code': 'VERSION_NOT_SUPPORTED'}}}"
+  },
+  {
+   "name": "a2aSubmit",
+   "detail": "7096539b-24e2-4577-87e3-87aa1dfa65bd"
+  },
+  {
+   "name": "a2aContext",
+   "detail": "eacf0620-927d-4fc6-b70a-7fbcbaf6571c"
+  },
+  {
+   "name": "a2aSubmittedState",
+   "detail": "{'state': 'TASK_STATE_SUBMITTED', 'timestamp': '2026-10-26T05:24:19.433161Z'}"
+  },
+  {
+   "name": "a2aCompleted",
+   "detail": "{'state': 'TASK_STATE_COMPLETED', 'timestamp': '2026-10-26T05:24:19.677174Z', 'message': {'messageId': 'f305adcc-c584-4e27-a750-7ee113259a83', 'contextId': 'eacf0620-927d-4fc6-b70a-7fbcbaf6571c', 'taskId': '7096539b-24e2-4577-87e3-87aa1dfa65bd', 'role': 'ROLE_AGENT', 'parts': [{'text': '团队已收到任务：画一条海边分镜', 'mediaType': 'text/plain'}]}}"
+  },
+  {
+   "name": "a2aArtifact",
+   "detail": "[{'artifactId': '7096539b-24e2-4577-87e3-87aa1dfa65bd', 'name': '团队结果', 'parts': [{'text': '团队已收到任务：画一条海边分镜', 'mediaType': 'text/plain'}]}]"
+  },
+  {
+   "name": "a2aHistory",
+   "detail": "2"
+  },
+  {
+   "name": "a2aCrossClientGetTask",
+   "detail": "{'jsonrpc': '2.0', 'id': '4b8be6dc-06b0-4b8c-8018-4a3a1fff7141', 'error': {'code': -32001, 'message': 'TaskNotFound', 'data': {'code': 'TASK_NOT_FOUND'}}}"
+  },
+  {
+   "name": "a2aCrossClientCancelTask",
+   "detail": "{'jsonrpc': '2.0', 'id': 'e0a5252c-5a9d-4f12-82e5-e453d5e8613c', 'error': {'code': -32001, 'message': 'TaskNotFound', 'data': {'code': 'TASK_NOT_FOUND'}}}"
+  },
+  {
+   "name": "a2aCrossTeamForbidden",
+   "detail": "403"
+  },
+  {
+   "name": "a2aCancel",
+   "detail": "{'state': 'TASK_STATE_CANCELED', 'timestamp': '2026-10-26T05:24:20.615961Z'}"
+  },
+  {
+   "name": "a2aCancelNoArtifact",
+   "detail": "dict_keys(['id', 'contextId', 'status', 'history'])"
+  },
+  {
+   "name": "adminCsrf",
+   "detail": "200"
+  },
+  {
+   "name": "adminLogin",
+   "detail": "200"
+  },
+  {
+   "name": "adminCsrf",
+   "detail": "200"
+  },
+  {
+   "name": "a2aRevoke",
+   "detail": "204"
+  },
+  {
+   "name": "a2aRevokedCard",
+   "detail": "401"
+  },
+  {
+   "name": "a2aRevokedTools",
+   "detail": "401"
+  },
+  {
+   "name": "a2aOtherClientUnaffected",
+   "detail": "200"
+  }
+ ],
+ "tasks": {
+  "completed": "7096539b-24e2-4577-87e3-87aa1dfa65bd",
+  "canceled": "c31d1777-cc3a-4698-b36e-2e1ad0011d4f"
+ }
+}

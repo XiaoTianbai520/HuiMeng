@@ -70,6 +70,8 @@ M1 已完成独立安装/构建、统一客户端、非 Web 入口清理、市�
 
 ## 5. 下一步具体做什么
 
+**M3-06 已完成（HTTP 层）。** `/mcp` 提供 Streamable HTTP 子集（握手、`Mcp-Session-Id`、按凭证裁剪的 26 个工具、工作区文件工具与路径隔离、页面控制桥），`/a2a/{team}` 提供 Agent Card 与 SendMessage/GetTask/CancelTask，任务按客户端+项目落在 `a2a_tasks`，撤销凭证立即 401。54 项 A13 外部协议检查、11 项真实浏览器画布控制、113 项后端与 26 项前端检查通过，见[M3-06 记录](../validation/M3_EXTERNAL_PROTOCOLS.md)。团队 HTTPS 证书与浏览器信任沿用 M2 结论未复验；A2A 流式事件、服务端推送与外部 `generateMedia` 实跑未做。下一步 M3-07（清理排除路由与页面入口、A14），再 M3-08（插件市场，A12）。
+
 **M3-05 已完成（节点包分发除外）。** H3 五模式视频已接入：五个模板随代码分发、规格按 352p/480p/544p×5 比例与 17k+5 帧网格计算、参考图按模式挂载、名额与取消复用图片通道；前端模型下拉按获批项合并并可切换时长/分辨率。81 项视频检查与 113 项后端测试通过，并用真实权重跑通 T2V（5 秒 352p → 209.9 秒、5.17 秒 MP4），见[H3 记录](../validation/M3_H3_VIDEO.md)。I2V/FL2V/L2V/R2V 真实出片、R2V 参考视频/音频、内置节点包仍未完成。
 
 **M3-05 转码与能力目录已完成。** 服务端 FFmpeg 受控转码（transcode/concat/extractAudio、4 个固定预设、SSE 进度百分比、按 requestId 定向取消、结果写入项目媒体、2 GiB/15 分钟/2 线程限制）与成员只读能力目录（nodes/tools/renderers/skills/ffmpeg status）已接通，页面不再出现「工具界面加载失败」与 403/404 提示。108 项后端、29 项 HTTP+真实转码、11 项浏览器回归通过，见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。下一步补 H3 五模式视频与内置节点包分发，再进入 M3-06。

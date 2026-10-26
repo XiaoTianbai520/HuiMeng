@@ -23,8 +23,12 @@ class FfmpegServiceImplTests {
   void setUp() {
     ffmpeg =
         new FfmpegServiceImpl(
-            mock(ProjectService.class), mock(ProjectMediaService.class), mock(AuditService.class),
-            json, false, "ffmpeg");
+            mock(ProjectService.class),
+            mock(ProjectMediaService.class),
+            mock(AuditService.class),
+            json,
+            false,
+            "ffmpeg");
   }
 
   private FfmpegExecuteReqDTO request(String method, String argsJson) throws Exception {
@@ -52,10 +56,7 @@ class FfmpegServiceImplTests {
             ApiException.class,
             () ->
                 ffmpeg.execute(
-                    "p1",
-                    request("prepare", null),
-                    "r",
-                    java.io.OutputStream.nullOutputStream()));
+                    "p1", request("prepare", null), "r", java.io.OutputStream.nullOutputStream()));
     assertEquals("FFMPEG_UNAVAILABLE", error.code);
   }
 
@@ -92,7 +93,8 @@ class FfmpegServiceImplTests {
                 ffmpeg.execute(
                     "p1",
                     request(
-                        "shell", "{\"source\":\".huimeng-media/3f0d4c1e-1f2a-4b3c-8d9e-0a1b2c3d4e5f.mp4\"}"),
+                        "shell",
+                        "{\"source\":\".huimeng-media/3f0d4c1e-1f2a-4b3c-8d9e-0a1b2c3d4e5f.mp4\"}"),
                     "r",
                     java.io.OutputStream.nullOutputStream()));
     assertEquals("FFMPEG_OPERATION_UNSUPPORTED", method.code);

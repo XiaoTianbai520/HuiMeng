@@ -52,6 +52,17 @@ public class McpControlServiceImpl implements McpControlService {
       }
     }
 
+    private void comment(String value) {
+      synchronized (emitter) {
+        if (closed) return;
+        try {
+          emitter.send(SseEmitter.event().comment(value));
+        } catch (IOException | IllegalStateException ex) {
+          closed = true;
+        }
+      }
+    }
+
     private void close() {
       synchronized (emitter) {
         if (closed) return;
@@ -90,6 +101,8 @@ public class McpControlServiceImpl implements McpControlService {
             KEEPALIVE_MS,
             KEEPALIVE_MS,
             TimeUnit.MILLISECONDS);
+    // 立即写一帧注释，让容器提交响应头；否则客户端一直等不到 SSE 建立。
+    connection.comment("connected");
     emitter.onCompletion(
         () -> {
           ticker.cancel(false);
