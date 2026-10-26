@@ -75,3 +75,7 @@ m3FileWriteBoundary.py 仅面向 M3FileAcceptanceHarness 新建的 Linux/H2 夹�
 ## M3-04 Agent 工具
 
 `m3M04LlmMock.py` 首轮返回 `getCanvas` 工具调用、次轮回显工具结果；`m3M04AgentToolsCheck.mjs` 用 Playwright 进入画布工作区发起提问，断言工具卡片、真实画布字段回填、供应商请求次数，并通过接口核对 `.jsonl` 会话中的工具调用与结果。夹具为 `WorkspaceBrowserAcceptanceHarness`（`-Dhm.llm.enabled=true` 指向合成供应商）。证据见[M3-04 记录](../M3_AGENT_TOOLS.md)。
+
+## M3-05 转码与能力目录
+
+`m3M05FfmpegCheck.py` 在装了 ffmpeg 的 `MediaBrowserAcceptanceHarness` 容器上验证能力目录、转码 SSE 进度、结果下载、定向取消与参数边界（29 项）；样例视频由容器内 `ffmpeg -f lavfi -i testsrc2` 生成。证据见[M3-05 记录](../M3_CAPABILITIES_FFMPEG.md)。

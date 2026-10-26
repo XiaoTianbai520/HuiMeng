@@ -5192,6 +5192,151 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/nodes/get:
+    get:
+      operationId: capabilityNodes
+      summary: 远端节点包列表
+      description: 本批没有随镜像分发的节点包，返回空列表；页面据此不再按加载失败处理。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/tools/get:
+    get:
+      operationId: capabilityTools
+      summary: 内置工具列表
+      description: 成员只读视图：只发布服务端内置工具，canManage 固定 false。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/tools/renderers:
+    get:
+      operationId: capabilityToolRenderers
+      summary: 工具界面列表
+      description: 没有定制工具界面时返回空列表，页面使用内置卡片展示工具调用。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/ffmpeg/status:
+    get:
+      operationId: capabilityFfmpegStatus
+      summary: 转码服务状态
+      description: 返回 ffmpeg 可执行性、版本、运行中任务数与受支持预设。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A10
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/projects/{projectId}/creative/agent/skills:
+    get:
+      operationId: agentSkills
+      summary: 项目可用技能列表
+      description: 技能包随插件市场安装（M3-08），未安装时返回空列表。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema: *id002
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/projects/{projectId}/creative/agent/create:
     post:
       operationId: agentCreate
@@ -5661,7 +5806,7 @@ paths:
   /api/v1/projects/{projectId}/creative/ffmpeg/execute:
     post:
       operationId: executeFfmpeg
-      summary: 隔离环境中的 FFmpeg 调用/prepare/取消
+      summary: 受控转码/合成（服务端预设）
       description: 必须先通过项目文件系统/网络隔离及资源限制验收；未实现隔离不得开放。requestId 绑定发起人+项目；取消等待进程结束。
       tags:
       - projects
@@ -5676,7 +5821,7 @@ paths:
       - FR-08
       - FR-11
       x-audit-required: false
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: projectId
         in: path

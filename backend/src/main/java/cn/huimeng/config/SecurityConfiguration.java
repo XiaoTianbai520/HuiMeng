@@ -88,7 +88,12 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/workspaces/files/read",
                     "/api/v1/projects/*/creative/workspaces/files/list",
                     "/api/v1/projects/*/creative/agent/get",
-                    "/api/v1/projects/*/creative/agent/list")
+                    "/api/v1/projects/*/creative/agent/list",
+                    "/api/v1/projects/*/creative/agent/skills",
+                    "/api/v1/capabilities/nodes/get",
+                    "/api/v1/capabilities/tools/get",
+                    "/api/v1/capabilities/tools/renderers",
+                    "/api/v1/capabilities/ffmpeg/status")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout")
                 .authenticated()
@@ -118,6 +123,7 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/agent/cancel",
                     "/api/v1/projects/*/creative/agent/answer",
                     "/api/v1/projects/*/creative/agent/canvasResult",
+                    "/api/v1/projects/*/creative/ffmpeg/execute",
                     "/api/v1/projects/*/runs/*/cancel")
                 .authenticated()
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/projects/*/creative/agent/rename")

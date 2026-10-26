@@ -233,3 +233,7 @@ R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excl
 ### 6.8 M3-04 Agent 工具循环与画布回执（2026-10-26）
 
 `POST /creative/agent` 请求可带 `canvas: {id}`；服务端据此下发 18 个画布工具（与 `@toonflow/tool-canvas` 同名同参数）和 `askQuestion`、`generateImage`。模型调用画布工具时服务端只发 `canvasCall`，由页面校验并执行后经 `POST /creative/agent/canvasResult` 回传（`result` 或 `error`，120 秒超时）；提问经 `POST /creative/agent/answer` 回传（`answer`/`values`/`cancelled`/`skipped`，300 秒超时）。两个回执端点要求 `callId` 属于本项目正在等待的调用，否则 404 `TOOL_CALL_NOT_FOUND`；`R002`/`R003` 本批冻结并标记实现。`generateImage` 在服务端同步执行，复用同一名额与幂等语义，文本会话本身不占名额。会话文件为 `.jsonl`（`session` 头 + 逐条 `message`），旧 `.json` 仍可读取。证据见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。
+
+### 6.9 M3-05 能力目录与受控转码（2026-10-26）
+
+`GET /capabilities/nodes/get`、`/capabilities/tools/get`、`/capabilities/tools/renderers`、`/capabilities/ffmpeg/status` 与 `GET /projects/{projectId}/creative/agent/skills` 为成员只读目录：没有随镜像分发的内容返回空列表，不返回 404。`POST /projects/{projectId}/creative/ffmpeg/execute` 只接受 `prepare`/`cancel`/`transcode`/`concat`/`extractAudio`；素材必须是 `.huimeng-media/<uuid>.<受支持扩展名>`，预设固定为 mp4-720p、mp4-1080p、webm-720p、mp3-192k，命令由服务端拼装。`prepare`/`cancel` 返回 JSON，其余返回 `text/event-stream`，事件为 `{event:"progress",args:[{outTimeMs,percent}]}`、`{event:"done",args:[{path,mimeType,mediaType,preset}]}` 或 `{event:"error",args:[{message}]}`；开流前的参数错误仍按 JSON 400 返回。R010/R059/R061/R073/R074/R109/R110/R112 本批冻结并标记实现。证据见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。
