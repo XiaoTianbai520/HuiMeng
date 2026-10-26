@@ -1,8 +1,8 @@
-# 内置节点包引入记录（textNode / imageNode）
+# 内置节点包引入记录（8 个内置节点）
 
 2026-10-26。来源是参考克隆的固定提交 `d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d`，通过 `git archive` 导出；迁入前只读核实 HEAD 与工作区，未复制本地修改、`.git`、`data/` 或 `node_modules/`。参考克隆里 `apps/server/src/router.ts`、`apps/web/src/types/components.d.ts` 的未提交改动与本轮无关，没有被带进来。
 
-只引入 **textNode（文本）与 imageNode（图片）** 两个节点及它们真正引用的共享模块，范围到「全新数据库启动后画布能看到并加载这两个节点」为止；节点内的生成链路仍不在本轮范围。
+2026-10-26 第二批补齐其余 6 个节点，现在 classpath 下共有 **8 个内置节点**：文本、图片、图片生成、视频、视频生成、音频、音频生成、3D导演台。范围仍是「全新数据库启动后画布能看到、加载并渲染这些节点」；节点内的生成链路（`/api/ai/*` 与媒体后端）不在本轮范围。
 
 ## 1. 实际路径
 
@@ -10,13 +10,20 @@
 | --- | --- |
 | `packages/nodeShared/src/groupNodeModels.ts`、`showNodeError.ts`、`useNodeReferences.ts` | `frontend/packages/nodeShared/src/`，包名 `@toonflow/node-shared` |
 | `packages/nodeShared/src/components/promptInput.vue`、`referenceItem.vue`、`referenceCard.vue`、`nodeError.vue` | `frontend/packages/nodeShared/src/components/`；`referenceItem` 内联 `referenceCard`，`showNodeError` 内联 `nodeError`，都是实际依赖 |
+| `packages/nodeShared/src/useNodeGeneration.ts`、`components/mediaPrice.vue`、`components/mediaHistory.vue` | `frontend/packages/nodeShared/src/`；第二批节点的实际依赖，追加到同一包的导出表 |
 | `packages/nodes/textNode/**`（8 个文件） | `frontend/packages/nodes/textNode/`，包名 `@toonflow/node-text` |
-| `packages/nodes/imageNode/**`（22 个文件） | `frontend/packages/nodes/imageNode/`，包名 `@toonflow/node-image` |
+| `packages/nodes/imageNode/**`（22 个文件） | `frontend/packages/nodes/imageNode/`，包名 `@toonflow/node-image`；导出表补齐 `imageEditor`/`imageGridSplit`/`imageInpaint`/`imageLighting`/`imageMultiAngle`/`imagePanorama`/`imageInpaintPrompt`，供图片生成节点引用 |
+| `packages/nodes/imageGenerationNode/**`（2 个源码文件） | `frontend/packages/nodes/imageGenerationNode/`，包名 `@toonflow/node-image-generation` |
+| `packages/nodes/videoNode/**`（4 个文件） | `frontend/packages/nodes/videoNode/`，包名 `@toonflow/node-video`；导出 `videoActions`/`videoPlayer` |
+| `packages/nodes/videoGenerationNode/**`（2 个文件） | `frontend/packages/nodes/videoGenerationNode/`，包名 `@toonflow/node-video-generation` |
+| `packages/nodes/audioNode/**`（6 个文件） | `frontend/packages/nodes/audioNode/`，包名 `@toonflow/node-audio`；导出 `audioActions`/`audioPlayer` |
+| `packages/nodes/audioGenerationNode/**`（3 个文件） | `frontend/packages/nodes/audioGenerationNode/`，包名 `@toonflow/node-audio-generation` |
+| `packages/nodes/director3dNode/**`（13 个文件） | `frontend/packages/nodes/director3dNode/`，包名 `@toonflow/node-director3d`；依赖 `@tweenjs/tween.js` 25.0.0、`html2canvas-pro` 2.0.2、`threejson` 0.1.0-alpha.9、`vue-draggable-plus` 0.6.1、`three` 0.184.0 |
 | 上游根 `LICENSE`（MIT, Copyright (c) 2026 HBAI-Ltd） | 沿用 `frontend/LICENSE.Toonflow`，与前端引入共用同一份上游 MIT 文本 |
 
 [39 条来源映射](node-packages-intake.json)记录原路径、目标路径和**固定提交导出内容的 SHA-256**。其中 36 个源码文件的导出字节与迁入文件逐字节相同（仅按仓库 `.editorconfig` 把行尾从 CRLF 换成 LF）；3 个 `package.json` 经过适配，摘要故意不同，适配内容见第 3 节。
 
-没有迁入 `packages/nodeShared` 的 `mediaHistory.vue`、`mediaPrice.vue`、`useNodeGeneration.ts`，也没有迁入上游 `teamScaffold`、`teams`、`mcp`、`skills`、`startup` 与其余 6 个节点：两个目标节点不引用它们，引入只会扩大需要维护和授权的范围。
+8 个节点全部迁入后，`packages/nodeShared` 的模块已全量引入。仍未迁入的是上游 `teamScaffold`、`teams`、`mcp`、`skills`、`startup`：这些与节点渲染无关，引入只会扩大需要维护和授权的范围。
 
 ## 2. 可复现构建
 
@@ -32,8 +39,16 @@ bun run check           # 边界/格式 + vue-tsc + 三个节点包 vue-tsc + 26
 
 | 产物 | 版本 | 显示名 | 字节 | SHA-256 |
 | --- | --- | --- | --- | --- |
-| `textNode.umd.js` | 2.0.0 | 文本 | 413453 | `8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e` |
-| `imageNode.umd.js` | 2.0.0 | 图片 | 520959 | `92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae` |
+| `textNode.umd.js` | 2.0.0 | 文本 | 413564 | `1d28cac4b4d162f0c09fa84e7d66533b3c9ee1db39cf5c96eb61def236e827b5` |
+| `imageNode.umd.js` | 2.0.0 | 图片 | 520996 | `e4be701b4bd5ac6afaef1c059e0f65eee5362509514e8b64ccdb836f593d93d3` |
+| `imageGenerationNode.umd.js` | 2.0.0 | 图片生成 | 604478 | `609f74fcaf070f115e4f780a2a6e8f405d66d1a9df6c1c41cc95c7062a724aec` |
+| `videoNode.umd.js` | 2.0.0 | 视频 | 267905 | `5eb3a3f60f2dec30dafff536abedceec6afdf40c7058a2e70c73821e547b4501` |
+| `videoGenerationNode.umd.js` | 2.0.0 | 视频生成 | 472978 | `f12505fd2cf4772bb66f7301d22e7c5941b15df3a4008de24ada9f7c1f22986e` |
+| `audioNode.umd.js` | 2.0.0 | 音频 | 263531 | `ddfceab52f74ff65d1617e0f2b50de86051385d7dde213296120975e0f657c4c` |
+| `audioGenerationNode.umd.js` | 2.0.0 | 音频生成 | 454663 | `a38010ca07c9e6b0f5eb384ab72b6bfd45aeea49563334a275ab4568e49af1b0` |
+| `director3dNode.umd.js` | 2.0.0 | 3D导演台 | 1703791 | `0ba587f81d1d87b3297cbc698cd8c2a5c0d1c801deb4f584c0a5443278c7f484` |
+
+`textNode` 的两个数字与首批记录不同，是因为首批之后修了「只认 `EEXIST`」的错误码兼容（见第 4 节），产物变了但可复现性不变：连续两次构建摘要一致。
 
 连续两次构建的摘要一致（产物不含时间戳），所以「重启后摘要不变 → 内置登记不写库」这一前提可复现。产物包头 `toonflowNode` 携带 `displayName`/`author`/`github`/`configRules`/`version`/`readme`：版本取节点包 `package.json`，其余取 `createNodeConfig` 入参，后端登记直接解析该包头，不再维护第二份元数据。
 

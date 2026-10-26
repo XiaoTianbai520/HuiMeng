@@ -1,0 +1,282 @@
+{
+  "createdAt": "2026-10-26T13:49:35.422Z",
+  "base": "http://localhost:5187",
+  "steps": [
+    {
+      "step": "open-project",
+      "ok": true
+    }
+  ],
+  "menuText": "双击画布 自由生成节点\n图片生成\n视频生成\n音频生成\n画布4\nTF-Router\n—\n100%\n画布\n文档\n添加节点\n文本\n图片\n视频\n音频\n音频生成\ndemoNode\n3D导演台\n图片生成\n视频生成\n上传\n新对话\n\n你好，我是 Toonflow 助手\n\n从一个想法开始\n\n聊聊你的故事、画面或镜头，让我们一起把想法落到画布上。\n\n搭建创作画布\n把创意串成清晰的节点流程\n梳理故事分镜\n拆解故事，安排画面与镜头\n生成图片素材\n为角色和场景寻找视觉方向\n\n点击填入提示，也可以直接输入，或添加图片、视频和文档。\n\n﻿\n\n\n输入消息，@ 提及节点输出或全局素材…\n选择模型\n·\n默认",
+  "rendered": {
+    "count": 1,
+    "types": [
+      "2c0a7bb8-c520-478f-9d3b-bbf1b6eaf8a2"
+    ],
+    "html": [
+      "<!----><!--teleport start--><div data-v-af55be28=\"\" class=\"nodeSkeleton\"><div data-v-af55be28=\"\" class=\"el-dropdown\"><!--v-if--><!--teleport start--><!--teleport end--><!--v-if--></div><div data-v-af55be28=\"\" class=\"floatingSlot topSlot nodrag nopan nowheel\" style=\"width: max-content;\"><div data-v-af55be28=\"\" class=\"el-card is-never-shadow mediaToolbar\"><!--v-if--><div class=\"el-card__body\" style=\"padding: 6px;\"><button data-v-af55be28=\"\" aria-disabled=\"true\" disabled=\"\" type=\"button\" class=\"el-"
+    ],
+    "text": [
+      "添加到素材库\n提取音轨\n分离音视频\n截取片段\n历史记录\n替换视频\n\n﻿\n\n\n描述一下生成风格提示词，输入 @ 引用参考\n选择模型\n9:16\n视频生成"
+    ]
+  },
+  "persisted": {
+    "projectId": "7fe56d7c-9093-4687-bba6-b08aecfca4d2",
+    "fileName": "画布4.json",
+    "canvasFiles": [
+      "画布1.json",
+      "画布2.json",
+      "画布3.json",
+      "画布4.json"
+    ],
+    "readStatus": 200,
+    "nodeCount": 1,
+    "nodeTypes": [
+      "remote-videoGenerationNode"
+    ],
+    "nodeIds": [
+      "2c0a7bb8-c520-478f-9d3b-bbf1b6eaf8a2"
+    ]
+  },
+  "checks": [
+    {
+      "section": "A",
+      "name": "新增画布未报错",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "section": "A",
+      "name": "画布写入未出现平台 503",
+      "ok": true,
+      "detail": "[{\"status\":206,\"path\":\"/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%831.json\"},{\"status\":206,\"path\":\"/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%832.json\"},{\"status\":206,\"path\":\"/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%833.json\"},{\"status\":200,\"path\":\"/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%831.json&snapshot=true\"}]"
+    },
+    {
+      "section": "A",
+      "name": "画布写入成功（至少一次 200/201）",
+      "ok": true,
+      "detail": "[206,206,206,200,409,409,409,200]"
+    },
+    {
+      "section": "A",
+      "name": "画布已创建（不再停留在「选择画布」）",
+      "ok": true,
+      "detail": "{\"chooseCanvas\":false,\"vueFlow\":true}"
+    },
+    {
+      "section": "A",
+      "name": "VueFlow 容器已挂载",
+      "ok": true,
+      "detail": "true"
+    },
+    {
+      "section": "B",
+      "name": "画布内已放入节点实例",
+      "ok": true,
+      "detail": "{\"placed\":\"视频生成\",\"count\":1}"
+    },
+    {
+      "section": "B",
+      "name": "节点实例渲染出非空 DOM（不只是空壳）",
+      "ok": true,
+      "detail": "html长度=500"
+    },
+    {
+      "section": "B",
+      "name": "节点内容可见（出现标题或交互元素）",
+      "ok": true,
+      "detail": "[\"添加到素材库\\n提取音轨\\n分离音视频\\n截取片段\\n历史记录\\n替换视频\\n\\n﻿\\n\\n\\n描述一下生成风格提示词，输入 @ 引用参考\\n选择模型\\n9:16\\n视频生成\"]"
+    },
+    {
+      "section": "C",
+      "name": "画布文件已落盘且包含该节点实例",
+      "ok": true,
+      "detail": "{\"projectId\":\"7fe56d7c-9093-4687-bba6-b08aecfca4d2\",\"fileName\":\"画布4.json\",\"canvasFiles\":[\"画布1.json\",\"画布2.json\",\"画布3.json\",\"画布4.json\"],\"readStatus\":200,\"nodeCount\":1,\"nodeTypes\":[\"remote-videoGenerationNode\"],\"nodeIds\":[\"2c0a7bb8-c520-478f-9d3b-bbf1b6eaf8a2\"]}"
+    },
+    {
+      "section": "C",
+      "name": "落盘的节点类型与放入的内置节点一致",
+      "ok": true,
+      "detail": "{\"placed\":\"视频生成\",\"expectedType\":\"remote-videoGenerationNode\",\"nodeTypes\":[\"remote-videoGenerationNode\"]}"
+    }
+  ],
+  "failures": [],
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+  ],
+  "httpLog": [
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/get"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/list?path="
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=audioNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=audioGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=director3dNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=textNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=videoGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=videoNode"
+    },
+    {
+      "status": 206,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%831.json"
+    },
+    {
+      "status": 206,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%832.json"
+    },
+    {
+      "status": 206,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%833.json"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%831.json&snapshot=true"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=audioNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=audioGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=director3dNode"
+    },
+    {
+      "status": 409,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode"
+    },
+    {
+      "status": 409,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%832.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 409,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%833.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%834.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=videoGenerationNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=videoNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=textNode"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/get"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%834.json&expectedRevision=57e7c03e649b3905979973e7518e459f5636a7646dec8103a81bf380ee41a3b3&encoding=utf-8"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/list?path="
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%831.json"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%832.json"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%833.json"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/read?path=%E7%94%BB%E5%B8%834.json"
+    }
+  ],
+  "httpErrors": [
+    {
+      "status": 401,
+      "method": "GET",
+      "path": "/api/v1/auth/me"
+    },
+    {
+      "status": 401,
+      "method": "GET",
+      "path": "/api/v1/auth/me"
+    },
+    {
+      "status": 409,
+      "method": "PUT",
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 409,
+      "method": "PUT",
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%832.json&exclusive=true&encoding=utf-8"
+    },
+    {
+      "status": 409,
+      "method": "PUT",
+      "path": "/api/v1/projects/7fe56d7c-9093-4687-bba6-b08aecfca4d2/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%833.json&exclusive=true&encoding=utf-8"
+    }
+  ]
+}

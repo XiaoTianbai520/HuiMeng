@@ -8,7 +8,10 @@
     "./referenceItem": "./src/components/referenceItem.vue",
     "./showNodeError": "./src/showNodeError.ts",
     "./useNodeReferences": "./src/useNodeReferences.ts",
-    "./groupNodeModels": "./src/groupNodeModels.ts"
+    "./groupNodeModels": "./src/groupNodeModels.ts",
+    "./mediaPrice": "./src/components/mediaPrice.vue",
+    "./mediaHistory": "./src/components/mediaHistory.vue",
+    "./useNodeGeneration": "./src/useNodeGeneration.ts"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit"

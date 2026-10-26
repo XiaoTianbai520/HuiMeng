@@ -24,6 +24,12 @@ const targetDir = resolve(
 const nodePackages = [
   { directory: "textNode", name: "textNode" },
   { directory: "imageNode", name: "imageNode" },
+  { directory: "imageGenerationNode", name: "imageGenerationNode" },
+  { directory: "videoNode", name: "videoNode" },
+  { directory: "videoGenerationNode", name: "videoGenerationNode" },
+  { directory: "audioNode", name: "audioNode" },
+  { directory: "audioGenerationNode", name: "audioGenerationNode" },
+  { directory: "director3dNode", name: "director3dNode" },
 ] as const;
 const HEADER = "/*! toonflowNode:";
 

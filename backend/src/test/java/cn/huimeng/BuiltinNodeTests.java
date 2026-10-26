@@ -54,7 +54,18 @@ class BuiltinNodeTests {
       PASSWORD = "synthetic-account-password-42",
       BUILTIN_LOCATION = "classpath*:capabilities/nodes/*.umd.js",
       ROOT_PACKAGE = "capabilities/nodes/";
-  static final List<String> BUILTIN_NODES = List.of("imageNode", "textNode");
+  // 与 classpath 下的产物同名同序（registrar 按文件名排序登记）。
+  static final List<String> BUILTIN_NODES =
+      List.of(
+          "audioGenerationNode",
+          "audioNode",
+          "director3dNode",
+          "imageGenerationNode",
+          "imageNode",
+          "textNode",
+          "videoGenerationNode",
+          "videoNode");
+  static final int TEXT_INDEX = BUILTIN_NODES.indexOf("textNode");
 
   @Autowired MockMvc mvc;
   @Autowired ObjectMapper json;
@@ -108,17 +119,19 @@ class BuiltinNodeTests {
 
     mvc.perform(get("/api/v1/capabilities/nodes/get").session(admin))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data.length()").value(2))
-        .andExpect(jsonPath("$.data[0].name").value("imageNode"))
-        .andExpect(jsonPath("$.data[0].displayName").value("图片"))
+        .andExpect(jsonPath("$.data.length()").value(BUILTIN_NODES.size()))
+        .andExpect(jsonPath("$.data[0].name").value("audioGenerationNode"))
+        .andExpect(jsonPath("$.data[0].displayName").value("音频生成"))
         .andExpect(jsonPath("$.data[0].enabled").value(true))
         .andExpect(
-            jsonPath("$.data[0].url").value("/api/v1/capabilities/nodes/files?name=imageNode"))
-        .andExpect(jsonPath("$.data[1].name").value("textNode"))
-        .andExpect(jsonPath("$.data[1].displayName").value("文本"))
-        .andExpect(jsonPath("$.data[1].enabled").value(true))
+            jsonPath("$.data[0].url")
+                .value("/api/v1/capabilities/nodes/files?name=audioGenerationNode"))
+        .andExpect(jsonPath("$.data[" + TEXT_INDEX + "].name").value("textNode"))
+        .andExpect(jsonPath("$.data[" + TEXT_INDEX + "].displayName").value("文本"))
+        .andExpect(jsonPath("$.data[" + TEXT_INDEX + "].enabled").value(true))
         .andExpect(
-            jsonPath("$.data[1].url").value("/api/v1/capabilities/nodes/files?name=textNode"));
+            jsonPath("$.data[" + TEXT_INDEX + "].url")
+                .value("/api/v1/capabilities/nodes/files?name=textNode"));
   }
 
   @Test
@@ -163,8 +176,8 @@ class BuiltinNodeTests {
     assertThat(updatedAt()).isEqualTo(stamps);
 
     mvc.perform(get("/api/v1/capabilities/nodes/get").session(admin))
-        .andExpect(jsonPath("$.data[1].name").value("textNode"))
-        .andExpect(jsonPath("$.data[1].enabled").value(false));
+        .andExpect(jsonPath("$.data[" + TEXT_INDEX + "].name").value("textNode"))
+        .andExpect(jsonPath("$.data[" + TEXT_INDEX + "].enabled").value(false));
     mvc.perform(get("/api/v1/capabilities/nodes/files").param("name", "textNode").session(admin))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value("CAPABILITY_NOT_FOUND"));
@@ -266,10 +279,10 @@ class BuiltinNodeTests {
 
     mvc.perform(get("/api/v1/admin/plugins").session(admin).secure(true))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items.length()").value(2))
-        .andExpect(jsonPath("$.items[1].name").value("textNode"))
-        .andExpect(jsonPath("$.items[1].source").value("builtin"))
-        .andExpect(jsonPath("$.items[1].canManage").value(false));
+        .andExpect(jsonPath("$.items.length()").value(BUILTIN_NODES.size()))
+        .andExpect(jsonPath("$.items[" + TEXT_INDEX + "].name").value("textNode"))
+        .andExpect(jsonPath("$.items[" + TEXT_INDEX + "].source").value("builtin"))
+        .andExpect(jsonPath("$.items[" + TEXT_INDEX + "].canManage").value(false));
   }
 
   // --- 夹具 -----------------------------------------------------------------

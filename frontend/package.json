@@ -12,7 +12,7 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "bun test tests",
     "check": "bun run check:boundaries && bun run typecheck && bun run check:nodes && bun test tests",
-    "check:nodes": "bun run --cwd packages/nodeShared typecheck && bun run --cwd packages/nodes/textNode typecheck && bun run --cwd packages/nodes/imageNode typecheck",
+    "check:nodes": "bun run --cwd packages/nodeShared typecheck && bun run --cwd packages/nodes/textNode typecheck && bun run --cwd packages/nodes/imageNode typecheck && bun run --cwd packages/nodes/imageGenerationNode typecheck && bun run --cwd packages/nodes/videoNode typecheck && bun run --cwd packages/nodes/videoGenerationNode typecheck && bun run --cwd packages/nodes/audioNode typecheck && bun run --cwd packages/nodes/audioGenerationNode typecheck && bun run --cwd packages/nodes/director3dNode typecheck",
     "build:nodes": "bun scripts/build-nodes.ts",
     "check:boundaries": "bun scripts/check-boundaries.ts",
     "licenses:archive": "bun scripts/archive-licenses.ts"

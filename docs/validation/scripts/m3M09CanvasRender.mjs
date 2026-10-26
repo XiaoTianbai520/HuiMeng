@@ -79,7 +79,13 @@ try {
   await page.click('button[type="submit"]');
   await page.waitForSelector(`text=${PROJECT_LABEL}`, { timeout: 60000 });
   await page.getByRole("button", { name: new RegExp(`打开项目 ${PROJECT_LABEL}`) }).click();
-  await page.waitForSelector("text=选择画布", { timeout: 60000 });
+  // 夹具可能已经预置画布：此时工作区直接显示 VueFlow，不会再出现「选择画布」。
+  await page.waitForFunction(() => location.hash.includes("workspace"), null, { timeout: 60000 });
+  await page.waitForFunction(
+    () => document.body.innerText.includes("选择画布") || Boolean(document.querySelector(".vue-flow")),
+    null,
+    { timeout: 60000 },
+  );
   await shot("project-opened");
   result.steps.push({ step: "open-project", ok: true });
 
@@ -127,8 +133,19 @@ try {
 
   // 4. 点「文本」放入内置 textNode 实例
   let placed = "";
+  // 菜单里显示的是中文标签，落盘的类型是 remote-<包名>；这里维护一份对照，避免断言写死两个节点。
+  const BUILTIN = {
+    文本: "textNode",
+    图片: "imageNode",
+    图片生成: "imageGenerationNode",
+    视频: "videoNode",
+    视频生成: "videoGenerationNode",
+    音频: "audioNode",
+    音频生成: "audioGenerationNode",
+    "3D导演台": "director3dNode",
+  };
   const wantLabel = process.env.HM_NODE_LABEL ?? "文本";
-  for (const label of [wantLabel, ...["文本", "图片"].filter(item => item !== wantLabel)]) {
+  for (const label of [wantLabel, ...Object.keys(BUILTIN).filter(item => item !== wantLabel)]) {
     const item = page.getByText(label, { exact: true }).first();
     if ((await item.count()) > 0) {
       await item.click({ timeout: 8000 }).catch(() => {});
@@ -212,11 +229,12 @@ try {
     (persisted?.nodeCount ?? 0) > 0,
     JSON.stringify(persisted).slice(0, 400),
   );
+  const expectedType = placed ? "remote-" + (BUILTIN[placed] ?? "") : "";
   check(
     "C",
-    "落盘的节点类型为内置节点（remote-textNode / remote-imageNode）",
-    (persisted?.nodeTypes ?? []).every(type => /^remote-(text|image)Node$/.test(type ?? "")),
-    JSON.stringify(persisted?.nodeTypes),
+    "落盘的节点类型与放入的内置节点一致",
+    Boolean(expectedType) && (persisted?.nodeTypes ?? []).every(type => type === expectedType),
+    JSON.stringify({ placed, expectedType, nodeTypes: persisted?.nodeTypes }),
   );
 
   await page.screenshot({ path: path.join(EVIDENCE, process.env.HM_EVIDENCE_SHOT ?? "m3-m09-canvas-render.png"), fullPage: false });

@@ -24,5 +24,14 @@
     "typescript": "6.0.3",
     "vite": "8.2.2",
     "vue-tsc": "3.3.11"
+  },
+  "exports": {
+    "./imageInpaint": "./src/imageInpaint.ts",
+    "./imagePanorama": "./src/components/imagePanorama.vue",
+    "./imageLighting": "./src/components/imageLighting.vue",
+    "./imageMultiAngle": "./src/components/imageMultiAngle.vue",
+    "./imageEditor": "./src/components/imageEditor.vue",
+    "./imageGridSplit": "./src/components/imageGridSplit.vue",
+    "./imageInpaintPrompt": "./src/components/imageInpaintPrompt.vue"
   }
 }
