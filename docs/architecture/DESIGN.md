@@ -189,3 +189,7 @@ M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队�
 ### 13.8 服务端转码与能力目录（2026-10-26）
 
 上游 FFmpeg 由浏览器侧 SDK 驱动；本平台改为服务端固定预设转码：素材只从项目媒体读取、输出写回项目媒体、命令由服务端拼装，浏览器不能传命令、滤镜或任意参数。进度用 `-progress pipe:1` 解析 `out_time_ms`，时长由 ffprobe 提供（缺失时只有时间没有百分比）；取消按 `requestId` 定向结束进程。资源上限为单/总素材 2 GiB、8 个素材、2 线程、15 分钟。SSE 帧序列化下沉到服务层，控制器只声明 `ResponseEntity<StreamingResponseBody>`，以满足「控制器只依赖服务接口」的架构约束。能力目录（节点/工具/工具界面/技能/转码状态）由服务端诚实返回空列表，页面据此降级而不是报加载失败。证据见[M3-05 记录](../validation/M3_CAPABILITIES_FFMPEG.md)。
+
+### 13.9 H3 五模式视频（2026-10-26）
+
+五个图模板（`comfy/h3-*.json`）随代码分发，节点固定为 `MiniMaxH3ImageToVideo`（R2V 为 `MiniMaxH3ReferenceToVideo`）与 `SaveVideo`；服务端只替换提示词、宽高、帧数、种子与参考图，浏览器无法提供工作流。规格由 `ComfyVideoClient.resolve` 统一计算：三档基线像素、五种比例（非 16:9/9:16 按短边换算并 32 对齐）、帧数 `round(秒×24)` 补齐到 17k+5。参考图按模式挂到首帧/尾帧节点或 `ref_images.ref_image_N`，提示词按模式补齐三段或六段结构。视频与图片共用同一 `admit`/`execute` 通道，因此名额、幂等与取消行为一致；取消向执行器发 `/api/jobs/<id>/cancel`。证据见[H3 记录](../validation/M3_H3_VIDEO.md)。
