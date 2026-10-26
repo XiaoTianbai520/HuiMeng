@@ -7,7 +7,8 @@ export interface Plugin {
   key: string;
   id?: string;
   installable?: boolean;
-  manifest?: { type: string; name: string; version: string; sha256: string };
+  /** 服务端给出的不可安装原因；可安装时为 null。 */
+  reason?: string | null;
   isCollected?: boolean;
   type: PluginType;
   name: string;

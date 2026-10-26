@@ -118,14 +118,7 @@ public class PluginController {
   public ApiRespDTO<PluginDTOs.Named> installMarket(
       @RequestBody MarketInstallReqDTO input, HttpServletRequest request) {
     var plugin =
-        plugins.installMarket(
-            input.type(),
-            input.name(),
-            input.version(),
-            input.url(),
-            input.sha256(),
-            input.force(),
-            RequestContext.requestId(request));
+        plugins.installMarket(input.pluginId(), input.force(), RequestContext.requestId(request));
     return ApiRespDTO.ok(new PluginDTOs.Named(plugin.name()));
   }
 

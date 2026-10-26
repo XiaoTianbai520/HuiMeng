@@ -30,7 +30,10 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-/** 市场代理成功流：本地合成上游返回目录与制品，验证凭据转发、摘要校验与安装落库。 */
+/**
+ * 市场代理：本地合成上游返回真实目录形态（identifier/supplier/desc/link/fileName/state），验证字段映射、来源白名单、
+ * 服务端目录回查与获批摘要，而不是采信客户端给的 url/sha256。
+ */
 @SpringBootTest
 @AutoConfigureMockMvc(
     print = org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint.NONE)
@@ -67,30 +70,77 @@ class PluginMarketProxyTests {
           "/v1/plugin/getPlugin",
           exchange -> {
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
-            String body =
-                "{\"code\":200,\"data\":{\"items\":[{\"id\":\"market-skill-1\",\"type\":\"skill\","
-                    + "\"name\":\"marketSkill\",\"displayName\":\"市场技能\",\"author\":\"team\","
-                    + "\"description\":\"来自市场的合成技能\",\"version\":\"1.4.0\","
-                    + "\"manifest\":{\"type\":\"skill\",\"name\":\"marketSkill\",\"version\":\"1.4.0\","
-                    + "\"sha256\":\""
-                    + SHA
-                    + "\"}}],\"total\":1}}";
-            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
             if (auth == null || !auth.startsWith("Bearer ")) {
               exchange.sendResponseHeaders(401, -1);
+              exchange.close();
               return;
             }
+            String body =
+                "{\"code\":200,\"data\":{\"list\":["
+                    + entry(
+                        74,
+                        "市场技能",
+                        "marketSkill",
+                        "team",
+                        "skill",
+                        1,
+                        "来自市场的合成技能",
+                        "1.4.0",
+                        "marketSkill.zip",
+                        artifact("marketSkill.zip"))
+                    + ","
+                    + entry(
+                        75,
+                        "越界工具",
+                        "evilTool",
+                        "team",
+                        "tool",
+                        1,
+                        "来源不在清单内",
+                        "1.0.0",
+                        "evilTool.tool.js",
+                        "https://evil.example.com/x/evilTool.tool.js")
+                    + ","
+                    + entry(
+                        76,
+                        "已下架节点",
+                        "goneNode",
+                        "team",
+                        "node",
+                        0,
+                        "已下架",
+                        "1.0.0",
+                        "goneNode.umd.js",
+                        artifact("goneNode.umd.js"))
+                    + "],\"total\":3}}";
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, bytes.length);
             exchange.getResponseBody().write(bytes);
             exchange.close();
           });
+      // 签名跳转：同源 302 后才是真实制品。
       server.createContext(
           "/artifacts/marketSkill.zip",
+          exchange -> {
+            exchange.getResponseHeaders().add("Location", artifact("real.zip"));
+            exchange.sendResponseHeaders(302, -1);
+            exchange.close();
+          });
+      server.createContext(
+          "/artifacts/real.zip",
           exchange -> {
             exchange.getResponseHeaders().add("Content-Type", "application/zip");
             exchange.sendResponseHeaders(200, ARTIFACT.length);
             exchange.getResponseBody().write(ARTIFACT);
+            exchange.close();
+          });
+      // 跨主机跳转：不允许被跟随。
+      server.createContext(
+          "/artifacts/offhost.zip",
+          exchange -> {
+            exchange.getResponseHeaders().add("Location", "https://evil.example.com/x.zip");
+            exchange.sendResponseHeaders(302, -1);
             exchange.close();
           });
       server.start();
@@ -98,6 +148,44 @@ class PluginMarketProxyTests {
     } catch (Exception ex) {
       throw new IllegalStateException(ex);
     }
+  }
+
+  static String artifact(String fileName) {
+    return "http://127.0.0.1:" + PORT + "/artifacts/" + fileName;
+  }
+
+  static String entry(
+      int id,
+      String displayName,
+      String identifier,
+      String supplier,
+      String type,
+      int state,
+      String desc,
+      String version,
+      String fileName,
+      String link) {
+    return "{\"id\":"
+        + id
+        + ",\"name\":\""
+        + displayName
+        + "\",\"identifier\":\""
+        + identifier
+        + "\",\"supplier\":\""
+        + supplier
+        + "\",\"type\":\""
+        + type
+        + "\",\"state\":"
+        + state
+        + ",\"desc\":\""
+        + desc
+        + "\",\"link\":\""
+        + link
+        + "\",\"fileName\":\""
+        + fileName
+        + "\",\"version\":\""
+        + version
+        + "\",\"fileHash\":\"4157b9da127ef31448865fae2d1700b156249f36dca7a1d5de64cd6bcaace791\"}";
   }
 
   @AfterAll
@@ -151,6 +239,7 @@ class PluginMarketProxyTests {
         List.of(
             "plugin_documents",
             "plugins",
+            "market_catalog",
             "market_collections",
             "app_documents",
             "audit_events",
@@ -172,7 +261,7 @@ class PluginMarketProxyTests {
   }
 
   @Test
-  void searchesWithTeamCredentialAndInstallsVerifiedArtifact() throws Exception {
+  void mapsRealCatalogFieldsAndInstallsApprovedArtifact() throws Exception {
     mvc.perform(
             write(
                 post("/api/v1/admin/plugin-market/search"),
@@ -180,22 +269,24 @@ class PluginMarketProxyTests {
                 Map.of("page", 1, "limit", 10, "type", "skill")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.configured").value(true))
-        .andExpect(jsonPath("$.total").value(1))
+        .andExpect(jsonPath("$.total").value(3))
+        // identifier 是安装标识，中文 name 只作显示名。
         .andExpect(jsonPath("$.items[0].name").value("marketSkill"))
+        .andExpect(jsonPath("$.items[0].displayName").value("市场技能"))
+        .andExpect(jsonPath("$.items[0].author").value("team"))
+        .andExpect(jsonPath("$.items[0].description").value("来自市场的合成技能"))
         .andExpect(jsonPath("$.items[0].installable").value(true))
-        .andExpect(jsonPath("$.items[0].isCollected").value(false));
+        // 未知来源与已下架都不能装，并且给出原因。
+        .andExpect(jsonPath("$.items[1].installable").value(false))
+        .andExpect(jsonPath("$.items[1].reason").value("下载来源不在允许清单内"))
+        .andExpect(jsonPath("$.items[2].installable").value(false))
+        .andExpect(jsonPath("$.items[2].reason").value("该制品已下架"));
 
-    mvc.perform(
-            write(
-                post("/api/v1/admin/plugin-market/install"),
-                admin,
-                Map.of(
-                    "pluginId", "market-skill-1",
-                    "type", "skill",
-                    "name", "marketSkill",
-                    "version", "1.4.0",
-                    "url", "http://127.0.0.1:" + PORT + "/artifacts/marketSkill.zip",
-                    "sha256", SHA)))
+    // 只登记可安装的条目。
+    assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM market_catalog", Integer.class))
+        .isEqualTo(1);
+
+    mvc.perform(write(post("/api/v1/admin/plugin-market/install"), admin, Map.of("pluginId", "74")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.name").value("marketSkill"));
     assertThat(
@@ -208,27 +299,91 @@ class PluginMarketProxyTests {
                 "SELECT source FROM plugins WHERE type='skill' AND name='marketSkill'",
                 String.class))
         .isEqualTo("market");
-    // manifest.json 用于解析元数据，只把正文文档留在可变内容里。
-    assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM plugin_documents", Integer.class))
-        .isEqualTo(1);
     assertThat(
             jdbc.queryForObject(
                 "SELECT content FROM plugin_documents WHERE path='SKILL.md'", String.class))
         .contains("市场技能");
+    // 首次下载即记录获批摘要；fileHash 不作校验依据。
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT sha256 FROM market_catalog WHERE plugin_id='74'", String.class))
+        .isEqualTo(SHA);
 
-    // 摘要不符时拒绝写入，且不覆盖已安装版本。
+    // 同一制品再次安装必须与已获批摘要一致，显式覆盖也要走同一校验。
+    mvc.perform(
+            write(
+                post("/api/v1/admin/plugin-market/install"),
+                admin,
+                Map.of("pluginId", "74", "force", true)))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void rejectsUnknownEntryAndClientSuppliedSource() throws Exception {
+    mvc.perform(
+            write(post("/api/v1/admin/plugin-market/install"), admin, Map.of("pluginId", "999")))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value("MARKET_ENTRY_UNKNOWN"));
+
+    // 未登记（越界来源）的条目即使知道 id 也不能装。
+    mvc.perform(
+            write(
+                post("/api/v1/admin/plugin-market/search"), admin, Map.of("page", 1, "limit", 10)))
+        .andExpect(status().isOk());
+    mvc.perform(write(post("/api/v1/admin/plugin-market/install"), admin, Map.of("pluginId", "75")))
+        .andExpect(status().isNotFound());
+
+    // 客户端塞 url/sha256 不再被接受：请求体只允许 pluginId 与 force。
     mvc.perform(
             write(
                 post("/api/v1/admin/plugin-market/install"),
                 admin,
                 Map.of(
-                    "type", "skill",
-                    "name", "otherSkill",
-                    "version", "1.0.0",
-                    "url", "http://127.0.0.1:" + PORT + "/artifacts/marketSkill.zip",
-                    "sha256", "f".repeat(64))))
+                    "pluginId",
+                    "74",
+                    "url",
+                    "http://127.0.0.1:" + PORT + "/artifacts/real.zip",
+                    "sha256",
+                    SHA)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void rejectsArtifactThatDiffersFromApprovedDigest() throws Exception {
+    mvc.perform(
+            write(
+                post("/api/v1/admin/plugin-market/search"), admin, Map.of("page", 1, "limit", 10)))
+        .andExpect(status().isOk());
+    jdbc.update("UPDATE market_catalog SET sha256=? WHERE plugin_id='74'", "f".repeat(64));
+
+    mvc.perform(write(post("/api/v1/admin/plugin-market/install"), admin, Map.of("pluginId", "74")))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.code").value("CHECKSUM_MISMATCH"));
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM plugins WHERE name='marketSkill'", Integer.class))
+        .isZero();
+  }
+
+  @Test
+  void refusesRedirectThatLeavesAllowedHosts() throws Exception {
+    jdbc.update(
+        "INSERT INTO market_catalog(plugin_id,type,name,display_name,version,file_name,"
+            + "artifact_url,sha256,updated_at) VALUES (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
+        "offhost",
+        "skill",
+        "offHostSkill",
+        "跨主机",
+        "1.0.0",
+        "offHostSkill.zip",
+        artifact("offhost.zip"),
+        null);
+
+    mvc.perform(
+            write(
+                post("/api/v1/admin/plugin-market/install"), admin, Map.of("pluginId", "offhost")))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.code").value("PLUGIN_SOURCE_FORBIDDEN"));
   }
 
   @Test
@@ -237,7 +392,7 @@ class PluginMarketProxyTests {
             write(
                 post("/api/v1/admin/plugin-market/collections/toggle"),
                 admin,
-                Map.of("pluginId", "market-skill-1")))
+                Map.of("pluginId", "74")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.collected").value(true));
     mvc.perform(
@@ -250,7 +405,7 @@ class PluginMarketProxyTests {
             write(
                 post("/api/v1/admin/plugin-market/collections/toggle"),
                 admin,
-                Map.of("pluginId", "market-skill-1")))
+                Map.of("pluginId", "74")))
         .andExpect(jsonPath("$.collected").value(false));
   }
 

@@ -1292,7 +1292,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(7);
+        .isEqualTo(8);
     assertThatThrownBy(
             () ->
                 jdbc.update(

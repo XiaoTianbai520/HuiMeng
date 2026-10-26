@@ -1,7 +1,6 @@
 import client from "@huimeng/api/client";
 type Options = { signal?: AbortSignal };
-type Manifest = { type: "node" | "ext" | "skill" | "tool"; name: string; version: string; sha256: string };
-type MarketItem = { id: string; type: "node" | "ext" | "skill" | "tool" | "agent"; name: string; displayName: string; author: string; description: string; version: string; fileName: string; isCollected: boolean; installable: boolean; manifest: Manifest | null };
+type MarketItem = { id: string; type: "node" | "ext" | "skill" | "tool" | "agent"; name: string; displayName: string; author: string; description: string; version: string; fileName: string; isCollected: boolean; installable: boolean; reason: string | null };
 export function isTfRouterProvider(provider: { id: string; apiUrl?: string }) { return provider.id.toLowerCase() === "tfrouter"; }
 // Compatibility callers cannot obtain a company credential from the browser.
 export function getTfApiKey() { return ""; }

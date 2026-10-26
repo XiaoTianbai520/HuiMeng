@@ -1,7 +1,6 @@
 package cn.huimeng.dto.resp;
 
 import java.util.List;
-import java.util.Map;
 
 /** 插件市场、技能/Agent 文档与媒体供应商的响应模型；控制器只返回这些显式结构。 */
 public final class PluginDTOs {
@@ -30,7 +29,7 @@ public final class PluginDTOs {
       String fileName,
       boolean isCollected,
       boolean installable,
-      Map<String, Object> manifest) {}
+      String reason) {}
 
   public record MarketPage(List<MarketItem> items, int total, boolean configured) {}
 

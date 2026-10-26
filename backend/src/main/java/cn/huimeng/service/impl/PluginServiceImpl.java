@@ -1,8 +1,10 @@
 package cn.huimeng.service.impl;
 
 import cn.huimeng.common.exception.ApiException;
+import cn.huimeng.dao.entity.MarketCatalogDO;
 import cn.huimeng.dao.entity.PluginDO;
 import cn.huimeng.dao.mapper.ConfigurationMapper;
+import cn.huimeng.dao.mapper.MarketCatalogMapper;
 import cn.huimeng.dao.mapper.PluginMapper;
 import cn.huimeng.dto.resp.PluginDTOs;
 import cn.huimeng.dto.resp.PluginRespDTO;
@@ -37,6 +39,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PluginServiceImpl implements PluginService {
   private static final Set<String> TYPES = Set.of("node", "tool", "skill", "ext", "agent");
   private static final Set<String> DOCUMENT_TYPES = Set.of("skill", "agent");
+  private static final int MAX_REDIRECTS = 5;
+
+  /** 市场制品文件名规则：与上游安装器的类型规范一致，技能沿用较宽的归档后缀。 */
+  private static final Map<String, Pattern> MARKET_FILES =
+      Map.of(
+          "node", Pattern.compile("[a-z][a-zA-Z0-9]*\\.umd\\.js"),
+          "ext", Pattern.compile("ext-[a-z][a-zA-Z0-9]*\\.umd\\.js"),
+          "tool", Pattern.compile("[a-z][a-zA-Z0-9]*\\.tool\\.js"),
+          "skill", Pattern.compile("(?i).+\\.(md|zip|tar|tar\\.gz|tgz)"),
+          "agent", Pattern.compile("[a-z][a-zA-Z0-9]*\\.agent\\.zip"));
+
   private static final Pattern NAME = Pattern.compile("[A-Za-z0-9][A-Za-z0-9._-]{0,63}");
   private static final Pattern SECRET_KEY =
       Pattern.compile("(?i).*(key|secret|token|password|credential).*");
@@ -48,6 +61,7 @@ public class PluginServiceImpl implements PluginService {
       Set.of(".md", ".txt", ".json", ".yaml", ".yml", ".js", ".ts", ".vue", ".csv");
 
   private final PluginMapper plugins;
+  private final MarketCatalogMapper catalog;
   private final ConfigurationMapper configuration;
   private final ConfigurationService settings;
   private final SecretBox box;
@@ -63,14 +77,17 @@ public class PluginServiceImpl implements PluginService {
 
   public PluginServiceImpl(
       PluginMapper plugins,
+      MarketCatalogMapper catalog,
       ConfigurationMapper configuration,
       ConfigurationService settings,
       SecretBox box,
       AuditService audit,
       ObjectMapper json,
       @Value("${huimeng.market.endpoint:https://api.toonflow.net}") String marketEndpoint,
-      @Value("${huimeng.market.artifact-hosts:api.toonflow.net}") String artifactHosts) {
+      @Value("${huimeng.market.artifact-hosts:api.toonflow.net,toonflow.tos-cn-beijing.volces.com}")
+          String artifactHosts) {
     this.plugins = plugins;
+    this.catalog = catalog;
     this.configuration = configuration;
     this.settings = settings;
     this.box = box;
@@ -103,23 +120,25 @@ public class PluginServiceImpl implements PluginService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public PluginRespDTO installMarket(
-      String type,
-      String name,
-      String version,
-      String url,
-      String sha256,
-      boolean force,
-      String requestId) {
-    checkType(type);
+  public PluginRespDTO installMarket(String pluginId, boolean force, String requestId) {
+    RequestContext.admin();
     if (!settings.marketConfigured())
       throw new ApiException(409, "MARKET_NOT_CONFIGURED", "团队市场凭据未配置");
-    if (url == null || url.isBlank()) throw ApiException.invalid();
-    if (sha256 == null || !sha256.matches("[a-f0-9]{64}")) throw ApiException.invalid();
-    byte[] bytes = download(url);
-    if (!sha256.equals(sha256Hex(bytes)))
-      throw new ApiException(409, "CHECKSUM_MISMATCH", "下载内容与市场摘要不一致");
-    return install(type, name + suffixOf(url), bytes, force, "market", url, requestId);
+    if (pluginId == null || pluginId.isBlank()) throw ApiException.invalid();
+    MarketCatalogDO entry = catalog.find(pluginId);
+    if (entry == null) throw new ApiException(404, "MARKET_ENTRY_UNKNOWN", "市场目录里没有该制品，请先刷新目录");
+    checkType(entry.type());
+    // 地址只从登记表取，客户端给的 url/sha256 一律不接受。
+    byte[] bytes = download(entry.artifactUrl());
+    String sha256 = sha256Hex(bytes);
+    if (entry.sha256() != null && !entry.sha256().equals(sha256))
+      throw new ApiException(409, "CHECKSUM_MISMATCH", "下载内容与已获批摘要不一致");
+    PluginRespDTO result =
+        install(
+            entry.type(), entry.fileName(), bytes, force, "market", entry.artifactUrl(), requestId);
+    // 首次成功下载即记录获批摘要；之后同一制品必须与之一致。
+    if (entry.sha256() == null) catalog.approve(entry.pluginId(), sha256);
+    return result;
   }
 
   @Override
@@ -316,28 +335,39 @@ public class PluginServiceImpl implements PluginService {
       throw new ApiException(503, "MARKET_UNAVAILABLE", "市场暂不可用，已安装能力仍可使用");
     }
     JsonNode data = payload.path("data");
-    JsonNode items = data.isArray() ? data : data.path("items");
+    // 真实市场返回 data.list；早期夹具用过 data.items，两者都接受。
+    JsonNode items =
+        data.isArray() ? data : data.has("list") ? data.path("list") : data.path("items");
     List<PluginDTOs.MarketItem> mapped = new ArrayList<>();
     if (items.isArray()) {
       for (JsonNode item : items) {
-        String id = item.path("id").asText(item.path("name").asText());
-        JsonNode manifest = item.path("manifest");
-        Map<String, Object> manifestMap =
-            manifest.isObject() ? json.convertValue(manifest, Map.class) : null;
-        boolean installable = manifest.isObject() && !manifest.path("sha256").asText("").isBlank();
+        // 上游字段：identifier 是安装标识，name 是中文显示名，supplier/desc 才是作者与说明。
+        String itemType = item.path("type").asText("");
+        String name = item.path("identifier").asText("");
+        String fileName = item.path("fileName").asText("");
+        String link = item.path("link").asText("");
+        String id = item.path("id").asText(name);
+        String displayName = item.path("name").asText(name);
+        String version = item.path("version").asText("");
+        int state = item.has("state") ? item.path("state").asInt(1) : 1;
+        String reason = installBlocker(itemType, name, fileName, link, state);
+        if (reason == null)
+          catalog.upsert(
+              new MarketCatalogDO(
+                  id, itemType, name, displayName, version, fileName, link, null, Instant.now()));
         mapped.add(
             new PluginDTOs.MarketItem(
                 id,
-                item.path("type").asText(type),
-                item.path("name").asText(),
-                item.path("displayName").asText(item.path("name").asText()),
-                item.path("author").asText(""),
-                item.path("description").asText(""),
-                item.path("version").asText(""),
-                item.path("fileName").asText(""),
+                itemType,
+                name,
+                displayName,
+                item.path("supplier").asText(""),
+                item.path("desc").asText(""),
+                version,
+                fileName,
                 plugins.collected(id),
-                installable,
-                manifestMap));
+                reason == null,
+                reason));
       }
     }
     int total = data.path("total").asInt(mapped.size());
@@ -547,32 +577,70 @@ public class PluginServiceImpl implements PluginService {
     return box.decrypt(ConfigurationService.MARKET, encrypted);
   }
 
-  private byte[] download(String url) {
-    URI uri;
+  /** 市场条目能否安装：先按类型、文件名与来源判定，能装才落进目录登记表。 */
+  private String installBlocker(String type, String name, String fileName, String link, int state) {
+    if (!TYPES.contains(type)) return "暂不支持该类型";
+    if (state != 1) return "该制品已下架";
+    if (!NAME.matcher(name).matches()) return "制品标识不符合安装规范";
+    if (fileName.isBlank()
+        || fileName.length() > 128
+        || fileName.contains("/")
+        || fileName.contains("\\")) return "文件名缺失或包含路径";
+    Pattern pattern = MARKET_FILES.get(type);
+    if (pattern == null || !pattern.matcher(fileName).matches()) return "文件名不符合 " + type + " 类型规范";
+    if (link.isBlank()) return "缺少下载地址";
     try {
-      uri = URI.create(url);
+      return sourceProblem(URI.create(link));
+    } catch (Exception ex) {
+      return "下载地址不合法";
+    }
+  }
+
+  private byte[] download(String url) {
+    URI current;
+    try {
+      current = URI.create(url);
     } catch (Exception ex) {
       throw new ApiException(400, "PLUGIN_SOURCE", "下载地址不合法");
     }
-    String host = uri.getHost() == null ? "" : uri.getHost();
-    boolean loopback = "127.0.0.1".equals(host) || "localhost".equals(host);
-    if (!artifactHosts.contains(host) && !loopback)
-      throw new ApiException(403, "PLUGIN_SOURCE_FORBIDDEN", "下载来源不在允许清单内");
-    if (!"https".equals(uri.getScheme()) && !loopback)
-      throw new ApiException(403, "PLUGIN_SOURCE_FORBIDDEN", "下载来源必须使用 HTTPS");
-    HttpRequest request = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(20)).GET().build();
-    try {
-      HttpResponse<byte[]> response = http.send(request, HttpResponse.BodyHandlers.ofByteArray());
-      if (response.statusCode() != 200)
-        throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载插件失败：HTTP " + response.statusCode());
+    // 逐跳校验：跟随签名跳转，但每一跳都必须仍在允许来源内。
+    for (int hop = 0; hop < MAX_REDIRECTS; hop++) {
+      String problem = sourceProblem(current);
+      if (problem != null) throw new ApiException(403, "PLUGIN_SOURCE_FORBIDDEN", problem);
+      HttpRequest request =
+          HttpRequest.newBuilder(current).timeout(Duration.ofSeconds(20)).GET().build();
+      HttpResponse<byte[]> response;
+      try {
+        response = http.send(request, HttpResponse.BodyHandlers.ofByteArray());
+      } catch (Exception ex) {
+        throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载插件失败，请稍后重试");
+      }
+      int status = response.statusCode();
+      if (status >= 300 && status < 400) {
+        String location = response.headers().firstValue("Location").orElse("");
+        if (location.isBlank()) throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载跳转缺少目标地址");
+        try {
+          current = current.resolve(location);
+        } catch (Exception ex) {
+          throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载跳转地址不合法");
+        }
+        continue;
+      }
+      if (status != 200) throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载插件失败：HTTP " + status);
       if (response.body().length > MAX_BYTES)
         throw new ApiException(413, "PLUGIN_FILE_TOO_LARGE", "插件文件不能超过 20 MB");
       return response.body();
-    } catch (ApiException ex) {
-      throw ex;
-    } catch (Exception ex) {
-      throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载插件失败，请稍后重试");
     }
+    throw new ApiException(502, "PLUGIN_DOWNLOAD", "下载跳转次数过多");
+  }
+
+  /** 允许来源：清单内主机走 HTTPS；回环地址留给本机与测试夹具。 */
+  private String sourceProblem(URI uri) {
+    String host = uri.getHost() == null ? "" : uri.getHost();
+    boolean loopback = "127.0.0.1".equals(host) || "localhost".equals(host);
+    if (!artifactHosts.contains(host) && !loopback) return "下载来源不在允许清单内";
+    if (!"https".equals(uri.getScheme()) && !loopback) return "下载来源必须使用 HTTPS";
+    return null;
   }
 
   private PluginDO require(String type, String name) {

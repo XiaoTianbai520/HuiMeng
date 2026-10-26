@@ -126,7 +126,7 @@
           <div v-if="isMarketTab" class="pluginFooter" @click.stop>
             <el-text v-if="installLabel(plugin) === '已安装'" type="info" size="small">已安装</el-text>
             <el-popconfirm
-              v-else-if="pluginTypes[plugin.type].path && plugin.installable && plugin.manifest"
+              v-else-if="pluginTypes[plugin.type].path && plugin.installable"
               :title="`${translate(installLabel(plugin))}${pluginTypes[plugin.type].label}“${plugin.displayName}”（${plugin.fileName}）？`"
               width="280"
               :confirmButtonText="translate(installLabel(plugin))"
@@ -143,7 +143,7 @@
                 </el-button>
               </template>
             </el-popconfirm>
-            <el-text v-else type="info" size="small">{{ plugin.type === 'agent' && !agentMarketEnabled ? '测试阶段，暂未开放' : '缺少获批制品清单，暂不能安装' }}</el-text>
+            <el-text v-else type="info" size="small">{{ plugin.type === 'agent' && !agentMarketEnabled ? '测试阶段，暂未开放' : (plugin.reason || '该制品暂不能安装') }}</el-text>
             <div class="pluginActions">
               <component
                 :is="plugin.isCollected ? IconStarFilled : IconStar"
@@ -485,7 +485,7 @@ watch(
         author: typeof item.supplier === "string" ? item.supplier : "",
         description: typeof item.desc === "string" ? item.desc : "",
         installable: item.installable,
-        manifest: item.manifest ?? undefined,
+        reason: item.reason ?? null,
         fileName: item.fileName.trim(),
         version: item.version,
       }));
@@ -618,15 +618,15 @@ async function toggleCollection(plugin: Plugin) {
 
 async function installMarketPlugin(plugin: Plugin) {
   const path = pluginTypes[plugin.type].path;
-  if (!path || !plugin.id || !plugin.installable || !plugin.manifest || loading.value || pendingPlugins.value.has(plugin.key)) return;
+  if (!path || !plugin.id || !plugin.installable || loading.value || pendingPlugins.value.has(plugin.key)) return;
   const action = installLabel(plugin);
   if (action === "已安装") return;
   pendingPlugins.value.add(plugin.key);
   try {
-    await axios.post("/api/v1/admin/plugin-market/install", { pluginId: plugin.id, manifest: plugin.manifest }, { headers: requestHeaders });
-    const data = { data: { name: plugin.name } };
-    window.dispatchEvent(new CustomEvent("toonflow:plugin-installed", { detail: { type: plugin.type, name: data.data.name } }));
-    if (plugin.type === "ext") window.dispatchEvent(new CustomEvent("toonflow:ext-updated", { detail: { name: data.data.name } }));
+    // 只发目录标识：下载地址与获批摘要由服务端登记表决定。
+    await axios.post("/api/v1/admin/plugin-market/install", { pluginId: plugin.id }, { headers: requestHeaders });
+    window.dispatchEvent(new CustomEvent("toonflow:plugin-installed", { detail: { type: plugin.type, name: plugin.name } }));
+    if (plugin.type === "ext") window.dispatchEvent(new CustomEvent("toonflow:ext-updated", { detail: { name: plugin.name } }));
     ElMessage.success(action === "更新" ? `${plugin.displayName}已更新` : `${plugin.displayName}已安装`);
   } catch (error) {
     ElMessage.error(errorMessage(error, "安装插件失败，请重试"));

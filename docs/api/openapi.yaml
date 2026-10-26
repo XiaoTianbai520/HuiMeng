@@ -3515,7 +3515,7 @@ paths:
     post:
       operationId: installMarketPlugin
       summary: 校验清单后安装市场制品
-      description: pluginId 由目录查找地址；类型/标识/版本/明确的 SHA-256 必须与包一致。force 必须经界面明确确认；有运行占用仍拒绝。Agent 市场安装关闭。
+      description: pluginId 由目录查找地址；类型/标识/版本由服务端登记表决定，摘要与下载内容一致（首次下载即记录获批摘要）。force 必须经界面明确确认；有运行占用仍拒绝。Agent 市场安装关闭。
       tags:
       - admin
       x-contract-status: frozen
@@ -3525,7 +3525,7 @@ paths:
       x-requirements:
       - FR-14
       x-audit-required: true
-      x-implemented: false
+      x-implemented: true
       parameters:
       - name: X-Request-Id
         in: header
@@ -6336,10 +6336,10 @@ components:
           type: string
         isCollected: *id005
         installable: *id005
-        manifest:
-          oneOf:
-          - $ref: '#/components/schemas/PluginManifest'
-          - *id007
+        reason:
+          type: string
+          nullable: true
+          description: 不可安装的原因；可安装时为 null
       required:
       - id
       - type
@@ -6351,7 +6351,6 @@ components:
       - fileName
       - isCollected
       - installable
-      - manifest
     MarketResult:
       type: object
       additionalProperties: false
@@ -6366,38 +6365,15 @@ components:
       required:
       - items
       - total
-    PluginManifest:
-      type: object
-      additionalProperties: false
-      properties:
-        type:
-          type: string
-          enum:
-          - node
-          - ext
-          - skill
-          - tool
-        name: *id006
-        version: *id006
-        sha256:
-          type: string
-          pattern: ^[a-f0-9]{64}$
-      required:
-      - type
-      - name
-      - version
-      - sha256
     PluginInstall:
       type: object
       additionalProperties: false
+      description: 只接受目录标识；下载地址、类型、标识、版本与摘要均由服务端目录登记表回查，客户端不得提供 url 或 sha256。
       properties:
         pluginId: *id002
-        manifest:
-          $ref: '#/components/schemas/PluginManifest'
         force: *id005
       required:
       - pluginId
-      - manifest
     InstalledPlugin:
       type: object
       additionalProperties: false

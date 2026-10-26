@@ -13,15 +13,12 @@ public interface PluginService {
   PluginRespDTO installFile(
       String type, String fileName, byte[] content, boolean force, String requestId);
 
-  /** 从市场安装：先按允许来源下载，校验摘要后再登记。 */
-  PluginRespDTO installMarket(
-      String type,
-      String name,
-      String version,
-      String url,
-      String sha256,
-      boolean force,
-      String requestId);
+  /**
+   * 从市场安装：只接受目录条目标识，地址与摘要由服务端登记表回查，从不采信客户端给的 url/sha256。
+   *
+   * <p>首次成功下载即记录获批摘要，之后同一制品必须与之一致。
+   */
+  PluginRespDTO installMarket(String pluginId, boolean force, String requestId);
 
   PluginRespDTO config(
       String type, String name, java.util.Map<String, Object> config, String requestId);

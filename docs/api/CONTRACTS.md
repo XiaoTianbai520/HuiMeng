@@ -112,9 +112,9 @@ ProjectMedia 仅含 id、projectId、filename、byteSize、sha256、createdAt；
 | `PUT /api/v1/admin/plugin-market/secret` | Body `{apiKey}`；成功 `204`，只写不回显 | 管理员 |
 | `GET /api/v1/admin/plugin-market/status` | 无请求参数；返回 `{configured}`，不含凭据 | 管理员 |
 | `GET /api/v1/admin/plugins` | 安全已安装元数据，包含停用项；无配置密钥 | 管理员 |
-| `POST /api/v1/admin/plugin-market/install` | `{pluginId,manifest:{type,name,version,sha256},force?}`；核对服务器获批清单 | 管理员 |
+| `POST /api/v1/admin/plugin-market/install` | `{pluginId,force?}`；地址、类型、标识、版本与摘要由服务端目录登记表回查，不接受客户端 url/sha256 | 管理员 |
 
-`page` 正整数；`limit` 为 1–50；`type` 沿用 `all/node/ext/skill/tool/agent/my/collection`，原版关闭的 Agent 市场安装入口保持关闭。`items` 保留 `id,type,name,displayName,author,description,version,fileName,isCollected` 等展示字段，并给出 installable/获批 manifest；内网目录、凭据、远端认证参数不返回。M0-06 已录制真实原响应 `{code:200,data:{list,total},message,id}` 与无效凭据 HTTP 401；M1 的安全 DTO 字段、缺省和可空性见 OpenAPI 与冻结记录，来源见[市场基线](../archive/m0/M0_PLUGIN_MARKET.md)。
+`page` 正整数；`limit` 为 1–50；`type` 沿用 `all/node/ext/skill/tool/agent/my/collection`，原版关闭的 Agent 市场安装入口保持关闭。`items` 保留 `id,type,name,displayName,author,description,version,fileName,isCollected` 等展示字段，并给出 `installable` 与不可安装原因 `reason`；内网目录、凭据、远端认证参数不返回。上游条目的 `identifier` 映射为 `name`（安装标识），中文 `name` 只作 `displayName`，`supplier`/`desc` 映射为 `author`/`description`；`fileHash` 不作校验依据。M0-06 已录制真实原响应 `{code:200,data:{list,total},message,id}` 与无效凭据 HTTP 401；M1 的安全 DTO 字段、缺省和可空性见 OpenAPI 与冻结记录，来源见[市场基线](../archive/m0/M0_PLUGIN_MARKET.md)。
 
 上游源码已核对的外部调用为 `POST https://api.toonflow.net/v1/plugin/getPlugin` 和 `POST .../v1/plugin/toggleCollection`，使用 TF-Router Bearer；不是现有 127 条 Bun 自动路由。新 Web 只调用 Spring，凭据由 Spring 注入，不复用浏览器 settings 中的明文 Key。真实目录、分类、分页、搜索、收藏切换与恢复、官方文档技能下载已取证。
 

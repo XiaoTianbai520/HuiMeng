@@ -286,6 +286,7 @@ class PluginMarketTests {
         .andExpect(status().isServiceUnavailable())
         .andExpect(jsonPath("$.code").value("MARKET_UNAVAILABLE"));
 
+    // 安装不再接受客户端给的地址与摘要：多带 url/sha256 直接按请求体非法拒绝。
     mvc.perform(
             write(
                 post("/api/v1/admin/plugin-market/install"),
@@ -296,8 +297,7 @@ class PluginMarketTests {
                     "version", "1.0.0",
                     "url", "https://evil.example/node.umd.js",
                     "sha256", "0".repeat(64))))
-        .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.code").value("PLUGIN_SOURCE_FORBIDDEN"));
+        .andExpect(status().isBadRequest());
   }
 
   @Test

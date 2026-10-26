@@ -141,6 +141,8 @@ M2 完成门槛：所有对外路径默认拒绝，只有已登记权限和项�
 
 2026-10-25 最终结果见[M2 验收](../validation/M2_ACCEPTANCE.md)。当前 35/44 个 OpenAPI 操作有代码，公开生成仅固定 Qwen 文生图 1K/1:1；71 项后端、21 项前端、32 项真实边界检查、真实 MySQL 名额事务通过。正式部署及源路由发布开关未更新；完整 M3-03、跨入口 A16/A18 和 1.0 仍待验。
 
+2026-10-26 市场在线安装接通：目录按真实字段映射（`identifier`→安装名、中文 `name`→显示名、`supplier`/`desc`→作者/说明，兼容 `data.list` 与 `data.items`），搜索结果落 `V8 market_catalog`；安装只接受 `{pluginId,force?}`，地址与摘要由登记表回查，逐跳校验下载来源（默认含 `toonflow.tos-cn-beijing.volces.com`，最多 5 跳），首次下载记录获批 SHA-256、之后不一致即 409，`fileHash` 不作校验依据；前端按 `installable` 与 `reason` 展示。`PluginMarketProxyTests` 5 项、`PluginMarketTests` 6 项通过。真实市场凭据与 M0-I12～I14 未复跑。
+
 2026-10-26 技能正文注入 Web Agent：`CapabilityService.skillPrompt()` 按已启用登记读取 `SKILL.md`（缺失回退第一个 `.md`，单条 6000、合计 20000 字符上限），`AgentServiceImpl` 组装系统提示词时追加「可用技能」段；停用技能立即消失，与 `mcp/skill` 共用登记且不暴露路径。`CapabilityCatalogTests` 7 项与 `AgentServiceImplTests` 9 项通过。
 
 2026-10-26 工具界面契约与内置节点撤销：`renderers()` 改为按包头 `components` 发布真实工具名，`tools/client` 下发第二行内嵌 `code`+`css`（固定 style 元素 id），纯 Agent 工具与缺界面的包不再发布渲染器，元数据损坏的包在目录里显示「工具元数据无效」；`BuiltinNodeRegistrar` 增加下线清理（只删 `builtin` 且本轮扫描不到的条目，扫不到任何产物时不清理）。后端 `BuiltinNodeTests` 7 项与 `CapabilityCatalogTests` 6 项通过。

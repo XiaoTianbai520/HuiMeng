@@ -77,20 +77,20 @@ export default {
 
 ## 5. 已知断点
 
-### 5.1 市场在线安装链路（当前不可用）
+### 5.1 市场在线安装链路（已接通，待真实凭据复跑）
 
-不是密钥或网络问题，是四处独立断开：
+原先四处独立断开，现按上游真实字段与「服务端查目录」的安全模型重做：
 
-1. **`installable` 恒为 `false`**：上游条目没有 `manifest` 字段（只有 `link` / `fileHash`），`PluginServiceImpl.search()` 只认 `manifest.sha256`；前端 `index.vue` 双重 guard，安装按钮不渲染。
-2. **请求体不匹配**：前端发 `{pluginId, manifest}`，后端 `MarketInstallReqDTO` 收 `(pluginId,type,name,version,url,sha256,force)`，且 `application.yml` 开了 `fail-on-unknown-properties: true` → 400。
-3. **没有下载地址**：`installMarket` 要求 `url` 非空，前端 `manifest` 类型里没有 `url`。
-4. **下载主机白名单**：真实制品在 `toonflow.tos-cn-beijing.volces.com`，默认 `huimeng.market.artifact-hosts=api.toonflow.net` → 403；`HttpClient.Redirect.NEVER` 还会让签名跳转失败。
+1. **`installable`**：不再依赖上游不存在的 `manifest.sha256`，改由类型、文件名、`state`、下载来源四项判定；不可安装时由服务端返回 `reason`（如「下载来源不在允许清单内」「该制品已下架」），页面直接显示。
+2. **请求体**：`POST /admin/plugin-market/install` 只接受 `{pluginId,force?}`，多带 `url`/`sha256` 直接 400。
+3. **下载地址**：搜索结果落 `market_catalog` 表，安装时按 `plugin_id` 回查地址，从不采信请求体。
+4. **下载主机**：默认白名单为 `api.toonflow.net,toonflow.tos-cn-beijing.volces.com`，逐跳校验（最多 5 跳），签名 302 可以跟，但每一跳都必须仍在允许来源内。
 
-另外三个语义问题：
+字段映射与摘要语义：
 
-- 字段映射错误：应取 `identifier` / `supplier` / `desc`，代码用的是 `name`（中文显示名）/ `author` / `description`；中文名会被 `NAME` 正则拒绝。
-- `fileHash` 算法未声明，且**不等于**下载字节的 SHA-256（`4157b9…` vs `6674e5…`），直接当 `sha256` 用会 409。
-- `installMarket` 信任请求体给的 url/sha256，没有实现 CONTRACTS 要求的「后端重新查目录 + 获批制品清单」。
+- `identifier` → 安装名，中文 `name` → `displayName`，`supplier`/`desc` → `author`/`description`；目录响应同时兼容 `data.list` 与 `data.items`。
+- `fileHash` **不作**校验依据（实测与下载字节不一致）。首次成功下载时把字节 SHA-256 记为获批摘要，之后同一 `pluginId` 必须与之一致，否则 409 `CHECKSUM_MISMATCH`。
+- 真实市场凭据复跑与 M0-I12～I14 仍未做（需 TF-Router 子账号）。
 
 ### 5.2 工具界面契约（已修复）
 
@@ -118,7 +118,7 @@ export default {
    - Node sidecar：与原版一致，兼容性最好，但多一个运行时；
    - GraalJS：留在 JVM 内，需要 ESM 适配与 `fs`/`fetch` 受控注入。
    两项都必须满足 M3-08 的「执行隔离」验收，不能只做「能跑」。
-5. **市场在线安装**：按 5.1 修映射与契约；`fileHash` 不可信，需要服务端「获批制品清单」（pluginId → url + SHA-256），未登记就保持 `installable=false` 并显示原因，不能为了能点而放行。
+5. ~~**市场在线安装**~~ **已完成（待真实凭据复跑）**：字段映射、请求体、下载来源与获批制品清单见 5.1；`installable=false` 时给出原因，不为了能点而放行。`V8` 新增 `market_catalog`。
 6. **真实凭据复跑**：需要用户提供 TF-Router 子账号凭证，顺带复验 M0-I12～I14。
 
 ## 7. 验证方式
