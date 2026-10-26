@@ -1,0 +1,177 @@
+{
+  "createdAt": "2026-10-26T09:54:48.733Z",
+  "base": "http://localhost:5187",
+  "artifactRoot": "C:\\Users\\c1338\\Desktop\\绘梦\\backend\\src\\main\\resources\\capabilities\\nodes",
+  "checks": [
+    {
+      "name": "登录并进入首页",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "打开工作区并注入节点宿主",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "window.toonflowNodeHost 注入 vue/vueFlow/elementPlus/three/ai",
+      "ok": true,
+      "detail": "vue,vueFlow,elementPlus,three,ai"
+    },
+    {
+      "name": "目录发布 textNode 且启用",
+      "ok": true,
+      "detail": "{\"name\":\"textNode\",\"displayName\":\"文本\",\"url\":\"/api/v1/capabilities/nodes/files?name=textNode\",\"enabled\":true,\"config\":{}}"
+    },
+    {
+      "name": "目录发布 imageNode 且启用",
+      "ok": true,
+      "detail": "{\"name\":\"imageNode\",\"displayName\":\"图片\",\"url\":\"/api/v1/capabilities/nodes/files?name=imageNode\",\"enabled\":true,\"config\":{}}"
+    },
+    {
+      "name": "textNode 需要的 toonflowTiptapHost 已按需注入",
+      "ok": true,
+      "detail": "17 项"
+    },
+    {
+      "name": "textNode 脚本执行并注册到 window.toonflowNodes",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "textNode 导出可挂载组件（render/setup）",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "textNode 脚本返回 200 且体积正常",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "textNode 下发字节与 classpath 产物一致",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "imageNode 脚本执行并注册到 window.toonflowNodes",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "imageNode 导出可挂载组件（render/setup）",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "imageNode 脚本返回 200 且体积正常",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "imageNode 下发字节与 classpath 产物一致",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "无未捕获页面错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无非平台控制台错误",
+      "ok": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "能力脚本请求无失败响应",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "platformNoise": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "failures": [
+    {
+      "status": 503,
+      "method": "GET",
+      "path": "/api/v1/projects/155dab78-4397-4222-8cf6-43fa0362b653/creative/agent/list"
+    },
+    {
+      "status": 503,
+      "method": "GET",
+      "path": "/api/v1/projects/155dab78-4397-4222-8cf6-43fa0362b653/creative/workspaces/files/list?path="
+    }
+  ],
+  "responses": [
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/get"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode",
+      "bytes": 222,
+      "sha256": "ef52abb13a838c61eeac24d9a142315b16b432379dfd1bb895fb1c63f79050f9"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode",
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=textNode",
+      "bytes": 413453,
+      "sha256": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/get"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=textNode",
+      "bytes": 413453,
+      "sha256": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=demoNode",
+      "bytes": 222,
+      "sha256": "ef52abb13a838c61eeac24d9a142315b16b432379dfd1bb895fb1c63f79050f9"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode",
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=textNode",
+      "bytes": 413453,
+      "sha256": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode",
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    },
+    {
+      "status": 200,
+      "path": "/api/v1/capabilities/nodes/files?name=imageNode",
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    }
+  ]
+}

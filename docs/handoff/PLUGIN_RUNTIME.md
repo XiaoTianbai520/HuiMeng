@@ -60,17 +60,18 @@ export default {
 | 安装/校验/归档/市场代理 | `backend/src/main/java/cn/huimeng/service/impl/PluginServiceImpl.java` |
 | 安全接口与文档编辑 | `backend/src/main/java/cn/huimeng/controller/PluginController.java` |
 | 能力目录与脚本分发 | `service/impl/CapabilityServiceImpl.java`、`controller/CapabilityController.java` |
+| 内置节点登记（启动幂等） | `service/impl/BuiltinNodeRegistrar.java`、`src/main/resources/capabilities/nodes/*.umd.js` |
 | 登记表 | `backend/src/main/resources/db/migration/V7__plugin_registry.sql`（plugins / plugin_documents / market_collections / app_documents） |
 | 节点加载 | `frontend/src/pages/workspace/panels/canvas/loadNodeComponent.ts` |
 | 工具界面加载 | `frontend/packages/toolScaffold/src/client.ts` |
 
-`V7` 没有种子数据，`plugins` 表初始为空；`source` 允许 `file` / `market` / `builtin`，但当前没有任何 `builtin` 行。
+`V7` 没有种子数据；`source` 允许 `file` / `market` / `builtin`。`builtin` 行由 `BuiltinNodeRegistrar` 在启动时按 classpath 产物登记：两个同名资源存在时才有一致的摘要，重复启动不写库，摘要变化只更新内容与元数据并保留 `enabled`/`config_json`/`installed_by`/`created_at`，因此管理员停用的内置节点不会被重启打开。单个制品损坏时记录 WARN 并跳过该节点，不阻断启动（`BuiltinNodeTests` 固定该行为）。
 
 ## 4. 真正能用到什么程度
 
 | 类型 | 安装 | 运行期加载 | 真正使用 |
 | --- | --- | --- | --- |
-| 节点 | 可用 | 可用（`nodes/get` + `nodes/files` + 浏览器执行） | 仅合成样本验证过 |
+| 节点 | 可用 | 可用（`nodes/get` + `nodes/files` + 浏览器执行） | 内置 `textNode`/`imageNode` 已真实加载（浏览器 16 项）；画布内渲染待在 Linux 夹具复跑；生成链路仍未接通 |
 | 工具 | 可用 | 部分（`renderers` 映射错误，见 5.2） | **无执行器**，Agent/MCP 工具清单硬编码，不读插件 |
 | 技能 | 可用 | 可用（文档入库 + `mcp/skill` 下发） | Web Agent 未注入正文，仅外部 MCP 客户端可取 |
 
@@ -99,9 +100,13 @@ export default {
 
 `createTools` 只在原版 Node/Bun 里跑。当前 Web Agent 与 MCP 的工具清单都是硬编码（画布 18 项等），不读 `PluginService`。
 
+### 5.4 内置节点没有撤销（prune）
+
+`BuiltinNodeRegistrar` 只做 insert/update：产物从 classpath 移除后，DB 里的 `builtin` 行不会被清掉，`nodes/get` 仍会发布它、`nodes/files` 仍会下发旧字节，而 `PluginServiceImpl.uninstall` 对 `builtin` 恒 403，管理员无法自行清理。当前两个产物都在，不构成现网问题；下一批要么在登记时按「classpath 现有产物集合」删除多余行（需要先确认停用/审计语义），要么给出显式的内置能力同步入口。
+
 ## 6. 修复方案（按依赖顺序）
 
-1. **内置节点包入库**（M3-05 / M3-I08）：把构建产物登记为 `builtin`，启动幂等写入，`nodes/files` 可分发；用真实 `.umd.js` 做浏览器加载验证。
+1. ~~**内置节点包入库**（M3-05 / M3-I08）~~ **已完成（textNode/imageNode 两个节点）**：产物入 `backend/src/main/resources/capabilities/nodes/`，启动按摘要幂等登记为 `builtin`；`nodes/files` 可分发，管理员停用状态跨重启保留。构建与来源见 [节点包引入记录](../upstream/NODE_PACKAGES_INTAKE.md)。仍未做：其余上游节点、画布内渲染的 Linux 复跑。
 2. **修 `renderers()`**：解析包头元数据，返回真实 `components` 映射与工具名。
 3. **技能注入**：Web Agent 组装提示词时读取已启用技能的正文，与 `mcp/skill` 共用登记。
 4. **工具执行器**（唯一有方案分叉）：
@@ -113,10 +118,11 @@ export default {
 
 ## 7. 验证方式
 
-- 后端：`cd backend && ./mvnw.cmd -s .mvn/settings.xml -B -ntp verify`（当前 126 项）
-- 前端：`cd frontend && bun run check`（26 项）
-- 能力目录夹具：`CapabilityHarness` + `docs/validation/scripts/m3M09NodeLoad.mjs`
-- 夹具需要 Linux（工作区安全原语），跑在容器 `maven:3.9.11-eclipse-temurin-21`，`network host`，挂载 `/tmp/huimeng-m306:/repo`
+- 后端：`cd backend && ./mvnw.cmd -s .mvn/settings.xml -B -ntp verify`（当前 132 项，含 `BuiltinNodeTests` 6 项）
+- 前端：`cd frontend && bun run check`（26 项 + 内置节点包 vue-tsc）
+- 内置节点构建：`cd frontend && bun run build:nodes`（产物写入 `backend/src/main/resources/capabilities/nodes/`）
+- 能力目录夹具：`CapabilityHarness` + `docs/validation/scripts/m3M09NodeLoad.mjs`（合成节点）、`m3M09BuiltinNodes.mjs`（内置节点）
+- 夹具需要 Linux（工作区安全原语），跑在容器 `maven:3.9.11-eclipse-temurin-21`，`network host`，挂载 `/tmp/huimeng-m306:/repo`；Windows 上 `workspaces/files/list|write` 恒 503（Windows JDK 的 `Files.newDirectoryStream` 返回 `sun.nio.fs.WindowsDirectoryStream`，不实现 `SecureDirectoryStream`），画布 `.json` 读写被挡住，因此只能验证到「画布取回并注册节点」，放置实例并渲染需在 Linux 复跑
 - 浏览器脚本需要 `PLAYWRIGHT_CORE_PATH` 与 `PLAYWRIGHT_CHROMIUM_PATH`
 - 前端 dev server 若被 safe-delete 垫片打断，用 `env -u NODE_OPTIONS -u CODEBUDDY_SAFE_DELETE_* bun run dev`
 

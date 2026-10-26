@@ -1,0 +1,640 @@
+{
+  "createdAt": "2026-10-26T09:49:10.168Z",
+  "runner": "qa-independent",
+  "base": "http://localhost:5187",
+  "projectId": "7fa58419-b621-4a1d-b5b5-e6043a405a19",
+  "artifactRoot": "C:\\Users\\c1338\\Desktop\\绘梦\\backend\\src\\main\\resources\\capabilities\\nodes",
+  "artifacts": {
+    "textNode": {
+      "bytes": 413453,
+      "sha256": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+    },
+    "imageNode": {
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    }
+  },
+  "served": {
+    "textNode": {
+      "status": 200,
+      "bytes": 413453,
+      "sha256": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e",
+      "etag": "\"8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e\""
+    },
+    "imageNode": {
+      "status": 200,
+      "bytes": 520959,
+      "sha256": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae",
+      "etag": "\"92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae\""
+    }
+  },
+  "catalog": [
+    {
+      "name": "demoNode",
+      "enabled": true,
+      "url": "/api/v1/capabilities/nodes/files?name=demoNode",
+      "displayName": "demoNode"
+    },
+    {
+      "name": "imageNode",
+      "enabled": true,
+      "url": "/api/v1/capabilities/nodes/files?name=imageNode",
+      "displayName": "图片"
+    },
+    {
+      "name": "textNode",
+      "enabled": true,
+      "url": "/api/v1/capabilities/nodes/files?name=textNode",
+      "displayName": "文本"
+    }
+  ],
+  "plugins": [
+    {
+      "type": "node",
+      "name": "imageNode",
+      "source": "builtin",
+      "canManage": false,
+      "version": "2.0.0"
+    },
+    {
+      "type": "node",
+      "name": "textNode",
+      "source": "builtin",
+      "canManage": false,
+      "version": "2.0.0"
+    }
+  ],
+  "loaded": {
+    "textNode": {
+      "registered": true,
+      "type": "object",
+      "mountable": true,
+      "name": "index"
+    },
+    "imageNode": {
+      "registered": true,
+      "type": "object",
+      "mountable": true,
+      "name": "index"
+    }
+  },
+  "canvas": {
+    "listProbe": {
+      "status": 503,
+      "body": {
+        "code": "EXECUTOR_UNAVAILABLE",
+        "message": "当前文件系统不支持此安全文件操作",
+        "requestId": "19177a0d-567f-4263-b840-fb6479dec2d8",
+        "details": null
+      }
+    },
+    "writeProbe": {
+      "status": 503,
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"cec43251-7f09-418d-915f-f2a12dabe248\",\"details\":null}"
+    },
+    "uiRequests": [
+      {
+        "phase": "response",
+        "status": 503,
+        "method": "PUT",
+        "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=qaProbeCanvas.json&exclusive=true&encoding=utf-8",
+        "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"cec43251-7f09-418d-915f-f2a12dabe248\",\"details\":null}"
+      },
+      {
+        "phase": "response",
+        "status": 503,
+        "method": "PUT",
+        "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8",
+        "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"279954c8-96b4-454f-b5a8-4f6b29983807\",\"details\":null}"
+      }
+    ],
+    "uiError": "当前文件系统不支持安全原子保存",
+    "canvasCreated": {
+      "hasChooseCanvas": true,
+      "hasNewCanvasName": false
+    },
+    "secureHandleProbe": {
+      "status": 503,
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持此安全文件操作\",\"requestId\":\"b4aa186f-94ff-4538-8e78-0b7a1c3b681e\",\"details\":null}"
+    },
+    "freshPage": {
+      "canvasMounted": {
+        "vueFlow": true,
+        "chooseCanvasShown": true,
+        "registeredNodes": [
+          "demoNode",
+          "imageNode",
+          "textNode"
+        ]
+      },
+      "appCapabilityRequests": [
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/get"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=textNode"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=imageNode"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=demoNode"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=imageNode"
+        },
+        {
+          "status": 200,
+          "path": "/api/v1/capabilities/nodes/files?name=textNode"
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "section": "A",
+      "name": "夹具账号登录成功并进入首页",
+      "ok": true,
+      "detail": "cap-admin"
+    },
+    {
+      "section": "A1",
+      "name": "nodes/get 返回 200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "A1",
+      "name": "目录包含 textNode 且 enabled=true",
+      "ok": true,
+      "detail": "{\"name\":\"textNode\",\"displayName\":\"文本\",\"url\":\"/api/v1/capabilities/nodes/files?name=textNode\",\"enabled\":true,\"config\":{}}"
+    },
+    {
+      "section": "A1",
+      "name": "textNode 的 url 指向 nodes/files",
+      "ok": true,
+      "detail": "/api/v1/capabilities/nodes/files?name=textNode"
+    },
+    {
+      "section": "A1",
+      "name": "目录包含 imageNode 且 enabled=true",
+      "ok": true,
+      "detail": "{\"name\":\"imageNode\",\"displayName\":\"图片\",\"url\":\"/api/v1/capabilities/nodes/files?name=imageNode\",\"enabled\":true,\"config\":{}}"
+    },
+    {
+      "section": "A1",
+      "name": "imageNode 的 url 指向 nodes/files",
+      "ok": true,
+      "detail": "/api/v1/capabilities/nodes/files?name=imageNode"
+    },
+    {
+      "section": "A1",
+      "name": "两个内置节点都已发布到目录",
+      "ok": true,
+      "detail": "目录实有 3 项：demoNode,imageNode,textNode"
+    },
+    {
+      "section": "A2",
+      "name": "textNode 脚本返回 200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "A2",
+      "name": "textNode Content-Type 为 text/javascript",
+      "ok": true,
+      "detail": "text/javascript;charset=UTF-8"
+    },
+    {
+      "section": "A2",
+      "name": "textNode 带 X-Content-Type-Options=nosniff",
+      "ok": true,
+      "detail": "nosniff"
+    },
+    {
+      "section": "A2",
+      "name": "textNode ETag 等于响应体字节 SHA-256",
+      "ok": true,
+      "detail": "etag=\"8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e\" body=8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+    },
+    {
+      "section": "A2",
+      "name": "textNode 响应体 SHA-256 等于 classpath 产物",
+      "ok": true,
+      "detail": "served=8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e/413453B artifact=8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e/413453B"
+    },
+    {
+      "section": "A2",
+      "name": "imageNode 脚本返回 200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "A2",
+      "name": "imageNode Content-Type 为 text/javascript",
+      "ok": true,
+      "detail": "text/javascript;charset=UTF-8"
+    },
+    {
+      "section": "A2",
+      "name": "imageNode 带 X-Content-Type-Options=nosniff",
+      "ok": true,
+      "detail": "nosniff"
+    },
+    {
+      "section": "A2",
+      "name": "imageNode ETag 等于响应体字节 SHA-256",
+      "ok": true,
+      "detail": "etag=\"92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae\" body=92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+    },
+    {
+      "section": "A2",
+      "name": "imageNode 响应体 SHA-256 等于 classpath 产物",
+      "ok": true,
+      "detail": "served=92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae/520959B artifact=92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae/520959B"
+    },
+    {
+      "section": "B",
+      "name": "工作区注入 window.toonflowNodeHost（vue/vueFlow/elementPlus/three/ai）",
+      "ok": true,
+      "detail": "vue,vueFlow,elementPlus,three,ai"
+    },
+    {
+      "section": "B",
+      "name": "textNode 依赖的 toonflowTiptapHost 已按需注入",
+      "ok": true,
+      "detail": "17 项"
+    },
+    {
+      "section": "B",
+      "name": "textNode 脚本执行并注册到 window.toonflowNodes",
+      "ok": true,
+      "detail": "{\"registered\":true,\"type\":\"object\",\"mountable\":true,\"name\":\"index\"}"
+    },
+    {
+      "section": "B",
+      "name": "textNode 导出可挂载组件",
+      "ok": true,
+      "detail": "object"
+    },
+    {
+      "section": "B",
+      "name": "imageNode 脚本执行并注册到 window.toonflowNodes",
+      "ok": true,
+      "detail": "{\"registered\":true,\"type\":\"object\",\"mountable\":true,\"name\":\"index\"}"
+    },
+    {
+      "section": "B",
+      "name": "imageNode 导出可挂载组件",
+      "ok": true,
+      "detail": "object"
+    },
+    {
+      "section": "A3",
+      "name": "管理员停用 textNode 返回 200",
+      "ok": true,
+      "detail": "status=200 200"
+    },
+    {
+      "section": "A3",
+      "name": "停用后目录 enabled=false",
+      "ok": true,
+      "detail": "{\"name\":\"textNode\",\"displayName\":\"文本\",\"url\":\"/api/v1/capabilities/nodes/files?name=textNode\",\"enabled\":false,\"config\":{}}"
+    },
+    {
+      "section": "A3",
+      "name": "停用后脚本请求返回 404",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "section": "A3",
+      "name": "停用后错误码为 CAPABILITY_NOT_FOUND",
+      "ok": true,
+      "detail": "CAPABILITY_NOT_FOUND"
+    },
+    {
+      "section": "A3",
+      "name": "停用 textNode 不影响 imageNode 分发",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "A3",
+      "name": "卸载内置节点返回 403",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "section": "A3",
+      "name": "卸载内置节点错误码为 PLUGIN_BUILTIN",
+      "ok": true,
+      "detail": "PLUGIN_BUILTIN"
+    },
+    {
+      "section": "A3",
+      "name": "复验后恢复 textNode 启用状态",
+      "ok": true,
+      "detail": "{\"name\":\"textNode\",\"displayName\":\"文本\",\"url\":\"/api/v1/capabilities/nodes/files?name=textNode\",\"enabled\":true,\"config\":{}}"
+    },
+    {
+      "section": "A4",
+      "name": "admin/plugins 返回 200",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "A4",
+      "name": "admin/plugins 中恰有两项 source=builtin",
+      "ok": true,
+      "detail": "node:imageNode=builtin,node:textNode=builtin"
+    },
+    {
+      "section": "A4",
+      "name": "textNode 标记 source=builtin 且 canManage=false",
+      "ok": true,
+      "detail": "{\"type\":\"node\",\"name\":\"textNode\",\"displayName\":\"文本\",\"author\":\"Toonflow\",\"description\":\"\",\"version\":\"2.0.0\",\"enabled\":true,\"source\":\"builtin\",\"canConfigure\":true,\"canManage\":false,\"isCollected\":false,\"installable\":false,\"kind\":\"local\",\"manifest\":{\"type\":\"node\",\"name\":\"textNode\",\"version\":\"2.0.0\",\"displayName\":\"文本\",\"author\":\"Toonflow\",\"github\":\"https://github.com/HBAI-Ltd/Toonflow-app\",\"configRules\":[],\"readme\":\"# 文本节点\\n\\n使用 Markdown 编写、保存和生成正文，可用于剧本、分镜说明或素材分析。\\n\\n## 输入与输出\\n\\n- 输入支持文本、图片和视频参考。\\n- 输出节点当前的完整 Markdown 字符串，可连接支持文本输入的下游节点。\\n\\n## 使用方法\\n\\n1. 节点内以 Markdown 预览正文；点击“编辑”打开富文本编辑器，也可切换到原文编辑 "
+    },
+    {
+      "section": "A4",
+      "name": "imageNode 标记 source=builtin 且 canManage=false",
+      "ok": true,
+      "detail": "{\"type\":\"node\",\"name\":\"imageNode\",\"displayName\":\"图片\",\"author\":\"Toonflow\",\"description\":\"\",\"version\":\"2.0.0\",\"enabled\":true,\"source\":\"builtin\",\"canConfigure\":true,\"canManage\":false,\"isCollected\":false,\"installable\":false,\"kind\":\"local\",\"manifest\":{\"type\":\"node\",\"name\":\"imageNode\",\"version\":\"2.0.0\",\"displayName\":\"图片\",\"author\":\"Toonflow\",\"github\":\"https://github.com/HBAI-Ltd/Toonflow-app\",\"configRules\":[],\"readme\":\"# 图片节点\\n\\n在画布中展示图片，可作为角色、场景、道具或分镜参考。\\n\\n## 输入与输出\\n\\n- 导入本地图片文件，单个文件不能为空且不超过 100 MB。\\n- 输出当前图片素材，可连接图片生成、视频生成等支持图片输入的节点。\\n\\n## 使用方法\\n\\n1. 点击上传按钮，选择图片文件。\\n2. 上传完成后，节点按图片比例显示预览。\\n3. 将图片输出"
+    },
+    {
+      "section": "C",
+      "name": "workspaces/files/list 可用（画布列表前置条件）",
+      "ok": false,
+      "detail": "status=503 body=\"EXECUTOR_UNAVAILABLE\""
+    },
+    {
+      "section": "C",
+      "name": "workspaces/files/write 可用（创建画布前置条件）",
+      "ok": false,
+      "detail": "status=503 body={\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"cec43251-7f09-418d-915f-f2a12dabe248\",\"details\":null}"
+    },
+    {
+      "section": "C",
+      "name": "点「新增画布」后页面出现新画布（画布可创建）",
+      "ok": false,
+      "detail": "{\"hasChooseCanvas\":true,\"hasNewCanvasName\":false,\"uiError\":\"当前文件系统不支持安全原子保存\"}"
+    },
+    {
+      "section": "C",
+      "name": "进入项目后 VueFlow 画布已挂载",
+      "ok": true,
+      "detail": "{\"vueFlow\":true,\"chooseCanvasShown\":true,\"registeredNodes\":[\"demoNode\",\"imageNode\",\"textNode\"],\"requests\":7}"
+    },
+    {
+      "section": "C",
+      "name": "画布自身发起节点脚本加载（nodes/files）",
+      "ok": true,
+      "detail": "[{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/get\"},{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/files?name=demoNode\"},{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/files?name=textNode\"},{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/files?name=imageNode\"},{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/files?name=demoNode\"},{\"status\":200,\"path\":\"/api/v1/capabilities/nodes/files?name=imageNode\"}]"
+    },
+    {
+      "section": "B",
+      "name": "无未捕获页面错误",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "section": "B",
+      "name": "无可归因于页面/节点加载的控制台错误",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "section": "C",
+      "name": "其余控制台错误只由工作区文件 503 与负向探测构成",
+      "ok": true,
+      "detail": "503 噪音 6 条，负向探测 2 条，未归因 0 条"
+    }
+  ],
+  "failures": [
+    {
+      "section": "C",
+      "name": "workspaces/files/list 可用（画布列表前置条件）",
+      "ok": false,
+      "detail": "status=503 body=\"EXECUTOR_UNAVAILABLE\""
+    },
+    {
+      "section": "C",
+      "name": "workspaces/files/write 可用（创建画布前置条件）",
+      "ok": false,
+      "detail": "status=503 body={\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"cec43251-7f09-418d-915f-f2a12dabe248\",\"details\":null}"
+    },
+    {
+      "section": "C",
+      "name": "点「新增画布」后页面出现新画布（画布可创建）",
+      "ok": false,
+      "detail": "{\"hasChooseCanvas\":true,\"hasNewCanvasName\":false,\"uiError\":\"当前文件系统不支持安全原子保存\"}"
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "B",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/agent/list",
+      "phase": "B",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://localhost:5187/api/v1/capabilities/nodes/files?name=textNode",
+      "phase": "A3-negative",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "url": "http://localhost:5187/api/v1/admin/nodes/uninstall?name=textNode",
+      "phase": "A3-negative",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=qaProbeCanvas.json&exclusive=true&encoding=utf-8",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "C",
+      "afterLogin": true
+    }
+  ],
+  "consoleErrorBreakdown": {
+    "workspace503Noise": 6,
+    "negativeProbeNoise": 2,
+    "other": []
+  },
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://localhost:5187/api/v1/auth/me",
+      "phase": "startup",
+      "afterLogin": false
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://localhost:5187/favicon.ico",
+      "phase": "startup",
+      "afterLogin": false
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://localhost:5187/api/v1/auth/me",
+      "phase": "startup",
+      "afterLogin": false
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "B",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/agent/list",
+      "phase": "B",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://localhost:5187/api/v1/capabilities/nodes/files?name=textNode",
+      "phase": "A3-negative",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "url": "http://localhost:5187/api/v1/admin/nodes/uninstall?name=textNode",
+      "phase": "A3-negative",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=qaProbeCanvas.json&exclusive=true&encoding=utf-8",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8",
+      "phase": "C",
+      "afterLogin": true
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "phase": "C",
+      "afterLogin": true
+    }
+  ],
+  "httpLog": [
+    {
+      "phase": "failed",
+      "method": "POST",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/mcp/control/state",
+      "error": "[object Object]"
+    },
+    {
+      "phase": "response",
+      "status": 503,
+      "method": "GET",
+      "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持此安全文件操作\",\"requestId\":\"a37c88ae-f15f-42fb-97b5-fc01f242afd9\",\"details\":null}"
+    },
+    {
+      "phase": "response",
+      "status": 503,
+      "method": "GET",
+      "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持此安全文件操作\",\"requestId\":\"19177a0d-567f-4263-b840-fb6479dec2d8\",\"details\":null}"
+    },
+    {
+      "phase": "response",
+      "status": 503,
+      "method": "PUT",
+      "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=qaProbeCanvas.json&exclusive=true&encoding=utf-8",
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"cec43251-7f09-418d-915f-f2a12dabe248\",\"details\":null}"
+    },
+    {
+      "phase": "response",
+      "status": 503,
+      "method": "PUT",
+      "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/write?path=%E7%94%BB%E5%B8%831.json&exclusive=true&encoding=utf-8",
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持安全原子保存\",\"requestId\":\"279954c8-96b4-454f-b5a8-4f6b29983807\",\"details\":null}"
+    },
+    {
+      "phase": "response",
+      "status": 503,
+      "method": "GET",
+      "path": "/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/workspaces/files/list?path=",
+      "body": "{\"code\":\"EXECUTOR_UNAVAILABLE\",\"message\":\"当前文件系统不支持此安全文件操作\",\"requestId\":\"b4aa186f-94ff-4538-8e78-0b7a1c3b681e\",\"details\":null}"
+    },
+    {
+      "phase": "failed",
+      "method": "GET",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/mcp/control/events?connectionId=a8459a51-1f40-47f0-84b3-ca19de9a90a9",
+      "error": "[object Object]"
+    },
+    {
+      "phase": "failed",
+      "method": "POST",
+      "url": "http://localhost:5187/api/v1/projects/7fa58419-b621-4a1d-b5b5-e6043a405a19/creative/mcp/control/state",
+      "error": "[object Object]"
+    }
+  ]
+}

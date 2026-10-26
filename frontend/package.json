@@ -11,7 +11,9 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "vue-tsc --noEmit",
     "test": "bun test tests",
-    "check": "bun run check:boundaries && bun run typecheck && bun test tests",
+    "check": "bun run check:boundaries && bun run typecheck && bun run check:nodes && bun test tests",
+    "check:nodes": "bun run --cwd packages/nodeShared typecheck && bun run --cwd packages/nodes/textNode typecheck && bun run --cwd packages/nodes/imageNode typecheck",
+    "build:nodes": "bun scripts/build-nodes.ts",
     "check:boundaries": "bun scripts/check-boundaries.ts",
     "licenses:archive": "bun scripts/archive-licenses.ts"
   },
@@ -94,7 +96,8 @@
   "packageManager": "bun@1.4.2",
   "workspaces": [
     "packages/*",
-    "packages/tools/*"
+    "packages/tools/*",
+    "packages/nodes/*"
   ],
   "patchedDependencies": {
     "@vue-flow/core@1.48.2": "patches/vueFlowCore.patch"

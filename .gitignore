@@ -13,6 +13,9 @@ backend/*.log
 **/node_modules/
 frontend/dist/
 frontend/coverage/
+# 节点包构建中间产物；可分发产物随部署入 backend/src/main/resources/capabilities/nodes/
+frontend/build/
+frontend/data/
 **/__pycache__/
 **/.idea/
 

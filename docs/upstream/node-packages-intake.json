@@ -1,0 +1,203 @@
+{
+  "commit": "d2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d",
+  "source": "git archive of the fixed commit (packages/nodeShared packages/nodes/textNode packages/nodes/imageNode); never a working-tree copy",
+  "license": "MIT, Copyright (c) 2026 HBAI-Ltd (upstream repository root LICENSE)",
+  "note": "sha256 is the hash of the file as exported from the fixed commit. Targets keep identical bytes except LF line endings (repository .editorconfig); the three package.json files are adapted (dependency pinning, exports trimmed), so their hashes intentionally differ.",
+  "records": [
+    {
+      "source": "packages/nodeShared/package.json",
+      "target": "frontend/packages/nodeShared/package.json",
+      "sha256": "f65569234435ad306a30756b7eb7335a1e8ea7cef4dd90356b318c68f0281568"
+    },
+    {
+      "source": "packages/nodeShared/src/components/nodeError.vue",
+      "target": "frontend/packages/nodeShared/src/components/nodeError.vue",
+      "sha256": "5381d61b54a9782e85ef5d16ee4ce03094e4648a212b9e71fb30b103553e8285"
+    },
+    {
+      "source": "packages/nodeShared/src/components/promptInput.vue",
+      "target": "frontend/packages/nodeShared/src/components/promptInput.vue",
+      "sha256": "b6745b9ad03eba68d984dccc140d8704d4feb19cb90dcc966705ca868773d8ba"
+    },
+    {
+      "source": "packages/nodeShared/src/components/referenceCard.vue",
+      "target": "frontend/packages/nodeShared/src/components/referenceCard.vue",
+      "sha256": "e2e0b13e9cf39b1d23995c5b38cc4fb47e0c257e801764fd1a7745ae0b1a86bc"
+    },
+    {
+      "source": "packages/nodeShared/src/components/referenceItem.vue",
+      "target": "frontend/packages/nodeShared/src/components/referenceItem.vue",
+      "sha256": "ff7611afaf4b799cf8a8f47fcb1ceb0159901da98ad4ef69cc2a9b3df32fc942"
+    },
+    {
+      "source": "packages/nodeShared/src/groupNodeModels.ts",
+      "target": "frontend/packages/nodeShared/src/groupNodeModels.ts",
+      "sha256": "a4528ef9f5b0115ca12fc968d60e7605b13434f84bb168b638d7a9c9e4d74f03"
+    },
+    {
+      "source": "packages/nodeShared/src/showNodeError.ts",
+      "target": "frontend/packages/nodeShared/src/showNodeError.ts",
+      "sha256": "45b44adc4489e3ade54341892ffb065d7e7d7d273858279afdedfab403555344"
+    },
+    {
+      "source": "packages/nodeShared/src/useNodeReferences.ts",
+      "target": "frontend/packages/nodeShared/src/useNodeReferences.ts",
+      "sha256": "05c077419df3ee183c3d77df3885eab79dc53e638332684e73ec55f6daf81a8c"
+    },
+    {
+      "source": "packages/nodeShared/tsconfig.json",
+      "target": "frontend/packages/nodeShared/tsconfig.json",
+      "sha256": "e6204417485feaccd36dbf0a6db971a312cee1afdc932e6185b529d99a96d137"
+    },
+    {
+      "source": "packages/nodes/imageNode/package.json",
+      "target": "frontend/packages/nodes/imageNode/package.json",
+      "sha256": "cc63d73c28e17d4cd36d3a2f4eba6deb65e98b7369fd122ea7bbfc9166cd796a"
+    },
+    {
+      "source": "packages/nodes/imageNode/readme.md",
+      "target": "frontend/packages/nodes/imageNode/readme.md",
+      "sha256": "5cec15c7f2595a8f7e93d129f57729048f7d98bb3e5d131f1db4fe5e298a0576"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageEditor.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageEditor.vue",
+      "sha256": "64866ef1623ca1c08a3acf392627ebcf7a090e2687c99603c4aaab69dd3cb2b6"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageGridSplit.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageGridSplit.vue",
+      "sha256": "a148d3ab0f898fd954835517d2b36e73162cf16fef4988f7306074904cfbfbd5"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageInpaintPrompt.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageInpaintPrompt.vue",
+      "sha256": "2d1f59b8266c7ce791d6eb658c4af9f9e80cd1a274bcd8ee3634453eeaa3e9a2"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageLighting.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageLighting.vue",
+      "sha256": "e13b4598f8cdd14c3f62553964ff36c4693017621f79403a954e536e80c98ae8"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageLightingStage.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageLightingStage.vue",
+      "sha256": "a6ebad310eeb74b962dad10ec03c9cd1ec834fa9ecfcec71fa5c37194a4622b7"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageMultiAngle.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageMultiAngle.vue",
+      "sha256": "9633440a50dc4c1ee769c238387fb611cc007eec78addd3f7ca0a7f02aaa2dae"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageMultiAngleStage.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageMultiAngleStage.vue",
+      "sha256": "5dadc7c34739f96ca88c98ad94e94d38227c0a19ae4484d3cbc4f54f1dd295f2"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imagePanorama.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imagePanorama.vue",
+      "sha256": "4120fd0462e6f22c24213d7e0a89bbc36216e8fb2cb8535b860afd89d8de2a2a"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imagePanoramaPreview.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imagePanoramaPreview.vue",
+      "sha256": "be23b5604492820120113f640bfd6d24a3319ebb255e90386c857bebcf1fe9df"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/components/imageVariationGenerator.vue",
+      "target": "frontend/packages/nodes/imageNode/src/components/imageVariationGenerator.vue",
+      "sha256": "a927acdf69fdcf73d57692039bf472b51a7c0aff7e4f3a958782b9895ffd3d96"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/imageInpaint.ts",
+      "target": "frontend/packages/nodes/imageNode/src/imageInpaint.ts",
+      "sha256": "5e003981e0cc34f7936c5bcb33a16008e1a308cdbeea0e262ba81787b450887d"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/imageLighting.ts",
+      "target": "frontend/packages/nodes/imageNode/src/imageLighting.ts",
+      "sha256": "4d592e08168d0d22985e12b1294038a94e82bd0947778b2975aa4bdf7ad2e632"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/imageMultiAngle.ts",
+      "target": "frontend/packages/nodes/imageNode/src/imageMultiAngle.ts",
+      "sha256": "799f3f4fce222522811b411db3b452f962a5d9b8b760c5efbbb23cf1cd7f9f74"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/imagePanorama.ts",
+      "target": "frontend/packages/nodes/imageNode/src/imagePanorama.ts",
+      "sha256": "6bcb09f359028a77993a7fbbc826a5bb04551be8d127e4b1de3e3964a5b40e8a"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/index.vue",
+      "target": "frontend/packages/nodes/imageNode/src/index.vue",
+      "sha256": "42daf07e121763e9ef3c686f269ddd4cb7e6d55932009bbd4094b638decb7c1f"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/useImageVariationNode.ts",
+      "target": "frontend/packages/nodes/imageNode/src/useImageVariationNode.ts",
+      "sha256": "82a0749a6efae3bf4e420febdd7e2a19d6f8680ae3f4e0b4755f1a0cbbc4a7ed"
+    },
+    {
+      "source": "packages/nodes/imageNode/src/usePanoramaCapture.ts",
+      "target": "frontend/packages/nodes/imageNode/src/usePanoramaCapture.ts",
+      "sha256": "bef8b6655b1ea5e50aa0d645848653a878f0a072bfbe68373fc823747400d79d"
+    },
+    {
+      "source": "packages/nodes/imageNode/tsconfig.json",
+      "target": "frontend/packages/nodes/imageNode/tsconfig.json",
+      "sha256": "d7325a7b555655a1a33e65a768c951d63970232af6c1e8f396b7b610f03350c1"
+    },
+    {
+      "source": "packages/nodes/imageNode/vite.config.ts",
+      "target": "frontend/packages/nodes/imageNode/vite.config.ts",
+      "sha256": "b8b340f5e0cc4882c805fd18580e61f70b420621f2cff4be54b09dedb5589c7c"
+    },
+    {
+      "source": "packages/nodes/textNode/package.json",
+      "target": "frontend/packages/nodes/textNode/package.json",
+      "sha256": "019eb9d57c1486aaf52a37230adb3e002de93f947023bc933d8afff886167cf9"
+    },
+    {
+      "source": "packages/nodes/textNode/readme.md",
+      "target": "frontend/packages/nodes/textNode/readme.md",
+      "sha256": "5277ac5da64c73481b434aa960b34325274730d8792ffa0f62f88cb184b7a65e"
+    },
+    {
+      "source": "packages/nodes/textNode/src/index.vue",
+      "target": "frontend/packages/nodes/textNode/src/index.vue",
+      "sha256": "814dd2484e8843cf6f65cadda51ef092bd2deccdbaf9d80e1951f1f607d066ff"
+    },
+    {
+      "source": "packages/nodes/textNode/src/markdownContent.ts",
+      "target": "frontend/packages/nodes/textNode/src/markdownContent.ts",
+      "sha256": "7a01cc0255569aa14aaf80cc8db4cdbad290c313247a032d6d1576a679447013"
+    },
+    {
+      "source": "packages/nodes/textNode/src/markdownEditor.vue",
+      "target": "frontend/packages/nodes/textNode/src/markdownEditor.vue",
+      "sha256": "4aeb871b13f291195c837d8ac154b455877934fe5ab7568a02cbfb68981602fd"
+    },
+    {
+      "source": "packages/nodes/textNode/src/markdownExtensions.ts",
+      "target": "frontend/packages/nodes/textNode/src/markdownExtensions.ts",
+      "sha256": "8f264f232ec1bde8f36b951bd51133c8edafe6f15df26d6bab288e584ada181f"
+    },
+    {
+      "source": "packages/nodes/textNode/src/markdownPreview.vue",
+      "target": "frontend/packages/nodes/textNode/src/markdownPreview.vue",
+      "sha256": "6f12369684cf200066eb9f2d3c121de199646162b9cabc9f69bd3c08c5c1ea8f"
+    },
+    {
+      "source": "packages/nodes/textNode/tsconfig.json",
+      "target": "frontend/packages/nodes/textNode/tsconfig.json",
+      "sha256": "d7325a7b555655a1a33e65a768c951d63970232af6c1e8f396b7b610f03350c1"
+    },
+    {
+      "source": "packages/nodes/textNode/vite.config.ts",
+      "target": "frontend/packages/nodes/textNode/vite.config.ts",
+      "sha256": "5c71902433fba45b4723df89c41e3b2736b3d67b1234bc3885ec89138024464c"
+    }
+  ]
+}

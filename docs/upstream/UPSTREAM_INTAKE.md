@@ -27,6 +27,8 @@ M0 采集时曾核对参考克隆的 `git status`：`apps/server/src/router.ts`�
 
 这是一种选择性迁移方案，不需要在绘梦仓库中再放一份完整的上游 Git 仓库。若引入阶段发现动态加载模块无法安全拆开，应先维持必要的 Bun 工作区依赖结构，再分批移动到目标目录，不以目录整洁牺牲功能基线。
 
+内置节点包（`packages/nodeShared` 的子集与 `packages/nodes/textNode`、`imageNode`）按同一固定提交选择性引入，映射、依赖装配、构建命令与产物摘要在[节点包引入记录](NODE_PACKAGES_INTAKE.md)。
+
 ## 3. 依赖扫描结果
 
 扫描依据是固定提交的根及工作区 `package.json`、当前安装的 `node_modules/.bun`。以 Web 与 Server 为起点，递归追踪清单中声明的 `workspace:*` 依赖，得到 **17 个内部工作区包**（含 Web、Server）和 **83 个不同名称的直接第三方依赖**。其中内部包包含 `@toonflow/providers`、`@toonflow/mcp`、`@toonflow/tools-scaffold`、`@toonflow/tool-media-generation`、`@toonflow/file` 等；前端清单还直接依赖 `@toonflow/server`。动态发现的节点、技能和工具尚未全部包含在这一静态闭包中。

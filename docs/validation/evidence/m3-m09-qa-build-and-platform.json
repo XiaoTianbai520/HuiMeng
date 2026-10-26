@@ -1,0 +1,37 @@
+{
+  "createdAt": "2026-10-26T09:51:42.953Z",
+  "purpose": "D 构建可复现性 + C 平台阻塞根因（只读取证，不改源码）",
+  "build": {
+    "command": "cd frontend && bun run build:nodes",
+    "toolchain": "vite 8.2.2",
+    "artifacts": [
+      {
+        "file": "imageNode.umd.js",
+        "bytes": 520959,
+        "sha256Rebuilt": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae",
+        "sha256Baseline": "92e153b6a4cdef96ecfbb5abd2688b886bd9234ee2525c9b21dab070f3ff8eae"
+      },
+      {
+        "file": "textNode.umd.js",
+        "bytes": 413453,
+        "sha256Rebuilt": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e",
+        "sha256Baseline": "8dfdcb18ed11d0742b0cbe2da9470053795e62790e034606935543c451b8056e"
+      }
+    ]
+  },
+  "platformProbe": {
+    "command": "java SecureHandleProbe.java (JDK 21.0.8, Windows 11)",
+    "os": "Windows 11 (build 10.0.26200), JDK 21.0.8 LTS",
+    "result": {
+      "provider": "sun.nio.fs.WindowsFileSystemProvider",
+      "streamClass": "sun.nio.fs.WindowsDirectoryStream",
+      "implementsSecureDirectoryStream": false
+    },
+    "mapsTo": "SecureDirectory.open / SecureFileReader.open 抛 UnsupportedOperationException → ProjectFileServiceImpl 转 503 EXECUTOR_UNAVAILABLE",
+    "source": "JDK 直接探测：Files.newDirectoryStream(盘符根) 的返回类型，以及它是否实现 SecureDirectoryStream"
+  },
+  "batchScope": {
+    "backendMainSourceDiff": "(空：本批未改动任何已跟踪后端主源码)",
+    "securePrimitiveLastCommit": "fd57510 2026-10-25 22:12:25 +0800 实现 M3 安全目录操作并验收文档页面"
+  }
+}

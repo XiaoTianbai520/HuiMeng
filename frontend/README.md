@@ -16,7 +16,18 @@ bun run check
 bun run build
 ```
 
-`check` 执行 Web 边界/格式检查、严格 vue-tsc 检查和离线测试。`build` 输出 `dist/`，同时核对实际入包依赖的许可与补充摘要，并生成 `THIRD_PARTY_NOTICES.txt`、`license-inventory.json` 和 `licenses/`。出现大 chunk 提示会如实记录，不把它改造成未确认的性能发布阈值。
+`check` 执行 Web 边界/格式检查、严格 vue-tsc 检查、内置节点包类型检查和离线测试。`build` 输出 `dist/`，同时核对实际入包依赖的许可与补充摘要，并生成 `THIRD_PARTY_NOTICES.txt`、`license-inventory.json` 和 `licenses/`。出现大 chunk 提示会如实记录，不把它改造成未确认的性能发布阈值。
+
+## 内置节点包
+
+`packages/nodeShared`（`@toonflow/node-shared`）与 `packages/nodes/textNode`、`packages/nodes/imageNode` 是随部署分发的文本/图片节点，源码来自上游固定提交，映射与产物摘要见[引入记录](../docs/upstream/NODE_PACKAGES_INTAKE.md)。它们不进入 `dist/` 应用构建，而是各自打成 `textNode.umd.js`、`imageNode.umd.js` 由后端按能力分发。
+
+```powershell
+bun run build:nodes    # 构建两个节点，产物收口到 backend/src/main/resources/capabilities/nodes/
+bun run check:nodes    # 只对这 3 个包做 vue-tsc 检查（已包含在 check 中）
+```
+
+`build:nodes` 只清理 `build/nodes`（已忽略）并复制最终制品，不改动其他构建产物；连续两次构建的产物摘要一致。
 
 ## 本地开发
 

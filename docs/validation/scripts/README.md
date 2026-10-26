@@ -1,5 +1,20 @@
 # 验证脚本
 
+## 内置节点真实加载
+
+`m3M09BuiltinNodes.mjs` 验证随部署分发的 `textNode`/`imageNode` 能被页面取回并执行：登录夹具账号 → 进入工作区（确认 `window.toonflowNodeHost`/`toonflowTiptapHost` 已注入）→ 读 `nodes/get` → 按 `loadNodeComponent.ts` 的做法加载 `nodes/files` 并检查 `window.toonflowNodes.<name>`，同时比对下发字节与 `backend/src/main/resources/capabilities/nodes/` 产物的 SHA-256。先按 [插件运行期交接](../../handoff/PLUGIN_RUNTIME.md#7-验证方式) 启动 `CapabilityHarness` 与 Vite dev server（`HUIMENG_API_TARGET` 指向夹具）。
+
+```powershell
+$env:HM_NODE_ORIGIN="http://localhost:5187"
+$env:PLAYWRIGHT_CORE_PATH="<playwright-core 目录>"
+$env:PLAYWRIGHT_CHROMIUM_PATH="<chromium 可执行文件>"
+node docs/validation/scripts/m3M09BuiltinNodes.mjs
+```
+
+Windows 上 `workspaces/files/list` 与 `workspaces/files/write` 恒返回 503「当前文件系统不支持此安全文件操作」：根因是 Windows JDK 的 `Files.newDirectoryStream` 返回 `sun.nio.fs.WindowsDirectoryStream`，不实现 `SecureDirectoryStream`。画布 `.json` 因此无法读写，「放置节点实例并看到渲染」这一步需在 Linux 夹具复跑；但画布进入项目后确实会请求 `nodes/get`+`nodes/files` 并注册两个内置节点，本脚本在此基础上再独立加载一次以核对字节与导出。平台 503 单独归类为 `platformNoise`，不静默丢弃，也不冒充节点脚本的错误。脚本只使用合成夹具账号，不连接模型、对象存储或市场。
+
+QA 另有一份独立复验脚本 `m3M09QaBuiltinNodes.mjs`（43 项：HTTP 语义、ETag 三方对齐、管理面启停/卸载与画布阻塞点取证），与本节脚本互补，验收时两份都要看。
+
 ## M2 Linux 文件边界
 
 `m2FileBoundary.py` 只面向新建的独立 Spring/H2 验收实例，合成账号固定为测试夹具，不得指向团队/开发库或已有工作区。以 [backend LinuxFileAcceptanceHarness](../../../backend/README.md#m2-读取导出与模型验收) 启动和运行；脚本要求显式 base、fixture-root、report 与 isolated-h2-fixture 参数，检查真实原字节/快照/Range、授权及链接竞态，不管理服务或 MySQL。结果含检查名称，无 Cookie、CSRF 或密码。
