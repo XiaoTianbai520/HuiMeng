@@ -225,3 +225,7 @@ R117/R119/R120/R122/R123 本批冻结，当前 13 frozen、87 proposed、25 excl
 ### 6.6 M3-02 模型列表与文本生成（2026-10-26）
 
 `POST /creative/agent` 输出 `session/userMessage/text/done/error` NDJSON；会话存于项目 `.agent/sessions`，支持 `create/get/list/rename/message/cancel`；同会话生成互斥（409 `AGENT_RUNNING`），`cancel` 在下一增量前生效并关闭上游流。`LlmClient` 支持 OpenAI 兼容 `deepseek`/`qwen`，端点来自服务端配置；密钥仅内存使用，执行前重新校验项目成员与数据库批准状态。`R128` 注册取消兼容路由。工具回调、画布控制与 `.jsonl` 原格式兼容在 M3-04；A07/A11 证据见[M3-02 记录](../validation/M3_TEXT_GENERATION.md)。
+
+### 6.7 M3-03 图片生成规格与取消（2026-10-26）
+
+`generateMedia` 的图片分支接通现用 Qwen 两模型：`qwenImage21Text` 只接受提示词，`qwenImage21Edit` 必须且只能带一项 `images`，其 `path` 须为 `.huimeng-media/<uuid>.png`、`mimeType` 为 `image/png`。`size` 取 1K/0.5MP/2K、`ratio` 取 8 种画幅，省略时服务端按 1K、1:1 提交；非法组合 400，不做静默降级，`data[].spec` 回显实际提交的规格与像素尺寸。名额由数据库事务先占，之后才探测执行器，因此第 6 个请求 429 且不触达供应商；幂等重放仍为 202 原运行。执行器返回的 `prompt_id` 取代本地运行 ID 作为查询/取消参照。视频与音频分支保持原契约但本批未实现，A08 图片部分证据见[M3-03 记录](../validation/M3_MEDIA_GENERATION.md)。

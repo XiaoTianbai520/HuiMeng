@@ -177,3 +177,7 @@ M3-W03 将原文件树/文档面板/画布接入既有精确文件 API：画布�
 ### 13.5 文本生成与 Agent 会话（2026-10-26）
 
 M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队密文解密后在内存使用；端点由服务端配置，不跟随重定向。Agent 会话保存在项目 `.agent/sessions`，复用工作区安全文件 API 与修订号；`POST /creative/agent` 以 NDJSON 输出 `session/userMessage/text/done/error`，同会话生成互斥，`cancel` 在下一增量前生效并关闭上游流，保证停止后释放锁。工具回调、画布控制与上游 `.jsonl` 会话格式兼容在 M3-04 处理。92 项后端与 8/8 真实浏览器证据见[M3-02 记录](../validation/M3_TEXT_GENERATION.md)。
+
+### 13.6 图片规格与执行器任务绑定（2026-10-26）
+
+规格算法固定在 `ComfyImageClient.resolve`：按供应商 1.0.0 的像素预算（0.5MP=736、1K=1024、2K=2048）与画幅比换算宽高，再按 32 对齐写入 `EmptyLatentImage`，同步编码节点 `resolution`；未知规格直接 400。图生图参考图只从项目媒体读取，占位前校验归属与 16 MiB 上限，执行时以 `/upload/image` 送入执行器，文件名由服务端运行 ID 生成，浏览器无法指定路径或文件名。提交后以执行器返回的 `prompt_id` 查询、取消与补偿核对，提交前写入本运行 ID 作为 LOST 对账的临时参照。名额事务先完成，再检查执行器就绪，避免无效请求占用或触达供应商。23 项 HTTP、10 项浏览器与真实 ComfyUI 两模型回归见[M3-03 记录](../validation/M3_MEDIA_GENERATION.md)。
