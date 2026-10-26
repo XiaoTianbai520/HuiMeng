@@ -163,12 +163,13 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
   /** 视频参考图按模式决定数量与顺序：i2v/l2v 一张，fl2v 首帧+尾帧，r2v 1–9 张。 */
   private List<String> videoReferenceIds(GenerateImageReqDTO input, String mode) {
     var images = input.images() == null ? List.<GenerateImageMediaDTO>of() : input.images();
-    int expectedMin = switch (mode) {
-      case "t2v" -> 0;
-      case "i2v", "l2v" -> 1;
-      case "fl2v" -> 2;
-      default -> 1;
-    };
+    int expectedMin =
+        switch (mode) {
+          case "t2v" -> 0;
+          case "i2v", "l2v" -> 1;
+          case "fl2v" -> 2;
+          default -> 1;
+        };
     int expectedMax = mode.equals("r2v") ? 9 : expectedMin;
     if (images.size() < expectedMin || images.size() > expectedMax)
       throw new ApiException(400, "INVALID_ARGUMENT", "该模式参考图数量不符");
@@ -194,11 +195,10 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     String reference = "";
     List<String> videoReferences = List.of();
     if (video) {
-      if (!ComfyVideoClient.PROVIDER.equals(input.providerId()) || !videos.supports(input.modelId()))
-        throw ComfyVideoClient.unfamiliarModel();
+      if (!ComfyVideoClient.PROVIDER.equals(input.providerId())
+          || !videos.supports(input.modelId())) throw ComfyVideoClient.unfamiliarModel();
       videoSpec =
-          ComfyVideoClient.resolve(
-              input.modelId(), input.duration(), input.size(), input.ratio());
+          ComfyVideoClient.resolve(input.modelId(), input.duration(), input.size(), input.ratio());
       videoReferences = videoReferenceIds(input, videoSpec.mode());
       for (String id : videoReferences) media.requireReference(project, id);
     } else {
@@ -222,7 +222,8 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     if (known != null) {
       if (!known.requestHash().equals(hash))
         throw new ApiException(409, "IDEMPOTENCY_CONFLICT", "该幂等键已用于不同请求");
-      return new Admission(known.id(), known, owner, spec, reference, videoSpec, videoReferences, true);
+      return new Admission(
+          known.id(), known, owner, spec, reference, videoSpec, videoReferences, true);
     }
     String id = UUID.randomUUID().toString();
     GenerationRunDO run =
@@ -241,7 +242,8 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               audit.record(owner.id(), project, "MEDIA_GENERATE", id, "ADMITTED", requestId);
               return runs.find(project, id);
             });
-    return new Admission(run.id(), run, owner, spec, reference, videoSpec, videoReferences, !run.id().equals(id));
+    return new Admission(
+        run.id(), run, owner, spec, reference, videoSpec, videoReferences, !run.id().equals(id));
   }
 
   /** 名额已在库中占用后才探测执行器；不可达立即释放，不留下待核查占位。 */
@@ -287,6 +289,22 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     return new GenerationSubmission(response(admission.run()), false, stream);
   }
 
+  @Override
+  public RunRespDTO start(String project, GenerateImageReqDTO input, String key, String requestId) {
+    Admission admission = admit(project, input, key, requestId);
+    if (admission.replay()) return response(admission.run());
+    String id = admission.id();
+    requireExecutor(project, id, admission.videoSpec() != null);
+    try {
+      workers.execute(() -> execute(project, admission, input, requestId, value -> {}));
+    } catch (RejectedExecutionException ex) {
+      var current = runs.find(project, id);
+      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
+      throw ComfyImageClient.unavailable();
+    }
+    return response(runs.find(project, id));
+  }
+
   /** Agent 内部生图：同一名额语义、同步返回结果；文本会话本身不占名额，因此不会重复计数。 */
   @Override
   public GeneratedMediaRespDTO generateInternal(
@@ -309,7 +327,6 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
           503, "GENERATION_FAILED", result == null ? "生成未完成，请稍后重试" : result.message());
     return result.data().get(0);
   }
-
 
   /** 视频执行：提交、轮询、下载、入库；取消与超时都走同一套终态收敛。 */
   private void executeVideo(
@@ -417,6 +434,12 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
   }
 
   private void bind(Actor owner) {
+    if ("EXTERNAL".equals(owner.role())) {
+      // 外部客户端不查员工表；项目范围在调用线程已由 ExternalCallContext 限定，这里只恢复主体。
+      SecurityContextHolder.getContext()
+          .setAuthentication(new UsernamePasswordAuthenticationToken(owner, null, List.of()));
+      return;
+    }
     Actor current = users.findActor(owner.id());
     if (current == null
         || !current.status().equals("ACTIVE")
@@ -446,12 +469,15 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       GenerateImageReqDTO input,
       String requestId,
       java.util.function.Consumer<Object> sink) {
+    Actor owner = admission.owner();
+    if ("EXTERNAL".equals(owner.role()))
+      cn.huimeng.security.ExternalCallContext.bind(
+          new cn.huimeng.security.ExternalActor(owner.id(), project));
     if (admission.videoSpec() != null) {
       executeVideo(project, admission, input, requestId, sink);
       return;
     }
     String id = admission.id(), referenceId = admission.reference();
-    Actor owner = admission.owner();
     ComfyImageClient.Spec spec = admission.spec();
     boolean remoteAttempted = false, confirmedTerminal = false;
     try {

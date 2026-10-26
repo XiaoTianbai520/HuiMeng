@@ -5,12 +5,20 @@ import cn.huimeng.service.*;
 import com.fasterxml.jackson.databind.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/** Authenticates before protocol dispatch; M2 never forwards or fabricates protocol success. */
+/**
+ * 外部协议入口的认证与能力边界：凭证、项目、工具/团队名单都在分派前校验，拒绝时保留 JSON-RPC 关联 id。
+ *
+ * <p>通过后把客户端身份绑定为 {@code EXTERNAL} 主体，并只在本次请求内暴露其单项目范围；控制器不信任请求体里的项目或身份字段。
+ */
 public class ExternalBoundaryFilter extends OncePerRequestFilter {
+  private static final int MAX_BODY = 65536;
   private final ExternalClientService clients;
   private final AuditService audit;
   private final ObjectMapper json;
@@ -31,77 +39,161 @@ public class ExternalBoundaryFilter extends OncePerRequestFilter {
         supplied != null && supplied.matches("[A-Za-z0-9_-]{1,128}")
             ? supplied
             : UUID.randomUUID().toString();
+    request.setAttribute("requestId", requestId);
     response.setHeader("X-Request-Id", requestId);
     response.setHeader("Cache-Control", "no-store");
-    response.setContentType("application/json;charset=UTF-8");
-    int status = 503;
-    String code = "EXECUTOR_UNAVAILABLE";
-    Object rpcId = null;
+
+    JsonNode body = null;
     boolean hasId = false;
-    ExternalActor actor = null;
+    Object rpcId = null;
+    byte[] bytes = readBody(request);
+    if (bytes.length > MAX_BODY) {
+      reject(request, response, 400, "INVALID_ARGUMENT", null, false, requestId);
+      return;
+    }
+    if (bytes.length > 0) {
+      try {
+        body = json.readTree(bytes);
+      } catch (Exception ex) {
+        reject(request, response, 400, "INVALID_ARGUMENT", null, false, requestId);
+        return;
+      }
+      if (body != null && body.isObject() && body.has("id") && scalar(body.get("id"))) {
+        rpcId = body.get("id");
+        hasId = true;
+      }
+    }
+
+    ExternalActor actor;
     try {
       actor = clients.authenticate(request.getHeader("Authorization"));
+      // 名单在分派前判断：tools/list 只裁剪列表，tools/call 与 A2A 团队路径必须精确授权。
+      if (request.getRequestURI().startsWith("/a2a/")) {
+        String team = teamOf(request.getRequestURI());
+        if (team == null) throw ApiException.forbidden();
+        clients.authorize(actor, actor.projectId(), "A2A", team);
+      } else if (body != null && "tools/call".equals(body.path("method").asText())) {
+        String name = body.path("params").path("name").asText();
+        if (name.isBlank()) throw new ApiException(400, "INVALID_ARGUMENT", "缺少工具名称");
+        clients.authorize(actor, actor.projectId(), "MCP", name);
+      }
     } catch (ApiException ex) {
-      status = ex.status;
-      code = ex.code;
+      reject(request, response, ex.status, ex.code, rpcId, hasId, requestId);
+      return;
     }
-    // Bounded parsing only preserves RPC correlation on gateway rejections. No SDK dispatch exists
-    // yet.
-    JsonNode body = null;
+
+    ExternalCallContext.bind(actor);
+    SecurityContextHolder.getContext()
+        .setAuthentication(
+            new UsernamePasswordAuthenticationToken(
+                new Actor(actor.clientId(), "external", "EXTERNAL", "ACTIVE", 0), null, List.of()));
+    boolean failed = true;
     try {
-      byte[] bytes = request.getInputStream().readNBytes(65537);
-      if (bytes.length > 65536) {
-        if (status != 401) {
-          status = 400;
-          code = "INVALID_ARGUMENT";
-        }
-      } else if (bytes.length > 0) {
-        body = json.readTree(bytes);
-        if (body != null
-            && body.isObject()
-            && body.has("id")
-            && (body.get("id").isTextual()
-                || body.get("id").isNumber()
-                || body.get("id").isNull())) {
-          rpcId = body.get("id");
-          hasId = true;
-        }
-      }
-    } catch (Exception ignored) {
-      if (status != 401) {
-        status = 400;
-        code = "INVALID_ARGUMENT";
-      }
+      chain.doFilter(new CachedBodyRequest(request, bytes), response);
+      failed = false;
+    } finally {
+      ExternalCallContext.clear();
+      SecurityContextHolder.clearContext();
+      int status = failed && response.getStatus() < 400 ? 500 : response.getStatus();
+      audit.recordExternal(actor.clientId(), actor.projectId(), String.valueOf(status), requestId);
     }
-    if (actor != null && status == 503) {
-      try {
-        if (request.getRequestURI().startsWith("/a2a/")) {
-          String[] parts = request.getRequestURI().split("/");
-          if (parts.length < 3) throw ApiException.forbidden();
-          clients.authorize(actor, actor.projectId(), "A2A", parts[2]);
-        } else if (body != null && "tools/call".equals(body.path("method").asText())) {
-          clients.authorize(
-              actor, actor.projectId(), "MCP", body.path("params").path("name").asText());
-        }
-      } catch (ApiException ex) {
-        status = ex.status;
-        code = ex.code;
-      }
-    }
+  }
+
+  private byte[] readBody(HttpServletRequest request) throws IOException {
+    return request.getInputStream().readNBytes(MAX_BODY + 1);
+  }
+
+  private static boolean scalar(JsonNode node) {
+    return node.isTextual() || node.isNumber() || node.isNull();
+  }
+
+  private static String teamOf(String uri) {
+    String[] parts = uri.split("/");
+    if (parts.length < 3) return null;
+    String team = parts[2];
+    return team.matches("[A-Za-z0-9_-]{1,128}") ? team : null;
+  }
+
+  /** 拒绝发生在协议分派之前：401/403/429 用 HTTP 状态，能解析 id 时按 JSON-RPC 错误回显。 */
+  private void reject(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      int status,
+      String code,
+      Object rpcId,
+      boolean hasId,
+      String requestId)
+      throws IOException {
     response.setStatus(status);
+    response.setContentType("application/json;charset=UTF-8");
     if (status == 401) response.setHeader("WWW-Authenticate", "Bearer");
-    Map<String, Object> data = Map.of("code", code, "requestId", requestId);
+    Map<String, Object> data = new LinkedHashMap<>();
+    data.put("code", code);
+    data.put("requestId", requestId);
+    Object payload;
     if (hasId) {
       Map<String, Object> result = new LinkedHashMap<>();
       result.put("jsonrpc", "2.0");
       result.put("id", rpcId);
-      result.put("error", Map.of("code", -32099, "message", "请求未获执行", "data", data));
-      json.writeValue(response.getOutputStream(), result);
-    } else json.writeValue(response.getOutputStream(), data);
-    audit.recordExternal(
-        actor == null ? null : actor.clientId(),
-        actor == null ? null : actor.projectId(),
-        String.valueOf(status),
-        requestId);
+      result.put(
+          "error",
+          Map.of(
+              "code",
+              -32099,
+              "message",
+              status == 401 ? "凭证无效或已撤销" : status == 403 ? "该客户端无权调用此能力" : "请求未获执行",
+              "data",
+              data));
+      payload = result;
+    } else payload = data;
+    json.writeValue(response.getOutputStream(), payload);
+    audit.recordExternal(null, null, String.valueOf(status), requestId);
+  }
+
+  /** 缓存请求体供过滤器解析一次、控制器再读一次；上限在读取时已校验。 */
+  private static final class CachedBodyRequest extends HttpServletRequestWrapper {
+    private final byte[] body;
+
+    private CachedBodyRequest(HttpServletRequest request, byte[] body) {
+      super(request);
+      this.body = body;
+    }
+
+    @Override
+    public ServletInputStream getInputStream() {
+      var stream = new ByteArrayInputStream(body);
+      return new ServletInputStream() {
+        @Override
+        public boolean isFinished() {
+          return stream.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+          return true;
+        }
+
+        @Override
+        public void setReadListener(ReadListener listener) {
+          // 同步读取；MCP/A2A 不使用异步 Servlet 输入。
+        }
+
+        @Override
+        public int read() {
+          return stream.read();
+        }
+
+        @Override
+        public int read(byte[] buffer, int offset, int length) {
+          return stream.read(buffer, offset, length);
+        }
+      };
+    }
+
+    @Override
+    public BufferedReader getReader() {
+      return new BufferedReader(
+          new InputStreamReader(new ByteArrayInputStream(body), StandardCharsets.UTF_8));
+    }
   }
 }

@@ -9,6 +9,9 @@ public interface MediaGenerationService {
   GenerationSubmission generate(
       String projectId, GenerateImageReqDTO input, String key, String requestId);
 
+  /** 只发起运行并立即返回句柄；外部协议（MCP/A2A）用查询接口跟进，不占用 HTTP 流。 */
+  RunRespDTO start(String projectId, GenerateImageReqDTO input, String key, String requestId);
+
   RunRespDTO get(String projectId, String runId);
 
   RunRespDTO cancel(String projectId, String runId);

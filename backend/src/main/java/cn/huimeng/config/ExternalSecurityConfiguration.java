@@ -24,7 +24,8 @@ public class ExternalSecurityConfiguration {
         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.addFilterBefore(
         new ExternalBoundaryFilter(clients, audit, json), AnonymousAuthenticationFilter.class);
-    http.authorizeHttpRequests(auth -> auth.anyRequest().denyAll());
+    // 边界过滤器保证只有已认证的外部客户端到达控制器；这里再用认证状态兜底。
+    http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
     return http.build();
   }
 }

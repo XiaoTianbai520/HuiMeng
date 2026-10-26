@@ -90,6 +90,12 @@ public class ExternalClientServiceImpl implements ExternalClientService {
   }
 
   @Override
+  public List<String> abilities(ExternalActor actor, String type) {
+    if (!"MCP".equals(type) && !"A2A".equals(type)) throw ApiException.invalid();
+    return clientMapper.capabilities(actor.clientId(), type);
+  }
+
+  @Override
   public PageRespDTO<ExternalClientRespDTO> list(String cursor, int limit) {
     RequestContext.admin();
     var page = clientMapper.list(cursor, limit);

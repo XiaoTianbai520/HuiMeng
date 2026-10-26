@@ -90,6 +90,9 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/agent/get",
                     "/api/v1/projects/*/creative/agent/list",
                     "/api/v1/projects/*/creative/agent/skills",
+                    "/api/v1/projects/*/creative/mcp/control/events",
+                    "/api/v1/capabilities/mcp/status",
+                    "/api/v1/capabilities/mcp/skill",
                     "/api/v1/capabilities/nodes/get",
                     "/api/v1/capabilities/tools/get",
                     "/api/v1/capabilities/tools/renderers",
@@ -123,6 +126,8 @@ public class SecurityConfiguration {
                     "/api/v1/projects/*/creative/agent/cancel",
                     "/api/v1/projects/*/creative/agent/answer",
                     "/api/v1/projects/*/creative/agent/canvasResult",
+                    "/api/v1/projects/*/creative/mcp/control/state",
+                    "/api/v1/projects/*/creative/mcp/control/result",
                     "/api/v1/projects/*/creative/ffmpeg/execute",
                     "/api/v1/projects/*/runs/*/cancel")
                 .authenticated()

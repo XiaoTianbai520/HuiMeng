@@ -1292,7 +1292,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(5);
+        .isEqualTo(6);
     assertThatThrownBy(
             () ->
                 jdbc.update(
@@ -1749,7 +1749,7 @@ class SecurityIntegrationTests {
   }
 
   @Test
-  void externalProtocolGatesCapabilitiesRevocationAndNeverExecutesDuringM2() throws Exception {
+  void externalProtocolGatesCapabilitiesRevocationAndImplementsM3Dispatch() throws Exception {
     String project = createProject("protocol");
     JsonNode issued =
         body(
@@ -1769,14 +1769,37 @@ class SecurityIntegrationTests {
                 .andExpect(status().isCreated())
                 .andReturn());
     String token = issued.path("token").asText();
+    // M3-06 起握手与目录已实现；工具调用在未连接页面时明确返回 isError，而不是伪装成功。
     mvc.perform(
             post("/mcp")
                 .header("Authorization", "Bearer " + token)
                 .contentType("application/json")
                 .content(
-                    "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/call\",\"params\":{\"name\":\"getCanvas\"}}"))
-        .andExpect(status().isServiceUnavailable())
-        .andExpect(jsonPath("$.id").value(7));
+                    "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-06-18\"}}"))
+        .andExpect(status().isOk())
+        .andExpect(header().exists("Mcp-Session-Id"))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("huimeng")));
+    mvc.perform(
+            post("/mcp")
+                .header("Authorization", "Bearer " + token)
+                .contentType("application/json")
+                .content("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("getCanvas")))
+        .andExpect(
+            content()
+                .string(
+                    org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("deleteFile"))));
+    mvc.perform(
+            post("/mcp")
+                .header("Authorization", "Bearer " + token)
+                .contentType("application/json")
+                .content(
+                    "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/call\",\"params\":{\"name\":\"getCanvas\",\"arguments\":{}}}"))
+        .andExpect(status().isOk())
+        // 协议帧是 SSE 单帧，不能用 JSON 路径断言裸对象。
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("\"id\":7")))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("\"isError\":true")));
     mvc.perform(
             post("/mcp")
                 .header("Authorization", "Bearer " + token)

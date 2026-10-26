@@ -19,6 +19,9 @@ public interface ExternalClientService {
   /** 校验项目和显式 MCP/A2A 能力。 */
   void authorize(ExternalActor actor, String projectId, String type, String capability);
 
+  /** 读取该客户端已授予的 MCP 工具或 A2A 团队名单；只用于本人凭证的范围展示。 */
+  java.util.List<String> abilities(ExternalActor actor, String type);
+
   /** 管理员分页读取不含令牌的元数据。 */
   PageRespDTO<ExternalClientRespDTO> list(String cursor, int limit);
 }

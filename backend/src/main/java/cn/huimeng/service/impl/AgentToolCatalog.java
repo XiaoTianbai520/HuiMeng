@@ -54,6 +54,14 @@ public class AgentToolCatalog {
     return result;
   }
 
+  /** 原始定义（name/label/description/parameters），供 MCP 目录复用同一份画布签名。 */
+  public List<Map<String, Object>> raw(boolean withCanvas) {
+    var result = new ArrayList<Map<String, Object>>();
+    if (withCanvas) result.addAll(canvas);
+    result.addAll(extra);
+    return result;
+  }
+
   public String label(String name) {
     Map<String, Object> tool = byName.get(name);
     return tool == null ? name : String.valueOf(tool.get("label"));

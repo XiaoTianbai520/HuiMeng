@@ -47,7 +47,9 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public boolean member(String projectId, String userId) {
-    return projectMapper.member(projectId, userId);
+    // 外部客户端没有成员行，只在其凭证绑定的项目内视作成员；其他项目仍按无权处理。
+    return cn.huimeng.security.ExternalCallContext.allows(projectId)
+        || projectMapper.member(projectId, userId);
   }
 
   @Override
