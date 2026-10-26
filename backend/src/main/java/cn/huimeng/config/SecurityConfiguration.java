@@ -171,6 +171,7 @@ public class SecurityConfiguration {
                     "/api/v1/admin/skills/setEnabled",
                     "/api/v1/admin/agents/connect",
                     "/api/v1/admin/providers/media/add",
+                    "/api/v1/admin/providers/media/validate",
                     "/api/v1/admin/providers/media/save",
                     "/api/v1/admin/providers/media/delete",
                     "/api/v1/admin/providers/media/models")
@@ -187,7 +188,8 @@ public class SecurityConfiguration {
                     "/api/v1/admin/skills/move",
                     "/api/v1/admin/skills/order",
                     "/api/v1/admin/agents/save",
-                    "/api/v1/admin/agents/a2a/save")
+                    "/api/v1/admin/agents/a2a/save",
+                    "/api/v1/admin/providers/media/save")
                 .hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/preferences/personalization")
                 .authenticated()
@@ -197,6 +199,8 @@ public class SecurityConfiguration {
                 .hasRole("ADMIN")
                 .requestMatchers(
                     HttpMethod.DELETE, "/api/v1/admin/plugins/*/*", "/api/v1/admin/*/uninstall")
+                .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/providers/media/delete")
                 .hasRole("ADMIN")
                 .anyRequest()
                 .denyAll());

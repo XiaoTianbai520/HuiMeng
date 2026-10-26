@@ -28,6 +28,22 @@ public class AgentServiceImpl implements AgentService {
   private static final long CANVAS_TIMEOUT_SECONDS = 120;
   private static final long QUESTION_TIMEOUT_SECONDS = 300;
   private static final int MAX_TOOL_RESULT_CHARS = 8000;
+
+  /** 触发上下文压缩的总字符数；低于它时原样发送。 */
+  private static final int COMPACT_TRIGGER_CHARS = 60_000;
+
+  /** 压缩后发给模型的硬上限，超过则继续缩小原样保留的窗口。 */
+  private static final int MAX_REQUEST_CHARS = 130_000;
+
+  /** 原样保留的最近消息条数（含工具调用与结果）。 */
+  private static final int KEEP_RECENT_MESSAGES = 12;
+
+  /** 压缩后的历史最多保留多少条。 */
+  private static final int MAX_OLD_ENTRIES = 30;
+
+  /** 单条压缩历史的字符上限。 */
+  private static final int OLD_ENTRY_CHARS = 500;
+
   private static final String PROVIDER = "qwenImage21Local";
   private final ProjectService projects;
   private final ProjectFileService files;
@@ -493,51 +509,148 @@ public class AgentServiceImpl implements AgentService {
     }
   }
 
+  /**
+   * 组装发给模型的对话。
+   *
+   * <p>会话文件保留完整历史，只压发送给模型的那一份：总长度超过 {@link #COMPACT_TRIGGER_CHARS} 后，较早的轮次压成「要点 + 工具名」，最近 {@link
+   * #KEEP_RECENT_MESSAGES} 条原样保留（含工具结果）。压缩是确定性的，不额外调用模型，也不改会话文件。
+   */
   private List<Map<String, Object>> chatMessages(List<AgentMessageRespDTO> messages) {
-    var result = new ArrayList<Map<String, Object>>();
-    result.add(Map.of("role", "system", "content", systemPrompt()));
-    for (var message : messages) {
-      if (message.parts() != null && message.parts().isArray()) {
-        var calls = new ArrayList<Map<String, Object>>();
+    int total = 0;
+    for (var message : messages) total += weight(message);
+    if (total <= COMPACT_TRIGGER_CHARS) {
+      var plain = new ArrayList<Map<String, Object>>();
+      plain.add(Map.of("role", "system", "content", systemPrompt()));
+      for (var message : messages) appendFull(plain, message);
+      return trim(plain);
+    }
+
+    int size = messages.size();
+    int keep = Math.min(KEEP_RECENT_MESSAGES, size);
+    int omitted = 0;
+    var compacted = new ArrayList<Map<String, Object>>();
+    for (int index = 0; index < size - keep; index++)
+      if (!compact(compacted, messages.get(index))) omitted++;
+
+    // 更早的精简记录也不无限堆：只留最近 MAX_OLD_ENTRIES 条，其余计入省略数。
+    if (compacted.size() > MAX_OLD_ENTRIES) {
+      omitted += compacted.size() - MAX_OLD_ENTRIES;
+      compacted =
+          new ArrayList<>(compacted.subList(compacted.size() - MAX_OLD_ENTRIES, compacted.size()));
+    }
+
+    while (true) {
+      var result = new ArrayList<Map<String, Object>>();
+      var system = systemPrompt() + compactionNote(omitted);
+      result.add(Map.of("role", "system", "content", system));
+      result.addAll(compacted);
+      for (int index = size - keep; index < size; index++) appendFull(result, messages.get(index));
+      if (charCount(result) <= MAX_REQUEST_CHARS || keep <= 2) return trim(result);
+      // 仍然超限：缩小原样保留的窗口，把更早的轮次也压成要点。
+      int drop = Math.min(4, keep - 2);
+      for (int index = size - keep; index < size - keep + drop; index++)
+        if (!compact(compacted, messages.get(index))) omitted++;
+      keep -= drop;
+      if (compacted.size() > MAX_OLD_ENTRIES) {
+        omitted += compacted.size() - MAX_OLD_ENTRIES;
+        compacted =
+            new ArrayList<>(
+                compacted.subList(compacted.size() - MAX_OLD_ENTRIES, compacted.size()));
+      }
+    }
+  }
+
+  private static String compactionNote(int omitted) {
+    var note =
+        new StringBuilder(
+            "\n\n上下文说明：为控制长度，较早的对话已压缩为要点，工具参数与返回值不再逐条附上；" + "需要细节时重新读取文件或画布，不要凭记忆复述被省略的内容。");
+    if (omitted > 0) note.append("另有 ").append(omitted).append(" 条更早的消息已省略。");
+    return note.toString();
+  }
+
+  private void appendFull(List<Map<String, Object>> result, AgentMessageRespDTO message) {
+    if (message.parts() != null && message.parts().isArray()) {
+      var calls = new ArrayList<Map<String, Object>>();
+      for (var part : message.parts()) {
+        if (!"tool".equals(part.path("type").asText())) continue;
+        var tool = part.path("tool");
+        var call = new LinkedHashMap<String, Object>();
+        call.put("id", tool.path("id").asText());
+        call.put("type", "function");
+        call.put(
+            "function",
+            Map.of(
+                "name",
+                tool.path("name").asText(),
+                "arguments",
+                tool.path("args").isMissingNode() ? "{}" : tool.path("args").toString()));
+        calls.add(call);
+      }
+      if (!calls.isEmpty()) {
+        var assistant = new LinkedHashMap<String, Object>();
+        assistant.put("role", "assistant");
+        assistant.put("content", message.content());
+        assistant.put("tool_calls", calls);
+        result.add(assistant);
         for (var part : message.parts()) {
           if (!"tool".equals(part.path("type").asText())) continue;
           var tool = part.path("tool");
-          var call = new LinkedHashMap<String, Object>();
-          call.put("id", tool.path("id").asText());
-          call.put("type", "function");
-          call.put(
-              "function",
-              Map.of(
-                  "name",
-                  tool.path("name").asText(),
-                  "arguments",
-                  tool.path("args").isMissingNode() ? "{}" : tool.path("args").toString()));
-          calls.add(call);
+          var reply = new LinkedHashMap<String, Object>();
+          reply.put("role", "tool");
+          reply.put("tool_call_id", tool.path("id").asText());
+          reply.put(
+              "content",
+              truncate(tool.path("result").isMissingNode() ? "" : tool.path("result").asText()));
+          result.add(reply);
         }
-        if (!calls.isEmpty()) {
-          var assistant = new LinkedHashMap<String, Object>();
-          assistant.put("role", "assistant");
-          assistant.put("content", message.content());
-          assistant.put("tool_calls", calls);
-          result.add(assistant);
-          for (var part : message.parts()) {
-            if (!"tool".equals(part.path("type").asText())) continue;
-            var tool = part.path("tool");
-            var reply = new LinkedHashMap<String, Object>();
-            reply.put("role", "tool");
-            reply.put("tool_call_id", tool.path("id").asText());
-            reply.put(
-                "content",
-                truncate(tool.path("result").isMissingNode() ? "" : tool.path("result").asText()));
-            result.add(reply);
-          }
-          continue;
-        }
+        return;
       }
-      if (message.content() == null || message.content().isBlank()) continue;
-      result.add(Map.of("role", message.role(), "content", message.content()));
     }
-    return result;
+    if (message.content() == null || message.content().isBlank()) return;
+    result.add(Map.of("role", message.role(), "content", message.content()));
+  }
+
+  /** 把一条历史压成「角色 + 摘要 + 工具名」；空消息返回 false，计入省略。 */
+  private boolean compact(List<Map<String, Object>> result, AgentMessageRespDTO message) {
+    var names = new ArrayList<String>();
+    if (message.parts() != null && message.parts().isArray())
+      for (var part : message.parts())
+        if ("tool".equals(part.path("type").asText()))
+          names.add(part.path("tool").path("name").asText());
+    String text = message.content() == null ? "" : message.content();
+    if (text.length() > OLD_ENTRY_CHARS) text = text.substring(0, OLD_ENTRY_CHARS) + "…";
+    if (!names.isEmpty())
+      text = (text.isBlank() ? "" : text + " ") + "（调用工具：" + String.join("、", names) + "）";
+    if (text.isBlank()) return false;
+    String role = "assistant".equals(message.role()) ? "assistant" : "user";
+    result.add(Map.of("role", role, "content", "[历史] " + text));
+    return true;
+  }
+
+  private static int weight(AgentMessageRespDTO message) {
+    int size = message.content() == null ? 0 : message.content().length();
+    if (message.parts() != null && message.parts().isArray())
+      for (var part : message.parts()) {
+        if (!"tool".equals(part.path("type").asText())) continue;
+        var tool = part.path("tool");
+        size += tool.path("args").toString().length() + tool.path("result").toString().length();
+      }
+    return size;
+  }
+
+  private static int charCount(List<Map<String, Object>> messages) {
+    int total = 0;
+    for (var message : messages) total += String.valueOf(message.get("content")).length();
+    return total;
+  }
+
+  /** 兜底裁剪：只从最早的非系统消息开始丢，避免把 system 丢掉，也不留下没有调用方的工具结果。 */
+  private static List<Map<String, Object>> trim(List<Map<String, Object>> messages) {
+    while (charCount(messages) > MAX_REQUEST_CHARS && messages.size() > 2) {
+      messages.remove(1);
+      while (messages.size() > 2 && "tool".equals(messages.get(1).get("role"))) messages.remove(1);
+    }
+    return messages;
   }
 
   private String systemPrompt() {

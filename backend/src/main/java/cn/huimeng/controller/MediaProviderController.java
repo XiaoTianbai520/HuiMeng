@@ -1,43 +1,63 @@
 package cn.huimeng.controller;
 
-import cn.huimeng.common.exception.ApiException;
 import cn.huimeng.dto.req.MediaProviderReqDTO;
+import cn.huimeng.dto.resp.ApiRespDTO;
+import cn.huimeng.dto.resp.MediaProviderDTOs;
 import cn.huimeng.security.RequestContext;
+import cn.huimeng.service.MediaProviderService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 自定义媒体供应商文件：当前版本只支持内置供应商，列表为空而不是伪造条目。
+ * 自定义媒体供应商文件的登记面。
  *
- * <p>写入入口显式拒绝，避免页面把"保存成功"误当成能力已生效。
+ * <p>可以登记、查看声明出来的模型、编辑清单与删除；生成仍只走内置供应商。返回里 {@code executable} 固定为 false， 页面据此禁用生成，避免把「已登记」显示成「可用」。
  */
 @RestController
 @RequestMapping("/api/v1/admin/providers/media")
 public class MediaProviderController {
+  private final MediaProviderService providers;
+
+  public MediaProviderController(MediaProviderService providers) {
+    this.providers = providers;
+  }
 
   @GetMapping("/list")
-  public MediaProviders list() {
-    RequestContext.admin();
-    return new MediaProviders(List.of());
+  public ApiRespDTO<List<MediaProviderDTOs.Provider>> list() {
+    return ApiRespDTO.ok(providers.list());
   }
 
-  @PostMapping({"/add", "/save"})
-  public MediaProviders unsupported(@RequestBody(required = false) MediaProviderReqDTO input) {
-    RequestContext.admin();
-    throw new ApiException(409, "MEDIA_PROVIDER_UNSUPPORTED", "自定义媒体供应商文件暂未开放，请使用内置模型");
+  @PostMapping("/add")
+  public ApiRespDTO<MediaProviderDTOs.Provider> add(
+      @RequestBody(required = false) MediaProviderReqDTO input, HttpServletRequest request) {
+    return ApiRespDTO.ok(providers.add(input, RequestContext.requestId(request)));
   }
 
-  @PostMapping("/delete")
-  public MediaProviders delete() {
-    RequestContext.admin();
-    throw new ApiException(409, "MEDIA_PROVIDER_UNSUPPORTED", "自定义媒体供应商文件暂未开放");
+  @PostMapping("/validate")
+  public ApiRespDTO<MediaProviderDTOs.Provider> validate(
+      @RequestBody(required = false) MediaProviderReqDTO input) {
+    return ApiRespDTO.ok(providers.validate(input));
+  }
+
+  @PutMapping("/save")
+  public ApiRespDTO<MediaProviderDTOs.Provider> save(
+      @RequestBody(required = false) MediaProviderReqDTO input, HttpServletRequest request) {
+    return ApiRespDTO.ok(providers.save(input, RequestContext.requestId(request)));
   }
 
   @PostMapping("/models")
-  public MediaProviders models() {
-    RequestContext.admin();
-    throw new ApiException(409, "MEDIA_PROVIDER_UNSUPPORTED", "自定义媒体供应商文件暂未开放");
+  public ApiRespDTO<MediaProviderDTOs.Provider> models(
+      @RequestBody(required = false) MediaProviderReqDTO input, HttpServletRequest request) {
+    return ApiRespDTO.ok(providers.refreshModels(input, RequestContext.requestId(request)));
   }
 
-  public record MediaProviders(List<?> data) {}
+  @RequestMapping(
+      value = "/delete",
+      method = {RequestMethod.POST, RequestMethod.DELETE})
+  public ApiRespDTO<String> delete(
+      @RequestBody(required = false) MediaProviderReqDTO input, HttpServletRequest request) {
+    providers.delete(input, RequestContext.requestId(request));
+    return ApiRespDTO.ok("deleted");
+  }
 }

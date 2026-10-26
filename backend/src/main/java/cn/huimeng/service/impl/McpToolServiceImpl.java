@@ -28,6 +28,7 @@ public class McpToolServiceImpl implements McpToolService {
   private final MediaGenerationService generation;
   private final McpControlService control;
   private final ExternalClientService clients;
+  private final ToolRuntime runtime;
   private final ObjectMapper json;
   private final List<Tool> tools = new ArrayList<>();
   private final Set<String> names = new LinkedHashSet<>();
@@ -42,6 +43,7 @@ public class McpToolServiceImpl implements McpToolService {
       McpControlService control,
       ExternalClientService clients,
       AgentToolCatalog catalog,
+      ToolRuntime runtime,
       ObjectMapper json) {
     this.projects = projects;
     this.files = files;
@@ -49,6 +51,7 @@ public class McpToolServiceImpl implements McpToolService {
     this.generation = generation;
     this.control = control;
     this.clients = clients;
+    this.runtime = runtime;
     this.json = json;
     pageTools();
     for (var raw : catalog.raw(true)) {
@@ -61,6 +64,35 @@ public class McpToolServiceImpl implements McpToolService {
           true);
     }
     serverTools();
+  }
+
+  /**
+   * 目录 = 内置工具 + 已安装工具包（市场/文件安装）。
+   *
+   * <p>每次现算而不是启动时缓存：安装/停用工具后无需重启即可出现在 MCP 目录里。执行走 {@link ToolRuntime} 的隔离上下文，与 Web Agent
+   * 共用同一份登记与限制；能否调用仍由凭证能力（工具名）决定，出现在目录里不等于已授权。
+   */
+  private List<Tool> catalog() {
+    var result = new ArrayList<>(tools);
+    var known = new HashSet<>(names);
+    for (var definition : runtime.definitions()) {
+      var function = (Map<?, ?>) definition.get("function");
+      if (function == null) continue;
+      String name = String.valueOf(function.get("name"));
+      if (!name.matches("[A-Za-z][A-Za-z0-9_]{0,63}") || !known.add(name)) {
+        if (!name.matches("[A-Za-z][A-Za-z0-9_]{0,63}"))
+          org.slf4j.LoggerFactory.getLogger(McpToolServiceImpl.class)
+              .warn("已安装工具名不符合 MCP 工具命名规范，已跳过：{}", name);
+        continue;
+      }
+      result.add(
+          new Tool(
+              name,
+              String.valueOf(function.get("description")),
+              json.valueToTree(function.get("parameters")),
+              false));
+    }
+    return result;
   }
 
   private void add(String name, String description, JsonNode schema, boolean page) {
@@ -221,7 +253,7 @@ public class McpToolServiceImpl implements McpToolService {
   public List<Map<String, Object>> tools(ExternalActor actor) {
     var granted = new HashSet<>(clients.abilities(actor, "MCP"));
     var result = new ArrayList<Map<String, Object>>();
-    for (var tool : tools)
+    for (var tool : catalog())
       if (granted.contains(tool.name()))
         result.add(
             Map.of(
@@ -233,14 +265,14 @@ public class McpToolServiceImpl implements McpToolService {
 
   @Override
   public int totalTools() {
-    return tools.size();
+    return catalog().size();
   }
 
   @Override
   public JsonNode call(
       ExternalActor actor, String name, JsonNode args, String requestId, String idempotencyKey) {
     Tool tool =
-        tools.stream()
+        catalog().stream()
             .filter(item -> item.name().equals(name))
             .findFirst()
             .orElseThrow(() -> new ApiException(404, "MCP_TOOL_NOT_FOUND", "未知工具：" + name));
@@ -318,7 +350,10 @@ public class McpToolServiceImpl implements McpToolService {
       case "listTeams" -> {
         return json.valueToTree(Map.of("teams", clients.abilities(actor, "A2A")));
       }
-      default -> throw new ApiException(404, "MCP_TOOL_NOT_FOUND", "未知工具：" + name);
+      default -> {
+        if (runtime.owns(name)) return runtime.execute(name, requestId, args);
+        throw new ApiException(404, "MCP_TOOL_NOT_FOUND", "未知工具：" + name);
+      }
     }
   }
 

@@ -108,6 +108,40 @@ class AgentServiceImplTests {
   }
 
   @Test
+  void compactsOlderTurnsButKeepsRecentPromptAndFullHistoryOnDisk() throws Exception {
+    respondSse("data: {\"choices\":[{\"delta\":{\"content\":\"好\"}}]}\n\ndata: [DONE]\n\n");
+    String file = null;
+    var prompts = new ArrayList<String>();
+    for (int round = 0; round < 8; round++) {
+      String prompt = "ROUND" + round + "-" + String.valueOf((char) ('A' + round)).repeat(10_000);
+      prompts.add(prompt);
+      var output = new ByteArrayOutputStream();
+      agents.generate(
+          "p1",
+          new AgentGenerateReqDTO(
+              "p1", prompt, "deepseek", "deepseek-chat", null, file, null, null, null, null),
+          output,
+          "r" + round);
+      if (file == null) file = ndjsonFile(output.toString(StandardCharsets.UTF_8));
+    }
+
+    String last;
+    synchronized (requestBodies) {
+      last = requestBodies.get(requestBodies.size() - 1);
+    }
+    // 超过阈值后，较早轮次压成要点；最近一轮提问原样保留。
+    assertTrue(last.contains("上下文说明"), last.substring(0, Math.min(400, last.length())));
+    assertTrue(last.contains("[历史] ROUND0"), last.substring(0, Math.min(600, last.length())));
+    assertFalse(last.contains(prompts.get(0)));
+    assertTrue(last.contains(prompts.get(7)));
+
+    // 压缩只作用于请求，会话文件仍是完整历史（8 轮 = 16 条）。
+    var conversation = agents.get("p1", file);
+    assertEquals(16, conversation.messages().size());
+    assertEquals(prompts.get(0), conversation.messages().get(0).content());
+  }
+
+  @Test
   void generateEmitsSafeErrorWhenProviderFails() {
     server.createContext(
         "/chat/completions",
@@ -244,10 +278,16 @@ class AgentServiceImplTests {
     return found;
   }
 
+  private final List<String> requestBodies = new ArrayList<>();
+
   private void respondSse(String body) {
     server.createContext(
         "/chat/completions",
         exchange -> {
+          synchronized (requestBodies) {
+            requestBodies.add(
+                new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+          }
           byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
           exchange.getResponseHeaders().add("Content-Type", "text/event-stream");
           exchange.sendResponseHeaders(200, bytes.length);

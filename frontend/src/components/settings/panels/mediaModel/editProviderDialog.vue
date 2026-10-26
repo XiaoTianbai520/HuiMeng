@@ -63,7 +63,8 @@ import { IconPlus, IconTrash, IconDeviceFloppy, IconEdit } from "@tabler/icons-v
 import formCreate, { type Api, type Options } from "../../formCreate";
 import { modelIcon } from "@toonflow/model-icons";
 import messageMarkdown from "@/components/messageMarkdown.vue";
-import type { MediaProvider, MediaProviderModel } from "./types";
+import { toMediaProvider } from "./types";
+import type { MediaProvider, MediaProviderModel, MediaProviderRecord } from "./types";
 import { settings, saveSettings } from "@/stores/settings";
 import { invalidateNodeModels } from "@toonflow/nodes-scaffold/nodeAi";
 
@@ -144,11 +145,11 @@ async function saveModels() {
       ids.add(id);
       return { ...item, id, label };
     });
-    const { data } = await axios.put<{ code: number; data: MediaProvider; message?: string }>("/api/providers/media/save", {
-      fileName, revision: revision.value, models: values,
+    const { data } = await axios.put<{ code: number; data: MediaProviderRecord; message?: string }>("/api/v1/admin/providers/media/save", {
+      fileName, models: values,
     });
     if (data.code !== 200 || !data.data) throw new Error(data.message || "保存模型失败");
-    revision.value = data.data.revision;
+    revision.value = data.data.sha256 ?? revision.value;
     modelsSaved = true;
     invalidateNodeModels("media");
     await saveSettings(settings => {
@@ -160,9 +161,9 @@ async function saveModels() {
       return { mediaProviderConfigs: { ...configs, [providerId]: { ...current, ...config } } };
     });
     configSaved = true;
-    const response = await axios.get<{ code: number; data: MediaProvider[]; message?: string }>("/api/providers/media/list");
+    const response = await axios.get<{ code: number; data: MediaProviderRecord[]; message?: string }>("/api/v1/admin/providers/media/list");
     if (response.data.code !== 200 || !Array.isArray(response.data.data)) throw new Error(response.data.message || "读取最新模型失败");
-    const latest = response.data.data.find(item => item.fileName === fileName);
+    const latest = response.data.data.filter(item => item.fileName === fileName).map(toMediaProvider)[0];
     if (!latest) throw new Error("供应商已不存在");
     revision.value = latest.revision;
     emit("saved", latest);

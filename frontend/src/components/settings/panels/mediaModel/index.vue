@@ -46,7 +46,8 @@ import { computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref, shallo
 import { ElMessage } from "element-plus";
 import { IconPlus, IconSettings, IconEdit, IconTrash, IconDownload } from "@tabler/icons-vue";
 import logoUrl from "@toonflow/assets/logo.svg";
-import type { MediaProvider } from "./types";
+import { toMediaProvider } from "./types";
+import type { MediaProvider, MediaProviderRecord } from "./types";
 import { settings, saveSettings } from "@/stores/settings";
 import { invalidateNodeModels } from "@toonflow/nodes-scaffold/nodeAi";
 import tfAccount from "../../tfAccount.vue";
@@ -96,8 +97,8 @@ onBeforeUnmount(() => {
 async function loadProviders() {
   const request = ++loadRequest;
   try {
-    const { data } = await axios.get<{ data: MediaProvider[] }>("/api/providers/media/list");
-    if (request === loadRequest) providers.value = data.data;
+    const { data } = await axios.get<{ data: MediaProviderRecord[] }>("/api/v1/admin/providers/media/list");
+    if (request === loadRequest) providers.value = (data.data ?? []).map(toMediaProvider);
   } catch (error) {
     if (request === loadRequest) ElMessage.error(axios.isAxiosError(error) ? error.response?.data?.message || error.message : "读取媒体供应商失败");
   } finally {
@@ -122,11 +123,11 @@ async function fetchModels(provider: MediaProvider) {
   if (fetchingFile.value || deletingFile.value || !provider.modelsUrl || !provider.revision || provider.loadError) return;
   fetchingFile.value = provider.fileName;
   try {
-    const { data } = await axios.post<{ code: number; data: MediaProvider; message: string }>("/api/providers/media/models", {
-      fileName: provider.fileName, revision: provider.revision,
+    const { data } = await axios.post<{ code: number; data: MediaProviderRecord; message: string }>("/api/v1/admin/providers/media/models", {
+      fileName: provider.fileName,
     }, { timeout: 35000 });
     if (data.code !== 200 || !data.data) throw new Error(data.message || "获取模型失败");
-    saveProviderItem(data.data);
+    saveProviderItem(toMediaProvider(data.data));
     invalidateNodeModels("media");
     ElMessage.success("模型列表已更新");
   } catch (error) {
@@ -139,7 +140,7 @@ async function deleteProvider(provider: MediaProvider) {
   deletingFile.value = provider.fileName;
   let deleted = false;
   try {
-    await axios.delete("/api/providers/media/delete", { data: { fileName: provider.fileName, revision: provider.revision } });
+    await axios.delete("/api/v1/admin/providers/media/delete", { data: { fileName: provider.fileName } });
     deleted = true;
     loadRequest++;
     invalidateNodeModels("media");

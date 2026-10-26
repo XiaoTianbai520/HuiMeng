@@ -110,7 +110,8 @@ import tfRouterSource from "@toonflow/providers/media/tfRouter?raw";
 import apiMartSource from "@toonflow/providers/media/apiMart?raw";
 import metasoSource from "@toonflow/providers/media/metaso?raw";
 import compshareSource from "@toonflow/providers/media/compshare?raw";
-import type { MediaProvider } from "./types";
+import { toMediaProvider } from "./types";
+import type { MediaProvider, MediaProviderRecord } from "./types";
 import { providerPrompt } from "./providerPrompt";
 import { modelChoices, saveSettings } from "@/stores/settings";
 import { writeClipboardText } from "@/lib/clipboard";
@@ -231,9 +232,10 @@ async function addProvider() {
       }
     }
     if (!addedProvider.value) {
-      const { data } = await axios.post<{ data: MediaProvider }>("/api/providers/media/add", { source: source.value });
-      addedProvider.value = data.data;
-      emit("added", data.data);
+      const { data } = await axios.post<{ data: MediaProviderRecord }>("/api/v1/admin/providers/media/add", { source: source.value });
+      const provider = toMediaProvider(data.data);
+      addedProvider.value = provider;
+      emit("added", provider);
       invalidateNodeModels("media");
     }
     if (values) {
