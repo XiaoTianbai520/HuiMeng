@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-10-26T04:09:41Z",
+  "endpoint": "http://127.0.0.1:8188",
+  "promptId": "d9734815-8e9d-4c84-a461-b8e81198068f",
+  "mode": "t2v turbo8",
+  "spec": "5s 352p 16:9 608x352",
+  "seconds": 209.9,
+  "bytes": 175620,
+  "head": "ftyp",
+  "sha256": "38381ab527725234a36b05c65aee11f1e25ddde6e832d22dfdac35c566977cd0",
+  "file": "docs\\validation\\evidence\\m3-m05-h3-real.mp4"
+}
