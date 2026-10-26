@@ -181,3 +181,7 @@ M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队�
 ### 13.6 图片规格与执行器任务绑定（2026-10-26）
 
 规格算法固定在 `ComfyImageClient.resolve`：按供应商 1.0.0 的像素预算（0.5MP=736、1K=1024、2K=2048）与画幅比换算宽高，再按 32 对齐写入 `EmptyLatentImage`，同步编码节点 `resolution`；未知规格直接 400。图生图参考图只从项目媒体读取，占位前校验归属与 16 MiB 上限，执行时以 `/upload/image` 送入执行器，文件名由服务端运行 ID 生成，浏览器无法指定路径或文件名。提交后以执行器返回的 `prompt_id` 查询、取消与补偿核对，提交前写入本运行 ID 作为 LOST 对账的临时参照。名额事务先完成，再检查执行器就绪，避免无效请求占用或触达供应商。23 项 HTTP、10 项浏览器与真实 ComfyUI 两模型回归见[M3-03 记录](../validation/M3_MEDIA_GENERATION.md)。
+
+### 13.7 Agent 工具循环与页面执行边界（2026-10-26）
+
+工具定义固定在服务端资源 `agent/canvas-tools.json`，浏览器不能注入函数签名；画布未激活时不下发画布工具。`LlmClient.converse` 在一次流式响应内累积 `tool_calls` 片段，返回 `Turn(text, calls)`；服务端把工具结果以 `tool_call_id` 消息回填后续轮（最多 6 轮）。画布操作与提问都以 `callId` 挂起，`/cancel` 完成全部等待项，等待循环每 200 ms 检查取消标志。内部生图走 `MediaGenerationService.generateInternal`，与 HTTP 入口共用 `admit`（校验/幂等/五名额）与 `execute`，只是结果消费方式不同，因此 Agent 内部调用不会重复占位。会话改为 `.jsonl` 保存，工具调用与结果写在 `parts[].tool` 中，旧 `.json` 继续可读。证据见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。
