@@ -63,6 +63,7 @@ class SecurityIntegrationTests {
   @Autowired MediaGenerationService generation;
   @Autowired cn.huimeng.dao.mapper.GenerationRunMapper generationRuns;
   @org.springframework.boot.test.mock.mockito.MockBean cn.huimeng.common.io.ComfyImageClient comfy;
+  @org.springframework.boot.test.mock.mockito.MockBean cn.huimeng.common.io.ComfyVideoClient videos;
   @org.springframework.boot.test.mock.mockito.MockBean ObjectStorage objectStorage;
   final Map<String, byte[]> mediaObjects = new HashMap<>();
   MockHttpSession admin;
@@ -163,6 +164,29 @@ class SecurityIntegrationTests {
   void approveEdit() {
     jdbc.update(
         "UPDATE approved_models SET enabled=TRUE WHERE provider_id='qwenImage21Local' AND model_id='qwenImage21Edit'");
+  }
+
+  void approveVideo() {
+    jdbc.update(
+        "UPDATE approved_models SET enabled=TRUE WHERE provider_id='h3Local3060' AND model_id='h3T2v'");
+  }
+
+  Map<String, Object> videoInput() {
+    return Map.of(
+        "providerId",
+        "h3Local3060",
+        "modelId",
+        "h3T2v",
+        "mediaType",
+        "video",
+        "prompt",
+        "synthetic wave",
+        "size",
+        "352p",
+        "ratio",
+        "16:9",
+        "duration",
+        5);
   }
 
   /** 直接登记一条 READY 媒体并写入合成对象，供图生图参考图使用。 */
@@ -407,6 +431,13 @@ class SecurityIntegrationTests {
                 post(imagePath(project)).header("Idempotency-Key", "offline"), admin, imageInput()))
         .andExpect(status().isServiceUnavailable());
     assertThat(generationRuns.held(project)).isZero();
+    // 执行器就绪探测失败也留下原因，前端能说清是模型侧问题而不是用户操作问题。
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT failure_reason FROM generation_runs WHERE project_id=?",
+                String.class,
+                project))
+        .isEqualTo("MODEL_UNAVAILABLE");
     verify(comfy, never()).submit(anyString(), anyString(), anyString(), any(), anyString(), any());
   }
 
@@ -450,6 +481,132 @@ class SecurityIntegrationTests {
     mvc.perform(write(post(imagePath(project)).header("Idempotency-Key", "same"), admin, changed))
         .andExpect(status().isConflict());
     verify(comfy, times(1)).submit(eq(project), eq(run), anyString(), any(), anyString(), any());
+  }
+
+  @Test
+  void imageAndVideoRunsRecordTheirOwnKindSoStatisticsStayCorrect() throws Exception {
+    String project = createProject("generate-kinds");
+    member(project, adminId);
+    approveImage();
+    approveVideo();
+    when(videos.supports("h3T2v")).thenReturn(true);
+    when(videos.submit(anyString(), anyString(), any(), anyString(), anyList()))
+        .thenReturn("upstream-video");
+    when(videos.history("upstream-video"))
+        .thenReturn(json.readTree("{\"status\":{\"status_str\":\"success\",\"completed\":true}}"));
+    when(videos.output(eq("upstream-video"), any()))
+        .thenReturn(new byte[] {0, 0, 0, 24, 'f', 't', 'y', 'p', 'i', 's', 'o', 'm'});
+
+    var image =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "kind-image"),
+                    admin,
+                    imageInput()))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    mvc.perform(asyncDispatch(image)).andExpect(status().isOk());
+    var video =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "kind-video"),
+                    admin,
+                    videoInput()))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    mvc.perform(asyncDispatch(video))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data[0].spec").value("5s 352p 16:9 608×352"));
+
+    // 统计口径直接查库：两类运行各一条，视频不再被记成 image。
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM generation_runs WHERE project_id=? AND kind='image'",
+                Integer.class,
+                project))
+        .isEqualTo(1);
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM generation_runs WHERE project_id=? AND kind='video'",
+                Integer.class,
+                project))
+        .isEqualTo(1);
+    String videoRun =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=? AND kind='video'",
+            String.class,
+            project);
+    JsonNode body =
+        json.readTree(
+            mvc.perform(get("/api/v1/projects/" + project + "/runs/" + videoRun).session(admin))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
+    assertThat(body.path("kind").asText()).isEqualTo("video");
+    assertThat(body.path("state").asText()).isEqualTo("SUCCEEDED");
+    assertThat(body.path("reason").isNull()).isTrue();
+  }
+
+  @Test
+  void legacyVideoRunsAreRepairedOnlyWhenAnOutputFileProvesIt() throws Exception {
+    // V12 的回填口径：只修「有 mp4 产物」的历史运行；失败视频没有产物，保持原值，避免误改。
+    String project = createProject("kind-repair");
+    String produced = UUID.randomUUID().toString(), unproven = UUID.randomUUID().toString();
+    generationRuns.insert(project, produced, "image", adminId, "repair-1", "synthetic-hash");
+    generationRuns.insert(project, unproven, "image", adminId, "repair-2", "synthetic-hash");
+    jdbc.update(
+        "INSERT INTO project_media(id,project_id,object_key,filename,byte_size,sha256,state,created_by,created_at) VALUES (?,?,?,?,?,?,'READY',?,?)",
+        UUID.randomUUID().toString(),
+        project,
+        "projects/" + project + "/media/" + produced,
+        "generated-" + produced + ".mp4",
+        16L,
+        "synthetic-hash",
+        adminId,
+        java.sql.Timestamp.from(Instant.now()));
+    jdbc.update(
+        "UPDATE generation_runs SET kind='video' WHERE kind='image' AND EXISTS (SELECT 1 FROM project_media m WHERE m.filename = CONCAT('generated-', generation_runs.id, '.mp4'))");
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT kind FROM generation_runs WHERE id=?", String.class, produced))
+        .isEqualTo("video");
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT kind FROM generation_runs WHERE id=?", String.class, unproven))
+        .isEqualTo("image");
+  }
+
+  @Test
+  void failedRunCarriesControlledReasonAndNoInternals() throws Exception {
+    String project = createProject("generate-reason");
+    member(project, adminId);
+    approveImage();
+    when(comfy.history(anyString()))
+        .thenReturn(json.readTree("{\"status\":{\"status_str\":\"error\",\"completed\":false}}"));
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "reason"), admin, imageInput()))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());
+
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    String raw =
+        mvc.perform(get("/api/v1/projects/" + project + "/runs/" + run).session(admin))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    JsonNode body = json.readTree(raw);
+    assertThat(body.path("state").asText()).isEqualTo("FAILED");
+    assertThat(body.path("kind").asText()).isEqualTo("image");
+    assertThat(body.path("reason").asText()).isEqualTo("MODEL_UNAVAILABLE");
+    // 只下发词表代码：响应里不能出现异常类名、上游地址或执行器标识。
+    assertThat(raw).doesNotContain("Exception").doesNotContain("http://").doesNotContain("comfy");
   }
 
   @Test
@@ -537,7 +694,7 @@ class SecurityIntegrationTests {
     approveImage();
     for (int i = 0; i < 5; i++)
       generationRuns.insert(
-          full, UUID.randomUUID().toString(), adminId, "seed-" + i, "synthetic-hash");
+          full, UUID.randomUUID().toString(), "image", adminId, "seed-" + i, "synthetic-hash");
     mvc.perform(
             write(post(imagePath(full)).header("Idempotency-Key", "sixth"), admin, imageInput()))
         .andExpect(status().isTooManyRequests());
@@ -1360,11 +1517,12 @@ class SecurityIntegrationTests {
 
   @Test
   void freshMigrationsCreateConstraintsAndValidateOnRestart() {
+    // V1–V12 全部成功落地；新增迁移时同步这个数字，避免漏跑。
     assertThat(
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(11);
+        .isEqualTo(12);
     assertThatThrownBy(
             () ->
                 jdbc.update(

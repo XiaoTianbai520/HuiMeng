@@ -17,10 +17,12 @@ public class GenerationRunMapper {
               r.getString("id"),
               r.getString("project_id"),
               r.getString("actor_id"),
+              r.getString("kind"),
               r.getString("state"),
               r.getBoolean("capacity_held"),
               r.getString("request_hash"),
               r.getString("upstream_ref"),
+              r.getString("failure_reason"),
               r.getTimestamp("started_at").toInstant(),
               r.getTimestamp("ended_at") == null ? null : r.getTimestamp("ended_at").toInstant());
   private final JdbcTemplate jdbc;
@@ -57,12 +59,13 @@ public class GenerationRunMapper {
     return rows.isEmpty() ? null : rows.get(0);
   }
 
-  public void insert(String project, String id, String actor, String key, String hash) {
+  public void insert(String project, String id, String kind, String actor, String key, String hash) {
     jdbc.update(
-        "INSERT INTO generation_runs(id,project_id,actor_type,actor_id,kind,state,capacity_held,operation,idempotency_key,request_hash,started_at) VALUES (?,?,'USER',?,'image','RESERVED',TRUE,'generateMedia',?,?,?)",
+        "INSERT INTO generation_runs(id,project_id,actor_type,actor_id,kind,state,capacity_held,operation,idempotency_key,request_hash,started_at) VALUES (?,?,'USER',?,?,'RESERVED',TRUE,'generateMedia',?,?,?)",
         id,
         project,
         actor,
+        kind,
         key,
         hash,
         Timestamp.from(Instant.now()));
@@ -96,11 +99,17 @@ public class GenerationRunMapper {
   }
 
   public void finish(String project, String id, String state, boolean hold) {
+    finish(project, id, state, hold, null);
+  }
+
+  /** 失败原因写入受控词表代码；传 null 时保留已有原因，避免收敛过程把首次判定覆盖掉。 */
+  public void finish(String project, String id, String state, boolean hold, String reason) {
     jdbc.update(
-        "UPDATE generation_runs SET state=?,capacity_held=?,ended_at=? WHERE project_id=? AND id=? AND capacity_held=TRUE",
+        "UPDATE generation_runs SET state=?,capacity_held=?,ended_at=?,failure_reason=COALESCE(?,failure_reason) WHERE project_id=? AND id=? AND capacity_held=TRUE",
         state,
         hold,
         Timestamp.from(Instant.now()),
+        reason,
         project,
         id);
   }
@@ -108,9 +117,9 @@ public class GenerationRunMapper {
   /** 进程重启后没有线程再推动这些运行：没提交到上游的当场释放名额，已提交的等核对上游终态。 */
   public void markLostAfterRestart() {
     jdbc.update(
-        "UPDATE generation_runs SET state='LOST',capacity_held=FALSE,ended_at=NOW() WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING') AND (upstream_ref IS NULL OR upstream_ref='')");
+        "UPDATE generation_runs SET state='LOST',capacity_held=FALSE,ended_at=NOW(),failure_reason='EXECUTION_INTERRUPTED' WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING') AND (upstream_ref IS NULL OR upstream_ref='')");
     jdbc.update(
-        "UPDATE generation_runs SET state='LOST' WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING')");
+        "UPDATE generation_runs SET state='LOST',failure_reason='EXECUTION_INTERRUPTED' WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING')");
   }
 
   public List<GenerationRunDO> lost() {

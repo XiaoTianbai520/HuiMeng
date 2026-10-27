@@ -91,11 +91,49 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     return new RunRespDTO(
         run.id(),
         run.projectId(),
-        "image",
+        run.kind(),
         run.state(),
+        run.failureReason(),
         run.capacityHeld(),
         run.createdAt(),
         run.endedAt());
+  }
+
+  /**
+   * 失败原因只落固定词表代码，前端按前缀分类展示。不落异常文本，避免把上游地址、桶名或堆栈带出去。
+   */
+  private static String reasonOf(Throwable ex) {
+    if (ex instanceof StorageFailure) return "EXECUTION_STORAGE_UNAVAILABLE";
+    if (ex instanceof ApiException api)
+      return switch (api.code) {
+        case "INVALID_ARGUMENT", "UNSUPPORTED_MODEL", "UNSUPPORTED_MEDIA_TYPE", "NOT_FOUND" ->
+            "USER_INVALID_REQUEST";
+        case "CAPABILITY_FORBIDDEN", "PROJECT_FORBIDDEN" -> "USER_NOT_PERMITTED";
+        case "PROJECT_CAPACITY_EXCEEDED", "RATE_LIMITED" -> "USER_CAPACITY_EXCEEDED";
+        case "MODEL_TIMEOUT" -> "MODEL_TIMEOUT";
+        case "EXECUTOR_UNAVAILABLE" -> "MODEL_UNAVAILABLE";
+        case "STORAGE_UNAVAILABLE" -> "EXECUTION_STORAGE_UNAVAILABLE";
+        default -> "EXECUTION_FAILED";
+      };
+    if (ex instanceof InterruptedException) return "EXECUTION_INTERRUPTED";
+    return "EXECUTION_INTERNAL";
+  }
+
+  /** 产物入库失败属于执行侧问题，与「模型没出图」区分开；保留原始异常供日志定位。 */
+  private static final class StorageFailure extends RuntimeException {
+    StorageFailure(Throwable cause) {
+      super(cause.getMessage(), cause);
+    }
+  }
+
+  private ProjectMediaRespDTO upload(
+      String project, String filename, byte[] bytes, String requestId) {
+    try {
+      return media.upload(
+          project, filename, bytes.length, new ByteArrayInputStream(bytes), requestId);
+    } catch (RuntimeException ex) {
+      throw new StorageFailure(ex);
+    }
   }
 
   /** 服务端实际提交的规格；省略 size/ratio 等价于 1K、1:1，绝不静默沿用页面遗留值。 */
@@ -244,7 +282,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
               }
               if (runs.held(project) >= 5)
                 throw new ApiException(429, "PROJECT_CAPACITY_EXCEEDED", "当前项目已有五个活跃生成任务");
-              runs.insert(project, id, owner.id(), key, hash);
+              runs.insert(project, id, video ? "video" : "image", owner.id(), key, hash);
               audit.record(owner.id(), project, "MEDIA_GENERATE", id, "ADMITTED", requestId);
               return runs.find(project, id);
             });
@@ -254,17 +292,37 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
 
   /** 名额已在库中占用后才探测执行器；不可达立即释放，不留下待核查占位。 */
   private void requireExecutor(String project, String id, boolean video) {
+    probe(
+        project,
+        id,
+        "MODEL_UNAVAILABLE",
+        () -> {
+          if (video) videos.requireAvailable();
+          else comfy.requireAvailable();
+        });
+    probe(project, id, "EXECUTION_STORAGE_UNAVAILABLE", storage::requireAvailable);
+    probe(
+        project,
+        id,
+        "MODEL_UNAVAILABLE",
+        () -> {
+          if (video) videos.checkReady();
+          else comfy.checkReady();
+        });
+  }
+
+  private void probe(String project, String id, String reason, Runnable check) {
     try {
-      if (video) videos.requireAvailable();
-      else comfy.requireAvailable();
-      storage.requireAvailable();
-      if (video) videos.checkReady();
-      else comfy.checkReady();
+      check.run();
     } catch (RuntimeException ex) {
-      var current = runs.find(project, id);
-      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
+      release(project, id, reason);
       throw ex;
     }
+  }
+
+  private void release(String project, String id, String reason) {
+    var current = runs.find(project, id);
+    if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false, reason);
   }
 
   @Override
@@ -288,8 +346,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
             }
           });
     } catch (RejectedExecutionException ex) {
-      var current = runs.find(project, id);
-      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
+      release(project, id, "EXECUTION_BUSY");
       throw ComfyImageClient.unavailable();
     }
     return new GenerationSubmission(response(admission.run()), false, stream);
@@ -304,8 +361,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
     try {
       workers.execute(() -> execute(project, admission, input, requestId, value -> {}));
     } catch (RejectedExecutionException ex) {
-      var current = runs.find(project, id);
-      if (current != null && current.capacityHeld()) runs.finish(project, id, "FAILED", false);
+      release(project, id, "EXECUTION_BUSY");
       throw ComfyImageClient.unavailable();
     }
     return response(runs.find(project, id));
@@ -384,7 +440,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       }
       if (!confirmedTerminal) {
         videos.cancel(promptId);
-        throw ComfyVideoClient.unavailable();
+        throw new ApiException(504, "MODEL_TIMEOUT", "生成超时");
       }
       if (runs.find(project, id).state().equals("CANCELLING")) {
         runs.finish(project, id, "CANCELLED", false);
@@ -393,13 +449,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       bind(owner);
       authorization.requireApproved(project, input.providerId(), input.modelId());
       byte[] bytes = videos.output(promptId, record);
-      var result =
-          media.upload(
-              project,
-              "generated-" + id + ".mp4",
-              bytes.length,
-              new ByteArrayInputStream(bytes),
-              requestId);
+      var result = upload(project, "generated-" + id + ".mp4", bytes, requestId);
       if (runs.succeed(project, id) != 1) {
         media.discardGenerated(project, result.id(), owner.id(), requestId);
         runs.finish(project, id, "CANCELLED", false);
@@ -429,11 +479,12 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
             ex.getClass().getSimpleName(),
             ex.getMessage());
       boolean held = current != null && current.capacityHeld();
+      String reason = reasonOf(ex);
       if (remoteAttempted && !confirmedTerminal) {
-        runs.finish(project, id, "LOST", held);
+        runs.finish(project, id, "LOST", held, reason);
         sink.accept(new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
       } else if (held) {
-        runs.finish(project, id, "FAILED", false);
+        runs.finish(project, id, "FAILED", false, reason);
         sink.accept(new MediaResultRespDTO(503, List.of(), "生成失败，请稍后重试"));
       }
     } finally {
@@ -536,7 +587,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
         }
         Thread.sleep(1000);
       }
-      if (!confirmedTerminal) throw ComfyImageClient.unavailable();
+      if (!confirmedTerminal) throw new ApiException(504, "MODEL_TIMEOUT", "生成超时");
       if (runs.find(project, id).state().equals("CANCELLING")) {
         runs.finish(project, id, "CANCELLED", false);
         throw ApiException.forbidden();
@@ -546,13 +597,7 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       bind(owner);
       authorization.requireApproved(project, input.providerId(), input.modelId());
       byte[] bytes = comfy.output(project, id, record);
-      var result =
-          media.upload(
-              project,
-              "generated-" + id + ".png",
-              bytes.length,
-              new ByteArrayInputStream(bytes),
-              requestId);
+      var result = upload(project, "generated-" + id + ".png", bytes, requestId);
       if (runs.succeed(project, id) != 1) {
         media.discardGenerated(project, result.id(), owner.id(), requestId);
         runs.finish(project, id, "CANCELLED", false);
@@ -585,7 +630,8 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
             project,
             id,
             remoteAttempted && !confirmedTerminal ? "LOST" : "FAILED",
-            remoteAttempted && !confirmedTerminal);
+            remoteAttempted && !confirmedTerminal,
+            reasonOf(ex));
       sink.accept(new MediaResultRespDTO(503, List.of(), "生成未完成，请查询运行状态后重试"));
       if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
     } finally {
