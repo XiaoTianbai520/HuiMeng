@@ -59,7 +59,8 @@ public class GenerationRunMapper {
     return rows.isEmpty() ? null : rows.get(0);
   }
 
-  public void insert(String project, String id, String kind, String actor, String key, String hash) {
+  public void insert(
+      String project, String id, String kind, String actor, String key, String hash) {
     jdbc.update(
         "INSERT INTO generation_runs(id,project_id,actor_type,actor_id,kind,state,capacity_held,operation,idempotency_key,request_hash,started_at) VALUES (?,?,'USER',?,?,'RESERVED',TRUE,'generateMedia',?,?,?)",
         id,
@@ -128,10 +129,10 @@ public class GenerationRunMapper {
         ROW);
   }
 
-  /** 上游长期查不到终态（例如执行器被重建）时的兜底，避免名额被永久占用。 */
+  /** 上游长期查不到终态（例如执行器被重建）时的兜底，避免名额被永久占用。从进入 LOST 的时刻算起。 */
   public List<GenerationRunDO> lostOlderThan(int minutes) {
     return jdbc.query(
-        "SELECT * FROM generation_runs WHERE capacity_held=TRUE AND state='LOST' AND started_at < ?",
+        "SELECT * FROM generation_runs WHERE capacity_held=TRUE AND state='LOST' AND COALESCE(ended_at, started_at) < ?",
         ROW,
         Timestamp.from(Instant.now().minus(Duration.ofMinutes(minutes))));
   }

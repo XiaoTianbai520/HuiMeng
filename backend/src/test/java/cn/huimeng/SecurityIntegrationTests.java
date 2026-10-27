@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cn.huimeng.common.exception.*;
 import cn.huimeng.common.storage.*;
 import cn.huimeng.dto.req.CreateUserReqDTO;
+import cn.huimeng.dto.req.GenerateImageReqDTO;
 import cn.huimeng.dto.req.IssueExternalClientReqDTO;
 import cn.huimeng.security.*;
 import cn.huimeng.service.*;
@@ -17,6 +18,8 @@ import java.io.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -484,6 +487,106 @@ class SecurityIntegrationTests {
   }
 
   @Test
+  void mediaSubmissionsReachExecutorOneAtATimeWhileBothRunsStayAccepted() throws Exception {
+    // 单卡执行器必须串行：第二个请求已受理（有自己的运行号），但第一个结束前不得触达执行器。
+    String project = createProject("serial-executor");
+    member(project, adminId);
+    approveImage();
+    Actor actor = users.findActor(adminId);
+    SecurityContextHolder.getContext()
+        .setAuthentication(new UsernamePasswordAuthenticationToken(actor, null, List.of()));
+
+    var inFlight = new AtomicInteger();
+    var maxInFlight = new AtomicInteger();
+    var submits = new AtomicInteger();
+    var firstEntered = new CountDownLatch(1);
+    var releaseFirst = new CountDownLatch(1);
+    when(comfy.submit(anyString(), anyString(), anyString(), any(), anyString(), any()))
+        .thenAnswer(
+            call -> {
+              int sequence = submits.incrementAndGet();
+              maxInFlight.accumulateAndGet(inFlight.incrementAndGet(), Math::max);
+              try {
+                if (sequence == 1) {
+                  firstEntered.countDown();
+                  assertThat(releaseFirst.await(10, TimeUnit.SECONDS)).isTrue();
+                }
+                return call.getArgument(1);
+              } finally {
+                inFlight.decrementAndGet();
+              }
+            });
+
+    var first =
+        generation.start(
+            project,
+            new GenerateImageReqDTO(
+                "qwenImage21Local", "qwenImage21Text", "image", "first", "1K", "1:1", null, null),
+            "serial-1",
+            "req-serial-1");
+    assertThat(firstEntered.await(5, TimeUnit.SECONDS)).isTrue();
+    var second =
+        generation.start(
+            project,
+            new GenerateImageReqDTO(
+                "qwenImage21Local", "qwenImage21Text", "image", "second", "1K", "1:1", null, null),
+            "serial-2",
+            "req-serial-2");
+
+    Thread.sleep(1500);
+    assertThat(submits.get()).isEqualTo(1);
+    assertThat(second.state()).isEqualTo("RESERVED");
+
+    releaseFirst.countDown();
+    awaitRunState(project, first.id(), "SUCCEEDED");
+    awaitRunState(project, second.id(), "SUCCEEDED");
+    assertThat(maxInFlight.get()).isEqualTo(1);
+  }
+
+  void awaitRunState(String project, String run, String state) throws Exception {
+    for (int attempt = 0; attempt < 100; attempt++) {
+      String current =
+          jdbc.queryForObject(
+              "SELECT state FROM generation_runs WHERE project_id=? AND id=?",
+              String.class,
+              project,
+              run);
+      if (state.equals(current)) return;
+      Thread.sleep(100);
+    }
+    fail("run " + run + " did not reach " + state);
+  }
+
+  @Test
+  void transientHistoryReadFailuresDoNotFailTheRun() throws Exception {
+    // 单次执行器读超时不应把已经提交的任务判死；连续三次才收敛为失败。
+    String project = createProject("transient-poll");
+    member(project, adminId);
+    approveImage();
+    when(comfy.history(anyString()))
+        .thenThrow(new ApiException(503, "EXECUTOR_UNAVAILABLE", "synthetic"))
+        .thenThrow(new ApiException(503, "EXECUTOR_UNAVAILABLE", "synthetic"))
+        .thenReturn(json.readTree("{\"status\":{\"status_str\":\"success\",\"completed\":true}}"));
+
+    var initial =
+        mvc.perform(
+                write(
+                    post(imagePath(project)).header("Idempotency-Key", "transient"),
+                    admin,
+                    imageInput()))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+    mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());
+
+    String run =
+        jdbc.queryForObject(
+            "SELECT id FROM generation_runs WHERE project_id=?", String.class, project);
+    assertThat(
+            jdbc.queryForObject("SELECT state FROM generation_runs WHERE id=?", String.class, run))
+        .isEqualTo("SUCCEEDED");
+  }
+
+  @Test
   void imageAndVideoRunsRecordTheirOwnKindSoStatisticsStayCorrect() throws Exception {
     String project = createProject("generate-kinds");
     member(project, adminId);
@@ -587,7 +690,9 @@ class SecurityIntegrationTests {
     var initial =
         mvc.perform(
                 write(
-                    post(imagePath(project)).header("Idempotency-Key", "reason"), admin, imageInput()))
+                    post(imagePath(project)).header("Idempotency-Key", "reason"),
+                    admin,
+                    imageInput()))
             .andExpect(request().asyncStarted())
             .andReturn();
     mvc.perform(asyncDispatch(initial)).andExpect(status().isOk());

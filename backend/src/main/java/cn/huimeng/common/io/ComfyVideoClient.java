@@ -160,6 +160,8 @@ public class ComfyVideoClient {
     }
     var body = json.createObjectNode();
     body.set("prompt", graph);
+    // 让上游任务 ID 与本地运行 ID 一致：POST 已被接受但响应丢失时，核对任务仍能按运行 ID 查到。
+    body.put("prompt_id", run);
     body.put("client_id", "huimeng-" + run);
     var root = request("POST", "/prompt", body.toString());
     String promptId = root.path("prompt_id").asText("");

@@ -172,15 +172,14 @@ public class ComfyImageClient {
                   .header("Content-Type", "multipart/form-data; boundary=" + boundary)
                   .POST(HttpRequest.BodyPublishers.ofByteArray(head.toByteArray()))
                   .build(),
-              HttpResponse.BodyHandlers.ofInputStream());
-      try (var input = response.body()) {
-        if (response.statusCode() != 200) throw unavailable();
-        var result = json.readTree(input.readNBytes(64 * 1024));
-        String name = result.path("name").asText();
-        String subfolder = result.path("subfolder").asText("");
-        if (!IMAGE_NAME.matcher(name).matches()) throw unavailable();
-        return subfolder.isBlank() ? name : subfolder + "/" + name;
-      }
+              HttpResponse.BodyHandlers.ofByteArray());
+      byte[] body = response.body();
+      if (response.statusCode() != 200 || body.length > 64 * 1024) throw unavailable();
+      var result = json.readTree(body);
+      String name = result.path("name").asText();
+      String subfolder = result.path("subfolder").asText("");
+      if (!IMAGE_NAME.matcher(name).matches()) throw unavailable();
+      return subfolder.isBlank() ? name : subfolder + "/" + name;
     } catch (IOException ex) {
       throw unavailable();
     } catch (InterruptedException ex) {
@@ -228,17 +227,14 @@ public class ComfyImageClient {
                   .timeout(Duration.ofSeconds(60))
                   .GET()
                   .build(),
-              HttpResponse.BodyHandlers.ofInputStream());
-      try (var input = response.body()) {
-        if (response.statusCode() != 200) throw unavailable();
-        byte[] bytes = input.readNBytes(16 * 1024 * 1024 + 1);
-        if (bytes.length > 16 * 1024 * 1024
-            || bytes.length < 8
-            || !Arrays.equals(
-                Arrays.copyOf(bytes, 8), new byte[] {(byte) 137, 80, 78, 71, 13, 10, 26, 10}))
-          throw unavailable();
-        return bytes;
-      }
+              HttpResponse.BodyHandlers.ofByteArray());
+      byte[] body = response.body();
+      if (response.statusCode() != 200 || body.length > 16 * 1024 * 1024) throw unavailable();
+      if (body.length < 8
+          || !Arrays.equals(
+              Arrays.copyOf(body, 8), new byte[] {(byte) 137, 80, 78, 71, 13, 10, 26, 10}))
+        throw unavailable();
+      return body;
     } catch (IOException ex) {
       throw unavailable();
     } catch (InterruptedException ex) {
@@ -263,15 +259,15 @@ public class ComfyImageClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body)));
       else builder.GET();
-      var response = http.send(builder.build(), HttpResponse.BodyHandlers.ofInputStream());
-      try (var input = response.body()) {
-        if (response.statusCode() == 404 && path.startsWith("/api/jobs/"))
-          return json.createObjectNode();
-        if (response.statusCode() != 200) throw unavailable();
-        byte[] bytes = input.readNBytes(1024 * 1024 + 1);
-        if (bytes.length > 1024 * 1024) throw unavailable();
-        return json.readTree(bytes);
-      }
+      // 用 ByteArray 而不是 InputStream：HttpRequest.timeout 只保证响应头到达，流式读取不受它约束。
+      // 执行器若发完响应头就停止吐字节，线程会永久卡住并占着名额；字节数组让超时覆盖整个响应体。
+      var response = http.send(builder.build(), HttpResponse.BodyHandlers.ofByteArray());
+      byte[] bytes = response.body();
+      if (bytes.length > 1024 * 1024) throw unavailable();
+      if (response.statusCode() == 404 && path.startsWith("/api/jobs/"))
+        return json.createObjectNode();
+      if (response.statusCode() != 200) throw unavailable();
+      return json.readTree(bytes);
     } catch (IOException ex) {
       throw unavailable();
     } catch (InterruptedException ex) {
