@@ -1,0 +1,108 @@
+{
+  "evidence": "M4 试用期加固：真实部署验收",
+  "recordedAt": "2026-10-27T18:10:00+08:00",
+  "deployment": {
+    "host": "192.168.1.102",
+    "image": "huimeng-api:m4h",
+    "imageId": "eb6331ccca0e",
+    "previousImage": "huimeng-api:prev-m4h (cea8a73f6ef0, Flyway V11)",
+    "jarSha256": "52f189a0c6caa1826a65f4ecbf3fac6dcbb1bda12118dcf6376bfa70e3cf6552",
+    "jarBytes": 108414823,
+    "nativeLibSha256": "ca07953d595210082339753d9e818a1fdb40509a17a41914d9a2cb0d2df6b6af",
+    "backup": {
+      "path": "/data/backup/huimeng/pre-v12-20261027-174016/db.sql",
+      "bytes": 4835214,
+      "sha256": "7720a34c338588c9e91d892a9695d4d59e283652bd998d1448a36626d5cfa7bd",
+      "restoreDrill": {
+        "migrations": 11,
+        "tables": 20,
+        "users": 6,
+        "projects": 8,
+        "auditEvents": 333,
+        "projectMedia": 0,
+        "generationRuns": 0,
+        "scratchDatabaseDropped": true
+      }
+    },
+    "migration": {
+      "flywayBefore": 11,
+      "flywayAfter": 12,
+      "applied": "12 - generation run kind and failure reason",
+      "seconds": 0.096,
+      "failureReasonColumn": "varchar(48) NULL",
+      "rowsUnchanged": { "users": 6, "projects": 8, "auditEvents": 333 }
+    },
+    "startup": { "firstSeconds": 5.161, "afterEnvSeconds": 3.145, "errorsInLog": 0, "web": 200, "csrf": 200 }
+  },
+  "textModel": {
+    "envFlag": "HUIMENG_LLM_ENABLED=true (api.env backed up as api.env.bak-20261027-174208)",
+    "providerConfigured": [["deepseek", true]],
+    "enabledModels": ["deepseek/deepseek-chat", "h3Local3060/h3T2v", "qwenImage21Local/qwenImage21Text", "qwenImage21Local/qwenImage21Edit"],
+    "secretHandling": "通过 PUT /api/v1/admin/providers/deepseek/secret 写入（204），密钥经临时文件传入并在用后删除，未入库明文、未进仓库或日志"
+  },
+  "a2a": {
+    "method": "SendMessage",
+    "team": "m5team",
+    "httpStatus": 200,
+    "state": "TASK_STATE_COMPLETED",
+    "elapsedSeconds": 7.6,
+    "text": "1 加 1 等于 2。",
+    "note": "该部署第一次真实完成的 A2A 文本任务；此前无文本密钥时一律 TASK_STATE_REJECTED"
+  },
+  "mcp": {
+    "initialize": { "status": 200, "sessionIssued": true, "protocolVersion": "2025-06-18" },
+    "toolsList": ["listMedia", "listWorkspaceFiles"],
+    "ping": { "status": 200 },
+    "toolsCall": { "name": "listWorkspaceFiles", "status": 200, "elapsedSeconds": 0.05, "isError": false },
+    "deniedTool": { "name": "readWorkspaceFile", "status": 403, "code": -32099, "message": "该客户端无权调用此能力" },
+    "invalidToken": { "status": 401, "challenge": "Bearer" }
+  },
+  "media": {
+    "runs": { "total": 7, "image": 6, "video": 1, "succeeded": 7, "failed": 0, "lost": 0, "timeout": 0 },
+    "kindAllCorrect": true,
+    "mediaCount": 7,
+    "details": [
+      { "kind": "image", "seconds": 66, "state": "SUCCEEDED", "reason": null, "phase": "single" },
+      { "kind": "video", "seconds": 343, "state": "SUCCEEDED", "reason": null, "phase": "single", "model": "h3T2v 5s 352p 16:9" },
+      { "kind": "image", "seconds": 173, "state": "SUCCEEDED", "reason": null, "phase": "queue" },
+      { "kind": "image", "seconds": 241, "state": "SUCCEEDED", "reason": null, "phase": "queue" },
+      { "kind": "image", "seconds": 654, "state": "SUCCEEDED", "reason": null, "phase": "queue" },
+      { "kind": "image", "seconds": 731, "state": "SUCCEEDED", "reason": null, "phase": "queue" },
+      { "kind": "image", "seconds": 831, "state": "SUCCEEDED", "reason": null, "phase": "queue" }
+    ]
+  },
+  "queue": {
+    "submitted": 6,
+    "accepted": 5,
+    "rejectedBusy": 1,
+    "rejectedStatus": 429,
+    "rejectedMilliseconds": 20,
+    "rejectedRequestId": "bc24befc-55d3-4712-b86c-64ba74eb6cdc",
+    "acceptedRequestIds": [
+      "62653573-79af-443e-a9dd-ced89e06dcc5",
+      "5b3ba6ff-a841-44e5-bbbc-bbe8441d555d",
+      "83f0425a-ae6c-4841-b2f4-7ae4dc28e8a7",
+      "543cc306-1479-43f7-89b3-b289e9c6e20d",
+      "e7e81b63-e6d6-428d-8f1f-3a005468252b"
+    ],
+    "disconnectDuringQueue": "排队阶段本地会话超时断开，服务端 5 个任务全部跑完并落库"
+  },
+  "cleanup": {
+    "mediaDeleted": 7,
+    "mediaDeleteStatus": 204,
+    "clientRevoked": 204,
+    "projectsBefore": 8,
+    "projectsAfter": 8,
+    "mediaAfter": 0,
+    "runsAfter": 0,
+    "externalClientsAfter": 4,
+    "workspaceRemoved": "/data/huimeng/workspaces/e38508ba-3b29-44dc-9f34-43694a4e41d9"
+  },
+  "localChecks": {
+    "backendTests": { "total": 166, "failures": 0 },
+    "frontendTests": { "total": 26, "failures": 0 },
+    "frontendTypecheck": "pass",
+    "frontendBuild": "exit 0",
+    "openapiSpecValid": true
+  }
+}
