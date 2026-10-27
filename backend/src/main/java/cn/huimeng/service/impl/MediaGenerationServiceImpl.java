@@ -416,16 +416,18 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                       spec.display())),
               "success"));
     } catch (Exception ex) {
-      LOG.warn(
-          "视频生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
-          project,
-          id,
-          remoteAttempted,
-          confirmedTerminal,
-          ex.getClass().getSimpleName(),
-          ex.getMessage());
       cancelQuietly(promptId);
       var current = runs.find(project, id);
+      // 用户主动取消不是失败，别把它记成故障，否则失败率统计会失真。
+      if (current == null || !"CANCELLED".equals(current.state()))
+        LOG.warn(
+            "视频生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
+            project,
+            id,
+            remoteAttempted,
+            confirmedTerminal,
+            ex.getClass().getSimpleName(),
+            ex.getMessage());
       boolean held = current != null && current.capacityHeld();
       if (remoteAttempted && !confirmedTerminal) {
         runs.finish(project, id, "LOST", held);
@@ -567,15 +569,17 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                       spec.display())),
               "success"));
     } catch (Exception ex) {
-      LOG.warn(
-          "图片生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
-          project,
-          id,
-          remoteAttempted,
-          confirmedTerminal,
-          ex.getClass().getSimpleName(),
-          ex.getMessage());
       var current = runs.find(project, id);
+      // 用户主动取消不是失败，别把它记成故障，否则失败率统计会失真。
+      if (current == null || !"CANCELLED".equals(current.state()))
+        LOG.warn(
+            "图片生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
+            project,
+            id,
+            remoteAttempted,
+            confirmedTerminal,
+            ex.getClass().getSimpleName(),
+            ex.getMessage());
       if (current != null && current.capacityHeld())
         runs.finish(
             project,
