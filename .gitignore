@@ -20,3 +20,5 @@ frontend/data/
 **/.idea/
 
 docs/validation/scripts/*.log
+.run/*.log
+.run/*.txt
