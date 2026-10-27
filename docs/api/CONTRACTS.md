@@ -1,6 +1,6 @@
 # 绘梦 1.0 接口与数据契约（CONTRACTS）
 
-> **状态：M1 冻结契约；当前 49 操作/42 路径中 41 有实现。** M2 当前接通范围的开发/隔离验收完成，生成仅固定 Qwen 文生图 1K/1:1，正式部署未升级，完整创作/安装/协议继续 M3。字段以[OpenAPI](openapi.yaml)和[冻结记录](M1_CONTRACT_REVIEW.md)为准；127 条映射中 13 条 frozen、87 条兼容细项仍为 proposed，源台账 publicEnabled 全部 false。见[M2 最终验收](../validation/M2_ACCEPTANCE.md)。
+> **状态：1.0 契约（M1 冻结、M3 增补）；当前 66 操作/59 路径中 61 有实现。** 字段以[OpenAPI](openapi.yaml)与[route-map](route-map.json)为准；128 条映射中 23 条 frozen、78 条 proposed、25 条 excluded、2 条 internal，其中 R128 为平台新增（`platformAddition: true`），源台账 publicEnabled 全部 false。真实部署验收见[M4 加固验收](../validation/M4_HARDENING_20261027.md)，冻结记录见[M1_CONTRACT_REVIEW](M1_CONTRACT_REVIEW.md)。
 
 ## 1. 版本、域名与认证
 

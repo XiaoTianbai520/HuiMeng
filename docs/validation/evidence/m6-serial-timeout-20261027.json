@@ -1,0 +1,92 @@
+{
+  "milestone": "M4 试用期加固补验（执行器串行、时限、契约工具链）",
+  "deployedAt": "2026-10-27T19:27:47+08:00",
+  "server": "192.168.1.102",
+  "image": {
+    "tag": "huimeng-api:m4q",
+    "id": "68ae7766bf70",
+    "rollbackTag": "huimeng-api:prev-m4q",
+    "rollbackId": "eb6331ccca0e",
+    "flyway": "V12",
+    "startupSeconds": 4.251,
+    "errorsAfterStart": 0,
+    "web": 200,
+    "csrf": 200
+  },
+  "config": {
+    "imageDeadlineSeconds": 1800,
+    "videoDeadlineSeconds": 5400,
+    "queueTimeoutSeconds": 3600,
+    "streamTimeoutMillis": 10800000
+  },
+  "serial": {
+    "project": "ac121a29-e464-453f-918c-2a8c14669d79",
+    "projectName": "m6-serial-5d7843eb",
+    "wallSeconds": 105.8,
+    "description": "两个图片请求同时提交；两个都立即拿到响应头并保持流式等待，执行窗口不重叠。",
+    "requests": {
+      "first": {
+        "runId": "b0697e82-fffe-412d-a99e-8d4458717a01",
+        "http": 200,
+        "code": 200,
+        "ttfbSeconds": 0.17,
+        "elapsedSeconds": 45.0,
+        "state": "SUCCEEDED",
+        "kind": "image",
+        "reason": null
+      },
+      "second": {
+        "runId": "62fb51cc-bbc8-4511-adc7-91a800bc179f",
+        "http": 200,
+        "code": 200,
+        "ttfbSeconds": 0.12,
+        "elapsedSeconds": 105.8,
+        "state": "SUCCEEDED",
+        "kind": "image",
+        "reason": null
+      }
+    },
+    "statesAt3s": {
+      "0": "RUNNING",
+      "1": "RESERVED"
+    },
+    "executionOrder": [0, 1],
+    "comfyWindowsMs": {
+      "0": {"start": 1793100691597, "end": 1793100735857},
+      "1": {"start": 1793100736744, "end": 1793100796273}
+    },
+    "comfyWindowsLocal": {
+      "0": "2026-10-27T19:31:31.597+08:00 ~ 19:32:15.857+08:00",
+      "1": "2026-10-27T19:32:16.744+08:00 ~ 19:33:16.273+08:00"
+    },
+    "gapMillis": 887,
+    "serialByComfyWindow": true,
+    "serialByHttpCompletion": true,
+    "queueWaitMillis": 45135,
+    "apiLogLines": [
+      "2026-10-27T11:31:31.281Z 图片提交执行器 run=b0697e82-fffe-412d-a99e-8d4458717a01 spec=1K 1:1 1024×1024",
+      "2026-10-27T11:32:16.375Z 图片任务开始执行 run=62fb51cc-bbc8-4511-adc7-91a800bc179f waitedMs=45135 queueDepth=0",
+      "2026-10-27T11:32:16.428Z 图片提交执行器 run=62fb51cc-bbc8-4511-adc7-91a800bc179f spec=1K 1:1 1024×1024"
+    ]
+  },
+  "video": {
+    "project": "ac121a29-e464-453f-918c-2a8c14669d79",
+    "runId": "6f98b7ec-5334-45f7-be2f-76afd6921cf8",
+    "http": 200,
+    "code": 200,
+    "ttfbSeconds": 0.07,
+    "elapsedSeconds": 195.4,
+    "state": "SUCCEEDED",
+    "kind": "video",
+    "reason": null,
+    "spec": "5s 352p 16:9 608×352",
+    "mediaPath": ".huimeng-media/daf94550-8be9-44e1-8b5b-08dd0de06aec.mp4"
+  },
+  "cleanup": {
+    "projects": 8,
+    "projectMedia": 0,
+    "generationRuns": 0,
+    "externalClients": 4,
+    "workspaceRemoved": true
+  }
+}

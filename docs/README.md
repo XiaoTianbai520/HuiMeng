@@ -12,8 +12,9 @@
 | --- | --- |
 | [PRD](product/PRD.md) | 业务需求与版本边界 |
 | [DESIGN](architecture/DESIGN.md) | 架构、安全、数据与部署设计 |
+| [媒体执行队列与时限](architecture/MEDIA_EXECUTION_QUEUE.md) | 单卡串行派发、排队、超时与取消语义 |
 | [CONTRACTS](api/CONTRACTS.md) | 公共契约、已核对的上游协议及兼容接口细化边界 |
-| [OpenAPI](api/openapi.yaml) · [冻结记录](api/M1_CONTRACT_REVIEW.md) | 当前 49 操作/42 路径，其中 41 实现；固定 Qwen、私有媒体、文件保存与目录操作已接通，其他创作及安装业务仍待迁移 |
+| [OpenAPI](api/openapi.yaml) · [冻结记录](api/M1_CONTRACT_REVIEW.md) | 当前 66 操作/59 路径，其中 61 实现；固定 Qwen、私有媒体、文件保存、目录、Agent 与能力目录已接通 |
 | [TASKS](plan/TASKS.md) | 任务依赖、状态和完成标准 |
 | [迁移与验收矩阵](product/TOONFLOW_WEB_MIGRATION.md) | 路由分组与 A01–A18 定义 |
 | [插件市场范围](product/PLUGIN_MARKET.md) | 原市场及插件管理的现行范围 |
