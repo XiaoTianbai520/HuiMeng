@@ -75,12 +75,14 @@ public class BuiltinNodeRegistrar implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) {
+    List<Outcome> outcomes = sync();
     int registered = 0;
-    for (Outcome outcome : sync()) {
+    for (Outcome outcome : outcomes) {
       if (outcome.change() != Change.SKIPPED) registered++;
       LOG.info("内置节点 {} 登记结果 {}", outcome.name(), outcome.change());
     }
-    if (registered == 0) LOG.info("没有可登记的内置节点产物：{}", location);
+    if (outcomes.isEmpty()) LOG.info("没有可登记的内置节点产物：{}", location);
+    else if (registered == 0) LOG.info("内置节点登记无变更（{} 项已存在或跳过）", outcomes.size());
   }
 
   /**

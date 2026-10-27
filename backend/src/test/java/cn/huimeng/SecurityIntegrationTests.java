@@ -1326,7 +1326,7 @@ class SecurityIntegrationTests {
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(9);
+        .isEqualTo(10);
     assertThatThrownBy(
             () ->
                 jdbc.update(
