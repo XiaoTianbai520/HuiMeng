@@ -1,7 +1,7 @@
 name: huimeng
 services:
   migration:
-    image: huimeng-api:m2
+    image: ${HM_IMAGE:-huimeng-api:m3}
     user: '10001:10001'
     profiles: [migration]
     env_file: /opt/apps/huimeng/secrets/migration.env
@@ -12,7 +12,7 @@ services:
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
   api:
-    image: huimeng-api:m2
+    image: ${HM_IMAGE:-huimeng-api:m3}
     container_name: huimeng-api
     user: '10001:10001'
     env_file: /opt/apps/huimeng/secrets/api.env
@@ -31,7 +31,8 @@ services:
     tmpfs: ['/tmp:rw,noexec,nosuid,size=128m']
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    mem_limit: 1g
+    # GraalJS 引擎与节点包登记需要额外常驻内存，1g 下工具执行容易触顶。
+    mem_limit: 1536m
     restart: unless-stopped
     logging: &logs
       driver: json-file

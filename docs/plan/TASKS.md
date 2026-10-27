@@ -188,3 +188,9 @@ M2 完成门槛：所有对外路径默认拒绝，只有已登记权限和项�
 2026-10-26 M3-04 完成：Agent 工具循环接通 18 个画布操作（页面执行并回传）、问答与取消唤醒、内部生图单次占位、`.jsonl` 会话原格式；104 项后端与 9 项真实浏览器检查通过，见[M3-04 记录](../validation/M3_AGENT_TOOLS.md)。单 Agent 委派、技能/节点函数与上下文压缩未做。
 
 2026-10-26 M3-03 图片部分完成：Qwen 文生图与单图编辑、完整规格与默认值回显、真实取消和五名额通过 23 项 HTTP 检查、10 项真实浏览器检查，并以工作机 ComfyUI 实跑 1024×1024 与 992×544 两张图，后端 99 项全过，见[M3-03 记录](../validation/M3_MEDIA_GENERATION.md)。视频（H3）随 M3-05、跨入口容量随 M3-06/M4-02；M3-01 完整 A04/A05/A06/A17 与 M3-04～08、M4 仍待验，未部署。
+
+2026-10-27 本地运行与部署：先在本机用真实 MySQL 开发库跑通最新源码，修掉两个只在 MySQL 上出现的缺陷——运行账号缺 V7/V9 新表 DML（表现成 SQL 语法错误、8 个内置节点全部跳过），以及 `plugins.content` 为 BLOB 装不下 263 KiB–1.7 MiB 的内置节点产物。新增 `V10__plugin_content_capacity.sql` 把内容/文档列提到 MEDIUMBLOB/MEDIUMTEXT，`deploy/finalize_database.py` 改为按 `information_schema` 现算表清单。随后按规范把 JAR（108 300 703 B）、前端 dist 与 Linux 本地库部署到 `192.168.1.102`：生产库 `3 → 10`、20 张表授权收紧、`huimeng-api:m3`（`55a271b1589e`）启动后 8 个内置节点全部登记，HTTPS 首页/CSRF/登录/会话/能力目录/导出均通过，`m2` 镜像与旧 JAR 保留回滚。见[部署记录](../validation/M3_DEPLOY_20261027.md)。Windows 上文件/目录接口仍因缺 `SecureDirectoryStream` 返回 503，未降低路径保护。
+
+2026-10-27 工具执行器阶段一（M3-08 收尾）：内置 `toonflow:tool-zod` 虚拟模块（zod 4.6.7 单文件 ESM，MIT，391 KiB），把工具源码的多种 import 写法改写成全局命名空间取值，其余外部模块继续拒绝；依赖 `toonflowToolHost` 的工具在登记期说明「宿主文件接口未接通」。真实市场制品复验：`directorLens`（`composeCinematicPrompt`，91 935 B）加载并可执行（图片版/视频版各一次），`deleteTool`（`deleteFile`，49 009 B）加载但无工作区桥；`videoComposer`/`novelToTxt` 仍需 `fs`/`worker_threads`。`ToolRuntimeTests` 8 项、`ToolRegistryTests` 3 项、`AgentServiceImplTests` 11 项通过。见[zod 记录](../validation/M3_TOOL_RUNTIME_ZOD.md)。
+
+2026-10-27 单 Agent 架构确认：继续保留单 Agent，不开发多 Agent；把工具定义与分派收敛到 `ToolProvider` + `ToolRegistry`（画布/提问/生图/市场四个提供方，按 `@Order` 合并、重名先到先得、未知工具 `TOOL_UNKNOWN`），主循环只依赖 `ToolSession` 与注册表。未来若引入子 Agent，新增提供方即可，不改协议与循环。工作区沙箱与 `worker_threads` 的评估结论为：先做受控文件读写（授权目录、配额、审计），`worker_threads` 暂不开放，见[沙箱设计](../architecture/TOOL_RUNTIME_SANDBOX.md)。

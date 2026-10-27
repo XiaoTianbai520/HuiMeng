@@ -193,3 +193,9 @@ M3-02 使用 OpenAI 兼容 `LlmClient`（deepseek/qwen），密钥仅从团队�
 ### 13.9 H3 五模式视频（2026-10-26）
 
 五个图模板（`comfy/h3-*.json`）随代码分发，节点固定为 `MiniMaxH3ImageToVideo`（R2V 为 `MiniMaxH3ReferenceToVideo`）与 `SaveVideo`；服务端只替换提示词、宽高、帧数、种子与参考图，浏览器无法提供工作流。规格由 `ComfyVideoClient.resolve` 统一计算：三档基线像素、五种比例（非 16:9/9:16 按短边换算并 32 对齐）、帧数 `round(秒×24)` 补齐到 17k+5。参考图按模式挂到首帧/尾帧节点或 `ref_images.ref_image_N`，提示词按模式补齐三段或六段结构。视频与图片共用同一 `admit`/`execute` 通道，因此名额、幂等与取消行为一致；取消向执行器发 `/api/jobs/<id>/cancel`。证据见[H3 记录](../validation/M3_H3_VIDEO.md)。
+
+### 13.10 工具提供方注册表与内置 zod（2026-10-27）
+
+工具定义与分派从 `AgentServiceImpl` 收回 `cn.huimeng.service.impl.agent`：`ToolProvider` 约定「提供定义 / 是否拥有某名字 / 执行」，`ToolRegistry` 按 `@Order` 合并定义并按名字路由，重名只保留第一个并记日志。现有四个提供方是画布（页面执行）、提问（页面等待）、内部生图（服务端占名额）与市场工具（GraalJS 隔离执行）；主循环只拿 `ToolSession` 与注册表，不再认识具体工具。新增一类工具（例如未来的子 Agent 委派）只需加一个 Bean，协议与循环不变。
+
+工具执行器新增唯一放行的虚拟模块 `toonflow:tool-zod`：zod 4.6.7 的单文件 ESM 随包分发，工具源码里的对应 import 在执行前改写成从全局命名空间取值；改写后仍有其他 `import`/`require` 就拒绝，引用 `toonflowToolHost` 单独给出「宿主文件接口未接通」。文件与 `worker_threads` 不随 zod 一起放开，工作区沙箱与线程模型的评估见[工具运行时沙箱](TOOL_RUNTIME_SANDBOX.md)，阶段一证据见[工具执行器 zod 记录](../validation/M3_TOOL_RUNTIME_ZOD.md)。
