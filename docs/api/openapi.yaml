@@ -6445,6 +6445,23 @@ components:
           - FAILED
           - CANCELLED
           - LOST
+        reason:
+          description: 失败原因的固定词表代码；USER_ 为操作问题、MODEL_ 为模型服务异常、EXECUTION_ 为任务执行异常。服务端不下发异常文本，SUCCEEDED/CANCELLED/进行中为 null。
+          oneOf:
+          - type: string
+            enum:
+            - USER_INVALID_REQUEST
+            - USER_NOT_PERMITTED
+            - USER_CAPACITY_EXCEEDED
+            - MODEL_UNAVAILABLE
+            - MODEL_TIMEOUT
+            - EXECUTION_STORAGE_UNAVAILABLE
+            - EXECUTION_BUSY
+            - EXECUTION_LOST
+            - EXECUTION_INTERRUPTED
+            - EXECUTION_FAILED
+            - EXECUTION_INTERNAL
+          - *id007
         capacityHeld: *id005
         createdAt: *id008
         endedAt:
@@ -6456,6 +6473,7 @@ components:
       - projectId
       - kind
       - state
+      - reason
       - capacityHeld
       - createdAt
       - endedAt

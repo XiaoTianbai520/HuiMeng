@@ -87,6 +87,39 @@ async function refresh() {
   try { const rows = await readAll<ProjectMedia>(base(), signal); const result = await client.get<{ items: Model[] }>("/api/v1/models", { signal }); signal.throwIfAborted(); items.value = rows; models.value = result.data.items.filter(model => (model.providerId === "qwenImage21Local" && (model.modelId === "qwenImage21Text" || model.modelId === "qwenImage21Edit")) || (model.providerId === "h3Local3060" && videoModels.has(model.modelId))); if (!models.value.some(model => model.modelId === selectedModel.value)) selectedModel.value = models.value[0]?.modelId ?? ""; authorized.value = true; }
   catch (ex) { if (!signal.aborted) error.value = adminError(ex, "文件列表加载失败，请重试。"); }
 }
+// 运行失败原因由服务端给固定词表代码，页面负责翻成人话；服务端不下发异常文本。
+// 前缀区分三类：USER_ 操作问题、MODEL_ 模型服务异常、EXECUTION_ 任务执行异常。
+const reasonTexts: Record<string, string> = {
+  USER_INVALID_REQUEST: "请求参数或参考图不符合要求，请调整后重试。",
+  USER_NOT_PERMITTED: "当前账号或模型授权不足，请联系管理员开通该模型或加入项目。",
+  USER_CAPACITY_EXCEEDED: "项目已有五个活跃任务，请等待其中一个结束后再提交。",
+  MODEL_UNAVAILABLE: "执行器不可用或未能产出结果，请稍后重试或联系管理员检查本地模型服务。",
+  MODEL_TIMEOUT: "模型超时未返回结果，请稍后重试。",
+  EXECUTION_STORAGE_UNAVAILABLE: "产物入库失败（媒体存储不可用），请联系管理员排查存储后再重试。",
+  EXECUTION_BUSY: "服务繁忙，请稍后重试。",
+  EXECUTION_LOST: "执行状态待核查，未确认结束前保留名额。",
+  EXECUTION_INTERRUPTED: "服务重启导致任务中断，请重新提交。",
+  EXECUTION_FAILED: "任务执行出错，请稍后重试。",
+  EXECUTION_INTERNAL: "服务内部异常，请联系管理员查看日志。",
+};
+function reasonText(reason?: string | null) {
+  if (!reason) return "";
+  const group = reason.startsWith("USER_") ? "操作问题" : reason.startsWith("MODEL_") ? "模型服务异常" : "任务执行异常";
+  return `${group}：${reasonTexts[reason] ?? "请联系管理员查看服务端日志。"}`;
+}
+function runFailureText(run?: Run) {
+  if (!run) return "生成未完成，请重试。";
+  const detail = reasonText(run.reason);
+  if (run.state === "LOST") return detail || "执行状态待核查，未确认结束前保留名额。";
+  return detail ? `生成失败。${detail}` : "生成未完成，请检查模型状态后重试。";
+}
+function requestFailureText(status: number, result: { message?: string }) {
+  const base = result.message?.trim();
+  if (status === 429) return `${base ?? "项目生成名额已满"}（每个项目最多 5 个活跃任务，请等待其中一个结束后再提交。）`;
+  if (status === 403) return `${base ?? "无权执行此操作"}（可能是模型未启用，或你不是该项目成员。）`;
+  if (status === 503) return `${base ?? "服务暂不可用"}（执行器或媒体存储未就绪，请稍后重试。）`;
+  return base ?? "生成请求未获授权";
+}
 async function generate() {
   if (busy.value || !selectedModel.value || !prompt.value.trim()) return;
   const edit = isEditModel.value;
@@ -109,13 +142,13 @@ async function generate() {
   generationStatus.value = `正在提交${isVideoModel.value ? "视频" : "图片"}生成请求（${isVideoModel.value ? `${videoDuration.value} 秒 · ` : ""}${selectedSize.value} · ${selectedRatio.value}）…`;
   try {
     const response = await apiFetch(`/api/v1/projects/${encodeURIComponent(id)}/creative/ai/media/generate`, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(body), signal });
-    if (!response.ok) { const result = await response.json() as { message?: string }; throw new Error(result.message ?? "生成请求未获授权"); }
+    if (!response.ok) { const result = await response.json() as { message?: string }; throw new Error(requestFailureText(response.status, result)); }
     running.value = response.headers.get("X-Run-Id") ?? ""; generationStatus.value = "模型正在生成，结果将保存到当前项目…";
     const result = await response.json() as MediaResult; signal.throwIfAborted();
     if (result.code !== 200) {
-      const state = running.value ? (await client.get<Run>(`/api/v1/projects/${encodeURIComponent(id)}/runs/${running.value}`, { signal })).data.state : "FAILED";
-      if (state === "CANCELLED") { generationStatus.value = "已确认取消，名额已释放。"; return; }
-      throw new Error(state === "LOST" ? "执行状态待核查，未确认结束前保留名额。" : "生成未完成，请检查模型状态后重试。");
+      const run = running.value ? (await client.get<Run>(`/api/v1/projects/${encodeURIComponent(id)}/runs/${running.value}`, { signal })).data : undefined;
+      if (run?.state === "CANCELLED") { generationStatus.value = "已确认取消，名额已释放。"; return; }
+      throw new Error(runFailureText(run));
     }
     const spec = (result as { code: 200; data: { spec?: string }[] }).data?.[0]?.spec;
     await refresh(); if (!signal.aborted) generationStatus.value = spec ? `${isVideoModel.value ? "视频" : "图片"}已生成并保存到当前项目（实际规格 ${spec}）。` : "生成结果已保存到当前项目。";

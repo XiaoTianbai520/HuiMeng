@@ -98,8 +98,14 @@ SCHEMAS = {
         'enabled', 'canManage', 'canConfigure', 'configRules', 'config', 'configuredSecrets']),
     'Run': obj({'id': ID, 'projectId': ID, 'kind': string(enum=['image', 'video', 'audio', 'agent', 'singleAgent']),
         'state': string(enum=['RESERVED', 'RUNNING', 'CANCELLING', 'SUCCEEDED', 'FAILED', 'CANCELLED', 'LOST']),
+        # 失败原因只给固定词表代码：前端按 USER_/MODEL_/EXECUTION_ 前缀分类展示，服务端不下发异常文本，
+        # 避免把上游地址、桶名或堆栈带到客户端。SUCCEEDED/CANCELLED/进行中为 null。
+        'reason': {'oneOf': [string(enum=['USER_INVALID_REQUEST', 'USER_NOT_PERMITTED', 'USER_CAPACITY_EXCEEDED',
+                                          'MODEL_UNAVAILABLE', 'MODEL_TIMEOUT',
+                                          'EXECUTION_STORAGE_UNAVAILABLE', 'EXECUTION_BUSY', 'EXECUTION_LOST',
+                                          'EXECUTION_INTERRUPTED', 'EXECUTION_FAILED', 'EXECUTION_INTERNAL']), NULL]},
         'capacityHeld': BOOL, 'createdAt': TIME, 'endedAt': {'oneOf': [TIME, NULL]}},
-        ['id', 'projectId', 'kind', 'state', 'capacityHeld', 'createdAt', 'endedAt']),
+        ['id', 'projectId', 'kind', 'state', 'reason', 'capacityHeld', 'createdAt', 'endedAt']),
     'Preferences': obj({'ui': {'type': 'object'}, 'general': {'type': 'object'}, 'stores': {'type': 'object'},
                         'documentExtensions': {'type': 'object', 'additionalProperties': string()}}),
     'RelativePath': string(maxLength=2048, pattern=r'^(?![\\/])(?!.*(?:^|[\\/])\.\.(?:[\\/]|$))(?!.*[:\x00-\x1f]).*$'),
