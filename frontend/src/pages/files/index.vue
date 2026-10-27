@@ -28,7 +28,7 @@
         <el-table-column prop="createdAt" label="上传时间" min-width="180" />
         <el-table-column label="操作" width="160"><template #default="{ row }"><el-button text :disabled="busy" @click="preview(String(row.id))">查看</el-button><el-button text :disabled="busy" @click="download(String(row.id))">下载</el-button></template></el-table-column>
       </el-table>
-      <section v-if="previewItem" aria-label="文件预览" class="filePreview"><header><h3>{{ previewItem.filename }}</h3><el-button text @click="closePreview">关闭预览</el-button></header><img v-if="previewUrl" :src="previewUrl" :alt="previewItem.filename" /><p v-else>此类型请下载后查看。</p><p class="muted">SHA-256：{{ previewItem.sha256 }}</p></section>
+      <section v-if="previewItem" aria-label="文件预览" class="filePreview"><header><h3>{{ previewItem.filename }}</h3><el-button text @click="closePreview">关闭预览</el-button></header><img v-if="previewUrl && previewKind === 'image'" :src="previewUrl" :alt="previewItem.filename" /><video v-else-if="previewUrl && previewKind === 'video'" :src="previewUrl" controls playsinline preload="metadata" /><p v-else>此类型请下载后查看。</p><p class="muted">SHA-256：{{ previewItem.sha256 }}</p></section>
     </section>
   </main>
 </template>
@@ -45,6 +45,8 @@ import WorkspaceDocuments from "./WorkspaceDocuments.vue";
 const route = useRoute(), workspace = useWorkspaceStore();
 const projectName = ref(""), items = ref<ProjectMedia[]>([]), busy = ref(false), error = ref(""), authorized = ref(false);
 const selected = ref<File>(), uploadInput = ref<HTMLInputElement>(), previewItem = ref<ProjectMedia>(), previewUrl = ref("");
+// 预览区分图片与视频：视频走内联播放，超过 128 MiB 只取首字节占位，避免把大文件读进内存。
+const previewKind = ref<"image" | "video" | "">("");
 const models = ref<Model[]>([]), selectedModel = ref(""), prompt = ref(""), running = ref(""), cancelling = ref(false), generationStatus = ref("");
 // 规格与参考图始终显式上送；服务端再按模型校验，省略时才回落到 1K、1:1。
 const imageSizes = ["1K", "0.5MP", "2K"], imageRatios = ["1:1", "2:3", "3:2", "3:4", "4:3", "9:16", "16:9", "21:9"];
@@ -77,7 +79,7 @@ const referenceCandidates = computed(() => items.value.filter(item => item.filen
 let lifetime = new AbortController();
 const projectId = () => String(route.params.projectId ?? "");
 const base = () => `/api/v1/projects/${encodeURIComponent(projectId())}/media`;
-function closePreview() { if (previewUrl.value) URL.revokeObjectURL(previewUrl.value); previewUrl.value = ""; previewItem.value = undefined; }
+function closePreview() { if (previewUrl.value) URL.revokeObjectURL(previewUrl.value); previewUrl.value = ""; previewKind.value = ""; previewItem.value = undefined; }
 function formatBytes(size: number) { return size < 1024 ? `${size} B` : size < 1048576 ? `${(size / 1024).toFixed(1)} KiB` : `${(size / 1048576).toFixed(1)} MiB`; }
 async function refresh() {
   closePreview(); error.value = ""; authorized.value = false; items.value = [];
@@ -145,10 +147,16 @@ async function preview(id: string) {
   try {
     const extension = item.filename.split(".").pop()?.toLowerCase();
     const types: Record<string, string> = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif", avif: "image/avif" };
-    const imageType = extension && item.byteSize <= 16 * 1024 * 1024 ? types[extension] : undefined;
-    const { data } = await client.get<Blob>(`${base()}/${encodeURIComponent(item.id)}/content`, { responseType: "blob", signal, headers: !imageType && item.byteSize > 0 ? { Range: "bytes=0-0" } : undefined });
+    const videoTypes: Record<string, string> = { mp4: "video/mp4", webm: "video/webm", mov: "video/quicktime", m4v: "video/x-m4v" };
+    const imageType = extension ? types[extension] : undefined;
+    const videoType = extension ? videoTypes[extension] : undefined;
+    const inline = (imageType && item.byteSize <= 16 * 1024 * 1024) || (videoType && item.byteSize <= 128 * 1024 * 1024);
+    const { data } = await client.get<Blob>(`${base()}/${encodeURIComponent(item.id)}/content`, { responseType: "blob", signal, headers: !inline && item.byteSize > 0 ? { Range: "bytes=0-0" } : undefined });
     signal.throwIfAborted(); previewItem.value = item;
-    if (imageType) previewUrl.value = URL.createObjectURL(new Blob([data], { type: imageType }));
+    if (inline) {
+      previewKind.value = imageType ? "image" : "video";
+      previewUrl.value = URL.createObjectURL(new Blob([data], { type: (imageType ?? videoType) as string }));
+    }
   } catch (ex) { if (!signal.aborted) error.value = adminError(ex, "无法读取文件，请刷新权限后重试。"); }
   finally { if (!signal.aborted) busy.value = false; }
 }
@@ -176,5 +184,6 @@ onBeforeUnmount(() => { lifetime.abort(); closePreview(); selected.value = undef
 .filePreview { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--el-border-color); }
 .filePreview header { display: flex; justify-content: space-between; align-items: center; }
 .filePreview img { max-width: 100%; max-height: 520px; object-fit: contain; }
+.filePreview video { max-width: 100%; max-height: 520px; background: #000; }
 .filePreview p { overflow-wrap: anywhere; }
 </style>
