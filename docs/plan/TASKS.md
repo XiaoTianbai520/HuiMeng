@@ -194,3 +194,5 @@ M2 完成门槛：所有对外路径默认拒绝，只有已登记权限和项�
 2026-10-27 工具执行器阶段一（M3-08 收尾）：内置 `toonflow:tool-zod` 虚拟模块（zod 4.6.7 单文件 ESM，MIT，391 KiB），把工具源码的多种 import 写法改写成全局命名空间取值，其余外部模块继续拒绝；依赖 `toonflowToolHost` 的工具在登记期说明「宿主文件接口未接通」。真实市场制品复验：`directorLens`（`composeCinematicPrompt`，91 935 B）加载并可执行（图片版/视频版各一次），`deleteTool`（`deleteFile`，49 009 B）加载但无工作区桥；`videoComposer`/`novelToTxt` 仍需 `fs`/`worker_threads`。`ToolRuntimeTests` 8 项、`ToolRegistryTests` 3 项、`AgentServiceImplTests` 11 项通过。见[zod 记录](../validation/M3_TOOL_RUNTIME_ZOD.md)。
 
 2026-10-27 单 Agent 架构确认：继续保留单 Agent，不开发多 Agent；把工具定义与分派收敛到 `ToolProvider` + `ToolRegistry`（画布/提问/生图/市场四个提供方，按 `@Order` 合并、重名先到先得、未知工具 `TOOL_UNKNOWN`），主循环只依赖 `ToolSession` 与注册表。未来若引入子 Agent，新增提供方即可，不改协议与循环。工作区沙箱与 `worker_threads` 的评估结论为：先做受控文件读写（授权目录、配额、审计），`worker_threads` 暂不开放，见[沙箱设计](../architecture/TOOL_RUNTIME_SANDBOX.md)。
+
+2026-10-27 二次发布：zod 模块与工具注册表完成后重建 `huimeng-api:m3`（`5d7ee953240e`，JAR SHA-256 `54ce82b0…feed`）并重启 API，8 个内置节点幂等 `UNCHANGED`、日志 0 ERROR，登录/能力/导出复验通过；`m2` 与上一版 m3 JAR 留作回滚。见[部署记录](../validation/M3_DEPLOY_20261027.md#34-二次发布同一日工具执行器与注册表)。
