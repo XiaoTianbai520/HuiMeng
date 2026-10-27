@@ -65,8 +65,8 @@ const needsSecondFrame = computed(() => videoMode.value === "fl2v");
 const referenceLabel = computed(() => (isVideoModel.value ? (videoMode.value === "l2v" ? "尾帧（项目内 PNG）" : videoMode.value === "r2v" ? "参考图（项目内 PNG）" : "首帧（项目内 PNG）") : "参考图（项目内 PNG）"));
 const promptLabel = computed(() => (isEditModel.value ? "编辑指令" : isVideoModel.value ? "视频描述" : "图片描述"));
 const hint = computed(() => isVideoModel.value
-  ? "当前选中本地 MiniMax H3：352p、480p、544p 与 5/8/10/15 秒，五种模式按所选模型决定参考图数量；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。"
-  : "当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。");
+  ? "当前选中本地 MiniMax H3：352p、480p、544p 与 5/8/10/15 秒，五种模式按所选模型决定参考图数量；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。本地执行器单卡串行，多人同时提交会按顺序排队，页面会保持等待。"
+  : "当前接通 Qwen 文生图与单图编辑：1K、0.5MP、2K 与 8 种画幅，省略时按 1K、1:1 提交；结果页显示实际执行的规格。生成结果自动归入本项目；未获批模型无法调用。本地执行器单卡串行，多人同时提交会按顺序排队，页面会保持等待。");
 
 // 切换模型时把规格拉回该模型支持的默认值，避免带着图片规格去请求视频。
 watch(selectedModel, () => {
@@ -143,7 +143,7 @@ async function generate() {
   try {
     const response = await apiFetch(`/api/v1/projects/${encodeURIComponent(id)}/creative/ai/media/generate`, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(body), signal });
     if (!response.ok) { const result = await response.json() as { message?: string }; throw new Error(requestFailureText(response.status, result)); }
-    running.value = response.headers.get("X-Run-Id") ?? ""; generationStatus.value = "模型正在生成，结果将保存到当前项目…";
+    running.value = response.headers.get("X-Run-Id") ?? ""; generationStatus.value = "任务已受理，正在排队或生成，结果将保存到当前项目…";
     const result = await response.json() as MediaResult; signal.throwIfAborted();
     if (result.code !== 200) {
       const run = running.value ? (await client.get<Run>(`/api/v1/projects/${encodeURIComponent(id)}/runs/${running.value}`, { signal })).data : undefined;
