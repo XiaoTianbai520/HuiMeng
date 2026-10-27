@@ -69,10 +69,25 @@ public class AgentToolCatalog {
 
   /** OpenAI function 工具定义；画布未激活时不下发画布工具，模型不会尝试不可用的操作。 */
   public List<Map<String, Object>> definitions(boolean withCanvas) {
-    var result = new ArrayList<Map<String, Object>>();
     var source = new ArrayList<Map<String, Object>>();
     if (withCanvas) source.addAll(canvas);
     source.addAll(extra);
+    return openAi(source);
+  }
+
+  /** 只含画布操作的定义；工具注册表按提供方分别取用。 */
+  public List<Map<String, Object>> canvasDefinitions() {
+    return openAi(canvas);
+  }
+
+  /** 按名字取单条定义（提问、内部生图各自独立提供）。 */
+  public List<Map<String, Object>> definition(String name) {
+    Map<String, Object> tool = byName.get(name);
+    return tool == null ? List.of() : openAi(List.of(tool));
+  }
+
+  private List<Map<String, Object>> openAi(List<Map<String, Object>> source) {
+    var result = new ArrayList<Map<String, Object>>();
     for (var tool : source) {
       result.add(
           Map.of(

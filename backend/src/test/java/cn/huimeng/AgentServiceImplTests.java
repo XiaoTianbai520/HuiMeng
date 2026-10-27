@@ -13,6 +13,7 @@ import cn.huimeng.security.SecretBox;
 import cn.huimeng.service.*;
 import cn.huimeng.service.impl.AgentServiceImpl;
 import cn.huimeng.service.impl.AgentToolCatalog;
+import cn.huimeng.service.impl.agent.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 import java.io.*;
@@ -55,9 +56,14 @@ class AgentServiceImplTests {
     when(toolRuntime.definitions()).thenReturn(java.util.List.of());
     when(toolRuntime.owns(anyString())).thenReturn(false);
     this.toolRuntime = toolRuntime;
-    agents =
-        new AgentServiceImpl(
-            projects, files, models, llm, media, catalog, capabilities, toolRuntime, json);
+    var tools =
+        new ToolRegistry(
+            List.of(
+                new CanvasToolProvider(catalog, json),
+                new AskToolProvider(catalog, json),
+                new ImageToolProvider(catalog, media, json),
+                new MarketToolProvider(toolRuntime, json)));
+    agents = new AgentServiceImpl(projects, files, models, llm, capabilities, tools, json);
   }
 
   @AfterEach

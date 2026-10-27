@@ -5,6 +5,7 @@ import cn.huimeng.common.io.LlmClient;
 import cn.huimeng.dto.req.*;
 import cn.huimeng.dto.resp.*;
 import cn.huimeng.service.*;
+import cn.huimeng.service.impl.agent.*;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.*;
@@ -44,15 +45,12 @@ public class AgentServiceImpl implements AgentService {
   /** 单条压缩历史的字符上限。 */
   private static final int OLD_ENTRY_CHARS = 500;
 
-  private static final String PROVIDER = "qwenImage21Local";
   private final ProjectService projects;
   private final ProjectFileService files;
   private final ModelAuthorizationService models;
   private final LlmClient llm;
-  private final MediaGenerationService media;
-  private final AgentToolCatalog catalog;
   private final CapabilityService capabilities;
-  private final ToolRuntime toolRuntime;
+  private final ToolRegistry tools;
   private final ObjectMapper json;
   private final Set<String> running = ConcurrentHashMap.newKeySet();
   private final Set<String> cancelRequested = ConcurrentHashMap.newKeySet();
@@ -63,19 +61,15 @@ public class AgentServiceImpl implements AgentService {
       ProjectFileService files,
       ModelAuthorizationService models,
       LlmClient llm,
-      MediaGenerationService media,
-      AgentToolCatalog catalog,
       CapabilityService capabilities,
-      ToolRuntime toolRuntime,
+      ToolRegistry tools,
       ObjectMapper json) {
     this.projects = projects;
     this.files = files;
     this.models = models;
     this.llm = llm;
-    this.media = media;
-    this.catalog = catalog;
     this.capabilities = capabilities;
-    this.toolRuntime = toolRuntime;
+    this.tools = tools;
     this.json = json;
   }
 
@@ -240,9 +234,9 @@ public class AgentServiceImpl implements AgentService {
       emit(output, userMessage(entryId, input));
       boolean withCanvas =
           input.canvas() != null && !input.canvas().path("id").asText("").isBlank();
-      var tools = catalog.definitions(withCanvas);
-      // 已安装工具包提供的工具与服务端执行器一起进入本轮工具清单。
-      tools.addAll(toolRuntime.definitions());
+      // 注册表合并内置工具与已安装市场工具；新增工具类型只需注册新的提供方。
+      var session = toolSession(projectId, file, output, withCanvas);
+      var toolList = tools.definitions(session);
       var conversation = chatMessages(messages);
       var parts = json.createArrayNode();
       var answerText = new StringBuilder();
@@ -255,7 +249,7 @@ public class AgentServiceImpl implements AgentService {
                 input.providerId(),
                 input.modelId(),
                 conversation,
-                tools,
+                toolList,
                 delta -> {
                   if (cancelled(lockKey)) throw new Cancelled();
                   roundText.append(delta);
@@ -278,7 +272,7 @@ public class AgentServiceImpl implements AgentService {
           JsonNode result;
           var status = "success";
           try {
-            result = runTool(projectId, lockKey, file, input, call, output);
+            result = runTool(call, session);
           } catch (Cancelled ex) {
             throw ex;
           } catch (ApiException ex) {
@@ -379,87 +373,36 @@ public class AgentServiceImpl implements AgentService {
     call.future().complete(payload);
   }
 
-  /** 执行一次工具调用；画布与提问交给页面，生图在本服务内完成。 */
-  private JsonNode runTool(
-      String projectId,
-      String lockKey,
-      String sessionFile,
-      AgentGenerateReqDTO input,
-      LlmClient.ToolCall call,
-      OutputStream output)
-      throws IOException {
-    JsonNode args = arguments(call.arguments());
-    if (catalog.isCanvasTool(call.name())) {
-      if (input.canvas() == null || input.canvas().path("id").asText("").isBlank())
-        throw new ApiException(400, "CANVAS_UNAVAILABLE", "当前页面没有激活的画布");
-      String callId = UUID.randomUUID().toString();
-      var payload = json.createObjectNode();
-      payload.put("type", "canvasCall");
-      payload.put("callId", callId);
-      payload.put("name", call.name());
-      payload.set("args", args);
-      JsonNode result =
-          request(callId, projectId, sessionFile, output, payload, CANVAS_TIMEOUT_SECONDS);
-      if (result.path("cancelled").asBoolean())
-        throw new ApiException(400, "CANVAS_CANCELLED", "画布操作已取消");
-      if (!result.path("ok").asBoolean())
-        throw new ApiException(400, "CANVAS_FAILED", result.path("error").asText("画布操作失败"));
-      return result.path("result");
-    }
-    if (AgentToolCatalog.ASK.equals(call.name())) {
-      String callId = UUID.randomUUID().toString();
-      var payload = json.createObjectNode();
-      payload.put("type", "question");
-      payload.put("callId", callId);
-      payload.put("toolCallId", call.id());
-      payload.put("title", args.path("title").asText("需要确认"));
-      payload.put("question", args.path("question").asText(""));
-      if (args.has("options")) payload.set("options", args.path("options"));
-      if (args.has("fields")) payload.set("fields", args.path("fields"));
-      JsonNode result =
-          request(callId, projectId, sessionFile, output, payload, QUESTION_TIMEOUT_SECONDS);
-      if (result.path("cancelled").asBoolean() || !result.path("ok").asBoolean())
-        throw new ApiException(400, "QUESTION_CANCELLED", "用户取消了本次提问");
-      return result;
-    }
-    if (AgentToolCatalog.GENERATE_IMAGE.equals(call.name())) {
-      var generated =
-          media.generateInternal(
-              projectId, imageRequest(args), "agent-" + call.id(), "agent-" + call.id());
-      var result = json.createObjectNode();
-      result.put("path", generated.path());
-      result.put("mimeType", generated.mimeType());
-      result.put("spec", generated.spec());
-      return result;
-    }
-    if (toolRuntime.owns(call.name())) {
-      // 市场工具在服务端隔离上下文里执行，结果原样回给模型。
-      JsonNode result = toolRuntime.execute(call.name(), call.id(), args);
-      return result == null ? json.createObjectNode() : result;
-    }
-    throw new ApiException(400, "TOOL_UNKNOWN", "未接通该工具：" + call.name());
+  /** 执行一次工具调用：由注册表按工具名找到提供方，页面交互与生图细节留在各自提供方。 */
+  private JsonNode runTool(LlmClient.ToolCall call, ToolSession session) throws IOException {
+    return tools.invoke(call.name(), call.id(), arguments(call.arguments()), session);
   }
 
-  private GenerateImageReqDTO imageRequest(JsonNode args) {
-    String prompt = args.path("prompt").asText("");
-    if (prompt.isBlank() || prompt.length() > 8000) throw ApiException.invalid();
-    boolean edit = "edit".equals(args.path("model").asText("text"));
-    String reference = args.path("referencePath").asText("");
-    List<GenerateImageMediaDTO> images = null;
-    if (edit) {
-      if (!reference.matches("^\\.huimeng-media/[a-f0-9-]{36}\\.png$"))
-        throw new ApiException(400, "INVALID_ARGUMENT", "单图编辑必须给出项目内的 PNG 参考图路径");
-      images = List.of(new GenerateImageMediaDTO(reference, "image/png"));
-    }
-    return new GenerateImageReqDTO(
-        PROVIDER,
-        edit ? "qwenImage21Edit" : "qwenImage21Text",
-        "image",
-        prompt,
-        args.path("size").asText(null),
-        args.path("ratio").asText(null),
-        images,
-        null);
+  /** 一次运行的上下文：项目/会话、页面回传与画布开关。 */
+  private ToolSession toolSession(
+      String projectId, String sessionFile, OutputStream output, boolean canvasEnabled) {
+    return new ToolSession() {
+      @Override
+      public String projectId() {
+        return projectId;
+      }
+
+      @Override
+      public String sessionFile() {
+        return sessionFile;
+      }
+
+      @Override
+      public boolean canvasEnabled() {
+        return canvasEnabled;
+      }
+
+      @Override
+      public JsonNode pageRequest(String callId, ObjectNode payload, long seconds)
+          throws IOException {
+        return request(callId, projectId, sessionFile, output, payload, seconds);
+      }
+    };
   }
 
   /** 发出需要页面参与的事件并等待回传；超时、取消、页面断开都按失败处理。 */
