@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
@@ -25,13 +26,37 @@ import org.springframework.stereotype.Component;
  * <p>工具包是 ESM，`createTools({config})` 返回带 {@code execute(id, params)} 的工具数组。执行放在进程内的 JS 上下文里：
  * 禁止宿主访问、禁止文件与网络 IO、禁止创建线程，语句数与墙钟时间都有上限，单次调用结束即销毁上下文。
  *
- * <p>当前只接受自包含的工具包：请求里出现 {@code import}/{@code require} 一律拒绝并说明原因，不做模块解析。
+ * <p>模块解析只放开一个内置虚拟模块 {@code toonflow:tool-zod}：真实市场工具的纯计算部分都依赖它。实现方式是把该模块的 单文件产物先求值成命名空间挂到 {@code
+ * globalThis}，再把工具源码里的对应 import 改写成从这个全局取值的常量声明；不引入 通用模块解析，也不放开文件系统。其余 {@code fs}/{@code
+ * path}/{@code worker_threads} 等引用仍在加载期拒绝。
  */
 @Component
 public class ToolRuntime {
   private static final Logger LOG = LoggerFactory.getLogger(ToolRuntime.class);
   private static final Pattern IMPORT =
       Pattern.compile("(?m)^\\s*(?:import\\b|export\\s+[^;]*\\bfrom\\b|.*\\brequire\\s*\\()");
+
+  /** 唯一放行的虚拟模块；其余外部模块一律拒绝。 */
+  private static final String ZOD_MODULE = "toonflow:tool-zod";
+
+  private static final String ZOD_RESOURCE = "capabilities/runtime/tool-zod.mjs";
+  private static final String ZOD_GLOBAL = "__huimengToolZod";
+
+  /**
+   * 覆盖 `import {a as b} from "..."`、`import * as ns from "..."`、`import def, {a} from "..."` 与紧凑写法。
+   */
+  private static final Pattern ZOD_IMPORT =
+      Pattern.compile(
+          "import\\s*(\\*\\s*as\\s+[\\w$]+|\\{[^}]*\\}|[\\w$]+(?:\\s*,\\s*\\{[^}]*\\})?)?\\s*from\\s*(['\"])"
+              + Pattern.quote(ZOD_MODULE)
+              + "\\2\\s*;?");
+
+  private static final Pattern ZOD_REQUIRE =
+      Pattern.compile("require\\s*\\(\\s*(['\"])" + Pattern.quote(ZOD_MODULE) + "\\1\\s*\\)");
+
+  /** 依赖页面/宿主注入的文件接口的工具：当前执行器没有该桥，登记时直接说明不可用。 */
+  private static final Pattern HOST_BRIDGE = Pattern.compile("\\btoonflowToolHost\\b");
+
   private static final long STATEMENT_LIMIT = 20_000_000L;
   private static final Duration TIMEOUT = Duration.ofSeconds(20);
   private static final int MAX_RESULT_CHARS = 100_000;
@@ -75,6 +100,9 @@ public class ToolRuntime {
 
   private final PluginMapper plugins;
   private final ObjectMapper json;
+
+  /** 内置 zod 模块只读一次；源码 64 KiB 级别，不随调用变化。 */
+  private volatile String zodSource;
 
   public ToolRuntime(PluginMapper plugins, ObjectMapper json) {
     this.plugins = plugins;
@@ -212,7 +240,7 @@ public class ToolRuntime {
     return null;
   }
 
-  /** 只取包头之后的正文；带模块引用的包在执行前就拒绝。 */
+  /** 只取包头之后的正文；先解析内置 zod，其余模块引用在加载期拒绝。 */
   private String source(PluginDO plugin) {
     byte[] content = plugins.content(plugin.id());
     if (content == null || content.length == 0)
@@ -221,9 +249,66 @@ public class ToolRuntime {
     int from = lines.isEmpty() ? 0 : 1;
     if (from < lines.size() && lines.get(from).startsWith("/*! toonflowToolClient:")) from++;
     String body = String.join("\n", lines.subList(Math.min(from, lines.size()), lines.size()));
-    if (IMPORT.matcher(body).find())
-      throw new ApiException(409, "TOOL_RUNTIME_IMPORT_UNSUPPORTED", "工具包引用了外部模块，当前执行器只支持自包含工具包");
-    return body;
+    return resolveModules(body);
+  }
+
+  /** 把 `toonflow:tool-zod` 的引用改写到内置全局命名空间；改完还剩外部引用就拒绝。 */
+  private String resolveModules(String body) {
+    String rewritten = rewriteZodImports(body);
+    if (IMPORT.matcher(rewritten).find())
+      throw new ApiException(
+          409, "TOOL_RUNTIME_IMPORT_UNSUPPORTED", "工具包引用了外部模块，当前执行器只支持自包含工具包与 " + ZOD_MODULE);
+    if (HOST_BRIDGE.matcher(rewritten).find())
+      throw new ApiException(409, "TOOL_RUNTIME_HOST_BRIDGE_UNSUPPORTED", "工具依赖宿主文件接口，当前执行器尚未接通");
+    return rewritten;
+  }
+
+  private static String rewriteZodImports(String body) {
+    Matcher matcher = ZOD_IMPORT.matcher(body);
+    var out = new StringBuilder();
+    while (matcher.find())
+      matcher.appendReplacement(out, Matcher.quoteReplacement(zodBinding(matcher.group(1))));
+    matcher.appendTail(out);
+    return ZOD_REQUIRE.matcher(out.toString()).replaceAll("globalThis." + ZOD_GLOBAL);
+  }
+
+  /** 把 ESM 的各种 import 写法换成等价的顶层常量声明；`as` 在解构里要写成 `:`。 */
+  private static String zodBinding(String clause) {
+    if (clause == null || clause.isBlank()) return "";
+    String text = clause.trim();
+    if (text.startsWith("*"))
+      return "const "
+          + text.replaceAll("\\s*as\\s+", " ").replace("*", "").trim()
+          + " = globalThis."
+          + ZOD_GLOBAL
+          + ";";
+    if (text.startsWith("{"))
+      return "const {" + namedBindings(text) + "} = globalThis." + ZOD_GLOBAL + ";";
+    int comma = text.indexOf(',');
+    String def = (comma < 0 ? text : text.substring(0, comma)).trim();
+    String binding =
+        "const "
+            + def
+            + " = globalThis."
+            + ZOD_GLOBAL
+            + ".default ?? globalThis."
+            + ZOD_GLOBAL
+            + ".z;";
+    if (comma >= 0)
+      binding +=
+          " const {"
+              + namedBindings(text.substring(comma + 1).trim())
+              + "} = globalThis."
+              + ZOD_GLOBAL
+              + ";";
+    return binding;
+  }
+
+  private static String namedBindings(String braces) {
+    String inner = braces.trim();
+    if (inner.startsWith("{")) inner = inner.substring(1);
+    if (inner.endsWith("}")) inner = inner.substring(0, inner.length() - 1);
+    return inner.replaceAll("\\s+as\\s+", ": ");
   }
 
   /** 把（可能是 Promise 的）执行结果收敛成 JSON 文本；宿主重新进入上下文以推进微任务。 */
@@ -252,14 +337,49 @@ public class ToolRuntime {
 
   private Value evaluate(Context context, String source, String name) {
     try {
+      if (source.contains(ZOD_GLOBAL)) installZod(context);
       return context.eval(
           Source.newBuilder("js", source, name + ".tool.mjs")
               .mimeType("application/javascript+module")
               .encoding(StandardCharsets.UTF_8)
               .build());
+    } catch (ApiException ex) {
+      throw ex;
     } catch (Exception ex) {
       throw new ApiException(409, "TOOL_RUNTIME_INVALID", "工具包执行失败：" + ex.getMessage());
     }
+  }
+
+  /** 把内置 zod 产物求值成命名空间挂到全局；工具源码的 import 已被改写成读取该全局。 */
+  private void installZod(Context context) {
+    try {
+      Value exports =
+          context.eval(
+              Source.newBuilder("js", zodSource(), "toonflow-tool-zod.mjs")
+                  .mimeType("application/javascript+module")
+                  .encoding(StandardCharsets.UTF_8)
+                  .build());
+      context
+          .eval("js", "(module) => { globalThis." + ZOD_GLOBAL + " = module; }")
+          .execute(exports);
+    } catch (ApiException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      throw new ApiException(503, "TOOL_RUNTIME_UNAVAILABLE", "内置模块不可用：" + ex.getMessage());
+    }
+  }
+
+  private String zodSource() {
+    String cached = zodSource;
+    if (cached != null) return cached;
+    try (var input =
+        new org.springframework.core.io.ClassPathResource(ZOD_RESOURCE).getInputStream()) {
+      cached = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+    } catch (Exception ex) {
+      throw new ApiException(503, "TOOL_RUNTIME_UNAVAILABLE", "内置模块缺失：" + ZOD_RESOURCE);
+    }
+    zodSource = cached;
+    return cached;
   }
 
   private interface Body {
