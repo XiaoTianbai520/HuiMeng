@@ -26,7 +26,9 @@ services:
       - /opt/apps/huimeng/secrets/internal.key:/run/huimeng-secrets/internal.key:ro
       - /opt/apps/huimeng/secrets/bootstrap-password:/run/huimeng-secrets/bootstrap-password:ro
       - /data/huimeng/workspaces:/data/huimeng/workspaces
-    networks: [entry, executor, database]
+    # entry/executor/database 都是 internal 网络，容器没有默认路由，出不去；
+    # 模型供应商、插件市场与本地 ComfyUI 都在外部，必须有一条出口网络。
+    networks: [entry, executor, database, egress]
     read_only: true
     tmpfs: ['/tmp:rw,noexec,nosuid,size=128m']
     cap_drop: [ALL]
@@ -79,6 +81,8 @@ networks:
     internal: true
   executor:
     internal: true
+  # 唯一允许出网的网络，只挂 API；容器不发布端口，入口仍由 nginx 收口。
+  egress: {}
   database:
     external: true
     name: huimeng_database

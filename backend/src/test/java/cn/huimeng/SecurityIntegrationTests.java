@@ -618,6 +618,25 @@ class SecurityIntegrationTests {
     assertThat(generationRuns.held(project)).isZero();
   }
 
+  /** 重启时还没提交到执行器的运行没有可核对的上游，必须当场释放名额，不能一直占着。 */
+  @Test
+  void restartReleasesRunsThatNeverReachedUpstream() throws Exception {
+    String project = createProject("restart-reserved");
+    jdbc.update(
+        "INSERT INTO generation_runs(id,project_id,actor_type,actor_id,kind,state,capacity_held,operation,idempotency_key,request_hash,started_at) VALUES(?,?,'USER',?,'image','RESERVED',TRUE,'generateMedia',?,?,NOW())",
+        "run-restart-reserved",
+        project,
+        adminId,
+        "restart-key",
+        "restart-hash");
+    assertThat(generationRuns.held(project)).isEqualTo(1);
+
+    ((cn.huimeng.service.impl.MediaGenerationServiceImpl) generation).recoverAfterRestart();
+
+    assertThat(generationRuns.held(project)).isZero();
+    assertThat(generationRuns.find(project, "run-restart-reserved").state()).isEqualTo("LOST");
+  }
+
   @Test
   void generationRevokedMembershipBeforePublicationDoesNotPersistResult() throws Exception {
     String project = createProject("generate-revoke");

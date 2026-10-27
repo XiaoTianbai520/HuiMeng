@@ -612,6 +612,8 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
       } catch (RuntimeException ignored) {
       }
     }
+    // 上游被重建或任务被清空时查询永远拿不到终态，超过半小时直接释放，避免名额被永久占用。
+    for (var run : runs.lostOlderThan(30)) runs.finish(run.projectId(), run.id(), "LOST", false);
   }
 
   @PreDestroy

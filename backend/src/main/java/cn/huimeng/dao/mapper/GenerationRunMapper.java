@@ -2,6 +2,7 @@ package cn.huimeng.dao.mapper;
 
 import cn.huimeng.dao.entity.GenerationRunDO;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import org.springframework.jdbc.core.*;
@@ -104,7 +105,10 @@ public class GenerationRunMapper {
         id);
   }
 
+  /** 进程重启后没有线程再推动这些运行：没提交到上游的当场释放名额，已提交的等核对上游终态。 */
   public void markLostAfterRestart() {
+    jdbc.update(
+        "UPDATE generation_runs SET state='LOST',capacity_held=FALSE,ended_at=NOW() WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING') AND (upstream_ref IS NULL OR upstream_ref='')");
     jdbc.update(
         "UPDATE generation_runs SET state='LOST' WHERE capacity_held=TRUE AND state IN ('RESERVED','RUNNING','CANCELLING')");
   }
@@ -113,5 +117,13 @@ public class GenerationRunMapper {
     return jdbc.query(
         "SELECT * FROM generation_runs WHERE capacity_held=TRUE AND state='LOST' AND upstream_ref IS NOT NULL",
         ROW);
+  }
+
+  /** 上游长期查不到终态（例如执行器被重建）时的兜底，避免名额被永久占用。 */
+  public List<GenerationRunDO> lostOlderThan(int minutes) {
+    return jdbc.query(
+        "SELECT * FROM generation_runs WHERE capacity_held=TRUE AND state='LOST' AND started_at < ?",
+        ROW,
+        Timestamp.from(Instant.now().minus(Duration.ofMinutes(minutes))));
   }
 }
