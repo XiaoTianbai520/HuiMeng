@@ -86,6 +86,7 @@ declare module 'vue' {
     MentionThumbnail: typeof import('./../components/agent/mentionThumbnail.vue')['default']
     Menu: typeof import('./../components/agent/menu.vue')['default']
     MessageMarkdown: typeof import('./../components/messageMarkdown.vue')['default']
+    ModelCatalog: typeof import('./../components/settings/panels/modelCatalog.vue')['default']
     ModelPopover: typeof import('./../components/modelPopover.vue')['default']
     NodeMenuSettings: typeof import('./../components/settings/panels/general/nodeMenuSettings.vue')['default']
     Personalization: typeof import('./../components/settings/panels/personalization.vue')['default']

@@ -83,7 +83,7 @@
               </span>
             </button>
             <div class="projectActions">
-              <el-button text :disabled="creating || opening" :aria-label="`项目文件 ${project.name}`" @click="router.push(`/projects/${encodeURIComponent(project.directory)}/files`)">文件与素材</el-button>
+              <el-button text class="actionText" :disabled="creating || opening" :aria-label="`项目文件 ${project.name}`" @click="router.push(`/projects/${encodeURIComponent(project.directory)}/files`)">文件与素材</el-button>
               <el-button v-if="isAdmin" text :icon="IconEdit" :disabled="creating || opening" :aria-label="`重命名项目 ${project.name}`" title="重命名" @click="renameProject(project)" />
               <el-button text type="danger" :icon="IconFolderMinus" :disabled="creating || opening" :aria-label="`移除项目 ${project.name}`" title="从列表移除，不删除文件" @click="workspaceStore.removeProject(project.directory)" />
             </div>
@@ -603,16 +603,22 @@ async function createProject(fromPrompt = true) {
         &.listView { grid-template-columns: 1fr; }
 
         .projectCard {
-          position: relative;
+          display: flex;
+          flex-direction: column;
 
+          // 操作放在卡片底部单独一行：此前绝对定位到右上角并强制 32px 宽，
+          // “文件与素材”的文案会溢出按钮盒，直接压在项目名上。
           .projectActions {
-            position: absolute;
-            top: 12px;
-            right: 8px;
             display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
             gap: 4px;
+            padding: 0 10px 8px;
 
-            .el-button { width: 32px; height: 32px; margin: 0; padding: 0; }
+            .el-button { margin: 0; }
+            .el-button:not(.actionText) { width: 32px; height: 32px; padding: 0; }
+            .actionText { height: 30px; padding: 0 10px; }
           }
         }
 
@@ -621,7 +627,7 @@ async function createProject(fromPrompt = true) {
           align-items: flex-start;
           gap: 12px;
           width: 100%;
-          padding: 20px 84px 20px 20px;
+          padding: 18px 20px 6px;
           border: 0;
           background: transparent;
           color: inherit;
@@ -636,6 +642,7 @@ async function createProject(fromPrompt = true) {
 
           .projectInfo {
             display: flex;
+            flex: 1;
             flex-direction: column;
             gap: 6px;
             min-width: 0;
