@@ -1,0 +1,70 @@
+{
+ "date": "2026-10-27",
+ "endpoint": "https://192.168.1.102:18443",
+ "executor": "http://192.168.1.100:8188",
+ "model": "qwenImage21Local/qwenImage21Text",
+ "sixth": {
+  "http": 429,
+  "code": "PROJECT_CAPACITY_EXCEEDED",
+  "seconds": 0.06
+ },
+ "wall_seconds": 236.4,
+ "runs": [
+  {
+   "label": "A1",
+   "http": 200,
+   "seconds": 52.2,
+   "runId": "f8cf9df9-8508-4c70-89e9-bacdde8ff8fc",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  },
+  {
+   "label": "A2",
+   "http": 200,
+   "seconds": 88.9,
+   "runId": "491ef188-578b-4798-95c7-a00d3c31853e",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  },
+  {
+   "label": "A3",
+   "http": 200,
+   "seconds": 160.3,
+   "runId": "bf546bd2-0717-4534-8f19-aa93a6472d2f",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  },
+  {
+   "label": "A4",
+   "http": 200,
+   "seconds": 124.1,
+   "runId": "cc4cbbca-02dd-43a5-a21c-0be24809c295",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  },
+  {
+   "label": "A5",
+   "http": 200,
+   "seconds": 199.0,
+   "runId": "98720c14-0759-4087-8c85-64f3692e1544",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  },
+  {
+   "label": "B1",
+   "http": 200,
+   "seconds": 234.3,
+   "runId": "85b81c94-af46-41f1-9266-8fa22f7cddfc",
+   "bytes": null,
+   "spec": "1K 1:1 1024×1024"
+  }
+ ],
+ "vram_free_mb_min": 574,
+ "queue_pending_max": 5,
+ "samples": 30,
+ "media": {
+  "projectA": 6,
+  "projectB": 1
+ },
+ "sha256_verified": 6
+}
