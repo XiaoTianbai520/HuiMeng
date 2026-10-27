@@ -74,6 +74,8 @@
 
 新增用例 `restartReleasesRunsThatNeverReachedUpstream`（SecurityIntegrationTests）：插入一条 `RESERVED`/无上游的运行，调用 `recoverAfterRestart()` 后断言 `held=0`、状态 `LOST`。`SecurityIntegrationTests` 62 项全过。
 
+> 后续补充：第 7 节列出的视频缺口已在当日补测（真实 H3 出片 + 前端播放），另外发现并修复了外部入口媒体入库的外键缺陷；结论以[最终验收报告](M4_SIGNOFF_20261027.md)为准。
+
 ## 7. 未覆盖
 
 - 视频（H3 五模式）在生产上只做过本机直连执行器的验证，**经服务端的生产出片尚未重跑**；`h3Local3060/*` 在生产库里仍是 `enabled=0`。

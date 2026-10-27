@@ -1,0 +1,102 @@
+{
+ "date": "2026-10-27",
+ "endpoint": "https://192.168.1.102:18443",
+ "entries": {
+  "web": 3,
+  "mcp": 2,
+  "a2a": 1
+ },
+ "capacity": {
+  "sixth": {
+   "http": 429,
+   "seconds": 0.04,
+   "body": "{\"jsonrpc\": \"2.0\", \"id\": 2, \"error\": {\"code\": -32099, \"message\": \"当前项目已有五个活跃生成任务\", \"data\": {\"code\": \"PROJECT_CAPACITY_EXCEEDED\"}}}"
+  },
+  "note": "第 6 个经 MCP 入口，在 5 个名额占用期间发出"
+ },
+ "independentProject": {
+  "http": 200,
+  "runId": "6f4fae40-91c9-4f8f-b685-e599524b4aab",
+  "seconds": 0.0
+ },
+ "isolation": {
+  "http": 200,
+  "body": "{\"jsonrpc\": \"2.0\", \"id\": 2, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"运行不可用\"}], \"isError\": true}}"
+ },
+ "a2a": {
+  "no_version": {
+   "http": 400,
+   "body": "{\"jsonrpc\":\"2.0\",\"id\":1,\"error\":{\"code\":-32600,\"message\":\"A2A-Version 必须为 1.0\",\"data\":{\"code\":\"VERSION_NOT_SUPPORTED\"}}}"
+  },
+  "send": {
+   "http": 200,
+   "body": "{\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"task\":{\"id\":\"2224922f-3b51-4721-8398-21174a65089e\",\"contextId\":\"f12e0fbb-20fc-4a3e-ae9b-ee14a63703d7\",\"status\":{\"state\":\"TASK_STATE_REJECTED\",\"timestamp\":\"2026-10-27T06:14:07.195616Z\",\""
+  },
+  "task": {
+   "id": "2224922f-3b51-4721-8398-21174a65089e",
+   "final": "TASK_STATE_REJECTED"
+  }
+ },
+ "runs": {
+  "M2": {
+   "entry": "mcp",
+   "http": 200,
+   "seconds": 0.0
+  },
+  "M1": {
+   "entry": "mcp",
+   "http": 200,
+   "seconds": 0.0
+  },
+  "W1": {
+   "entry": "web",
+   "http": 200,
+   "seconds": 153.6
+  },
+  "W3": {
+   "entry": "web",
+   "http": 200,
+   "seconds": 202.0
+  },
+  "W2": {
+   "entry": "web",
+   "http": 200,
+   "seconds": 254.3
+  }
+ },
+ "states": {
+  "W1": "SUCCEEDED",
+  "W3": "SUCCEEDED"
+ },
+ "media": {
+  "count": 18,
+  "bytes": 31620272
+ },
+ "integrity": [
+  {
+   "file": "generated-8a197f5f-2914-4a46-b",
+   "sha": true,
+   "bytes": 1971658
+  },
+  {
+   "file": "generated-debd65df-f71a-4965-a",
+   "sha": true,
+   "bytes": 2383719
+  },
+  {
+   "file": "generated-5f64912f-f14f-4e7b-9",
+   "sha": true,
+   "bytes": 1959284
+  },
+  {
+   "file": "generated-7b0851c9-1596-43ea-b",
+   "sha": true,
+   "bytes": 1913784
+  },
+  {
+   "file": "generated-64d2b6fc-e22c-4451-a",
+   "sha": true,
+   "bytes": 1477882
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "date": "2026-10-27",
+ "endpoint": "https://192.168.1.102:18443",
+ "executor": "http://192.168.1.100:8188",
+ "provider": "h3Local3060",
+ "model": "h3T2v",
+ "spec": "5s 352p 16:9 608×352",
+ "runId": "e1a47e50-ece8-41c1-90f3-8a4153640ba8",
+ "http": 200,
+ "seconds": 173.0,
+ "state": "SUCCEEDED",
+ "capacityReleased": true,
+ "artifact": {
+  "filename": "generated-e1a47e50-ece8-41c1-90f3-8a4153640ba8.mp4",
+  "bytes": 528702,
+  "ftyp": "ftyp",
+  "durationSeconds": 5.17,
+  "sha256": "a090ab26b4b55a6418e00d46c4927f5d48a8d2fecf442557d0e2c40a5ca1c361",
+  "downloadMatched": true
+ },
+ "log": {
+  "lines": 47,
+  "errors": 0,
+  "warns": 0
+ },
+ "frontend": {
+  "browser": "Microsoft Edge (Playwright, ignoreHTTPSErrors)",
+  "rowVisible": true,
+  "rowText": "generated-e1a47e50-…-8a4153640ba8.mp4  516.3 KiB  2026-10-27T05:36:28Z",
+  "videoElement": 1,
+  "duration": 5.167,
+  "videoWidth": 608,
+  "videoHeight": 352,
+  "readyState": 4,
+  "note": "修复前预览提示「此类型请下载后查看」，修复后可内联播放"
+ },
+ "modelsRestored": [
+  "h3T2v",
+  "h3I2v",
+  "h3Fl2v",
+  "h3L2v",
+  "h3R2v"
+ ]
+}

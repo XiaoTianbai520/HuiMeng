@@ -1,0 +1,80 @@
+{
+ "date": "2026-10-27",
+ "backupDir": "/data/backup/huimeng/a15-20261027-134920",
+ "versions": {
+  "forward": {
+   "image": "huimeng-api:m3",
+   "id": "sha256:892cbd2b4872",
+   "jarSha256": "81967ef72089f1c3a442a9814e77aafb8bb64180f0c3b8950a9698ec2085889e"
+  },
+  "rollback": {
+   "image": "huimeng-api:prev-m3",
+   "id": "sha256:c9d00b4aa1ae",
+   "jarBytes": 108408520,
+   "builtFrom": "target/huimeng-api-m3-5d7ee95.jar"
+  }
+ },
+ "snapshots": {
+  "before": {
+   "csrf": 200,
+   "login": 200,
+   "projects": 10,
+   "projectMedia": 9,
+   "mediaBytes": 15011684,
+   "videoShaMatches": true,
+   "nodes": 8,
+   "tools": 1
+  },
+  "afterRollback": {
+   "csrf": 200,
+   "login": 200,
+   "projects": 10,
+   "projectMedia": 9,
+   "mediaBytes": 15011684,
+   "videoShaMatches": true,
+   "nodes": 8,
+   "tools": 1
+  },
+  "afterForward": {
+   "csrf": 200,
+   "login": 200,
+   "projects": 10,
+   "projectMedia": 9,
+   "mediaBytes": 15011684,
+   "videoShaMatches": true,
+   "nodes": 8,
+   "tools": 1
+  }
+ },
+ "db": {
+  "before": {
+   "projects": 10,
+   "media": 10,
+   "mediaBytes": 16676315,
+   "audit": 214,
+   "held": 0
+  },
+  "afterRollback": {
+   "projects": 10,
+   "media": 10,
+   "mediaBytes": 16676315,
+   "audit": 216
+  },
+  "afterForward": {
+   "projects": 10,
+   "media": 10,
+   "mediaBytes": 16676315
+  }
+ },
+ "startup": {
+  "rollbackSeconds": 4.766,
+  "forwardSeconds": 3.5
+ },
+ "m2Probe": {
+  "command": "docker run --rm --network huimeng_database --env-file secrets/migration.env huimeng-api:m2 --migrate-only",
+  "flywayWarning": "Schema huimeng has a version (10) that is newer than the latest available migration (3)",
+  "exit": 0,
+  "dbUnchanged": true
+ },
+ "boundary": "同一 schema 版本内回滚可用；跨 Flyway 迁移版本回滚会被 API 的 validate 拦下（Detected resolved migration not applied to database），必须先恢复数据库。"
+}
