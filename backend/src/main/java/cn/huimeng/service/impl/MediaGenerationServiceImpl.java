@@ -16,6 +16,8 @@ import java.io.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 /** 每项目原子五名额、持久幂等与本人运行；接通现用 Qwen 文生图与单图编辑两模型。 */
 @Service
 public class MediaGenerationServiceImpl implements MediaGenerationService {
+  private static final Logger LOG = LoggerFactory.getLogger(MediaGenerationServiceImpl.class);
   private static final String PROVIDER = "qwenImage21Local";
   private static final long REFERENCE_LIMIT = 16L * 1024 * 1024;
   private static final long DEADLINE_SECONDS = 1800;
@@ -413,6 +416,14 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                       spec.display())),
               "success"));
     } catch (Exception ex) {
+      LOG.warn(
+          "视频生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
+          project,
+          id,
+          remoteAttempted,
+          confirmedTerminal,
+          ex.getClass().getSimpleName(),
+          ex.getMessage());
       cancelQuietly(promptId);
       var current = runs.find(project, id);
       boolean held = current != null && current.capacityHeld();
@@ -556,6 +567,14 @@ public class MediaGenerationServiceImpl implements MediaGenerationService {
                       spec.display())),
               "success"));
     } catch (Exception ex) {
+      LOG.warn(
+          "图片生成失败 project={} run={} remoteAttempted={} confirmed={} error={}: {}",
+          project,
+          id,
+          remoteAttempted,
+          confirmedTerminal,
+          ex.getClass().getSimpleName(),
+          ex.getMessage());
       var current = runs.find(project, id);
       if (current != null && current.capacityHeld())
         runs.finish(

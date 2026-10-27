@@ -1339,13 +1339,32 @@ class SecurityIntegrationTests {
                 new Actor(adminId, "admin", "ADMIN", "ACTIVE", 0), null, List.of()));
   }
 
+  /** 外部客户端（MCP/A2A）生成的媒体用客户端 id 作为 created_by，不能被 users 外键挡住。 */
+  @Test
+  void mediaCreatorAcceptsExternalClientIds() throws Exception {
+    String project = createProject("media-external-creator");
+    jdbc.update(
+        "INSERT INTO project_media(id,project_id,object_key,filename,byte_size,state,created_by,created_at) VALUES(?,?,?,?,?,'PENDING',?,NOW())",
+        "media-external-creator",
+        project,
+        "projects/" + project + "/media/media-external-creator",
+        "external.png",
+        1L,
+        "client-0123456789");
+    assertThat(
+            jdbc.queryForObject(
+                "SELECT COUNT(*) FROM project_media WHERE created_by='client-0123456789'",
+                Integer.class))
+        .isEqualTo(1);
+  }
+
   @Test
   void freshMigrationsCreateConstraintsAndValidateOnRestart() {
     assertThat(
             jdbc.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success=TRUE AND version IS NOT NULL",
                 Integer.class))
-        .isEqualTo(10);
+        .isEqualTo(11);
     assertThatThrownBy(
             () ->
                 jdbc.update(
