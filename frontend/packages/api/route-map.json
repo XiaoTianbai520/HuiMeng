@@ -897,6 +897,22 @@
     },
     {
       "method": "GET",
+      "path": "/api/v1/capabilities/nodes/files"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/capabilities/tools/client"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/capabilities/mcp/status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/capabilities/mcp/skill"
+    },
+    {
+      "method": "GET",
       "path": "/api/v1/capabilities/tools/get"
     },
     {
@@ -942,18 +958,6 @@
     {
       "method": "POST",
       "path": "/api/v1/projects/{projectId}/creative/ffmpeg/execute"
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/capabilities/ext/read"
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/capabilities/mcp/status"
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/capabilities/mcp/skill"
     }
   ]
 }

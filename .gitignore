@@ -22,3 +22,5 @@ frontend/data/
 docs/validation/scripts/*.log
 .run/*.log
 .run/*.txt
+# build_openapi.py 的基线输出；提交版 docs/api/openapi.yaml 才是事实源
+docs/api/generated/

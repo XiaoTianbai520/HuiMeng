@@ -1,7 +1,13 @@
-"""Generate the reviewed platform contract and trace every fixed upstream route.
+"""Generate the frozen M1/M2 baseline contract and trace every fixed upstream route.
+
+Since M3 the committed ``docs/api/openapi.yaml`` and ``docs/api/route-map.json`` are the source
+of truth: platform-only paths and reviewed descriptions were added by hand and this generator
+cannot reproduce them. It therefore writes to ``docs/api/generated/`` by default; ``--write``
+is only for an intentional M1 baseline rebuild and will drop the M3 additions.
 
 Requires PyYAML (build only). Does not read a service, credentials or M0 scratch.
 """
+import argparse
 import json
 from pathlib import Path
 import yaml
@@ -160,7 +166,14 @@ def operation(method, path, op_id, summary, roles, acceptance, request=None, res
     return op
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description='重建 M1/M2 契约基线；默认不覆盖提交版。')
+    parser.add_argument(
+        '--write',
+        action='store_true',
+        help='覆盖 docs/api/openapi.yaml 与 route-map.json；会丢失 M3 之后的手工平台路径，仅用于有意重建基线',
+    )
+    args = parser.parse_args(argv)
     member = ['AUTHENTICATED']
     admin = ['ADMIN']
     project = ['PROJECT_MEMBER']
@@ -410,11 +423,22 @@ def main():
             'requirements': sorted({fr for a in acceptance for fr in FR_BY_ACCEPTANCE[a]}),
             'contractStatus': 'excluded' if disposition == '排除' else 'internal' if disposition == '仅内部诊断' else target_op.get('x-contract-status', 'proposed'),
             'publicEnabled': False})
-    (API / 'openapi.yaml').write_text(yaml.safe_dump(SPEC, allow_unicode=True, sort_keys=False, width=120), encoding='utf-8')
-    (API / 'route-map.json').write_text(json.dumps({'fixedCommit': 'd2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d',
+    contract = yaml.safe_dump(SPEC, allow_unicode=True, sort_keys=False, width=120)
+    mapping_text = json.dumps({'fixedCommit': 'd2e94aca7b59659ff6b4ca15f03cf134ec7f0e1d',
         'description': '目标显式映射及源字段；proposed 不表示 DTO 全部冻结，更不是可公开白名单。', 'routes': mapping},
-        ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(f'Generated {len(SPEC["paths"])} platform paths and {len(mapping)} route mappings')
+        ensure_ascii=False, indent=2) + '\n'
+    if args.write:
+        (API / 'openapi.yaml').write_text(contract, encoding='utf-8')
+        (API / 'route-map.json').write_text(mapping_text, encoding='utf-8')
+        print(f'Generated {len(SPEC["paths"])} baseline paths and {len(mapping)} route mappings '
+              f'into the committed contract (--write)')
+    else:
+        target = API / 'generated'
+        target.mkdir(exist_ok=True)
+        (target / 'openapi.baseline.yaml').write_text(contract, encoding='utf-8')
+        (target / 'route-map.baseline.json').write_text(mapping_text, encoding='utf-8')
+        print(f'Baseline written to {target}: {len(SPEC["paths"])} paths, {len(mapping)} mappings; '
+              'committed docs/api/openapi.yaml remains the source of truth')
 
 
 if __name__ == '__main__':

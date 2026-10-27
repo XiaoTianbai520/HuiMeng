@@ -137,6 +137,7 @@
       "id": "R128",
       "sourceMethod": "POST",
       "sourcePath": "/api/agent/cancel",
+      "platformAddition": true,
       "disposition": "项目创作适配",
       "targetMethod": "POST",
       "targetPath": "/api/v1/projects/{projectId}/creative/agent/cancel",

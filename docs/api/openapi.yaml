@@ -5220,6 +5220,149 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/nodes/files:
+    get:
+      operationId: capabilityNodeScript
+      summary: 节点脚本正文
+      description: 按节点名返回已安装节点的 JavaScript 正文；仅同源页面加载，响应禁止浏览器猜测类型。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JavaScript 正文
+          content:
+            text/javascript:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/tools/client:
+    get:
+      operationId: capabilityToolClient
+      summary: 工具界面脚本
+      description: 按工具名与安装摘要取回界面脚本；版本必须等于安装摘要，响应禁止浏览器猜测类型。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JavaScript 正文
+          content:
+            text/javascript:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/mcp/status:
+    get:
+      operationId: capabilityMcpStatus
+      summary: 外部协议状态
+      description: 只公布协议版本、连接数与工具总数，不含凭证或项目标识。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/capabilities/mcp/skill:
+    get:
+      operationId: capabilityMcpSkills
+      summary: 外部协议技能列表
+      description: 只发布已登记技能的名称与元数据，供 MCP 客户端发现；不包含密钥或项目数据。
+      tags:
+      - capabilities
+      x-contract-status: frozen
+      x-roles: *id001
+      x-acceptance:
+      - A12
+      x-requirements:
+      - FR-06
+      x-audit-required: false
+      x-implemented: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: 见 ErrorCode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/capabilities/tools/get:
     get:
       operationId: capabilityTools
